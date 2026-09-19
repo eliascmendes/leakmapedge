@@ -67,7 +67,41 @@
     tx: "bom",
     cPct: 0,
     realizacao: 0,
-    ajuste: null
+    ajuste: null,
+    caso: null
+  };
+
+  /* Casos de "tente quebrar". Os numeros dos textos foram medidos nos cinco
+   * pontos de rompimento com este mesmo simulador. */
+  var CASOS = {
+    faixa: {
+      titulo: "Transmissor saturado",
+      texto: "Faixa de medida de 30 a 100 m de carga. Na ruptura a pressão cai para 14 a 23 m, " +
+        "abaixo do que o instrumento consegue medir. O LEAKMAP detecta o evento, reconhece que os dois " +
+        "canais saíram da faixa e retém a posição em vez de publicar uma errada, em qualquer um dos cinco pontos.",
+      aplicar: function () {
+        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom");
+        estado.ajuste.faixa = { on: true, min: 30, max: 100 }; estado.evento = "EV-02";
+      }
+    },
+    skew: {
+      titulo: "Canais desencontrados",
+      texto: "1,2 ms de atraso entre os dois transmissores. O erro vira um desvio fixo de 0,48 m, sempre " +
+        "na direção do sensor A e igual nos cinco pontos. É o tipo de erro que desaparece quando os dois " +
+        "canais são lidos pelo mesmo relógio, como na FPGA.",
+      aplicar: function () {
+        estado.tx = "ideal"; estado.ajuste = ajustePadrao("ideal");
+        estado.ajuste.skew = { on: true, val: 1.2 }; estado.evento = "EV-02";
+      }
+    },
+    velocidade: {
+      titulo: "Velocidade da onda errada",
+      texto: "Velocidade de onda declarada 5% acima da real. O erro é zero no meio do trecho e cresce em " +
+        "direção aos sensores, até 2 m nas pontas. Por isso a velocidade de onda da linha é calibrada na instalação.",
+      aplicar: function () {
+        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom"); estado.cPct = 5; estado.evento = "EV-01";
+      }
+    }
   };
 
   function ajustePadrao(tx) {
@@ -192,21 +226,26 @@
       return "Evidência suficiente nos dois canais: a posição é publicada junto com o alarme.";
     }
     if (/fundo de escala/.test(m)) {
-      return (/os dois/.test(m) ? "Os dois canais encostaram" : "O canal " + m.charAt(6) + " encostou") +
-        " no fundo de escala. O LEAKMAP se recusa a publicar uma posição que o sinal não sustenta.";
+      return "Rompimento detectado, posição retida: " +
+        (/os dois/.test(m) ? "os dois transmissores saíram" : "o transmissor " + m.charAt(6) + " saiu") +
+        " da faixa de medida, e o LEAKMAP não publica posição sem evidência. Melhor reter do que apontar o lugar errado.";
     }
     if (/nenhum canal/.test(m)) { return "Nenhum canal viu uma onda de rompimento: sem alarme."; }
-    if (/nao declarou/.test(m)) { return "Só um dos canais viu a onda: alerta sem posição, em vez de posição errada."; }
-    if (/faixa fisica/.test(m)) {
-      return "Diferença de tempo fisicamente impossível para este trecho: a posição não é publicada.";
+    if (/nao declarou/.test(m)) {
+      return "Rompimento detectado, posição retida: só um dos canais viu a onda, e o LEAKMAP não publica posição sem os dois.";
     }
-    if (/abaixo do limiar/.test(m)) { return "A onda não se destacou do ruído com margem suficiente."; }
+    if (/faixa fisica/.test(m)) {
+      return "Rompimento detectado, posição retida: a diferença de tempo é fisicamente impossível para este trecho.";
+    }
+    if (/abaixo do limiar/.test(m)) {
+      return "Rompimento detectado, posição retida: a onda não se destacou do ruído com margem suficiente.";
+    }
     return m;
   }
 
   function nomeDaClasse(reg) {
     if (reg.classe === L.detector.CLASSE_LOCALIZADO) { return "Localizado"; }
-    if (reg.classe === L.detector.CLASSE_SEM_LOCALIZACAO) { return "Inconclusivo"; }
+    if (reg.classe === L.detector.CLASSE_SEM_LOCALIZACAO) { return "Posição retida"; }
     if (reg.classe === L.detector.CLASSE_SEM_DETECCAO) { return "Sem alarme"; }
     return "Falha";
   }
@@ -270,7 +309,7 @@
         "estimada " + fmt(reg.posicao_estimada_m, 2) + " m");
     } else if (reg) {
       txt((x0 + x1) / 2, y + 62, "#f5a524", MONO, "13", "600",
-        reg.classe === L.detector.CLASSE_SEM_DETECCAO ? "sem alarme" : "posição não publicada");
+        reg.classe === L.detector.CLASSE_SEM_DETECCAO ? "sem alarme" : "rompimento detectado · posição retida");
     }
   }
 
@@ -278,7 +317,7 @@
   /* grafico dos dois canais                                              */
   /* ------------------------------------------------------------------ */
 
-  function desenharGrafico(cv, sim) {
+  function desenharGrafico(cv, sim, faixa) {
     var dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = cv.clientHeight;
     if (!w || !h) { return; }
     cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
@@ -331,6 +370,20 @@
     }
     traco(B, "#2fd6e8"); traco(A, "#b3f000");
 
+    /* limites da faixa de medida, quando aparecem na janela: mostram por que
+     * o sinal "achata" num transmissor saturado */
+    if (faixa && faixa.on) {
+      [faixa.min, faixa.max].forEach(function (limite) {
+        var yb = bar(limite);
+        if (yb < lo || yb > hi) { return; }
+        var yy = Y(yb);
+        g.strokeStyle = "#f5a524"; g.lineWidth = 1.5; g.setLineDash([6, 4]);
+        g.beginPath(); g.moveTo(padL, yy); g.lineTo(w - padR, yy); g.stroke(); g.setLineDash([]);
+        g.fillStyle = "#f5a524"; g.textAlign = "right"; g.textBaseline = "bottom";
+        g.fillText("limite do transmissor", w - padR - 4, yy - 3);
+      });
+    }
+
     [["canal_A", "#b3f000", "A"], ["canal_B", "#2fd6e8", "B"]].forEach(function (c, j) {
       var d = reg[c[0]];
       if (!d || !d.detectado) { return; }
@@ -358,17 +411,21 @@
     var reg = sim.registro;
 
     desenharTrecho($("simSvg"), reg, real, function (id) { estado.evento = id; sincronizar(); });
-    desenharGrafico($("simCv"), sim);
+    desenharGrafico($("simCv"), sim, estado.ajuste.faixa);
 
     var loc = reg.classe === L.detector.CLASSE_LOCALIZADO;
-    $("sEst").innerHTML = loc ? fmt(reg.posicao_estimada_m, 2) + "<small>m</small>" : "—";
-    $("sErro").innerHTML = loc ? fmt(av.erro, 2) + "<small>m</small>" : "—";
+    var vazio = '<span class="vazio">—</span>';
+    $("sEst").innerHTML = loc ? fmt(reg.posicao_estimada_m, 2) + "<small>m</small>" : vazio;
+    $("sErro").innerHTML = loc ? fmt(av.erro, 2) + "<small>m</small>" : vazio;
     $("sDt").innerHTML = (reg.delta_t_s !== undefined) ? fmt(reg.delta_t_s * 1000, 2) + "<small>ms</small>" : "—";
     $("sClasse").textContent = nomeDaClasse(reg);
     $("sClasse").className = "val " + (loc ? "ok" : "alerta");
     $("sReal").textContent = "real " + fmt(real, 0) + " m";
     $("sIncerteza").textContent = loc ? "± " + fmt(reg.incerteza_de_posicao_m, 2) + " m declarados" : "";
     $("sMotivo").textContent = explicar(reg);
+    $("sMotivo").className = "motivo" + (loc ? "" : " retida");
+    $("sClasseSub").textContent = loc ? "posição publicada com o alarme" :
+      (reg.classe === L.detector.CLASSE_SEM_LOCALIZACAO ? "rompimento detectado" : "nenhuma onda de rompimento");
     $("bEst").textContent = loc ? fmt(reg.posicao_estimada_m, 2) + " m" : "—";
     $("bErro").textContent = loc ? fmt(av.erro, 2) + " m" : "—";
     $("bClasse").textContent = nomeDaClasse(reg);
@@ -396,8 +453,19 @@
     Array.prototype.forEach.call(document.querySelectorAll("#simTx button"), function (b) {
       b.setAttribute("aria-pressed", String(b.dataset.tx === estado.tx && !personalizado));
     });
-    $("simTxNota").textContent = personalizado ?
+    $("simTxNota").textContent = (personalizado && !estado.caso) ?
       "Instrumento personalizado a partir do transmissor " + TRANSMISSORES[estado.tx].nome.toLowerCase() + "." : "";
+
+    var caso = estado.caso ? CASOS[estado.caso] : null;
+    $("simCaso").hidden = !caso;
+    $("simCasoSair2").hidden = !caso;
+    if (caso) {
+      $("simCasoTitulo").textContent = caso.titulo;
+      $("simCasoTexto").textContent = caso.texto;
+    }
+    Array.prototype.forEach.call(document.querySelectorAll("[data-quebra]"), function (b) {
+      b.setAttribute("aria-pressed", String(b.dataset.quebra === estado.caso));
+    });
 
     $("simC").value = String(estado.cPct);
     var c = parametrosDoDetector(estado.cPct).velocidade_de_onda_m_s;
@@ -442,36 +510,31 @@
       el("span", { class: "n", texto: TRANSMISSORES[k].nome }, b);
       el("span", { class: "s", texto: TRANSMISSORES[k].sub }, b);
       b.addEventListener("click", function () {
-        estado.tx = k; estado.ajuste = ajustePadrao(k); sincronizar();
+        estado.tx = k; estado.ajuste = ajustePadrao(k); estado.caso = null; sincronizar();
       });
     });
-    $("simC").addEventListener("input", function () { estado.cPct = numero(this.value, 0); sincronizar(); });
+    $("simC").addEventListener("input", function () {
+      estado.cPct = numero(this.value, 0); estado.caso = null; sincronizar();
+    });
     Array.prototype.forEach.call(document.querySelectorAll("#simAjuste input"), function (inp) {
-      inp.addEventListener("change", function () { lerAjuste(); sincronizar(); });
+      inp.addEventListener("change", function () { lerAjuste(); estado.caso = null; sincronizar(); });
     });
     $("simNovo").addEventListener("click", function () { estado.realizacao += 1; sincronizar(); });
-    $("simReset").addEventListener("click", function () {
-      estado.evento = "EV-02"; estado.tx = "bom"; estado.cPct = 0; estado.realizacao = 0;
+    function voltarAoPadrao(manterPonto) {
+      if (!manterPonto) { estado.evento = "EV-02"; }
+      estado.tx = "bom"; estado.cPct = 0; estado.realizacao = 0; estado.caso = null;
       estado.ajuste = ajustePadrao("bom"); $("simAjuste").open = false; sincronizar();
-    });
+    }
+    $("simReset").addEventListener("click", function () { voltarAoPadrao(false); });
+    $("simCasoSair").addEventListener("click", function () { voltarAoPadrao(true); });
+    $("simCasoSair2").addEventListener("click", function () { voltarAoPadrao(true); });
 
-    var quebras = {
-      faixa: function () {
-        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom");
-        estado.ajuste.faixa = { on: true, min: 30, max: 100 }; estado.evento = "EV-02";
-      },
-      skew: function () {
-        estado.tx = "ideal"; estado.ajuste = ajustePadrao("ideal");
-        estado.ajuste.skew = { on: true, val: 1.2 }; estado.evento = "EV-02";
-      },
-      velocidade: function () {
-        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom"); estado.cPct = 5; estado.evento = "EV-01";
-      }
-    };
     Array.prototype.forEach.call(document.querySelectorAll("[data-quebra]"), function (b) {
       b.addEventListener("click", function () {
+        if (estado.caso === b.dataset.quebra) { voltarAoPadrao(true); return; }
         estado.cPct = 0; estado.realizacao = 0;
-        quebras[b.dataset.quebra]();
+        CASOS[b.dataset.quebra].aplicar();
+        estado.caso = b.dataset.quebra;
         $("simAjuste").open = true;
         sincronizar();
         if (window.matchMedia("(min-width: 861px)").matches) {
@@ -487,7 +550,7 @@
         });
         $("abaUm").hidden = b.dataset.aba !== "um";
         $("abaLote").hidden = b.dataset.aba !== "lote";
-        if (b.dataset.aba === "um" && ultimo) { desenharGrafico($("simCv"), ultimo); }
+        if (b.dataset.aba === "um" && ultimo) { desenharGrafico($("simCv"), ultimo, estado.ajuste.faixa); }
       });
     });
 

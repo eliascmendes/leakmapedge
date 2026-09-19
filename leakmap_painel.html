@@ -344,6 +344,34 @@ footer p{max-width:80ch;margin-top:10px}
   .tile{padding:14px 12px}
   .tile .val{font-size:21px}
 }
+/* caso de teste ativo */
+.casoativo{grid-column:1 / -1;display:flex;align-items:center;justify-content:space-between;gap:18px;
+  padding:16px 20px;background:#1a1408;border-bottom:1px solid rgba(245,165,36,.45)}
+.casoativo[hidden]{display:none}
+.casoativo .k{display:inline-flex;align-items:center;gap:7px;font:600 11px/1.4 var(--mono);letter-spacing:.12em;
+  text-transform:uppercase;color:var(--amber)}
+.casoativo .k::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amber);
+  animation:pulso 1.6s ease-in-out infinite}
+@keyframes pulso{50%{opacity:.25}}
+.casoativo b{display:block;font:600 17px/1.3 var(--disp);color:var(--ink);margin-top:4px}
+.casoativo p{margin:6px 0 0;font-size:14px;color:#c9c1ae;max-width:78ch}
+.casoativo .btn{flex:none;border-color:rgba(245,165,36,.5);color:var(--amber)}
+.casoativo .btn:hover{background:rgba(245,165,36,.1);color:var(--ink)}
+.quebra button[aria-pressed="true"]{border-style:solid;border-color:var(--amber);background:rgba(245,165,36,.1);position:relative}
+.quebra button[aria-pressed="true"]::after{content:"ativo";position:absolute;top:9px;right:10px;
+  font:600 10.5px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:#06080a;background:var(--amber);padding:3px 6px}
+.quebra button.sair{border:1px solid var(--rule);text-align:center;font:600 12px/1.3 var(--mono);
+  letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding:12px}
+.quebra button.sair:hover{color:var(--ink);border-color:var(--lime-dim);background:none}
+.quebra button[hidden]{display:none}
+.motivo.retida{border-left-color:var(--amber)}
+.tile .val .vazio{color:var(--dim)}
+#sClasse{font-family:var(--disp);font-size:clamp(19px,1.8vw,22px);letter-spacing:-.01em;line-height:1.25;padding-top:3px}
+@media (max-width:400px){ #sClasse{font-size:16px;letter-spacing:-.02em} }
+@media (max-width:640px){
+  .casoativo{flex-direction:column;align-items:flex-start;padding:14px}
+}
+
 /* barra de resultado: em tela empilhada, o resultado fica abaixo dos
    controles; a barra mostra a resposta enquanto se mexe neles */
 .simbarra{display:none}
@@ -368,8 +396,9 @@ footer p{max-width:80ch;margin-top:10px}
 @media (min-width:600px) and (max-width:860px){
   .seg3{grid-template-columns:repeat(3,minmax(0,1fr))}
   .quebra{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-  .quebra .glab{grid-column:1 / -1}
+  .quebra .glab,.quebra .sair{grid-column:1 / -1}
   .quebra button{margin-top:0}
+  .quebra button[aria-pressed="true"]::after{top:auto;bottom:9px}
   .ajuste{display:block}
 }
 @media (max-width:560px){
@@ -480,7 +509,7 @@ footer p{max-width:80ch;margin-top:10px}
 
   <p class="sub" style="margin-top:26px"><b style="color:#e9eee7;font-weight:600">Vazamento localizado a menos de um metro, em 200 metros de linha, com transmissor comum.</b> No caso típico o LEAKMAP aponta o ponto a 24 centímetros da posição real; no pior caso de toda a matriz, a 1,05 metro. Cada parcela desse erro tem causa conhecida e tratamento definido. Os 24 centímetros da configuração de ruído alto equivalem a um período de amostragem, vindo de 0,4 milissegundo de diferença de atraso entre os dois transmissores, e saem na calibração dos canais. Nas linhas de <span class="num">c</span> desviada, o erro é zero no meio do trecho e cresce em direção aos sensores, exatamente como a fórmula prevê, e diminui na mesma proporção em que a velocidade de onda da linha for medida.</p>
 
-  <p class="sub" style="margin-top:16px">Em 28 dos 30 eventos o erro ficou dentro da incerteza que o próprio detector declarou junto com a posição, ou seja, o produto sabe dizer quanto vale a resposta que está dando. Nenhum evento passou despercebido, nenhum resultado saiu inconclusivo e nenhuma corrida falhou. Nas quinze corridas sem evento não houve um único disparo em 13 860 oportunidades de decisão. O tempo entre a abertura do vazamento e a declaração do evento ficou em 31 milissegundos em média, com máximo de 53 milissegundos.</p>
+  <p class="sub" style="margin-top:16px">Em 28 dos 30 eventos o erro ficou dentro da incerteza que o próprio detector declarou junto com a posição, ou seja, o produto sabe dizer quanto vale a resposta que está dando. Nenhum evento passou despercebido, nenhuma posição precisou ser retida e nenhuma corrida falhou. Nas quinze corridas sem evento não houve um único disparo em 13 860 oportunidades de decisão. O tempo entre a abertura do vazamento e a declaração do evento ficou em 31 milissegundos em média, com máximo de 53 milissegundos.</p>
 </section>
 
 <section id="simule">
@@ -497,6 +526,14 @@ footer p{max-width:80ch;margin-top:10px}
   </div>
 
   <div class="sim" id="abaUm">
+    <div class="casoativo" id="simCaso" role="status" hidden>
+      <div>
+        <span class="k">Caso de teste ativo</span>
+        <b id="simCasoTitulo"></b>
+        <p id="simCasoTexto"></p>
+      </div>
+      <button type="button" class="btn ghost" id="simCasoSair">Sair do teste</button>
+    </div>
     <div class="simctl">
       <div class="grp">
         <div class="glab"><b>1</b> Onde a linha rompe</div>
@@ -533,6 +570,7 @@ footer p{max-width:80ch;margin-top:10px}
         <button type="button" data-quebra="faixa"><b>Transmissor saturado</b><span>faixa de medida curta demais para a onda</span></button>
         <button type="button" data-quebra="skew"><b>Canais desencontrados</b><span>1,2 ms de atraso entre os dois transmissores</span></button>
         <button type="button" data-quebra="velocidade"><b>Velocidade da onda errada</b><span>c declarada 5% acima da real</span></button>
+        <button type="button" class="sair" id="simCasoSair2" hidden>Sair do teste e voltar ao transmissor bom</button>
       </div>
 
       <div class="simbarra" id="simBarra" aria-live="polite">
@@ -549,7 +587,7 @@ footer p{max-width:80ch;margin-top:10px}
         <div class="tile acc"><div class="lab">Posição estimada</div><div class="val num" id="sEst">—</div><div class="sub2 num" id="sReal"></div></div>
         <div class="tile"><div class="lab">Erro</div><div class="val num" id="sErro">—</div><div class="sub2 num" id="sIncerteza"></div></div>
         <div class="tile"><div class="lab">Δt = tA − tB</div><div class="val num" id="sDt">—</div></div>
-        <div class="tile"><div class="lab">Resultado</div><div class="val" id="sClasse">—</div></div>
+        <div class="tile"><div class="lab">Resultado</div><div class="val" id="sClasse">—</div><div class="sub2" id="sClasseSub"></div></div>
       </div>
       <p class="motivo" id="sMotivo" aria-live="polite"></p>
       <div class="chartbox">
