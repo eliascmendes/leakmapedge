@@ -64,7 +64,7 @@
 
   var estado = {
     evento: "EV-02",
-    tx: "modesto",
+    tx: "bom",
     cPct: 0,
     realizacao: 0,
     ajuste: null
@@ -451,8 +451,8 @@
     });
     $("simNovo").addEventListener("click", function () { estado.realizacao += 1; sincronizar(); });
     $("simReset").addEventListener("click", function () {
-      estado.evento = "EV-02"; estado.tx = "modesto"; estado.cPct = 0; estado.realizacao = 0;
-      estado.ajuste = ajustePadrao("modesto"); $("simAjuste").open = false; sincronizar();
+      estado.evento = "EV-02"; estado.tx = "bom"; estado.cPct = 0; estado.realizacao = 0;
+      estado.ajuste = ajustePadrao("bom"); $("simAjuste").open = false; sincronizar();
     });
 
     var quebras = {
