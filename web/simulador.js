@@ -217,29 +217,31 @@
 
   function desenharTrecho(svg, reg, posReal, aoClicar) {
     while (svg.firstChild) { svg.removeChild(svg.firstChild); }
-    var x0 = 60, x1 = 940, y = 100, W = x1 - x0;
+    /* desenhado em pixels da largura disponivel, para o texto manter o
+     * tamanho em qualquer tela */
+    var Wv = Math.max(280, Math.round(svg.getBoundingClientRect().width || 1000));
+    var cp = Wv < 560, H = cp ? 150 : 162;
+    svg.setAttribute("viewBox", "0 0 " + Wv + " " + H);
+    var x0 = cp ? 18 : 40, x1 = Wv - x0, y = cp ? 62 : 68, W = x1 - x0;
     var px = function (m) { return x0 + (m / P.trecho_m) * W; };
     var MONO = "IBM Plex Mono, monospace", DISP = "Archivo, sans-serif";
-    /* em tela estreita o desenho encolhe; o texto cresce na mesma proporcao */
-    var k = (svg.clientWidth && svg.clientWidth < 560) ? 1.7 : 1;
-    function tam(v) { return String(Math.round(v * k)); }
     function txt(x, yy, cor, fam, tamanho, peso, conteudo, ancora) {
-      return el("text", { x: x, y: yy, fill: cor, "font-family": fam, "font-size": tam(Number(tamanho)),
+      return el("text", { x: x, y: yy, fill: cor, "font-family": fam, "font-size": tamanho,
         "font-weight": peso, "text-anchor": ancora || "middle", texto: conteudo }, svg);
     }
 
-    el("rect", { x: x0, y: y - 15, width: W, height: 30, fill: "#11171a", stroke: "#1e2724" }, svg);
+    el("rect", { x: x0, y: y - 13, width: W, height: 26, fill: "#11171a", stroke: "#1e2724" }, svg);
     [[P.posicao_sensor_A_m, "A"], [P.posicao_sensor_B_m, "B"]].forEach(function (s) {
       var X = px(s[0]);
-      el("line", { x1: X, y1: y - 15, x2: X, y2: y - 34, stroke: "#b3f000", "stroke-width": 2.5 }, svg);
-      el("rect", { x: X - 16, y: y - 38, width: 32, height: 5, fill: "#b3f000" }, svg);
-      txt(X, y - 50, "#b3f000", DISP, "22", "700", "SENSOR " + s[1]);
+      el("line", { x1: X, y1: y - 13, x2: X, y2: y - 28, stroke: "#b3f000", "stroke-width": 2 }, svg);
+      el("rect", { x: X - 13, y: y - 32, width: 26, height: 4, fill: "#b3f000" }, svg);
+      txt(X, y - 40, "#b3f000", DISP, cp ? "13" : "15", "700", "SENSOR " + s[1]);
     });
 
     /* faixa de incerteza e posicao estimada */
     if (reg && reg.classe === L.detector.CLASSE_LOCALIZADO) {
       var est = reg.posicao_estimada_m, u = Math.max(reg.incerteza_de_posicao_m, 0.4);
-      el("rect", { x: px(est - u), y: y - 15, width: Math.max(px(est + u) - px(est - u), 2), height: 30,
+      el("rect", { x: px(est - u), y: y - 13, width: Math.max(px(est + u) - px(est - u), 2), height: 26,
         fill: "#b3f000", "fill-opacity": ".16" }, svg);
     }
 
@@ -248,11 +250,11 @@
       var m = posicaoReal[id], X = px(m), ativo = id === estado.evento && posReal !== null;
       var g = el("g", { class: "alvo" + (ativo ? " ativo" : ""), tabindex: "0", role: "button",
         "aria-label": "Rompimento em " + fmt(m, 0) + " metros" }, svg);
-      el("circle", { cx: X, cy: y, r: 22, fill: "transparent" }, g);
-      el("circle", { cx: X, cy: y, r: ativo ? 9 : 7, fill: ativo ? "#f5a524" : "#06080a",
+      el("rect", { x: X - (cp ? 13 : 20), y: y - 18, width: cp ? 26 : 40, height: 60, fill: "transparent" }, g);
+      el("circle", { cx: X, cy: y, r: ativo ? 8 : 6, fill: ativo ? "#f5a524" : "#06080a",
         stroke: ativo ? "#06080a" : "#5b655d", "stroke-width": 2 }, g);
-      el("text", { x: X, y: y + 42, fill: ativo ? "#f5a524" : "#828d80", "font-family": MONO,
-        "font-size": tam(19), "text-anchor": "middle", texto: fmt(m, 0) + (k > 1 ? "" : " m") }, g);
+      el("text", { x: X, y: y + 32, fill: ativo ? "#f5a524" : "#828d80", "font-family": MONO,
+        "font-size": cp ? "12" : "13", "text-anchor": "middle", texto: fmt(m, 0) + (cp ? "" : " m") }, g);
       if (aoClicar) {
         g.addEventListener("click", function () { aoClicar(id); });
         g.addEventListener("keydown", function (e) {
@@ -263,10 +265,11 @@
 
     if (reg && reg.classe === L.detector.CLASSE_LOCALIZADO) {
       var XE = px(reg.posicao_estimada_m);
-      el("circle", { cx: XE, cy: y, r: 17, fill: "none", stroke: "#b3f000", "stroke-width": 3 }, svg);
-      txt(XE, y + 78, "#b3f000", MONO, "19", "600", (k > 1 ? "" : "estimada ") + fmt(reg.posicao_estimada_m, 2) + " m");
+      el("circle", { cx: XE, cy: y, r: 14, fill: "none", stroke: "#b3f000", "stroke-width": 2.5 }, svg);
+      txt(Math.min(Math.max(XE, x0 + 70), x1 - 70), y + 62, "#b3f000", MONO, "13", "600",
+        "estimada " + fmt(reg.posicao_estimada_m, 2) + " m");
     } else if (reg) {
-      txt((x0 + x1) / 2, y + 76, "#f5a524", MONO, "19", "600",
+      txt((x0 + x1) / 2, y + 62, "#f5a524", MONO, "13", "600",
         reg.classe === L.detector.CLASSE_SEM_DETECCAO ? "sem alarme" : "posição não publicada");
     }
   }
@@ -366,6 +369,10 @@
     $("sReal").textContent = "real " + fmt(real, 0) + " m";
     $("sIncerteza").textContent = loc ? "± " + fmt(reg.incerteza_de_posicao_m, 2) + " m declarados" : "";
     $("sMotivo").textContent = explicar(reg);
+    $("bEst").textContent = loc ? fmt(reg.posicao_estimada_m, 2) + " m" : "—";
+    $("bErro").textContent = loc ? fmt(av.erro, 2) + " m" : "—";
+    $("bClasse").textContent = nomeDaClasse(reg);
+    $("bClasse").className = loc ? "ok" : "alerta";
 
     var partes = [];
     if (reg.canal_A && reg.canal_A.detectado) { partes.push("<b>chegada A</b> " + fmt(reg.canal_A.tempo_de_chegada_s * 1000, 3) + " ms"); }
@@ -467,7 +474,9 @@
         quebras[b.dataset.quebra]();
         $("simAjuste").open = true;
         sincronizar();
-        $("simSvg").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        if (window.matchMedia("(min-width: 861px)").matches) {
+          $("simSvg").scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       });
     });
 
@@ -496,6 +505,9 @@
       el("span", { texto: TRANSMISSORES[k].nome }, r);
     });
     $("loteRodar").addEventListener("click", rodarLote);
+    $("bVer").addEventListener("click", function () {
+      document.querySelector("#abaUm .simres").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
   }
 
   /* ------------------------------------------------------------------ */
@@ -565,15 +577,15 @@
     [60, 80, 100, 120, 140].forEach(function (m) {
       el("line", { x1: X(m), y1: y1, x2: X(m), y2: y0, stroke: "#161d1b" }, svg);
       el("line", { x1: x0, y1: Y(m), x2: x1, y2: Y(m), stroke: "#161d1b" }, svg);
-      el("text", { x: X(m), y: y0 + 18, fill: "#5b655d", "font-family": MONO, "font-size": "12",
+      el("text", { x: X(m), y: y0 + 18, fill: "#5b655d", "font-family": MONO, "font-size": "15",
         "text-anchor": "middle", texto: String(m) }, svg);
-      el("text", { x: x0 - 8, y: Y(m) + 4, fill: "#5b655d", "font-family": MONO, "font-size": "12",
+      el("text", { x: x0 - 8, y: Y(m) + 4, fill: "#5b655d", "font-family": MONO, "font-size": "15",
         "text-anchor": "end", texto: String(m) }, svg);
     });
     el("line", { x1: X(m0), y1: Y(m0), x2: X(m1), y2: Y(m1), stroke: "#7fa800", "stroke-dasharray": "4 4" }, svg);
-    el("text", { x: (x0 + x1) / 2, y: y0 + 36, fill: "#828d80", "font-family": MONO, "font-size": "12",
+    el("text", { x: (x0 + x1) / 2, y: y0 + 36, fill: "#828d80", "font-family": MONO, "font-size": "15",
       "text-anchor": "middle", texto: "posição real (m)" }, svg);
-    var rot = el("text", { x: 14, y: (y0 + y1) / 2, fill: "#828d80", "font-family": MONO, "font-size": "12",
+    var rot = el("text", { x: 14, y: (y0 + y1) / 2, fill: "#828d80", "font-family": MONO, "font-size": "15",
       "text-anchor": "middle", transform: "rotate(-90 14 " + ((y0 + y1) / 2) + ")", texto: "estimada (m)" }, svg);
     rot.setAttribute("dominant-baseline", "middle");
     var deslocamento = { ideal: -7, bom: 0, modesto: 7 };
