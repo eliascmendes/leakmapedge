@@ -1,0 +1,3 @@
+{
+  "rewrites": [{ "source": "/", "destination": "/leakmap_painel.html" }]
+}
