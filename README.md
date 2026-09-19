@@ -113,5 +113,3 @@ O nó LEAKMAP Edge é uma instância da plataforma reconfigurável **Itaqui Edge
 ## Equipe
 
 **TACHYON**, de São Luís, MA, reúne projeto de hardware digital (HDL, FPGA e aquisição de sinais) e engenharia de software (backend, dados e produto) no mesmo time.
-
-Liderança: **Elias Camilo Mendes**, responsável pela arquitetura da solução e pelo pipeline em hardware.
