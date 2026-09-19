@@ -1,0 +1,517 @@
+{
+  "descricao": "Plano da matriz de ensaios. Diz de qual ensaio de origem cada linha veio e com que configuracao. Nao contem a posicao real do vazamento; o avaliador cruza este plano com a verdade do cenario.",
+  "eixos": {
+    "posicao": [
+      "EV-01",
+      "EV-02",
+      "EV-03",
+      "EV-04",
+      "EV-05"
+    ],
+    "ruido": [
+      "sem_ruido",
+      "baixo",
+      "alto"
+    ],
+    "velocidade": {
+      "casada": {
+        "c_m_s": 1200.899544131626,
+        "incerteza_m_s": 0.0,
+        "desvio_relativo": 0.0
+      },
+      "desviada": {
+        "c_m_s": 1224.9175350142586,
+        "incerteza_m_s": 24.01799088263252,
+        "desvio_relativo": 0.02
+      }
+    },
+    "sem_evento": {
+      "repeticoes": 5,
+      "n_pontos": 2000
+    }
+  },
+  "observacao_sobre_o_eixo_de_velocidade": "o eixo varia a velocidade de onda declarada ao detector, nao a velocidade com que o solucionador gerou os sinais; ver o cabecalho de 04_detector/matriz.py",
+  "n_ensaios": 45,
+  "ensaios": [
+    {
+      "id": "MX-001",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/sem_ruido/casada"
+    },
+    {
+      "id": "MX-002",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/sem_ruido/desviada"
+    },
+    {
+      "id": "MX-003",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/sem_ruido/casada"
+    },
+    {
+      "id": "MX-004",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/sem_ruido/desviada"
+    },
+    {
+      "id": "MX-005",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/sem_ruido/casada"
+    },
+    {
+      "id": "MX-006",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/sem_ruido/desviada"
+    },
+    {
+      "id": "MX-007",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/sem_ruido/casada"
+    },
+    {
+      "id": "MX-008",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/sem_ruido/desviada"
+    },
+    {
+      "id": "MX-009",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/sem_ruido/casada"
+    },
+    {
+      "id": "MX-010",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/sem_ruido/desviada"
+    },
+    {
+      "id": "MX-011",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/baixo/casada"
+    },
+    {
+      "id": "MX-012",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/baixo/desviada"
+    },
+    {
+      "id": "MX-013",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/baixo/casada"
+    },
+    {
+      "id": "MX-014",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/baixo/desviada"
+    },
+    {
+      "id": "MX-015",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/baixo/casada"
+    },
+    {
+      "id": "MX-016",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/baixo/desviada"
+    },
+    {
+      "id": "MX-017",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/baixo/casada"
+    },
+    {
+      "id": "MX-018",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/baixo/desviada"
+    },
+    {
+      "id": "MX-019",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/baixo/casada"
+    },
+    {
+      "id": "MX-020",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/baixo/desviada"
+    },
+    {
+      "id": "MX-021",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/alto/casada"
+    },
+    {
+      "id": "MX-022",
+      "ensaio_de_origem": "EV-01",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/alto/desviada"
+    },
+    {
+      "id": "MX-023",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/alto/casada"
+    },
+    {
+      "id": "MX-024",
+      "ensaio_de_origem": "EV-02",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/alto/desviada"
+    },
+    {
+      "id": "MX-025",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/alto/casada"
+    },
+    {
+      "id": "MX-026",
+      "ensaio_de_origem": "EV-03",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/alto/desviada"
+    },
+    {
+      "id": "MX-027",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/alto/casada"
+    },
+    {
+      "id": "MX-028",
+      "ensaio_de_origem": "EV-04",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/alto/desviada"
+    },
+    {
+      "id": "MX-029",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "linha_da_matriz": "evento/alto/casada"
+    },
+    {
+      "id": "MX-030",
+      "ensaio_de_origem": "EV-05",
+      "tem_evento": true,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "desviada",
+      "velocidade_declarada_m_s": 1224.9175350142586,
+      "desvio_relativo_de_c": 0.02,
+      "linha_da_matriz": "evento/alto/desviada"
+    },
+    {
+      "id": "MX-031",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 101,
+      "repeticao": 1,
+      "linha_da_matriz": "sem_evento/sem_ruido"
+    },
+    {
+      "id": "MX-032",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 102,
+      "repeticao": 2,
+      "linha_da_matriz": "sem_evento/sem_ruido"
+    },
+    {
+      "id": "MX-033",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 103,
+      "repeticao": 3,
+      "linha_da_matriz": "sem_evento/sem_ruido"
+    },
+    {
+      "id": "MX-034",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 104,
+      "repeticao": 4,
+      "linha_da_matriz": "sem_evento/sem_ruido"
+    },
+    {
+      "id": "MX-035",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "sem_ruido",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 105,
+      "repeticao": 5,
+      "linha_da_matriz": "sem_evento/sem_ruido"
+    },
+    {
+      "id": "MX-036",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 101,
+      "repeticao": 1,
+      "linha_da_matriz": "sem_evento/baixo"
+    },
+    {
+      "id": "MX-037",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 102,
+      "repeticao": 2,
+      "linha_da_matriz": "sem_evento/baixo"
+    },
+    {
+      "id": "MX-038",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 103,
+      "repeticao": 3,
+      "linha_da_matriz": "sem_evento/baixo"
+    },
+    {
+      "id": "MX-039",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 104,
+      "repeticao": 4,
+      "linha_da_matriz": "sem_evento/baixo"
+    },
+    {
+      "id": "MX-040",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "baixo",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 105,
+      "repeticao": 5,
+      "linha_da_matriz": "sem_evento/baixo"
+    },
+    {
+      "id": "MX-041",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 101,
+      "repeticao": 1,
+      "linha_da_matriz": "sem_evento/alto"
+    },
+    {
+      "id": "MX-042",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 102,
+      "repeticao": 2,
+      "linha_da_matriz": "sem_evento/alto"
+    },
+    {
+      "id": "MX-043",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 103,
+      "repeticao": 3,
+      "linha_da_matriz": "sem_evento/alto"
+    },
+    {
+      "id": "MX-044",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 104,
+      "repeticao": 4,
+      "linha_da_matriz": "sem_evento/alto"
+    },
+    {
+      "id": "MX-045",
+      "ensaio_de_origem": null,
+      "tem_evento": false,
+      "nivel_de_ruido": "alto",
+      "velocidade_declarada": "casada",
+      "velocidade_declarada_m_s": 1200.899544131626,
+      "desvio_relativo_de_c": 0.0,
+      "semente": 105,
+      "repeticao": 5,
+      "linha_da_matriz": "sem_evento/alto"
+    }
+  ]
+}

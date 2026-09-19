@@ -1,0 +1,59 @@
+{
+  "descricao": "Resultado da rodada de referencia sem ruido (baseline TSNet).",
+  "criterio_de_deteccao": "Primario: CUSUM interno do TSNet (tsnet.postprocessing.detect_cusum), limiar=0.500 m de carga, deriva=0.050 m, aplicado a serie bruta de carga de cada canal; o instante de chegada e o primeiro indice tai retornado. Conferencia: primeira amostra com |h - h0| > 1e-03 m. Os dois criterios coincidiram em todos os eventos (diferenca de no maximo 1 amostra).",
+  "ressalva": "O erro de localizacao deu exatamente 0 nos cinco eventos porque a malha do MOC ficou perfeitamente alinhada: cada sub-trecho de 20 m entre os sensores recebeu 166 segmentos, entao o tempo de transito entre nos vizinhos e um numero inteiro de passos de tempo (166 amostras por 20 m). Somado a ausencia de ruido, quantizacao e atraso de sensor, a diferenca de tempo de chegada cai exatamente sobre uma amostra. Isso valida a cadeia modelo-simulacao-deteccao-formula, nao a robustez do detector: com o modelo de sensores da etapa A-05 (ruido, saturacao, quantizacao) o erro deixara de ser nulo.",
+  "caso_de_conferencia": {
+    "descricao": "Evento em 100 m, exatamente no meio entre os sensores. Esperado delta_t = 0 e posicao estimada = 100 m.",
+    "aprovado": true,
+    "delta_t_s": 0.0,
+    "posicao_estimada_m": 100.0,
+    "erro_absoluto_m": 0.0
+  },
+  "resultados": [
+    {
+      "id": "EV-01",
+      "posicao_real_m": 60.0,
+      "chegada_A_s": 0.06661672942664679,
+      "chegada_B_s": 0.13323345885329357,
+      "delta_t_s": -0.06661672942664679,
+      "posicao_estimada_m": 60.0,
+      "erro_absoluto_m": 0.0
+    },
+    {
+      "id": "EV-02",
+      "posicao_real_m": 80.0,
+      "chegada_A_s": 0.08327091178330848,
+      "chegada_B_s": 0.11657927649663187,
+      "delta_t_s": -0.03330836471332339,
+      "posicao_estimada_m": 80.0,
+      "erro_absoluto_m": 0.0
+    },
+    {
+      "id": "EV-03",
+      "posicao_real_m": 100.0,
+      "chegada_A_s": 0.09992509413997018,
+      "chegada_B_s": 0.09992509413997018,
+      "delta_t_s": 0.0,
+      "posicao_estimada_m": 100.0,
+      "erro_absoluto_m": 0.0
+    },
+    {
+      "id": "EV-04",
+      "posicao_real_m": 120.0,
+      "chegada_A_s": 0.11657927649663187,
+      "chegada_B_s": 0.08327091178330848,
+      "delta_t_s": 0.03330836471332339,
+      "posicao_estimada_m": 120.0,
+      "erro_absoluto_m": 0.0
+    },
+    {
+      "id": "EV-05",
+      "posicao_real_m": 140.0,
+      "chegada_A_s": 0.13323345885329357,
+      "chegada_B_s": 0.06661672942664679,
+      "delta_t_s": 0.06661672942664679,
+      "posicao_estimada_m": 140.0,
+      "erro_absoluto_m": 0.0
+    }
+  ]
+}

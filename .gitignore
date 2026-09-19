@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.claude/
+
+# fora do repositorio publico
+01_documentacao/*.pdf
+01_documentacao/PROMPT_IMPLEMENTACAO_SOFTWARE.md

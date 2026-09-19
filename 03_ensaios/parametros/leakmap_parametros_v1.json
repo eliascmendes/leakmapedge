@@ -1,0 +1,65 @@
+{
+  "descricao": "Parametros conhecidos pelo detector. Existiriam em uma instalacao real.",
+  "trecho_m": 200.0,
+  "diametro_m": 0.3,
+  "sensores": {
+    "A": {
+      "nome_no": "N40",
+      "posicao_m": 40.0
+    },
+    "B": {
+      "nome_no": "N160",
+      "posicao_m": 160.0
+    },
+    "distancia_entre_sensores_L_m": 120.0
+  },
+  "velocidade_de_onda": {
+    "solicitada_m_s": 1200.0,
+    "efetiva_ajustada_m_s": 1200.899544131626,
+    "origem": "pipe.wavev apos tsnet discretization/adjust_wavev; os seis sub-trechos entre os sensores receberam o mesmo valor ajustado",
+    "por_sub_trecho": [
+      {
+        "tubo": "P2",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      },
+      {
+        "tubo": "P3",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      },
+      {
+        "tubo": "P4",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      },
+      {
+        "tubo": "P5",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      },
+      {
+        "tubo": "P6",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      },
+      {
+        "tubo": "P7",
+        "comprimento_m": 20.0,
+        "segmentos": 166,
+        "wavespeed_ajustada_m_s": 1200.899544131626
+      }
+    ]
+  },
+  "passo_de_tempo": {
+    "solicitado_s": 0.0001,
+    "efetivo_s": 0.00010032639973892588,
+    "origem": "tm.time_step apos tsnet set_time/adjust_wavev"
+  },
+  "formula_localizacao": "x = (L + c * delta_t) / 2, delta_t = tA - tB, x medido a partir do sensor A; posicao absoluta = 40 m + x"
+}
