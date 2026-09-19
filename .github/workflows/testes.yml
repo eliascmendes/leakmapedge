@@ -1,0 +1,25 @@
+name: testes
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  trilha-de-software:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Dependencias
+        run: pip install numpy
+
+      - name: Trilha completa, testes do Python e paridade do JavaScript
+        run: python rodar_software.py

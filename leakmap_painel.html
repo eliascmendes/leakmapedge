@@ -156,6 +156,100 @@ ol.next li em{font-style:normal;display:inline-block;margin-top:10px;font:600 10
   .cmp .h:first-child{display:none}
 }
 
+/* ---- simulador interativo ---- */
+.simtabs{display:inline-flex;margin-top:26px;border:1px solid var(--rule);background:var(--panel)}
+.simtabs button{appearance:none;cursor:pointer;background:none;border:0;padding:11px 18px;
+  font:600 12px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.simtabs button[aria-selected="true"]{background:var(--lime);color:#06080a}
+.sim{display:grid;grid-template-columns:minmax(280px,340px) minmax(0,1fr);gap:1px;margin-top:14px;
+  background:var(--rule);border:1px solid var(--rule)}
+.sim[hidden]{display:none}
+.simctl{background:var(--panel);padding:22px 20px}
+.simres{background:var(--ground);padding:20px;min-width:0}
+.grp + .grp,.grp + details,.acoes + .grp{margin-top:22px}
+.glab{font:600 11px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.glab b{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:8px;
+  background:var(--lime);color:#06080a;border-radius:50%;font-size:11px;letter-spacing:0}
+.hint{font-size:12.5px;color:var(--dim);margin-top:8px;line-height:1.5}
+.hint:empty{display:none}
+.seg{display:grid;gap:6px;margin-top:11px}
+.seg5{grid-template-columns:repeat(5,minmax(0,1fr))}
+.seg3{grid-template-columns:1fr}
+.seg button{appearance:none;cursor:pointer;text-align:left;background:var(--ground);
+  border:1px solid var(--rule);color:var(--muted);padding:9px 10px;font:600 13px/1.2 var(--mono)}
+.seg5 button{text-align:center;padding:10px 4px}
+.seg button .n{display:block;font:600 14px/1.2 var(--sans);color:var(--ink)}
+.seg button .s{display:block;font:400 12px/1.4 var(--mono);color:var(--dim);margin-top:3px}
+.seg button:hover{border-color:var(--lime-dim)}
+.seg button[aria-pressed="true"]{border-color:var(--lime);background:rgba(179,240,0,.1);color:var(--lime)}
+.seg button[aria-pressed="true"] .n{color:var(--lime)}
+input[type="range"]{width:100%;margin-top:14px;accent-color:var(--lime)}
+.rangeval{font-size:13px;color:var(--ink);margin-top:6px}
+.ajuste{margin-top:22px;border:1px solid var(--rule);background:var(--ground)}
+.ajuste summary{cursor:pointer;padding:11px 13px;font:600 12px/1.3 var(--mono);letter-spacing:.08em;
+  text-transform:uppercase;color:var(--lime-dim)}
+.ajuste[open] summary{border-bottom:1px solid var(--rule)}
+.ajuste .linha{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:9px 13px;font-size:13.5px;color:var(--muted)}
+.ajuste .linha + .linha{border-top:1px solid #11171a}
+.ajuste label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.ajuste input[type="checkbox"],.chk input{accent-color:var(--lime);width:15px;height:15px;margin:0}
+.ajuste input[type="number"]{width:64px;background:var(--panel);border:1px solid var(--rule);color:var(--ink);
+  font:500 13px/1 var(--mono);padding:6px 7px;text-align:right}
+.ajuste input[type="number"]:disabled{opacity:.4}
+.ajuste .linha span{white-space:nowrap;font:500 12px/1 var(--mono);color:var(--dim)}
+.acoes{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.btn{appearance:none;cursor:pointer;background:var(--lime);color:#06080a;border:1px solid var(--lime);
+  padding:10px 14px;font:600 12px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:none;color:var(--muted);border-color:var(--rule)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--lime-dim)}
+.quebra{margin-top:24px;padding-top:20px;border-top:1px solid var(--rule)}
+.quebra button{appearance:none;cursor:pointer;display:block;width:100%;text-align:left;margin-top:8px;
+  background:none;border:1px dashed rgba(245,165,36,.4);padding:10px 12px;color:var(--ink)}
+.quebra button:hover{background:rgba(245,165,36,.07)}
+.quebra b{display:block;font:600 14px/1.3 var(--sans);color:var(--amber)}
+.quebra span{display:block;font-size:12.5px;color:var(--dim);margin-top:2px}
+.simdiag{margin-top:0;padding:14px 12px 6px}
+.alvo{cursor:pointer;outline:none}
+.alvo:hover circle + circle,.alvo:focus-visible circle + circle{stroke:#b3f000}
+.simres .tiles{margin-top:14px}
+.tile .sub2{font-size:12px;color:var(--dim);margin-top:4px;min-height:1em}
+.tile .val.ok{color:var(--lime)}
+.tile .val.alerta{color:var(--amber)}
+.simres .tile .val{font-size:clamp(20px,2.6vw,26px)}
+.motivo{max-width:none;margin-top:14px;padding:12px 14px;border-left:3px solid var(--lime);
+  background:var(--panel);font-size:14.5px;color:var(--ink)}
+.simres .chartbox{margin-top:14px}
+.simres .chartbox canvas{height:300px}
+.chks{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:11px}
+.chk{display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--muted);cursor:pointer;margin-top:10px}
+.chks .chk{margin-top:0}
+.chk i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.tiles5{grid-template-columns:repeat(auto-fit,minmax(118px,1fr));margin-top:0}
+.lotegrid{display:grid;grid-template-columns:1fr;gap:14px;margin-top:14px}
+.lotegrid .diagram{display:grid;grid-template-columns:minmax(0,380px) minmax(0,1fr);gap:18px;align-items:center}
+.lotegrid .mtable td{white-space:nowrap}
+.lotegrid .diagram{margin-top:0;padding:14px}
+.lotegrid .mwrap{margin-top:0}
+.mtable td.ok{color:var(--lime)}
+.mtable td.alerta{color:var(--amber)}
+.simnota{margin-top:16px;max-width:none}
+@media (max-width:860px){
+  .sim{grid-template-columns:1fr}
+  .lotegrid .diagram{grid-template-columns:1fr}
+}
+@media (max-width:560px){
+  .simctl{padding:18px 14px}
+  .simres{padding:12px 10px}
+  .simres .chartbox{padding:14px 6px 10px}
+  .simres .chartbox canvas{height:250px}
+  .simdiag{padding:10px 4px 4px}
+  .simres .tiles{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .simres .tile{padding:14px}
+}
+@media (max-width:420px){ .seg5{grid-template-columns:repeat(3,minmax(0,1fr))} }
+
 /* ---- tabela da matriz de ensaios ---- */
 .mtable{width:100%;border-collapse:collapse;margin-top:20px;
   font:400 13.5px/1.5 var(--sans);border:1px solid var(--rule)}
@@ -175,7 +269,7 @@ ol.next li em{font-style:normal;display:inline-block;margin-top:10px;font:600 10
 .stnote .num,.mtable caption .num,footer .num{overflow-wrap:anywhere}
 @media (max-width:560px){ .mtable{font-size:12.5px}
   .mtable th,.mtable td{padding:9px 8px}
-  .mtable th:nth-child(2),.mtable td:nth-child(2){display:none}
+  .mtable.matriz th:nth-child(2),.mtable.matriz td:nth-child(2){display:none}
   .mtable thead th{white-space:normal;letter-spacing:.06em} }
 .chartbox{margin-top:22px;background:var(--panel);border:1px solid var(--rule);padding:20px 16px 12px}
 .chartbox canvas{display:block;width:100%;height:340px}
@@ -302,7 +396,7 @@ footer p{max-width:80ch;margin-top:10px}
     <div class="tile"><div class="lab">Falsos alarmes</div><div class="val num">0<small>/ 13 860</small></div></div>
   </div>
 
-  <div class="mwrap"><table class="mtable">
+  <div class="mwrap"><table class="mtable matriz">
     <caption>Cinco posições de evento por linha. As linhas <span class="num">casada</span> declaram ao detector a velocidade de onda efetiva do trecho; as linhas <span class="num">desviada</span> declaram um valor 2% acima, que é a ordem de grandeza com que <span class="num">c</span> é conhecido em uma linha real.</caption>
     <thead>
       <tr><th>Linha da matriz</th><th>Sensor</th><th>Erro médio</th><th>Erro máximo</th><th>Detectados</th></tr>
@@ -321,6 +415,118 @@ footer p{max-width:80ch;margin-top:10px}
   <p class="sub" style="margin-top:26px"><b style="color:#e9eee7;font-weight:600">Vazamento localizado a menos de um metro, em 200 metros de linha, com transmissor comum.</b> No caso típico o LEAKMAP aponta o ponto a 24 centímetros da posição real; no pior caso de toda a matriz, a 1,05 metro. Cada parcela desse erro tem causa conhecida e tratamento definido. Os 24 centímetros da configuração de ruído alto equivalem a um período de amostragem, vindo de 0,4 milissegundo de diferença de atraso entre os dois transmissores, e saem na calibração dos canais. Nas linhas de <span class="num">c</span> desviada, o erro é zero no meio do trecho e cresce em direção aos sensores, exatamente como a fórmula prevê, e diminui na mesma proporção em que a velocidade de onda da linha for medida.</p>
 
   <p class="sub" style="margin-top:16px">Em 28 dos 30 eventos o erro ficou dentro da incerteza que o próprio detector declarou junto com a posição, ou seja, o produto sabe dizer quanto vale a resposta que está dando. Nenhum evento passou despercebido, nenhum resultado saiu inconclusivo e nenhuma corrida falhou. Nas quinze corridas sem evento não houve um único disparo em 13 860 oportunidades de decisão. O tempo entre a abertura do vazamento e a declaração do evento ficou em 31 milissegundos em média, com máximo de 53 milissegundos.</p>
+</section>
+
+<section id="simule">
+  <div class="eyebrow">Experimente</div>
+  <div class="h2row">
+    <h2>Escolha onde a linha rompe. O LEAKMAP responde.</h2>
+    <span class="st ok">Roda no seu navegador</span>
+  </div>
+  <p class="sub">O mesmo detector que produziu os números acima, rodando aqui, agora. Troque o transmissor, erre a velocidade da onda, tente enganar o sistema: cada resposta sai em milissegundos, com a posição estimada, a incerteza declarada e o motivo da decisão.</p>
+
+  <div class="simtabs" role="tablist" aria-label="Modo do simulador">
+    <button type="button" role="tab" aria-selected="true" data-aba="um">Um cenário</button>
+    <button type="button" role="tab" aria-selected="false" data-aba="lote">Vários cenários</button>
+  </div>
+
+  <div class="sim" id="abaUm">
+    <div class="simctl">
+      <div class="grp">
+        <div class="glab"><b>1</b> Onde a linha rompe</div>
+        <div class="seg seg5" id="simPos" role="group" aria-label="Ponto de rompimento"></div>
+        <p class="hint">Pontos com a onda simulada pelo solucionador hidráulico. Também dá para clicar no desenho.</p>
+      </div>
+      <div class="grp">
+        <div class="glab"><b>2</b> Qual transmissor</div>
+        <div class="seg seg3" id="simTx" role="group" aria-label="Transmissor"></div>
+        <p class="hint" id="simTxNota"></p>
+      </div>
+      <div class="grp">
+        <div class="glab"><b>3</b> Velocidade de onda declarada</div>
+        <input type="range" id="simC" min="-5" max="5" step="0.5" value="0" aria-label="Desvio da velocidade de onda declarada, em porcentagem">
+        <div class="rangeval num" id="simCval"></div>
+      </div>
+
+      <details class="ajuste" id="simAjuste">
+        <summary>Ajustar o instrumento</summary>
+        <div class="linha"><label><input type="checkbox" id="aj_ruido_on"> Ruído do sinal</label><span><input type="number" id="aj_ruido" step="0.01" min="0"> m</span></div>
+        <div class="linha"><label><input type="checkbox" id="aj_bits_on"> Conversor A/D</label><span><input type="number" id="aj_bits" step="1" min="4" max="24"> bits</span></div>
+        <div class="linha"><label><input type="checkbox" id="aj_skew_on"> Atraso entre canais</label><span><input type="number" id="aj_skew" step="0.1" min="0"> ms</span></div>
+        <div class="linha"><label><input type="checkbox" id="aj_banda_on"> Banda do transmissor</label><span><input type="number" id="aj_banda" step="50" min="20" max="1200"> Hz</span></div>
+        <div class="linha"><label><input type="checkbox" id="aj_faixa_on"> Faixa de medida</label><span><input type="number" id="aj_faixa_min" step="5"> a <input type="number" id="aj_faixa_max" step="5"> m</span></div>
+      </details>
+
+      <div class="acoes">
+        <button type="button" class="btn" id="simNovo">Nova realização do ruído</button>
+        <button type="button" class="btn ghost" id="simReset">Voltar ao padrão</button>
+      </div>
+
+      <div class="grp quebra">
+        <div class="glab">Tente quebrar o LEAKMAP</div>
+        <button type="button" data-quebra="faixa"><b>Transmissor saturado</b><span>faixa de medida curta demais para a onda</span></button>
+        <button type="button" data-quebra="skew"><b>Canais desencontrados</b><span>1,2 ms de atraso entre os dois transmissores</span></button>
+        <button type="button" data-quebra="velocidade"><b>Velocidade da onda errada</b><span>c declarada 5% acima da real</span></button>
+      </div>
+    </div>
+
+    <div class="simres">
+      <div class="diagram simdiag"><svg id="simSvg" viewBox="0 0 1000 190" role="img" aria-label="Trecho com a posição real e a posição estimada"></svg></div>
+      <div class="tiles">
+        <div class="tile acc"><div class="lab">Posição estimada</div><div class="val num" id="sEst">—</div><div class="sub2 num" id="sReal"></div></div>
+        <div class="tile"><div class="lab">Erro</div><div class="val num" id="sErro">—</div><div class="sub2 num" id="sIncerteza"></div></div>
+        <div class="tile"><div class="lab">Δt = tA − tB</div><div class="val num" id="sDt">—</div></div>
+        <div class="tile"><div class="lab">Resultado</div><div class="val" id="sClasse">—</div></div>
+      </div>
+      <p class="motivo" id="sMotivo" aria-live="polite"></p>
+      <div class="chartbox">
+        <canvas id="simCv" aria-label="Pressão nos canais A e B como o transmissor entrega, com as marcas de chegada"></canvas>
+        <div class="legend">
+          <span><i style="background:#b3f000"></i>Canal A</span>
+          <span><i style="background:#2fd6e8"></i>Canal B</span>
+          <span><i style="background:#828d80"></i>Linha cheia: chegada marcada · tracejada: limiar cruzado</span>
+        </div>
+        <div class="readout" id="sReadout"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sim" id="abaLote" hidden>
+    <div class="simctl">
+      <div class="grp">
+        <div class="glab"><b>1</b> Pontos de rompimento</div>
+        <div class="chks" id="lotePos"></div>
+        <label class="chk"><input type="checkbox" id="loteSem" checked><span>Incluir corridas sem vazamento</span></label>
+      </div>
+      <div class="grp">
+        <div class="glab"><b>2</b> Transmissores</div>
+        <div class="chks" id="loteTx"></div>
+      </div>
+      <p class="hint">A velocidade de onda declarada é a escolhida na aba anterior. Com a velocidade exata, esta tabela repete a matriz de ensaios publicada.</p>
+      <div class="acoes"><button type="button" class="btn" id="loteRodar">Rodar todos os cenários</button></div>
+    </div>
+    <div class="simres">
+      <div id="loteRes" hidden>
+        <div class="tiles tiles5">
+          <div class="tile"><div class="lab">Cenários</div><div class="val num" id="lN">—</div></div>
+          <div class="tile acc"><div class="lab">Localizados</div><div class="val num" id="lLoc">—</div></div>
+          <div class="tile"><div class="lab">Erro mediano</div><div class="val num" id="lMed">—</div></div>
+          <div class="tile"><div class="lab">Erro máximo</div><div class="val num" id="lMax">—</div></div>
+          <div class="tile"><div class="lab">Falsos alarmes</div><div class="val num" id="lFa">—</div></div>
+        </div>
+        <div class="lotegrid">
+          <div class="diagram"><svg id="loteSvg" viewBox="0 0 400 340" role="img" aria-label="Posição real contra posição estimada"></svg>
+            <p class="stnote" style="margin-top:0">Cada ponto é um rompimento: posição real no eixo horizontal, posição estimada pelo LEAKMAP no vertical. Tudo que cai sobre a diagonal tracejada foi localizado no ponto certo.</p></div>
+          <div class="mwrap"><table class="mtable">
+            <thead><tr><th>Transmissor</th><th>Rompimento</th><th>Estimada</th><th>Erro</th><th>Resultado</th></tr></thead>
+            <tbody id="loteTabela"></tbody>
+          </table></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="stnote simnota">Detector adaptado do Python de <span class="num">04_detector</span> e conferido contra o gabarito que o próprio Python grava: mesma classe, mesmas marcas de chegada e mesma posição nos 45 ensaios da matriz, com diferença numérica máxima de 1,1 × 10⁻¹⁶. A primeira realização de ruído é o mesmo sorteio que o Python usou na matriz; as seguintes são sorteadas no navegador, com a mesma estatística. Código: <a class="src num" data-src="web/leakmap_detector.js" href="#">web/leakmap_detector.js</a> · teste: <a class="src num" data-src="web/testes/teste_paridade.js" href="#">web/testes/teste_paridade.js</a></p>
 </section>
 
 <section id="como">
@@ -659,6 +865,7 @@ footer p{max-width:80ch;margin-top:10px}
       <li>Matriz de 45 ensaios: cinco posições, três níveis de sensor, duas velocidades de onda e corridas sem evento.<em>executado</em></li>
       <li>Avaliador independente, em processo separado, que só abre os resultados gravados.<em>executado</em></li>
       <li>Porte do detector em aritmética inteira, idêntico ao software nos 90 canais da matriz.<em>executado</em></li>
+      <li>Simulador interativo neste painel, com o detector adaptado para o navegador e conferido contra o Python a cada envio ao repositório.<em>executado</em></li>
     </ul>
   </div>
 
@@ -859,6 +1066,9 @@ const DADOS={"trecho_m":200.0,"diametro_m":0.3,"sensorA":40.0,"sensorB":160.0,"L
   render();
 })();
 </script>
+<script src="web/leakmap_detector.js"></script>
+<script src="web/leakmap_dados_web.js"></script>
+<script src="web/simulador.js"></script>
 <script>
 (function(){
   "use strict";

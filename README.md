@@ -46,6 +46,7 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | A-14 | Cálculo da posição e propagação de erro | [`04_detector/posicao.py`](04_detector/posicao.py) |
 | A-17 | Avaliador independente, em processo separado, que nunca importa código do detector | [`05_avaliacao/avaliador.py`](05_avaliacao/avaliador.py) |
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
+| Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
 
 ### Resultados em simulação
 
@@ -72,6 +73,7 @@ Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avali
 | [`04_detector`](04_detector) | Modelo de sensor, amostragem, detector, posição e porte em ponto fixo |
 | [`05_avaliacao`](05_avaliacao) | Avaliador independente e métricas |
 | [`06_fpga`](06_fpga) | Implementação em hardware |
+| [`web`](web) | Simulador interativo do painel: adaptação do detector para o navegador e teste de paridade com o Python |
 | [`leakmap_painel.html`](leakmap_painel.html) | Painel de apresentação do projeto |
 
 Uma regra organiza os dados: o detector só lê `parametros`, `amostras` e `pacotes`. A posição real do vazamento fica em `03_ensaios/verdade_do_cenario` e só o avaliador a abre. Assim nenhum limiar é ajustado olhando a resposta.
@@ -85,11 +87,15 @@ pip install numpy
 python rodar_software.py
 ```
 
-O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado e termina rodando os 73 testes automatizados.
+O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado e roda os 73 testes automatizados em Python. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
 
 A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr; o ambiente está descrito em [`02_bancada/ambiente`](02_bancada/ambiente). Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela.
 
 Para ver o painel, abra `leakmap_painel.html` no navegador. O arquivo `vercel.json` publica esse mesmo painel na Vercel.
+
+### Simulador no painel
+
+No painel, a seção "Experimente" deixa qualquer pessoa escolher onde a linha rompe, trocar o transmissor, errar a velocidade da onda e rodar vários cenários de uma vez. O detector que responde ali é uma adaptação para o navegador do Python de `04_detector`, que continua sendo a implementação de referência. A adaptação é conferida contra um gabarito gravado pelo próprio Python: mesma classe, mesmas marcas de chegada e mesma posição nos 45 ensaios da matriz. Detalhes em [`web/LEIAME.md`](web/LEIAME.md).
 
 ## Roteiro
 

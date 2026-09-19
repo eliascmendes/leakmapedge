@@ -73,6 +73,13 @@ palavra observada foi 57 bits, registrada por estagio em
 `resultados/leakmap_ponto_fixo_v1.json` para dimensionar o registrador quando
 houver Verilog.
 
+## Adaptacao para o painel
+
+O simulador do painel usa `web/leakmap_detector.js`, uma adaptacao destes
+modulos para o navegador. Os modulos daqui continuam sendo a referencia: o
+JavaScript e conferido contra o gabarito que `web/gerar_gabarito.py` grava a
+partir deste Python. Mudanca de algoritmo comeca aqui; ver `web/LEIAME.md`.
+
 ## Como rodar
 
 ```

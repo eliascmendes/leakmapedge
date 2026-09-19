@@ -9,16 +9,26 @@ dependencia:
   3. 04_detector/detector_ponto_fixo.py  bonus, porte em ponto fixo
   4. 05_avaliacao/gerar_verdade_matriz.py  verdade do cenario da matriz
   5. 05_avaliacao/avaliador.py           A-17 avaliacao independente
-  6. testes dos dois lados
+  6. web/gerar_gabarito.py               gabarito do Python para o front-end
+  7. web/gerar_dados_web.py              dados do simulador do painel
+  8. testes do detector e do avaliador (Python) e teste de paridade da
+     adaptacao em JavaScript contra o gabarito do Python (Node)
 
 O passo 5 roda em processo separado do passo 2 de proposito: e o criterio de
 conclusao de A-17. O avaliador nunca importa modulo do detector.
+
+O Python e a implementacao de referencia. A adaptacao em
+web/leakmap_detector.js so existe para o painel e tem de reproduzir o
+gabarito que o Python grava no passo 6; se divergir, a trilha falha. Sem
+Node instalado o teste de paridade e pulado com aviso, e o GitHub Actions
+(.github/workflows/testes.yml) o executa a cada envio.
 
 As etapas A-01 a A-08 (modelo hidraulico e simulacao) nao entram aqui: elas
 dependem do TSNet e ja produziram 03_ensaios/amostras/leakmap_amostras_v1.json,
 que e a entrada desta trilha.
 """
 import os
+import shutil
 import subprocess
 import sys
 
@@ -35,6 +45,10 @@ PASSOS = [
      os.path.join('05_avaliacao', 'gerar_verdade_matriz.py')),
     ('A-17         avaliacao independente',
      os.path.join('05_avaliacao', 'avaliador.py')),
+    ('front-end    gabarito do Python para a adaptacao em JavaScript',
+     os.path.join('web', 'gerar_gabarito.py')),
+    ('front-end    dados do simulador do painel',
+     os.path.join('web', 'gerar_dados_web.py')),
 ]
 
 TESTES = [
@@ -61,6 +75,16 @@ def main():
                  [sys.executable, '-m', 'unittest', 'discover',
                   '-s', pasta, '-p', 'teste_*.py'],
                  RAIZ)
+
+    node = shutil.which('node')
+    if node:
+        executar('paridade do JavaScript com o Python',
+                 [node, '--test',
+                  os.path.join('web', 'testes', 'teste_paridade.js')],
+                 RAIZ)
+    else:
+        print('\n=== AVISO: Node nao encontrado; teste de paridade do '
+              'JavaScript nao executado nesta maquina ===')
 
     print('\n=== trilha de software concluida ===')
 
