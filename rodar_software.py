@@ -19,6 +19,9 @@ dependencia:
      Verilog contra o modelo da placa e prova dos criterios B-06 a B-09 sobre
      a resposta do proprio Verilog (Icarus Verilog), e teste de paridade da
      adaptacao em JavaScript contra o gabarito do Python (Node)
+ 10. web/gerar_dados_fpga.py             dados da tela do cenario B, lidos dos
+                                         resultados gravados, e o teste que
+                                         confere o rotulo de origem (Node)
 
 O passo 5 roda em processo separado do passo 2 de proposito: e o criterio de
 conclusao de A-17. O avaliador nunca importa modulo do detector.
@@ -96,11 +99,15 @@ def main():
         print('\n=== AVISO: Icarus Verilog nao encontrado; simulacao do Verilog '
               'nao executada nesta maquina ===')
 
+    executar('front-end    dados da tela do cenario B',
+             [sys.executable, 'gerar_dados_fpga.py'], os.path.join(RAIZ, 'web'))
+
     node = shutil.which('node')
     if node:
-        executar('paridade do JavaScript com o Python',
+        executar('paridade do JavaScript com o Python e rotulo da tela do cenario B',
                  [node, '--test',
-                  os.path.join('web', 'testes', 'teste_paridade.js')],
+                  os.path.join('web', 'testes', 'teste_paridade.js'),
+                  os.path.join('web', 'testes', 'teste_modo_fpga.js')],
                  RAIZ)
     else:
         print('\n=== AVISO: Node nao encontrado; teste de paridade do '

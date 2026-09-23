@@ -415,6 +415,53 @@ footer p{max-width:80ch;margin-top:10px}
   .chk{min-height:40px}
   input[type="range"]{height:36px}
 }
+/* ---- modo FPGA: cenario B lado a lado com o software ---- */
+#modo-fpga .simtabs{margin-top:22px}
+#modo-fpga .simtabs[hidden]{display:none}
+.fpgagrade{margin-top:22px;border:1px solid var(--rule);background:var(--panel);padding:16px 16px 12px}
+.fpgagrade .gcab,.fpgagrade .gfila{display:grid;grid-template-columns:minmax(150px,1.3fr) repeat(5,minmax(0,1fr));gap:6px;align-items:center}
+.fpgagrade .gfila{margin-top:6px}
+.fpgagrade .gfila.sem{margin-top:6px}
+.fpgagrade .gfila.sem:first-of-type,.fpgagrade .gfila:not(.sem) + .gfila.sem{margin-top:16px}
+.fpgagrade .glin{font:500 12.5px/1.3 var(--sans);color:var(--muted)}
+.fpgagrade .gcab .glin,.fpgagrade .gcol{font:600 10px/1.4 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+.fpgagrade .gcol{text-align:center}
+.gcel{appearance:none;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  min-height:36px;padding:6px 4px;border:1px solid var(--rule);background:var(--ground);color:var(--muted);
+  border-radius:2px;font:600 12.5px/1 var(--mono);transition:border-color .13s,color .13s,background .13s}
+.gcel:hover{border-color:var(--lime-dim);color:var(--ink)}
+.gcel .gok{font-size:12px;color:var(--lime)}
+.gcel.dif .gok{color:var(--amber)}
+.gcel[aria-pressed="true"]{background:var(--lime);border-color:var(--lime);color:#06080a}
+.gcel[aria-pressed="true"] .gok{color:#06080a}
+.fpgatela{margin-top:22px;border:1px solid rgba(179,240,0,.35);border-top:3px solid var(--lime);background:var(--panel)}
+.fpgatela .rotulo{display:flex;flex-wrap:wrap;gap:6px 18px;align-items:baseline;justify-content:space-between;
+  padding:14px 18px;border-bottom:1px solid var(--rule);background:rgba(179,240,0,.06)}
+.fpgatela .rotulo b{font:600 12px/1.5 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--lime)}
+.fpgatela .rotulo span{font:400 12.5px/1.5 var(--sans);color:var(--muted)}
+.fpgatela .ensaio{padding:14px 18px 0;font:600 13px/1.4 var(--mono);color:var(--ink)}
+.fpgatela .chartbox{margin:10px 18px 0;background:var(--ground)}
+.fpgatela .chartbox canvas{height:300px}
+.fpgatela .legend .tri{width:0;height:0;border-left:6px solid transparent;border-right:6px solid transparent;border-top:9px solid var(--ink);background:none}
+.fpgatela .cmp{margin:18px 18px 0}
+.fpgatela .cmp .eq,.fpgatela .cmp .ne{font:600 12px/1 var(--mono);margin-left:9px}
+.fpgatela .cmp .eq{color:var(--lime)}
+.fpgatela .cmp .ne{color:var(--amber)}
+.fpgatela .cmp > div{font-family:var(--mono);font-size:13px}
+.fpgatela .cmp .rl{font-family:var(--sans)}
+.fpgatela .veredito{margin:16px 18px 0;padding-bottom:18px;font-size:15px;color:#cfd8cb;max-width:78ch}
+@media (max-width:640px){
+  .fpgagrade{padding:12px 10px 10px}
+  .fpgagrade .gcab,.fpgagrade .gfila{grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+  .fpgagrade .glin{grid-column:1 / -1;margin-top:6px}
+  .fpgagrade .gcab .glin{margin-top:0}
+  .fpgatela .rotulo,.fpgatela .ensaio{padding-left:12px;padding-right:12px}
+  .fpgatela .chartbox{margin:10px 8px 0;padding:14px 6px 10px}
+  .fpgatela .chartbox canvas{height:250px}
+  .fpgatela .cmp{margin:16px 8px 0}
+  .fpgatela .veredito{margin:14px 12px 0}
+}
+@media (pointer:coarse){ .gcel{min-height:44px} }
 </style>
 <!-- ==================================================================
      LINK DO REPOSITÓRIO
@@ -438,6 +485,7 @@ footer p{max-width:80ch;margin-top:10px}
   <div class="pitch">
     <p>O que existe hoje, quando existe, avisa que a pressão caiu. <strong>O LEAKMAP Edge é desenhado para responder em qual trecho</strong>, cronometrando a mesma onda de pressão em dois pontos da linha e convertendo a diferença de tempo em distância.</p>
     <p>Ele lê por cópia isolada dos transmissores que já estão instalados, não entra em série na malha existente e não escreve de volta na automação. <strong>O supervisório que a operação usa hoje continua funcionando exatamente como funciona, com ou sem o LEAKMAP.</strong></p>
+    <p>A marcação do tempo vai para uma placa FPGA, com os dois sensores no mesmo relógio. <strong>O detector já está escrito para a placa e, simulado ciclo a ciclo, marca a mesma chegada que o software nos 45 ensaios da matriz</strong>; no hackathon, a equipe roda o cenário B, reprodução de sinais digitais em FPGA física, e mostra o resultado processado na placa ao lado do software.</p>
   </div>
 </header>
 
@@ -693,7 +741,7 @@ footer p{max-width:80ch;margin-top:10px}
   </div>
 
   <div class="fpga">
-    <div class="kick">Cenário 1 · LEAKMAP Edge em FPGA</div>
+    <div class="kick">O produto · LEAKMAP Edge em FPGA</div>
     <h3>Os dois canais amostrados no mesmo pulso de relógio</h3>
     <p class="lead">Uma placa FPGA recebe os dois transmissores de pressão e faz, em hardware dedicado e em tempo real, o filtro, o estimador de energia, o limiar e a marcação da chegada em cada canal. A diferença de tempo deixa de depender de rede, de sistema operacional ou do carimbo de horário do supervisório: ela é contada em pulsos de um único relógio. O computador fica só com a conta final de posição e classificação.</p>
 
@@ -1083,20 +1131,20 @@ footer p{max-width:80ch;margin-top:10px}
     </div>
 
     <div class="ready">
-      <div class="kick">O detector já está pronto para a placa</div>
+      <div class="kick">O detector já está escrito para a placa</div>
       <div class="row">
-        <div><div class="v num">90<small>/ 90</small></div><div class="d">canais da matriz com a mesma marca de chegada no porte em aritmética inteira e no software</div></div>
-        <div><div class="v num">57<small>bits</small></div><div class="d">maior registrador medido, com a largura de cada estágio já levantada para o hardware</div></div>
-        <div><div class="v num">0</div><div class="d">divisões e raízes quadradas no caminho de detecção: só soma, multiplicação, comparação e deslocamento</div></div>
+        <div><div class="v num">90<small>/ 90</small></div><div class="d">canais da matriz com a mesma marca de chegada no Verilog da placa, simulado ciclo a ciclo, e no software</div></div>
+        <div><div class="v num">0,32<small>ms</small></div><div class="d">para a placa processar o maior ensaio da matriz, 500 amostras nos dois canais, com relógio de 100 MHz</div></div>
+        <div><div class="v num">2<small>famílias</small></div><div class="d">Spartan-7 e Cyclone V com o mesmo Verilog, sem nenhum bloco de fabricante</div></div>
       </div>
-      <p class="stnote" style="margin-top:14px">Fonte: <a class="src num" data-src="04_detector/detector_ponto_fixo.py" href="#">04_detector/detector_ponto_fixo.py</a> e <a class="src num" data-src="04_detector/resultados/leakmap_ponto_fixo_v1.json" href="#">04_detector/resultados/leakmap_ponto_fixo_v1.json</a>.</p>
+      <p class="stnote" style="margin-top:14px">Ensaio a ensaio, na <a href="#modo-fpga">tela do cenário B</a>. Fonte: <a class="src num" data-src="06_fpga/rtl" href="#">06_fpga/rtl</a> e <a class="src num" data-src="06_fpga/resultados/leakmap_cenario_b_prova_simulacao_v1.json" href="#">06_fpga/resultados/leakmap_cenario_b_prova_simulacao_v1.json</a>.</p>
     </div>
   </div>
 
   <div class="base">
     <span class="st ok">Validado em simulação · 19/09/2026</span>
-    <h3>Cenário 2 · a cadeia completa já roda em software</h3>
-    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 73 testes automatizados. É a referência contra a qual a placa é comparada, amostra a amostra.</p>
+    <h3>Cenário A · a cadeia completa já roda em software</h3>
+    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 120 testes automatizados. É a referência contra a qual a placa é comparada, amostra a amostra, no cenário B.</p>
     <ul class="tick">
       <li>Geometria do trecho, evento de ruptura, solucionador hidráulico e extração das séries nos dois pontos de medição.<em>executado</em></li>
       <li>Modelo de sensores com banda, atraso de canal, jitter, ruído, offset, saturação e conversor A/D, cada efeito ajustável sozinho.<em>executado</em></li>
@@ -1107,6 +1155,8 @@ footer p{max-width:80ch;margin-top:10px}
       <li>Avaliador independente, em processo separado, que só abre os resultados gravados.<em>executado</em></li>
       <li>Porte do detector em aritmética inteira, idêntico ao software nos 90 canais da matriz.<em>executado</em></li>
       <li>Simulador interativo neste painel, com o detector adaptado para o navegador e conferido contra o Python a cada envio ao repositório.<em>executado</em></li>
+      <li>Verilog da placa para o cenário B, com as mesmas marcas de chegada do software nos 90 canais, simulado ciclo a ciclo.<em>executado</em></li>
+      <li>Computador do cenário B completo, testado de ponta a ponta pela serial contra uma placa simulada, inclusive com ruído no enlace.<em>executado</em></li>
     </ul>
   </div>
 
@@ -1116,15 +1166,50 @@ footer p{max-width:80ch;margin-top:10px}
   </div>
 </section>
 
+<section id="modo-fpga">
+  <div class="eyebrow">Cenário B · reprodução de sinais digitais em FPGA física</div>
+  <div class="h2row">
+    <h2>A placa marca a chegada. O software confere.</h2>
+    <span class="st ok" id="fpgaStatus">—</span>
+  </div>
+  <p class="sub">Os 45 ensaios do cenário A, convertidos em inteiros de 16 bits e carregados na placa. A placa filtra, calcula as energias, compara com o limiar e marca a chegada da onda nos dois canais, com um único contador de amostras para os dois. O computador recebe as marcas e faz a conta da posição. Esta tela põe o resultado da placa ao lado do resultado do software, ensaio a ensaio.</p>
+
+  <div class="simtabs" id="fpgaOrigens" role="tablist" aria-label="Origem do processamento" hidden></div>
+  <div class="tiles" id="fpgaTiles"></div>
+
+  <div class="fpgagrade" id="fpgaGrade" role="group" aria-label="Escolher ensaio da matriz"></div>
+
+  <div class="fpgatela">
+    <div class="rotulo"><b id="fpgaRotuloTexto">—</b><span id="fpgaEntrada"></span></div>
+    <div class="ensaio" id="fpgaEnsaio">—</div>
+    <div class="chartbox">
+      <canvas id="fpgaCv" aria-label="Amostras dos canais A e B recebidas pela placa, com as marcas de chegada da placa e do software"></canvas>
+      <div class="legend">
+        <span><i style="background:#b3f000"></i>Canal A · 40 m</span>
+        <span><i style="background:#2fd6e8"></i>Canal B · 160 m</span>
+        <span><i style="background:#e9eee7;width:2px;height:13px"></i>Chegada marcada pela placa</span>
+        <span><i class="tri"></i>Chegada do software</span>
+      </div>
+    </div>
+    <div class="cmp" id="fpgaCmp" role="table" aria-label="Resultado do software e da placa lado a lado">
+      <div class="h" role="columnheader"></div>
+      <div class="h" role="columnheader">Software · cenário A</div>
+      <div class="h me" role="columnheader" id="fpgaHwTitulo">Placa</div>
+    </div>
+    <p class="veredito" id="fpgaVeredito"></p>
+  </div>
+  <p class="stnote" id="fpgaFontes"></p>
+</section>
+
 <section id="proximos">
   <div class="eyebrow">No hackathon</div>
   <h2>Do software validado ao cais</h2>
-  <p class="sub">A detecção e a localização já funcionam de ponta a ponta e já têm desempenho medido. A equipe chega ao evento para aperfeiçoar o que existe: colocar o detector na placa, casar o modelo com o instrumento instalado e levar a mesma cadeia à linha real do cais.</p>
+  <p class="sub">A detecção e a localização já funcionam de ponta a ponta e já têm desempenho medido. A equipe chega ao evento para aperfeiçoar o que existe: rodar o detector na placa, casar o modelo com o instrumento instalado e levar a mesma cadeia à linha real do cais.</p>
   <ol class="next">
     <li>
       <div>
-        <h3>Colocar o detector na FPGA</h3>
-        <p>O detector já está escrito em aritmética inteira, marca a mesma chegada que o software nos 90 canais da matriz e tem a largura de cada registrador levantada. No evento, a equipe fecha a escolha da placa, traduz esse mesmo pipeline para hardware e mostra a placa marcando o mesmo índice de chegada que o software, amostra a amostra.</p>
+        <h3>Rodar o cenário B na placa FPGA</h3>
+        <p>O cenário B é a reprodução de sinais digitais em FPGA física: os mesmos ensaios do software, carregados na placa. O Verilog já marca a mesma chegada que o software nos 90 canais da matriz, simulado ciclo a ciclo, e o computador já conversa com a placa pela serial. No evento, a equipe grava o Verilog na placa escolhida e a tela do cenário B passa a mostrar o resultado processado na FPGA, lado a lado com o software.</p>
         <em>hardware · diferencial</em>
       </div>
     </li>
@@ -1145,7 +1230,7 @@ footer p{max-width:80ch;margin-top:10px}
     <li>
       <div>
         <h3>Entregar a bancada pronta para qualquer máquina</h3>
-        <p>A trilha de detecção e avaliação já roda com um comando, só com NumPy, e se confere sozinha com 73 testes. A equipe empacota também o ambiente do solucionador hidráulico, para que qualquer avaliador refaça os ensaios do zero na própria máquina.</p>
+        <p>A trilha de detecção e avaliação já roda com um comando, só com NumPy, e se confere sozinha com 120 testes. A equipe empacota também o ambiente do solucionador hidráulico, para que qualquer avaliador refaça os ensaios do zero na própria máquina.</p>
         <em>reprodutibilidade</em>
       </div>
     </li>
@@ -1324,6 +1409,8 @@ const DADOS={"trecho_m":200.0,"diametro_m":0.3,"sensorA":40.0,"sensorB":160.0,"L
 <script src="web/leakmap_detector.js"></script>
 <script src="web/leakmap_dados_web.js"></script>
 <script src="web/simulador.js"></script>
+<script src="web/leakmap_dados_fpga.js"></script>
+<script src="web/modo_fpga.js"></script>
 <script>
 (function(){
   "use strict";

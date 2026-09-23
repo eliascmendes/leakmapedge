@@ -18,6 +18,10 @@ só existe para o painel. Ele nunca gera número do repositório.
 | `gerar_dados_web.py` | Gera `leakmap_dados_web.js` a partir dos arquivos versionados |
 | `gabarito/leakmap_gabarito_js_v1.json` | Saídas do Python: modelo de sensor, cadeia completa e os 45 ensaios da matriz |
 | `testes/teste_paridade.js` | Confere o JavaScript contra o gabarito do Python |
+| `modo_fpga.js` | Tela do cenário B: resultado da placa ao lado do software, ensaio a ensaio, com o rótulo de origem fixo |
+| `leakmap_dados_fpga.js` | Dados dessa tela: amostras inteiras que a placa recebeu e os resultados gravados em `04_detector` e `06_fpga/resultados` |
+| `gerar_dados_fpga.py` | Gera `leakmap_dados_fpga.js`; com resultados de origem `fpga` gravados, a tela passa a abrir neles |
+| `testes/teste_modo_fpga.js` | Confere que o rótulo "Processado na FPGA" só aparece para resultado da FPGA e que os números da tela são os dos arquivos |
 
 ## Como a paridade é garantida
 
@@ -66,7 +70,7 @@ função que calcula o erro depois da resposta, repetindo a regra de
 ```bash
 python web/gerar_gabarito.py
 python web/gerar_dados_web.py
-node --test web/testes/teste_paridade.js
+node --test web/testes/teste_paridade.js web/testes/teste_modo_fpga.js
 ```
 
 Ou a trilha inteira: `python rodar_software.py`.

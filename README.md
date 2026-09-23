@@ -63,6 +63,7 @@ Matriz de 45 ensaios: cinco posições de rompimento, três níveis de qualidade
 | Falsos alarmes | 0 em 13 860 oportunidades de decisão |
 | Tempo do rompimento à declaração do evento | 31 ms em média |
 | Porte em aritmética inteira contra o software | mesma marca de chegada em 90 de 90 canais |
+| Cenário B, Verilog da placa simulado ciclo a ciclo, contra o software | mesma marca de chegada em 90 de 90 canais e mesma posição em 45 de 45 ensaios |
 
 Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avaliacao/leakmap_avaliacao_matriz_v1.json) e a leitura detalhada, linha por linha da matriz, em [`05_avaliacao/LEIAME.md`](05_avaliacao/LEIAME.md).
 
@@ -86,11 +87,11 @@ Uma regra organiza os dados: o detector só lê `parametros`, `amostras` e `paco
 A trilha de detecção e avaliação precisa apenas de Python 3 e NumPy:
 
 ```bash
-pip install numpy
+pip install numpy pyserial
 python rodar_software.py
 ```
 
-O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa e termina com os 105 testes automatizados em Python. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
+O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa e termina com os 120 testes automatizados em Python, inclusive os de ponta a ponta pela serial contra a placa simulada. Com o Icarus Verilog instalado, simula também o Verilog da placa e confere os critérios do cenário B. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
 
 A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr; o ambiente está descrito em [`02_bancada/ambiente`](02_bancada/ambiente). Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela.
 
@@ -100,11 +101,15 @@ Para ver o painel, abra `leakmap_painel.html` no navegador. O arquivo `vercel.js
 
 No painel, a seção "Experimente" deixa qualquer pessoa escolher onde a linha rompe, trocar o transmissor, errar a velocidade da onda e rodar vários cenários de uma vez. O detector que responde ali é uma adaptação para o navegador do Python de `04_detector`, que continua sendo a implementação de referência. A adaptação é conferida contra um gabarito gravado pelo próprio Python: mesma classe, mesmas marcas de chegada e mesma posição nos 45 ensaios da matriz. Detalhes em [`web/LEIAME.md`](web/LEIAME.md).
 
+### Tela do cenário B no painel
+
+A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra, ensaio a ensaio, o resultado da placa ao lado do resultado do software: as amostras dos dois canais que a placa recebeu, a marca de chegada da placa e a do software, a diferença de tempo e a posição. Um rótulo fixo diz sempre quem processou o resultado mostrado. Hoje a tela mostra o Verilog da placa simulado ciclo a ciclo; quando a placa gravar os resultados com origem `fpga`, basta rodar `python web/gerar_dados_fpga.py` e a tela passa a abrir no resultado processado na FPGA, com o rótulo "Processado na FPGA · reprodução de sinais digitais".
+
 ## Roteiro
 
 **No hackathon**, a equipe aperfeiçoa a cadeia que já funciona:
 
-1. Levar o detector para a placa FPGA e mostrar a placa marcando o mesmo índice de chegada que o software.
+1. Rodar o cenário B, reprodução de sinais digitais em FPGA física: gravar o Verilog na placa e mostrar, na tela do cenário B, a placa marcando o mesmo índice de chegada que o software.
 2. Ajustar o modelo de sensores aos parâmetros dos transmissores instalados.
 3. Estender o cálculo de posição à topologia real da linha, com três berços e manifold.
 4. Empacotar o ambiente da simulação hidráulica para que qualquer máquina refaça os ensaios do zero.

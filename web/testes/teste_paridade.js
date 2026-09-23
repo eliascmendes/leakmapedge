@@ -7,7 +7,7 @@
  *   - indices, classes, motivos e booleanos: exatamente iguais;
  *   - numeros em ponto flutuante: diferenca relativa de no maximo 1e-9.
  *
- * Roda com: node --test web/testes
+ * Roda com: node --test web/testes/teste_paridade.js web/testes/teste_modo_fpga.js
  */
 "use strict";
 
