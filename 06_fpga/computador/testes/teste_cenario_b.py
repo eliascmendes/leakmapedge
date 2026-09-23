@@ -158,6 +158,42 @@ class B04eB06Protocolo(unittest.TestCase):
         self.assertEqual(placa.execucoes, 0)
 
 
+class RegrasQueOHardwareSegue(unittest.TestCase):
+    """Regras que o Verilog implementa byte a byte; a referencia segue as mesmas."""
+
+    def recibos(self, placa, dados):
+        return [PR.ler_bloco_recebido(c) for s, t, c in PR.LeitorDeQuadros().alimentar(placa.receber(dados))
+                if t == PR.BLOCO_RECEBIDO]
+
+    def test_mensagem_com_tamanho_errado_e_mal_formada(self):
+        placa = PLACA.PlacaReferencia()
+        quadro = PR.montar_quadro(PR.CONFIGURAR, b'\x00' * 30)
+        self.assertEqual(self.recibos(placa, quadro), [('', PR.CONTAGEM_NAO_CONFIAVEL, PR.BLOCO_MAL_FORMADO)])
+        quadro = PR.montar_quadro(PR.EXECUTAR, b'\x00' * 13)
+        self.assertEqual(self.recibos(placa, quadro)[0][2], PR.BLOCO_MAL_FORMADO)
+
+    def test_bloco_que_nao_comeca_onde_o_anterior_terminou_e_recusado(self):
+        ensaio = POR_ID['MX-001']
+        preparo = PP.preparar_ensaio(ensaio, ESCALA, CAL)
+        placa = PLACA.PlacaReferencia()
+        placa.receber(PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(
+            ensaio['id'], preparo['parametros'], ensaio['n_pontos'])))
+        pares = [(1, 2)] * 4
+        fora = PR.montar_quadro(PR.AMOSTRAS, PR.carga_amostras(ensaio['id'], 0, 8, pares))
+        self.assertEqual(self.recibos(placa, fora), [(ensaio['id'], 0, PR.BLOCO_MAL_FORMADO)])
+        certo = PR.montar_quadro(PR.AMOSTRAS, PR.carga_amostras(ensaio['id'], 0, 0, pares))
+        self.assertEqual(self.recibos(placa, certo), [(ensaio['id'], 0, PR.BLOCO_OK)])
+
+    def test_cabecalho_com_tamanho_absurdo_e_descartado_e_a_placa_se_recupera(self):
+        placa = PLACA.PlacaReferencia()
+        lixo = PR.SINCRONISMO + bytes([PR.EXECUTAR]) + (5000).to_bytes(2, 'little')
+        valido = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(
+            'MX-001', PF.parametros_inteiros(CAL, 4e-4, 1e-3, 0.0244), 101))
+        eventos = PR.LeitorDeQuadros().alimentar(placa.receber(lixo + valido))
+        self.assertEqual([t for _, t, _ in eventos], [PR.BLOCO_RECEBIDO, PR.CONFIGURACAO_LIDA])
+        self.assertEqual(PR.ler_bloco_recebido(eventos[0][2])[2], PR.BLOCO_CRC_INVALIDO)
+
+
 class B01Selo(unittest.TestCase):
 
     def test_todos_os_ensaios_da_matriz_tem_selo(self):

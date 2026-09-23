@@ -66,6 +66,13 @@ A5 5A | tipo (1 byte) | tamanho (2 bytes) | carga útil | CRC-16 (2 bytes)
 - Quadro com CRC errado: a placa **não** processa, incrementa `falhas_de_crc`
   e responde `BLOCO_RECEBIDO` com identificador vazio, sequência `0xFFFF` e
   situação 1.
+- Cabeçalho com tamanho acima de 1 024 bytes: a placa descarta os 5 bytes do
+  cabeçalho, conta como falha de CRC, responde como acima e volta a procurar
+  `A5 5A` a partir do byte seguinte.
+- Mensagem com carga útil de tamanho diferente do exato (CONFIGURAR 31,
+  EXECUTAR 12, CONFIRMAR e PEDIR 8, AMOSTRAS 14 + 4·n): `BLOCO_RECEBIDO` com
+  identificador vazio, sequência `0xFFFF` e situação 5.
+- Tipo desconhecido: ignorado, sem resposta.
 
 ## 5. Mensagens
 
@@ -110,11 +117,15 @@ recusado por falta de configuração, 3 recusado por estouro de largura.
    - sequência maior → incrementa `descontinuidades_de_sequencia`, situação 2,
      não grava;
    - bloco que passa do fim da memória → situação 4;
-   - caso contrário grava, incrementa a sequência esperada e `blocos_recebidos`,
-     e responde situação 0.
+   - bloco que não começa exatamente onde o anterior terminou
+     (`indice_inicial` diferente do total de amostras gravadas) → situação 5;
+     é assim que a placa sabe, só contando, que não ficou lacuna na memória;
+   - caso contrário grava, incrementa a sequência esperada, `blocos_recebidos`
+     e o total de amostras gravadas, e responde situação 0.
 3. **EXECUTAR:** só executa se `n_amostras` e `n_blocos` batem com o que foi
-   configurado e recebido e se não falta nenhuma amostra. Senão, RESULTADO
-   com situação 1. Nunca processa em silêncio um ensaio incompleto.
+   configurado e recebido e se o total de amostras gravadas é igual ao
+   configurado. Senão, RESULTADO com situação 1. Nunca processa em silêncio
+   um ensaio incompleto.
 4. **Reprodução (B-08):** um único contador de índice percorre a memória, e
    os dois canais recebem a amostra do mesmo índice no mesmo ciclo.
 5. **RESULTADO:** enviado ao fim e guardado. PEDIR_RESULTADO reenvia o
@@ -183,6 +194,11 @@ Valores de configuração da matriz: `A` = 62 390 em todos os ensaios; `P` =
 de 1 mm, 16 bits ou 12 bits.
 
 ## 8. Critério de aceitação do Verilog
+
+**Situação:** o Verilog em [`rtl/`](rtl) cumpre os quatro critérios abaixo em
+simulação (Icarus Verilog), nos 56 casos gerados por
+[`computador/gerar_vetores.py`](computador/gerar_vetores.py) e no sistema
+completo com a serial. Falta confirmar na placa.
 
 1. Para cada um dos 45 ensaios da matriz e para os casos sintéticos de
    retrocesso longo e truncado de

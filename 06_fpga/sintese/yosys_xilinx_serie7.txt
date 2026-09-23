@@ -1,0 +1,34 @@
+
+10. Printing statistics.
+
+=== leakmap_topo ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    11150 wires
+    31200 wire bits
+      560 public wires
+     8407 public wire bits
+        8 ports
+        8 port bits
+    15309 cells
+        8   $scopeinfo
+        1   BUFG
+      620   CARRY4
+     5824   FDRE
+       64   FDSE
+        3   IBUF
+      560   INV
+     1398   LUT2
+     1755   LUT3
+      814   LUT4
+     2330   LUT5
+     1638   LUT6
+       14   MUXF7
+        6   MUXF8
+        5   OBUF
+       44   RAM32M
+      220   RAM64M
+        1   RAMB18E1
+        4   RAMB36E1
+

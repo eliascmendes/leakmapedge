@@ -19,7 +19,10 @@ jobs:
           node-version: "22"
 
       - name: Dependencias
-        run: pip install numpy
+        run: |
+          pip install numpy
+          sudo apt-get update
+          sudo apt-get install -y iverilog
 
-      - name: Trilha completa, testes do Python e paridade do JavaScript
+      - name: Trilha completa, testes do Python, simulacao do Verilog e paridade do JavaScript
         run: python rodar_software.py

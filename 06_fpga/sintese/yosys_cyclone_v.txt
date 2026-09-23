@@ -1,0 +1,28 @@
+
+10. Printing statistics.
+
+=== leakmap_topo ===
+
+        +----------Local Count, excluding submodules.
+        | 
+    10439 wires
+    30945 wire bits
+    10439 public wires
+    30945 public wire bits
+        8 ports
+        8 port bits
+    18188 cells
+     1076   MISTRAL_ALUT2
+     2492   MISTRAL_ALUT3
+     1324   MISTRAL_ALUT4
+     2136   MISTRAL_ALUT5
+      742   MISTRAL_ALUT6
+     2946   MISTRAL_ALUT_ARITH
+        1   MISTRAL_CLKBUF
+     5875   MISTRAL_FF
+        3   MISTRAL_IB
+       17   MISTRAL_M10K
+     1280   MISTRAL_MLAB
+      291   MISTRAL_NOT
+        5   MISTRAL_OB
+

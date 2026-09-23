@@ -47,7 +47,8 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | A-17 | Avaliador independente, em processo separado, que nunca importa código do detector | [`05_avaliacao/avaliador.py`](05_avaliacao/avaliador.py) |
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
-| Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga`](06_fpga) |
+| Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga/computador`](06_fpga/computador) |
+| Cenário B, Verilog da placa | Detector e protocolo em Verilog puro, idêntico ao modelo byte a byte em 57 casos simulados e sintetizável para Spartan-7 e Cyclone V | [`06_fpga/rtl`](06_fpga/rtl) |
 
 ### Resultados em simulação
 
@@ -73,7 +74,7 @@ Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avali
 | [`03_ensaios`](03_ensaios) | Dados de cada rodada, separados por quem pode lê-los |
 | [`04_detector`](04_detector) | Modelo de sensor, amostragem, detector, posição e porte em ponto fixo |
 | [`05_avaliacao`](05_avaliacao) | Avaliador independente e métricas |
-| [`06_fpga`](06_fpga) | Cenário B: especificação para o Verilog e todo o lado do computador |
+| [`06_fpga`](06_fpga) | Cenário B: especificação, Verilog da placa, simulação e o lado do computador |
 | [`web`](web) | Simulador interativo do painel: adaptação do detector para o navegador e teste de paridade com o Python |
 | [`leakmap_painel.html`](leakmap_painel.html) | Painel de apresentação do projeto |
 

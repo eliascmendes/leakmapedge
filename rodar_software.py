@@ -14,8 +14,9 @@ dependencia:
   8. 06_fpga/computador                  cenario B, lado do computador: selos,
                                          dimensionamento e execucao contra a
                                          referencia Python da placa
-  9. testes do detector, do avaliador e do cenario B (Python) e teste de
-     paridade da adaptacao em JavaScript contra o gabarito do Python (Node)
+  9. testes do detector, do avaliador e do cenario B (Python), simulacao do
+     Verilog contra o modelo da placa (Icarus Verilog) e teste de paridade da
+     adaptacao em JavaScript contra o gabarito do Python (Node)
 
 O passo 5 roda em processo separado do passo 2 de proposito: e o criterio de
 conclusao de A-17. O avaliador nunca importa modulo do detector.
@@ -85,6 +86,13 @@ def main():
                  [sys.executable, '-m', 'unittest', 'discover',
                   '-s', pasta, '-p', 'teste_*.py'],
                  RAIZ)
+
+    if shutil.which('iverilog') or os.path.exists(os.path.join('C:' + os.sep, 'iverilog', 'bin', 'iverilog.exe')):
+        executar('Verilog do cenario B contra o modelo da placa (Icarus)',
+                 [sys.executable, os.path.join('06_fpga', 'sim', 'rodar_simulacao.py')], RAIZ)
+    else:
+        print('\n=== AVISO: Icarus Verilog nao encontrado; simulacao do Verilog '
+              'nao executada nesta maquina ===')
 
     node = shutil.which('node')
     if node:

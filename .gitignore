@@ -5,3 +5,9 @@ __pycache__/
 # fora do repositorio publico
 01_documentacao/*.pdf
 01_documentacao/PROMPT_IMPLEMENTACAO_SOFTWARE.md
+
+# vetores de teste do Verilog, gerados por 06_fpga/computador/gerar_vetores.py
+06_fpga/vetores/
+# saida do simulador
+06_fpga/sim/*.vvp
+06_fpga/sim/*.vcd

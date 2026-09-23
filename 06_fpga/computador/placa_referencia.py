@@ -170,6 +170,7 @@ class PlacaReferencia:
         self.memoria_a = []
         self.memoria_b = []
         self.sequencia_esperada = 0
+        self.amostras_gravadas = 0
         self.contadores = {'falhas_de_crc': 0, 'descontinuidades_de_sequencia': 0,
                            'eventos_de_buffer': 0, 'blocos_recebidos': 0}
 
@@ -185,6 +186,8 @@ class PlacaReferencia:
         return bytes(saida)
 
     def _tratar(self, tipo, carga):
+        if tipo in PR.TAMANHO_EXATO and len(carga) != PR.TAMANHO_EXATO[tipo]:
+            return self._recibo('', PR.CONTAGEM_NAO_CONFIAVEL, PR.BLOCO_MAL_FORMADO)
         if tipo == PR.CONFIGURAR:
             return self._configurar(carga)
         if tipo == PR.AMOSTRAS:
@@ -229,9 +232,14 @@ class PlacaReferencia:
             return self._recibo(identificador, seq, PR.BLOCO_FORA_DE_SEQUENCIA)
         if inicio + len(pares) > self.n_amostras:
             return self._recibo(identificador, seq, PR.BLOCO_FORA_DA_MEMORIA)
+        if inicio != self.amostras_gravadas:
+            # cada bloco comeca onde o anterior terminou; e assim que a placa
+            # sabe, contando, que nao ficou lacuna na memoria
+            return self._recibo(identificador, seq, PR.BLOCO_MAL_FORMADO)
         for k, (a, b) in enumerate(pares):
             self.memoria_a[inicio + k] = a
             self.memoria_b[inicio + k] = b
+        self.amostras_gravadas += len(pares)
         self.sequencia_esperada += 1
         self.contadores['blocos_recebidos'] += 1
         return self._recibo(identificador, seq, PR.BLOCO_OK)
@@ -249,7 +257,7 @@ class PlacaReferencia:
             return self._enviar_resultado()
         completo = (n_amostras == self.n_amostras
                     and n_blocos == self.contadores['blocos_recebidos']
-                    and None not in self.memoria_a and None not in self.memoria_b)
+                    and self.amostras_gravadas == self.n_amostras)
         if not completo:
             self.resultado_pendente = PR.carga_resultado(
                 identificador, PR.RESULTADO_RECUSADO_AMOSTRAS_FALTANDO, 0, self.contadores, vazio, vazio)

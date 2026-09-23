@@ -109,7 +109,8 @@ class LeitorDeQuadros:
                 return eventos
             tipo, tamanho = struct.unpack_from('<BH', self.buffer, 2)
             if tamanho > self.TAMANHO_MAXIMO:
-                del self.buffer[:2]
+                # descarta o cabecalho inteiro, como faz um circuito que ja o consumiu
+                del self.buffer[:5]
                 eventos.append(('crc_invalido', tipo, b''))
                 continue
             total = 2 + 3 + tamanho + 2
@@ -247,6 +248,12 @@ def ler_executar(carga):
 
 def carga_so_id(identificador):
     return codificar_id(identificador)
+
+
+# tamanho exato da carga util de cada mensagem que a placa recebe;
+# AMOSTRAS e conferida a parte, porque o tamanho depende de n_pares
+TAMANHO_EXATO = {CONFIGURAR: _CONFIG.size, EXECUTAR: _EXECUTAR.size,
+                 CONFIRMAR_RESULTADO: TAMANHO_DO_ID, PEDIR_RESULTADO: TAMANHO_DO_ID}
 
 
 # --- B-10: resultado ---------------------------------------------------------------------
