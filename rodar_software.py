@@ -14,7 +14,8 @@ dependencia:
   8. 06_fpga/computador                  cenario B, lado do computador: selos,
                                          dimensionamento e execucao contra a
                                          referencia Python da placa
-  9. testes do detector, do avaliador e do cenario B (Python), simulacao do
+  9. testes do detector, do avaliador e do cenario B (Python), inclusive de
+     ponta a ponta pela serial contra a placa simulada, simulacao do
      Verilog contra o modelo da placa e prova dos criterios B-06 a B-09 sobre
      a resposta do proprio Verilog (Icarus Verilog), e teste de paridade da
      adaptacao em JavaScript contra o gabarito do Python (Node)
@@ -65,7 +66,7 @@ PASSOS = [
 TESTES = [
     ('testes do detector', os.path.join('04_detector', 'testes')),
     ('testes do avaliador', os.path.join('05_avaliacao', 'testes')),
-    ('testes do cenario B', os.path.join('06_fpga', 'computador', 'testes')),
+    ('testes do cenario B e da placa simulada', os.path.join('06_fpga', 'computador', 'testes')),
 ]
 
 

@@ -8,9 +8,14 @@ placa, ver dimensionamento.py):
      execucao (B-07);
   2. carregar os blocos, um a um, reenviando o bloco cujo CRC a placa
      rejeitou (B-04, B-06);
-  3. EXECUTAR e esperar o resultado; sem resposta, pedir de novo; ao
-     receber, confirmar. Sem resultado depois das tentativas, o ensaio sai
-     marcado como sem resultado, nunca some (B-10).
+  3. EXECUTAR e esperar o resultado; sem resposta, pedir de novo, e se a
+     placa acusar CRC invalido, mandar EXECUTAR de novo; ao receber,
+     confirmar. Sem resultado depois das tentativas, o ensaio sai marcado
+     como sem resultado, nunca some (B-10).
+
+Num enlace de verdade chegam respostas atrasadas: o recibo de um bloco que
+ja foi confirmado, a resposta a uma mensagem reenviada. O computador as
+descarta e conta, em vez de tomar uma delas pela resposta da mensagem atual.
 
 A temporizacao do sinal nao depende de nada disso: vem do indice das
 amostras dentro da placa. Os tempos medidos aqui sao so de comunicacao.
@@ -36,21 +41,22 @@ class Hospedeiro:
 
     def _zerar_eventos(self):
         self.eventos = {'reenvios_de_bloco': 0, 'reenvios_de_configuracao': 0,
-                        'pedidos_de_resultado': 0, 'quadros_com_crc_invalido_recebidos': 0}
+                        'reenvios_de_execucao': 0, 'pedidos_de_resultado': 0,
+                        'quadros_com_crc_invalido_recebidos': 0, 'respostas_fora_de_hora_descartadas': 0}
 
     # --- recepcao ------------------------------------------------------------------
     def _esperar(self, tipos):
-        """Proximo quadro valido de um dos tipos, ou um recibo de CRC invalido."""
+        """Proximo quadro valido de um dos tipos. Os de outros tipos estao fora de hora."""
         fim = time.monotonic() + self.tempo_limite_s
         while True:
-            for k, (situacao, tipo, carga) in enumerate(self.pendentes):
+            if self.pendentes:
+                situacao, tipo, carga = self.pendentes.pop(0)
                 if situacao != 'ok':
                     self.eventos['quadros_com_crc_invalido_recebidos'] += 1
-                    del self.pendentes[k]
-                    break
-                if tipo in tipos:
-                    del self.pendentes[k]
+                elif tipo in tipos:
                     return tipo, carga
+                else:
+                    self.eventos['respostas_fora_de_hora_descartadas'] += 1
             else:
                 restante = fim - time.monotonic()
                 if restante <= 0:
@@ -83,19 +89,33 @@ class Hospedeiro:
         raise FalhaNaPlaca('a placa nao confirmou a configuracao')
 
     # --- B-04 e B-06 ----------------------------------------------------------------------
+    def _recibo_do_bloco(self, identificador, seq):
+        """Situacao do bloco `seq`, ou None sem resposta. Recibo atrasado de bloco anterior e descartado."""
+        while True:
+            tipo, carga = self._esperar({PR.BLOCO_RECEBIDO})
+            if tipo is None:
+                return None
+            ident, seq_lida, situacao = PR.ler_bloco_recebido(carga)
+            if situacao == PR.BLOCO_CRC_INVALIDO:
+                return situacao
+            if ident == identificador and seq_lida < seq:
+                self.eventos['respostas_fora_de_hora_descartadas'] += 1
+                continue
+            if ident == identificador and seq_lida == seq:
+                return situacao
+            raise FalhaNaPlaca('recibo inesperado esperando o bloco %d: id %r, sequencia %d, situacao %d'
+                               % (seq, ident, seq_lida, situacao))
+
     def carregar(self, identificador, blocos):
         for seq, quadro in enumerate(blocos):
             for tentativa in range(self.tentativas):
                 if tentativa:
                     self.eventos['reenvios_de_bloco'] += 1
                 self.transporte.enviar(quadro)
-                tipo, carga = self._esperar({PR.BLOCO_RECEBIDO})
-                if tipo is None:
-                    continue
-                ident, seq_lida, situacao = PR.ler_bloco_recebido(carga)
-                if situacao == PR.BLOCO_OK and ident == identificador and seq_lida == seq:
+                situacao = self._recibo_do_bloco(identificador, seq)
+                if situacao == PR.BLOCO_OK:
                     break
-                if situacao == PR.BLOCO_CRC_INVALIDO:
+                if situacao in (None, PR.BLOCO_CRC_INVALIDO):
                     continue
                 raise FalhaNaPlaca('bloco %d recusado pela placa (situacao %d)' % (seq, situacao))
             else:
@@ -104,20 +124,37 @@ class Hospedeiro:
 
     # --- B-10 ------------------------------------------------------------------------------
     def executar(self, identificador, n_blocos, n_amostras):
-        self.transporte.enviar(PR.montar_quadro(
-            PR.EXECUTAR, PR.carga_executar(identificador, n_blocos, n_amostras)))
+        executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(identificador, n_blocos, n_amostras))
+        pedir = PR.montar_quadro(PR.PEDIR_RESULTADO, PR.carga_so_id(identificador))
+        self.transporte.enviar(executar)
+        crc_acusado = False
         for tentativa in range(self.tentativas + 1):
             if tentativa:
-                self.eventos['pedidos_de_resultado'] += 1
-                self.transporte.enviar(PR.montar_quadro(PR.PEDIR_RESULTADO, PR.carga_so_id(identificador)))
-            tipo, carga = self._esperar({PR.RESULTADO})
-            if tipo != PR.RESULTADO:
-                continue
-            resultado = PR.ler_resultado(carga)
-            if resultado['id'] != identificador:
-                raise FalhaNaPlaca('resultado de outro ensaio: %r' % resultado['id'])
-            self.transporte.enviar(PR.montar_quadro(PR.CONFIRMAR_RESULTADO, PR.carga_so_id(identificador)))
-            return resultado
+                # CRC invalido acusado: o EXECUTAR pode nao ter chegado inteiro, e
+                # executar de novo da o mesmo resultado; senao, so pede o resultado
+                if crc_acusado:
+                    self.eventos['reenvios_de_execucao'] += 1
+                    self.transporte.enviar(executar)
+                else:
+                    self.eventos['pedidos_de_resultado'] += 1
+                    self.transporte.enviar(pedir)
+            crc_acusado = False
+            while True:
+                tipo, carga = self._esperar({PR.RESULTADO, PR.BLOCO_RECEBIDO})
+                if tipo is None:
+                    break
+                if tipo == PR.BLOCO_RECEBIDO:
+                    if PR.ler_bloco_recebido(carga)[2] == PR.BLOCO_CRC_INVALIDO:
+                        crc_acusado = True
+                    else:
+                        self.eventos['respostas_fora_de_hora_descartadas'] += 1
+                    continue
+                resultado = PR.ler_resultado(carga)
+                if resultado['id'] != identificador:
+                    self.eventos['respostas_fora_de_hora_descartadas'] += 1
+                    continue
+                self.transporte.enviar(PR.montar_quadro(PR.CONFIRMAR_RESULTADO, PR.carga_so_id(identificador)))
+                return resultado
         return None
 
     # --- ensaio completo -----------------------------------------------------------------------

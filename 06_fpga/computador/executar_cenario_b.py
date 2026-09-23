@@ -2,6 +2,8 @@
 
 Uso:
   python executar_cenario_b.py                         referencia Python da placa
+  python executar_cenario_b.py --serial socket://127.0.0.1:5555
+                                                       placa simulada (placa_simulada.py)
   python executar_cenario_b.py --serial COM5           FPGA na porta serial
   python executar_cenario_b.py --serial COM5 --ensaios MX-001 MX-002
 
@@ -13,9 +15,12 @@ fecha o relatorio (B-14).
 
 A origem do processamento vai no nome de cada arquivo gravado:
 `referencia` quando a "placa" e o modelo Python, `simulacao` quando e o
-Verilog da placa rodando no simulador (06_fpga/sim/prova_cenario_b.py) e
-`fpga` quando e a placa de verdade. Resultado de referencia ou de simulacao
-nunca e apresentado como resultado de FPGA.
+Verilog da placa rodando no simulador (06_fpga/sim/prova_cenario_b.py),
+`placa_simulada` quando do outro lado da serial esta placa_simulada.py e
+`fpga` quando e a placa de verdade. Antes de comecar, o computador pergunta
+quem esta na porta: so a placa simulada responde, e a FPGA fica em silencio.
+Resultado de referencia, de simulacao ou de placa simulada nunca e
+apresentado como resultado de FPGA.
 
 A contagem de ensaios tentados e gravada antes da execucao, nao depois.
 """
@@ -45,10 +50,23 @@ RESULTADO_A = SE.RESULTADO_A
 VERDADE = os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario', 'leakmap_verdade_matriz_v1.json')
 SAIDA = os.path.join(RAIZ, '06_fpga', 'resultados')
 
-SUFIXO = {'referencia_python_da_placa': 'referencia', 'simulacao_do_verilog': 'simulacao', 'fpga': 'fpga'}
+SUFIXO = {'referencia_python_da_placa': 'referencia', 'simulacao_do_verilog': 'simulacao',
+          'placa_simulada': 'placa_simulada', 'fpga': 'fpga'}
 ONDE = {'referencia_python_da_placa': 'referencia Python da placa',
         'simulacao_do_verilog': 'Verilog da placa, em simulador',
+        'placa_simulada': 'placa simulada do outro lado da serial',
         'fpga': 'FPGA'}
+# origens em que ha um fio de verdade entre computador e placa
+COM_ENLACE = ('placa_simulada', 'fpga')
+
+
+def linha_do_ensaio(registro):
+    """Uma linha por ensaio, na hora em que o resultado chega."""
+    classe = registro['classe']
+    if registro.get('posicao_estimada_m') is not None:
+        return '%-7s %-14s %7.2f m  +- %.2f m' % (registro['id'], classe, registro['posicao_estimada_m'],
+                                                 registro.get('incerteza_de_posicao_m') or 0.0)
+    return '%-7s %-14s %s' % (registro['id'], classe, registro.get('motivo') or '')
 
 
 def ler(caminho):
@@ -69,7 +87,10 @@ def caminhos(origem, saida=SAIDA):
             for n in ('tentativas', 'resultado', 'comparacao', 'avaliacao', 'relatorio')}
 
 
-def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0, saida=SAIDA):
+def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0, saida=SAIDA,
+             mostrar=None):
+    if hasattr(transporte, 'identificar'):
+        transporte.identificar()
     origem = transporte.origem
     arquivos = caminhos(origem, saida)
     pacote, selos, resultado_a = ler(PACOTE), ler(SELOS), ler(RESULTADO_A)
@@ -110,6 +131,8 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
             preparo['motivo_de_falha'] = 'falha na comunicacao com a placa: %s' % e
         registro = RB.montar_registro(ensaio, preparo, rodada, escala, cal, origem)
         registros.append(registro)
+        if mostrar:
+            mostrar(linha_do_ensaio(registro))
         if identificador in registros_a:
             linhas.append(CP.comparar_ensaio(registros_a[identificador], registro,
                                              ensaio, preparo, escala, cal))
@@ -165,6 +188,7 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
         'o_que_nao_valida': ('sensores fisicos, resposta de transmissores, entrada analogica, '
                              'conversor analogico-digital real e instalacao industrial'),
         'nome_correto': 'reproducao de sinais digitais em FPGA fisica',
+        'identidade_da_placa': getattr(transporte, 'identidade', None),
         'ensaios': {
             'tentados': len(ids),
             'concluidos': len(concluidos),
@@ -184,8 +208,9 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
         'eventos_de_comunicacao_somados': {
             k: sum((r.get('comunicacao') or {}).get('eventos_de_comunicacao', {}).get(k, 0)
                    for r in registros)
-            for k in ('reenvios_de_bloco', 'reenvios_de_configuracao', 'pedidos_de_resultado',
-                      'quadros_com_crc_invalido_recebidos')},
+            for k in ('reenvios_de_bloco', 'reenvios_de_configuracao', 'reenvios_de_execucao',
+                      'pedidos_de_resultado', 'quadros_com_crc_invalido_recebidos',
+                      'respostas_fora_de_hora_descartadas')},
         'amostras_saturadas_na_conversao': sum(
             v for r in registros for c in (r.get('conversao') or {}).values() for v in c.values()),
         'tempos': {
@@ -193,7 +218,7 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
                                           for r in registros if 'periodo_de_amostragem_s' in r),
             'comunicacao_medida_no_computador_s': sum(
                 sum(((r.get('comunicacao') or {}).get('tempos_de_comunicacao') or {}).values())
-                for r in registros) if origem == 'fpga' else None,
+                for r in registros) if origem in COM_ENLACE else None,
             'observacao': ('tempo simulado, tempo de reproducao e latencia de processamento sao '
                            'grandezas diferentes. Os tempos de comunicacao medidos aqui nao sao '
                            'tempo real de processamento, e a expressao tempo real so vale com '
@@ -212,10 +237,12 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
-    ap.add_argument('--serial', help='porta serial da FPGA (ex.: COM5). Sem ela, usa a referencia Python.')
+    ap.add_argument('--serial', help=('porta serial da FPGA (ex.: COM5) ou endereco da placa simulada '
+                                      '(ex.: socket://127.0.0.1:5555). Sem ela, usa a referencia Python.'))
     ap.add_argument('--baud', type=int, default=115200)
     ap.add_argument('--ensaios', nargs='*', help='identificadores; sem eles, todos os ensaios do pacote')
     ap.add_argument('--tempo-limite', type=float, default=2.0)
+    ap.add_argument('--saida', default=SAIDA, help='pasta dos arquivos gravados (padrao 06_fpga/resultados)')
     args = ap.parse_args()
 
     if args.serial:
@@ -223,12 +250,15 @@ def main():
     else:
         transporte = TR.TransporteMemoria(PLACA.PlacaReferencia())
     try:
-        rel = executar(transporte, args.ensaios, tempo_limite_s=args.tempo_limite)
+        rel = executar(transporte, args.ensaios, tempo_limite_s=args.tempo_limite, saida=args.saida,
+                       mostrar=print if args.serial else None)
     finally:
         transporte.fechar()
 
     e, dv = rel['ensaios'], rel['divergencia_com_o_software']
     print('origem: %s' % rel['origem'])
+    if rel['identidade_da_placa']:
+        print('placa: %s' % rel['identidade_da_placa'])
     print('tentados %d | concluidos %d | nao concluidos %d'
           % (e['tentados'], e['concluidos'], e['nao_concluidos']))
     print('iguais ao software: %d de %d | maior divergencia: %d amostra(s), %.3f m'

@@ -27,17 +27,20 @@ AMOSTRAS = 0x02
 EXECUTAR = 0x03
 CONFIRMAR_RESULTADO = 0x04
 PEDIR_RESULTADO = 0x05
+# so a placa simulada responde; a FPGA ignora, como todo tipo que nao conhece
+IDENTIFICAR = 0x06
 
 # placa -> computador
 CONFIGURACAO_LIDA = 0x81
 BLOCO_RECEBIDO = 0x82
 RESULTADO = 0x83
+IDENTIDADE = 0x86
 
 NOMES = {
     CONFIGURAR: 'CONFIGURAR', AMOSTRAS: 'AMOSTRAS', EXECUTAR: 'EXECUTAR',
     CONFIRMAR_RESULTADO: 'CONFIRMAR_RESULTADO', PEDIR_RESULTADO: 'PEDIR_RESULTADO',
     CONFIGURACAO_LIDA: 'CONFIGURACAO_LIDA', BLOCO_RECEBIDO: 'BLOCO_RECEBIDO',
-    RESULTADO: 'RESULTADO',
+    RESULTADO: 'RESULTADO', IDENTIFICAR: 'IDENTIFICAR', IDENTIDADE: 'IDENTIDADE',
 }
 
 # situacao do bloco recebido
@@ -296,3 +299,20 @@ def ler_resultado(carga):
         'canal_A': canais[0],
         'canal_B': canais[1],
     }
+
+
+# --- identificacao da placa simulada -------------------------------------------------------
+#
+# A FPGA nao responde a IDENTIFICAR: o Verilog ignora tipo que nao conhece. So
+# a placa simulada responde, com IDENTIDADE e um texto curto. Assim o computador
+# nunca grava resultado de placa simulada como resultado de FPGA.
+
+TAMANHO_MAXIMO_DA_IDENTIDADE = 96
+
+
+def carga_identidade(texto):
+    return texto.encode('utf-8')[:TAMANHO_MAXIMO_DA_IDENTIDADE]
+
+
+def ler_identidade(carga):
+    return bytes(carga).decode('utf-8', errors='replace')

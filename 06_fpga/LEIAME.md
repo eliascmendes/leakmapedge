@@ -116,7 +116,8 @@ tempo, vêm do Vivado ou do Quartus na placa escolhida.
 | `placa_referencia.py` | B-06 a B-10 | Modelo do que a FPGA faz, amostra a amostra, só com inteiros |
 | `registro_b.py` | B-11 | Δt pelos índices, decisão e posição com o código do cenário A, campo `origem` |
 | `comparador.py` | B-13 | Divergência com o software em amostras e em metros, com a causa apontada |
-| `executar_cenario_b.py` | B-01 a B-14 | Roda tudo e fecha o relatório, com as tentativas gravadas antes da execução |
+| `executar_cenario_b.py` | B-01 a B-14 | Roda tudo e fecha o relatório, com as tentativas gravadas antes da execução e uma linha por ensaio na hora em que o resultado chega |
+| `placa_simulada.py` | — | Programa que fala o protocolo serial da FPGA, para testar o computador de ponta a ponta sem hardware |
 | `gerar_vetores.py` | — | Grava os bytes de cada caso para o testbench do Verilog |
 
 Resultado com a referência Python da placa (arquivos com `referencia` no nome,
@@ -124,6 +125,51 @@ que **não são resultado de FPGA**): 45 ensaios concluídos; 43 idênticos ao
 software e 2 com o cruzamento do limiar uma amostra depois, mesma chegada e
 mesma posição, por causa da conversão para inteiros; contra a verdade, os
 mesmos números do cenário A.
+
+## Placa simulada
+
+`computador/placa_simulada.py` é um programa que fica do outro lado do fio no
+lugar da FPGA e fala o mesmo protocolo. O computador conversa com ela pelo
+mesmo código da porta serial, só com outro endereço. Assim o receptor, o
+cálculo de posição e o avaliador são testados de ponta a ponta sem hardware,
+e a tela do modo FPGA (B-12) vai ser testada do mesmo jeito. No dia, basta
+trocar o endereço da placa simulada pela porta da placa real.
+
+Dois motores podem responder:
+
+- `referencia`: o modelo Python da placa;
+- `verilog`: o próprio Verilog da placa, rodando ciclo a ciclo no Icarus
+  Verilog atrás da porta, por [`sim/tb_interativo.v`](sim/tb_interativo.v).
+
+O enlace pode ser piorado de propósito, para exercitar o receptor: bits
+trocados nos dois sentidos, mensagens RESULTADO perdidas e o tempo de fio da
+serial a 115 200 bits/s.
+
+A placa simulada responde à mensagem IDENTIFICAR, que a FPGA ignora. Por isso
+o computador grava os resultados dela com a origem `placa_simulada` e nunca
+como resultado de FPGA. Essas rodadas são teste do computador e ficam fora do
+repositório.
+
+Os testes de ponta a ponta
+([`computador/testes/teste_placa_simulada.py`](computador/testes/teste_placa_simulada.py))
+rodam a matriz inteira pela serial:
+
+- sem ruído, os 45 ensaios chegam com o mesmo resultado da referência, e o
+  avaliador independente dá os números do cenário A;
+- com cerca de um bit trocado a cada 3 300 bytes, nos dois sentidos, e 20% dos
+  resultados perdidos, o computador reenvia blocos e pede resultados de novo.
+  Nenhum resultado errado passa em silêncio: cada ensaio chega igual ao da
+  referência ou sai marcado como falha, com o motivo. Com 6 tentativas, os 45
+  concluem;
+- com o Verilog atrás da porta e ruído no enlace, os ensaios testados chegam
+  iguais aos da referência;
+- quem não responde a IDENTIFICAR fica como `fpga`.
+
+Esses testes mostraram três pontos fracos do receptor, já corrigidos: um
+recibo atrasado de bloco já confirmado derrubava o ensaio; um EXECUTAR
+corrompido nunca era reenviado; e respostas fora de hora se acumulavam na
+fila. Agora o computador descarta e conta as respostas fora de hora, e manda
+EXECUTAR de novo quando a placa acusa CRC inválido.
 
 ## Como rodar
 
@@ -135,7 +181,17 @@ python 06_fpga/sim/sintetizar_yosys.py
 ```
 
 A simulação precisa do Icarus Verilog; a síntese, do Yosys ou do pacote
-`yowasp-yosys`. Com a FPGA na porta serial (precisa de `pip install pyserial`):
+`yowasp-yosys`. A porta serial precisa de `pip install pyserial`.
+
+Com a placa simulada, em dois terminais:
+
+```bash
+python 06_fpga/computador/placa_simulada.py --motor verilog
+python 06_fpga/computador/executar_cenario_b.py --serial socket://127.0.0.1:5555
+```
+
+A placa simulada aceita `--ruido 1e-4`, `--perder-resultado 0.1`,
+`--semente 7` e `--baud 0` (sem o tempo de fio). Com a FPGA na porta serial:
 
 ```bash
 python 06_fpga/computador/executar_cenario_b.py --serial COM5

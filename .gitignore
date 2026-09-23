@@ -11,3 +11,5 @@ __pycache__/
 # saida do simulador
 06_fpga/sim/*.vvp
 06_fpga/sim/*.vcd
+# rodadas contra a placa simulada: sao teste do computador, nao resultado
+06_fpga/resultados/*_placa_simulada_v1.json

@@ -4,6 +4,7 @@
   "o_que_este_cenario_valida": "o processamento digital na placa (deteccao e marcacao das chegadas) nas condicoes ensaiadas",
   "o_que_nao_valida": "sensores fisicos, resposta de transmissores, entrada analogica, conversor analogico-digital real e instalacao industrial",
   "nome_correto": "reproducao de sinais digitais em FPGA fisica",
+  "identidade_da_placa": null,
   "ensaios": {
     "tentados": 45,
     "concluidos": 45,
@@ -35,8 +36,10 @@
   "eventos_de_comunicacao_somados": {
     "reenvios_de_bloco": 0,
     "reenvios_de_configuracao": 0,
+    "reenvios_de_execucao": 0,
     "pedidos_de_resultado": 0,
-    "quadros_com_crc_invalido_recebidos": 0
+    "quadros_com_crc_invalido_recebidos": 0,
+    "respostas_fora_de_hora_descartadas": 0
   },
   "amostras_saturadas_na_conversao": 0,
   "tempos": {

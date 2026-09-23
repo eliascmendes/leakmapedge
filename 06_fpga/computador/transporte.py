@@ -3,14 +3,19 @@
 TransporteMemoria  liga o computador ao modelo de referencia da placa, no
                    mesmo processo. E o que roda nos testes e no GitHub. Pode
                    corromper bytes de proposito, para testar B-06.
-TransporteSerial   liga o computador a FPGA de verdade pela porta serial.
-                   Precisa do pacote pyserial, carregado so quando usado.
+TransporteSerial   liga o computador a placa pela porta serial: a FPGA
+                   (COM5, /dev/ttyUSB0) ou a placa simulada
+                   (socket://127.0.0.1:5555, ver placa_simulada.py). O codigo
+                   e o mesmo nos dois casos; so muda o endereco. Precisa do
+                   pacote pyserial, carregado so quando usado.
 TransporteSimulacaoDoVerilog
                    devolve ao computador os bytes que o Verilog da placa
                    respondeu no simulador (06_fpga/sim), conferindo que o
                    computador manda exatamente o que foi simulado.
 """
 import time
+
+import protocolo as PR
 
 
 class TransporteMemoria:
@@ -39,6 +44,11 @@ class TransporteMemoria:
 
 
 class TransporteSerial:
+    """Porta serial ou endereco do pyserial (COM5, socket://127.0.0.1:5555).
+
+    A origem comeca como `fpga` e so muda se a placa se identificar como
+    simulada (identificar()). A FPGA nao responde a IDENTIFICAR.
+    """
     origem = 'fpga'
 
     def __init__(self, porta, baud=115200):
@@ -47,25 +57,40 @@ class TransporteSerial:
         except ImportError as e:
             raise RuntimeError('a porta serial precisa do pacote pyserial: '
                                'pip install pyserial') from e
-        self.porta = serial.Serial(porta, baudrate=baud, timeout=0.05)
+        self.endereco = porta
+        self.identidade = None
+        self.porta = serial.serial_for_url(porta, baudrate=baud, timeout=0.01)
         self.porta.reset_input_buffer()
+
+    def identificar(self, tempo_limite_s=0.5):
+        """Pergunta quem responde. Resposta so vem da placa simulada."""
+        self.enviar(PR.montar_quadro(PR.IDENTIFICAR, b''))
+        leitor, fim = PR.LeitorDeQuadros(), time.monotonic() + tempo_limite_s
+        while time.monotonic() < fim:
+            for situacao, tipo, carga in leitor.alimentar(self.receber(fim - time.monotonic())):
+                if situacao == 'ok' and tipo == PR.IDENTIDADE:
+                    self.identidade = PR.ler_identidade(carga)
+                    self.origem = 'placa_simulada'
+                    return self.identidade
+        return None
 
     def enviar(self, dados):
         self.porta.write(dados)
         self.porta.flush()
 
     def receber(self, tempo_limite_s):
-        """Le o que chegar ate o tempo limite ou ate a linha ficar em silencio."""
-        fim = time.monotonic() + tempo_limite_s
-        dados = bytearray()
-        while time.monotonic() < fim:
-            parte = self.porta.read(4096)
-            if parte:
-                dados += parte
-                fim = min(fim, time.monotonic() + 0.1)
-            elif dados:
-                break
-        return bytes(dados)
+        """Devolve assim que chegar algum byte, ou vazio no tempo limite.
+
+        Quem junta os bytes em quadros e o LeitorDeQuadros do hospedeiro, entao
+        nao ha por que esperar a linha ficar em silencio.
+        """
+        fim = time.monotonic() + max(0.0, tempo_limite_s)
+        while True:
+            dados = self.porta.read(max(1, self.porta.in_waiting))
+            if dados:
+                return dados + self.porta.read(self.porta.in_waiting)
+            if time.monotonic() >= fim:
+                return b''
 
     def fechar(self):
         self.porta.close()

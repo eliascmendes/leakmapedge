@@ -168,15 +168,17 @@ def main():
     fora_de_lugar = PR.montar_quadro(PR.AMOSTRAS, PR.carga_amostras(ident, 0, 8, [(1, 2)] * 4))
     lixo = PR.SINCRONISMO + bytes([PR.EXECUTAR]) + (5000).to_bytes(2, 'little')
     desconhecido = PR.montar_quadro(0x7F, b'\x01\x02\x03')
+    identificar = PR.montar_quadro(PR.IDENTIFICAR, b'')   # so a placa simulada responde
     e, s = fluxo_bruto([
         PR.montar_quadro(PR.CONFIGURAR, b'\x00' * 30),
         PR.montar_quadro(PR.EXECUTAR, b'\x00' * 13),
         PR.montar_quadro(PR.AMOSTRAS, b'\x00' * 10),
-        configurar, fora_de_lugar, lixo, desconhecido, blocos[0],
+        configurar, fora_de_lugar, lixo, desconhecido, identificar, blocos[0],
         PR.montar_quadro(PR.PEDIR_RESULTADO, b'\x00' * 9),
     ])
     gravar('protocolo_mal_formados', e, s,
-           'tamanhos errados, bloco fora do lugar, cabecalho absurdo e tipo desconhecido', indice)
+           'tamanhos errados, bloco fora do lugar, cabecalho absurdo, tipo desconhecido '
+           'e IDENTIFICAR, que a FPGA nao responde', indice)
 
     outro = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar('OUTRO', 1, 10))
     amostra_solta = PR.montar_quadro(PR.AMOSTRAS, PR.carga_amostras(ident, 0, 0, [(1, 2)]))

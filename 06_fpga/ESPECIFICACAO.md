@@ -105,6 +105,20 @@ ensaio ou sem configuração, 4 fora da memória, 5 mal formado.
 Situação do resultado: 0 concluído, 1 recusado por amostras faltando, 2
 recusado por falta de configuração, 3 recusado por estouro de largura.
 
+### Identificação da placa simulada
+
+| Tipo | Nome | Carga útil (bytes) |
+|---|---|---|
+| `0x06` | IDENTIFICAR (0) | nenhuma |
+| `0x86` | IDENTIDADE (até 96) | texto UTF-8 que descreve a placa simulada e o motor dela |
+
+Só a placa simulada ([`computador/placa_simulada.py`](computador/placa_simulada.py))
+responde a IDENTIFICAR. A FPGA ignora, como faz com todo tipo que não conhece, e
+o Verilog não muda. O computador manda IDENTIFICAR antes do primeiro ensaio:
+com resposta, grava os resultados com a origem `placa_simulada`; em silêncio,
+com a origem `fpga`. Assim resultado de placa simulada nunca sai como
+resultado de FPGA.
+
 ## 6. Comportamento da placa
 
 1. **CONFIGURAR:** apaga a memória, zera todos os contadores, a sequência
