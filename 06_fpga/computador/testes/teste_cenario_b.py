@@ -426,5 +426,53 @@ class B11aB14Execucao(unittest.TestCase):
                                      ref['erro_de_localizacao_geral']['mediano_m'], abs_tol=1e-9))
 
 
+def gravar_conversa(ensaio):
+    """Conversa com a referencia gravada no formato do testbench: (entrada, [(byte, posicao)])."""
+    placa = PLACA.PlacaReferencia()
+    entrada, saidas = bytearray(), []
+
+    class Gravador(TR.TransporteMemoria):
+        def enviar(self, dados):
+            entrada.extend(dados)
+            resposta = placa.receber(dados)
+            saidas.extend((b, len(entrada)) for b in resposta)
+            self.recebido += resposta
+
+    preparo = PP.preparar_ensaio(ensaio, ESCALA, CAL)
+    args = (ensaio['id'], preparo['conversao']['canal_A']['codigos'],
+            preparo['conversao']['canal_B']['codigos'], preparo['parametros'])
+    rodada = HO.Hospedeiro(Gravador(placa)).rodar(*args)
+    return (bytes(entrada), saidas), args, rodada
+
+
+class TransporteDaSimulacao(unittest.TestCase):
+    """O transporte que liga o computador a resposta gravada do Verilog."""
+
+    def test_devolve_a_resposta_gravada_e_o_computador_chega_ao_mesmo_resultado(self):
+        gravacao, args, rodada = gravar_conversa(POR_ID['MX-005'])
+        transporte = TR.TransporteSimulacaoDoVerilog([gravacao])
+        self.assertEqual(transporte.origem, 'simulacao_do_verilog')
+        replay = HO.Hospedeiro(transporte).rodar(*args)
+        self.assertEqual(replay['resultado'], rodada['resultado'])
+        self.assertTrue(transporte.tudo_consumido())
+
+    def test_varias_conversas_em_sequencia(self):
+        g1, a1, r1 = gravar_conversa(POR_ID['MX-001'])
+        g2, a2, r2 = gravar_conversa(POR_ID['MX-021'])
+        transporte = TR.TransporteSimulacaoDoVerilog([g1, g2])
+        host = HO.Hospedeiro(transporte)
+        self.assertEqual(host.rodar(*a1)['resultado'], r1['resultado'])
+        self.assertEqual(host.rodar(*a2)['resultado'], r2['resultado'])
+        self.assertTrue(transporte.tudo_consumido())
+
+    def test_para_se_o_computador_sair_do_que_foi_simulado(self):
+        gravacao, args, _ = gravar_conversa(POR_ID['MX-005'])
+        outro = PP.preparar_ensaio(POR_ID['MX-030'], ESCALA, CAL)
+        transporte = TR.TransporteSimulacaoDoVerilog([gravacao])
+        with self.assertRaises(TR.DivergenciaDaSimulacao):
+            HO.Hospedeiro(transporte).rodar(args[0], outro['conversao']['canal_A']['codigos'],
+                                            outro['conversao']['canal_B']['codigos'], outro['parametros'])
+
+
 if __name__ == '__main__':
     unittest.main()

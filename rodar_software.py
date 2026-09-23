@@ -15,7 +15,8 @@ dependencia:
                                          dimensionamento e execucao contra a
                                          referencia Python da placa
   9. testes do detector, do avaliador e do cenario B (Python), simulacao do
-     Verilog contra o modelo da placa (Icarus Verilog) e teste de paridade da
+     Verilog contra o modelo da placa e prova dos criterios B-06 a B-09 sobre
+     a resposta do proprio Verilog (Icarus Verilog), e teste de paridade da
      adaptacao em JavaScript contra o gabarito do Python (Node)
 
 O passo 5 roda em processo separado do passo 2 de proposito: e o criterio de
@@ -88,7 +89,7 @@ def main():
                  RAIZ)
 
     if shutil.which('iverilog') or os.path.exists(os.path.join('C:' + os.sep, 'iverilog', 'bin', 'iverilog.exe')):
-        executar('Verilog do cenario B contra o modelo da placa (Icarus)',
+        executar('Verilog do cenario B: simulacao e prova de B-06 a B-09 (Icarus)',
                  [sys.executable, os.path.join('06_fpga', 'sim', 'rodar_simulacao.py')], RAIZ)
     else:
         print('\n=== AVISO: Icarus Verilog nao encontrado; simulacao do Verilog '

@@ -4,7 +4,9 @@
 2. compila 06_fpga/rtl com o testbench no Icarus Verilog;
 3. roda cada caso e exige a resposta do Verilog igual, byte a byte, a do
    modelo de referencia (criterios 1 a 4 de 06_fpga/ESPECIFICACAO.md);
-4. roda o modulo de topo inteiro, com a serial, num ensaio curto.
+4. roda o modulo de topo inteiro, com a serial, num ensaio curto;
+5. com tudo igual, roda prova_cenario_b.py, que decodifica a resposta gravada
+   do proprio Verilog e confere os criterios B-06 a B-09.
 
 Precisa do Icarus Verilog (iverilog e vvp no PATH, ou em C:\\iverilog\\bin).
 Sai com codigo diferente de zero se algum caso falhar.
@@ -62,7 +64,8 @@ def main():
     for nome in casos:
         processo = subprocess.run(
             [vvp, '-n', 'sim/tb_nucleo.vvp', '+caso=%s' % nome,
-             '+entrada=vetores/%s.entrada.hex' % nome, '+esperado=vetores/%s.saida.hex' % nome],
+             '+entrada=vetores/%s.entrada.hex' % nome, '+esperado=vetores/%s.saida.hex' % nome,
+             '+obtido=vetores/%s.verilog.txt' % nome],
             cwd=FPGA, capture_output=True, text=True)
         linha = next((l for l in processo.stdout.splitlines() if l.startswith('RESULTADO')), None)
         if linha and ' PASSOU ' in linha:
@@ -89,6 +92,8 @@ def main():
         print('  ' + str(f))
     if falharam:
         raise SystemExit(1)
+
+    subprocess.run([sys.executable, os.path.join(AQUI, 'prova_cenario_b.py')], check=True, cwd=RAIZ)
 
 
 if __name__ == '__main__':

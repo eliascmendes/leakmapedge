@@ -1,0 +1,75 @@
+{
+  "descricao": "Relatorio do cenario B (B-14).",
+  "origem": "simulacao_do_verilog",
+  "o_que_este_cenario_valida": "o processamento digital na placa (deteccao e marcacao das chegadas) nas condicoes ensaiadas",
+  "o_que_nao_valida": "sensores fisicos, resposta de transmissores, entrada analogica, conversor analogico-digital real e instalacao industrial",
+  "nome_correto": "reproducao de sinais digitais em FPGA fisica",
+  "ensaios": {
+    "tentados": 45,
+    "concluidos": 45,
+    "nao_concluidos": 0,
+    "recusados_pelo_selo": [],
+    "falhas_de_comunicacao": [],
+    "sem_resultado_ou_recusados_pela_placa": []
+  },
+  "contagem_por_classe": {
+    "localizado": 30,
+    "sem_deteccao": 15
+  },
+  "divergencia_com_o_software": {
+    "n_ensaios": 45,
+    "identicos": 43,
+    "divergentes": 2,
+    "maior_divergencia_amostras": 1,
+    "maior_divergencia_de_posicao_m": 5.684341886080801e-13,
+    "contagem_por_causa": {
+      "conversao para inteiros (B-02, B-03)": 2
+    },
+    "toda_divergencia_tem_causa": true
+  },
+  "contadores_da_placa_somados": {
+    "falhas_de_crc": 0,
+    "descontinuidades_de_sequencia": 0,
+    "eventos_de_buffer": 0
+  },
+  "eventos_de_comunicacao_somados": {
+    "reenvios_de_bloco": 0,
+    "reenvios_de_configuracao": 0,
+    "pedidos_de_resultado": 0,
+    "quadros_com_crc_invalido_recebidos": 0
+  },
+  "amostras_saturadas_na_conversao": 0,
+  "tempos": {
+    "tempo_simulado_total_s": 5.424849086683275,
+    "comunicacao_medida_no_computador_s": null,
+    "observacao": "tempo simulado, tempo de reproducao e latencia de processamento sao grandezas diferentes. Os tempos de comunicacao medidos aqui nao sao tempo real de processamento, e a expressao tempo real so vale com ensaio que demonstre a taxa sustentada sem perdas."
+  },
+  "avaliacao_contra_a_verdade": {
+    "arquivo": "leakmap_cenario_b_avaliacao_simulacao_v1.json",
+    "contagens": {
+      "deteccao": 30,
+      "nao_deteccao": 0,
+      "falso_alarme": 0,
+      "silencio_correto": 15,
+      "inconclusivo": 0,
+      "falha_de_execucao": 0,
+      "localizado": 30
+    },
+    "erro_de_localizacao_geral": {
+      "n": 30,
+      "medio_m": 0.2883534136549033,
+      "mediano_m": 0.24096385542154763,
+      "maximo_m": 1.045783132530687,
+      "p95_m": 0.8000000000005798
+    },
+    "falso_alarme": {
+      "ensaios_sem_evento": 15,
+      "falsos_alarmes": 0,
+      "taxa_por_ensaio": 0.0,
+      "oportunidades_de_decisao": 13860,
+      "taxa_por_oportunidade": 0.0,
+      "limite_superior_95_por_oportunidade": 0.00021645021645021645,
+      "observacao": "nenhum falso alarme observado; o limite superior de 95% de confianca vem da regra de tres, 3/N"
+    }
+  }
+}

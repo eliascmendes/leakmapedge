@@ -48,7 +48,7 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
 | Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga/computador`](06_fpga/computador) |
-| Cenário B, Verilog da placa | Detector e protocolo em Verilog puro, idêntico ao modelo byte a byte em 57 casos simulados e sintetizável para Spartan-7 e Cyclone V | [`06_fpga/rtl`](06_fpga/rtl) |
+| Cenário B, Verilog da placa | Detector e protocolo em Verilog puro, sintetizável para Spartan-7 e Cyclone V. Em simulação, marca o mesmo índice de chegada da referência em ponto fixo nos 90 canais da matriz e devolve exato um atraso imposto de 40 amostras | [`06_fpga/rtl`](06_fpga/rtl) |
 
 ### Resultados em simulação
 

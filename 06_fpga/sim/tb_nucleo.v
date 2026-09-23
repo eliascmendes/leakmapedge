@@ -3,7 +3,12 @@
 // Le dois arquivos gravados por 06_fpga/computador/gerar_vetores.py: os bytes
 // que o computador envia e os bytes que placa_referencia.py devolveu. Alimenta
 // o nucleo com o primeiro, respeitando rx_pronto, e exige o segundo byte a
-// byte. Uso:  vvp tb_nucleo.vvp +caso=NOME +entrada=ARQ +esperado=ARQ
+// byte. Uso:  vvp tb_nucleo.vvp +caso=NOME +entrada=ARQ +esperado=ARQ [+obtido=ARQ]
+//
+// Com +obtido, grava cada byte que o Verilog devolveu, numa linha:
+//   byte  bytes_de_entrada_consumidos  ciclo_do_byte  ciclo_da_ultima_entrada
+// e o que 06_fpga/sim/prova_cenario_b.py le para decodificar a resposta do
+// proprio Verilog, sem passar pelo modelo Python da placa.
 `timescale 1ns / 1ps
 `default_nettype none
 
@@ -19,7 +24,8 @@ module tb_nucleo;
     reg [7:0] esperado [0:MAX_BYTES-1];
     reg [7:0] obtido   [0:MAX_BYTES-1];
     integer n_entrada, n_esperado, n_obtido, posicao, ciclos, ociosos, erros, primeiro, i, fd, lidos;
-    reg [8*400-1:0] caso, arq_entrada, arq_esperado;
+    integer relogio, ultima_entrada, fd_obtido;
+    reg [8*400-1:0] caso, arq_entrada, arq_esperado, arq_obtido;
     reg [7:0] valor;
 
     wire       rx_pronto;
@@ -36,11 +42,16 @@ module tb_nucleo;
 
     always @(posedge clk) begin
         if (!rst) begin
-            if (rx_valido && rx_pronto)
+            relogio <= relogio + 1;
+            if (rx_valido && rx_pronto) begin
                 posicao <= posicao + 1;
+                ultima_entrada <= relogio;
+            end
             if (tx_valido) begin
                 obtido[n_obtido] <= tx_dado;
                 n_obtido <= n_obtido + 1;
+                if (fd_obtido != 0)
+                    $fwrite(fd_obtido, "%02h %0d %0d %0d\n", tx_dado, posicao, relogio, ultima_entrada);
             end
         end
     end
@@ -70,8 +81,16 @@ module tb_nucleo;
         end
         $fclose(fd);
 
+        fd_obtido = 0;
+        if ($value$plusargs("obtido=%s", arq_obtido)) begin
+            fd_obtido = $fopen(arq_obtido, "w");
+            if (fd_obtido == 0) begin $display("ERRO: nao abriu %0s", arq_obtido); $finish; end
+        end
+
         posicao = 0;
         n_obtido = 0;
+        relogio = 0;
+        ultima_entrada = 0;
         repeat (4) @(posedge clk);
         rst = 1'b0;
 
@@ -102,6 +121,7 @@ module tb_nucleo;
                 $display("  byte %0d: obtido %02h, esperado %02h", primeiro, obtido[primeiro], esperado[primeiro]);
         end else
             $display("RESULTADO %0s PASSOU bytes=%0d ciclos=%0d", caso, n_obtido, ciclos);
+        if (fd_obtido != 0) $fclose(fd_obtido);
         $finish;
     end
 endmodule

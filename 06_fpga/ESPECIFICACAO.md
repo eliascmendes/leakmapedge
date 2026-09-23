@@ -195,10 +195,13 @@ de 1 mm, 16 bits ou 12 bits.
 
 ## 8. Critério de aceitação do Verilog
 
-**Situação:** o Verilog em [`rtl/`](rtl) cumpre os quatro critérios abaixo em
-simulação (Icarus Verilog), nos 56 casos gerados por
+**Situação:** o Verilog em [`rtl/`](rtl) cumpre os cinco critérios abaixo em
+simulação (Icarus Verilog), nos 57 casos gerados por
 [`computador/gerar_vetores.py`](computador/gerar_vetores.py) e no sistema
-completo com a serial. Falta confirmar na placa.
+completo com a serial. A resposta do próprio Verilog também é decodificada e
+conferida direto contra `04_detector/detector_ponto_fixo.py`, sem passar pelo
+modelo da placa, em [`sim/prova_cenario_b.py`](sim/prova_cenario_b.py): 90 de
+90 canais com o mesmo índice. A placa confirma o que a simulação já mostra.
 
 1. Para cada um dos 45 ensaios da matriz e para os casos sintéticos de
    retrocesso longo e truncado de
@@ -211,6 +214,8 @@ completo com a serial. Falta confirmar na placa.
    final é o mesmo do ensaio limpo.
 4. O mesmo ensaio executado duas vezes seguidas dá exatamente o mesmo
    resultado.
+5. Com o canal B igual ao A atrasado 40 amostras, a diferença entre os
+   índices de chegada devolvidos é exatamente 40.
 
 Com a placa ligada, basta rodar:
 

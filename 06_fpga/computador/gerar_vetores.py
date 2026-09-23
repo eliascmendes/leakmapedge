@@ -11,8 +11,11 @@ Casos:
     atraso conhecido entre canais;
   - casos de protocolo: bloco corrompido, lacuna de sequencia, mensagens mal
     formadas, execucao sem configuracao, ensaio acima da capacidade, pedido
-    de resultado repetido, mensagem de tipo desconhecido e tres ensaios
-    seguidos na mesma placa.
+    de resultado repetido, mensagem de tipo desconhecido, o mesmo ensaio duas
+    vezes seguidas e tres ensaios seguidos na mesma placa.
+
+casos.json guarda, para cada caso, os ensaios que ele roda na ordem, que e
+o que 06_fpga/sim/prova_cenario_b.py usa para conferir os criterios.
 
 Grava 06_fpga/vetores/ (gerado, fora do git) com um byte hexadecimal por linha.
 """
@@ -78,13 +81,13 @@ def fluxo_bruto(quadros):
     return bytes(entrada), bytes(saida)
 
 
-def gravar(nome, entrada, saida, descricao, indice):
+def gravar(nome, entrada, saida, descricao, indice, ensaios=()):
     os.makedirs(SAIDA, exist_ok=True)
     for sufixo, dados in (('entrada', entrada), ('saida', saida)):
         with open(os.path.join(SAIDA, '%s.%s.hex' % (nome, sufixo)), 'w') as f:
             f.write(''.join('%02x\n' % b for b in dados))
-    indice[nome] = {'descricao': descricao, 'bytes_de_entrada': len(entrada),
-                    'bytes_de_saida_esperados': len(saida)}
+    indice[nome] = {'descricao': descricao, 'ensaios': list(ensaios),
+                    'bytes_de_entrada': len(entrada), 'bytes_de_saida_esperados': len(saida)}
 
 
 def main():
@@ -103,7 +106,8 @@ def main():
     # --- os 45 ensaios da matriz ---------------------------------------------------
     for ensaio in pacote['ensaios']:
         e, s = conversa([execucao(ensaio['id'])])
-        gravar('ensaio_%s' % ensaio['id'], e, s, 'conversa completa do ensaio %s' % ensaio['id'], indice)
+        gravar('ensaio_%s' % ensaio['id'], e, s, 'conversa completa do ensaio %s' % ensaio['id'], indice,
+               [ensaio['id']])
 
     # --- sinais sinteticos --------------------------------------------------------------
     params = PF.parametros_inteiros(cal, 4.0130559895570352e-4, 1e-3, escala['resolucao_declarada_m'])
@@ -111,7 +115,8 @@ def main():
     truncada = [int(v) for v in np.rint(58000 - 2.9 * rampa)]
     atrasada = [truncada[0]] * 5 + truncada[:-5]
     e, s = conversa([('RAMPA', truncada, atrasada, params)])
-    gravar('sintetico_retrocesso_truncado', e, s, 'rampa limpa de passo 2,9: retrocesso truncado', indice)
+    gravar('sintetico_retrocesso_truncado', e, s, 'rampa limpa de passo 2,9: retrocesso truncado', indice,
+           ['RAMPA'])
 
     for semente in (0, 3, 7):
         rng = np.random.default_rng(semente)
@@ -120,12 +125,13 @@ def main():
         b = [int(v) for v in np.rint(52000 + np.roll(frente, 12) + rng.normal(0, 20, frente.size))]
         e, s = conversa([('RUIDO%d' % semente, a, b, params)])
         gravar('sintetico_frente_fraca_%d' % semente, e, s,
-               'frente fraca com ruido, semente %d: retrocesso longo' % semente, indice)
+               'frente fraca com ruido, semente %d: retrocesso longo' % semente, indice,
+               ['RUIDO%d' % semente])
 
     base = execucao('MX-005')
     atraso = [base[1][0]] * 40 + list(base[1][:-40])
     e, s = conversa([('ATRASO40', base[1], atraso, base[3])])
-    gravar('sintetico_atraso_40', e, s, 'canal B igual ao A atrasado 40 amostras', indice)
+    gravar('sintetico_atraso_40', e, s, 'canal B igual ao A atrasado 40 amostras', indice, ['ATRASO40'])
 
     # --- protocolo -------------------------------------------------------------------------
     def corromper_terceiro(quadro, n):
@@ -134,10 +140,16 @@ def main():
             quadro[20] ^= 0x01
         return bytes(quadro)
     e, s = conversa([execucao('MX-001')], corromper=corromper_terceiro)
-    gravar('protocolo_bloco_corrompido', e, s, 'segundo bloco corrompido no enlace e reenviado', indice)
+    gravar('protocolo_bloco_corrompido', e, s, 'segundo bloco corrompido no enlace e reenviado', indice,
+           ['MX-001'])
+
+    e, s = conversa([execucao('MX-005'), execucao('MX-005')])
+    gravar('protocolo_mesmo_ensaio_duas_vezes', e, s, 'MX-005 duas vezes seguidas na mesma placa', indice,
+           ['MX-005', 'MX-005'])
 
     e, s = conversa([execucao('MX-021'), execucao('MX-001'), execucao('MX-021')])
-    gravar('protocolo_tres_ensaios_seguidos', e, s, 'MX-021, MX-001 e MX-021 na mesma placa', indice)
+    gravar('protocolo_tres_ensaios_seguidos', e, s, 'MX-021, MX-001 e MX-021 na mesma placa', indice,
+           ['MX-021', 'MX-001', 'MX-021'])
 
     ident, ca, cb, par = execucao('MX-003')
     blocos = PR.blocos_do_ensaio(ident, ca, cb)

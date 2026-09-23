@@ -12,8 +12,10 @@ cenario A (B-13), manda o avaliador independente comparar com a verdade e
 fecha o relatorio (B-14).
 
 A origem do processamento vai no nome de cada arquivo gravado:
-`referencia` quando a "placa" e o modelo Python, `fpga` quando e a placa de
-verdade. Resultado da referencia nunca e apresentado como resultado de FPGA.
+`referencia` quando a "placa" e o modelo Python, `simulacao` quando e o
+Verilog da placa rodando no simulador (06_fpga/sim/prova_cenario_b.py) e
+`fpga` quando e a placa de verdade. Resultado de referencia ou de simulacao
+nunca e apresentado como resultado de FPGA.
 
 A contagem de ensaios tentados e gravada antes da execucao, nao depois.
 """
@@ -43,7 +45,10 @@ RESULTADO_A = SE.RESULTADO_A
 VERDADE = os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario', 'leakmap_verdade_matriz_v1.json')
 SAIDA = os.path.join(RAIZ, '06_fpga', 'resultados')
 
-SUFIXO = {'referencia_python_da_placa': 'referencia', 'fpga': 'fpga'}
+SUFIXO = {'referencia_python_da_placa': 'referencia', 'simulacao_do_verilog': 'simulacao', 'fpga': 'fpga'}
+ONDE = {'referencia_python_da_placa': 'referencia Python da placa',
+        'simulacao_do_verilog': 'Verilog da placa, em simulador',
+        'fpga': 'FPGA'}
 
 
 def ler(caminho):
@@ -122,7 +127,7 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
                                'Q16, somas de energia, limiar por multiplicacao cruzada e '
                                'retrocesso; B-11 no computador: delta_t pelos indices, decisao '
                                'de evidencia e posicao com o codigo do cenario A.'
-                               % ('FPGA' if origem == 'fpga' else 'referencia Python da placa')),
+                               % ONDE[origem]),
         'n_ensaios': len(registros),
         'contagem_por_classe': contagem,
         'resultados': registros,

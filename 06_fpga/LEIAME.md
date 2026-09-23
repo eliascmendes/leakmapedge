@@ -34,8 +34,8 @@ Escolhas de projeto que tornam o mesmo Verilog válido em qualquer placa:
 
 - **Sem multiplicador combinacional grande.** As multiplicações de até 64 × 32
   bits são feitas uma de cada vez por um multiplicador sequencial. Não
-  dependem de bloco DSP de fabricante e fecham tempo com folga. O maior caso
-  da matriz leva cerca de 52 mil ciclos, meio milissegundo a 100 MHz.
+  dependem de bloco DSP de fabricante e fecham tempo com folga. O ensaio mais
+  longo da matriz é processado em 32 338 ciclos, 0,32 ms a 100 MHz.
 - **Memórias escritas no padrão que as duas ferramentas reconhecem.** As
   amostras viram blocos de memória dedicados no Vivado e no Quartus.
 - **Reinício interno na energização.** Não depende de botão da placa.
@@ -50,13 +50,42 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
   conhecido de 40 amostras entre canais;
 - casos de protocolo: bloco corrompido e reenviado, lacuna de sequência,
   mensagens mal formadas, cabeçalho absurdo, tipo desconhecido, execução sem
-  configuração, ensaio acima da capacidade, pedido de resultado repetido e
-  três ensaios seguidos na mesma placa;
+  configuração, ensaio acima da capacidade, pedido de resultado repetido, o
+  mesmo ensaio duas vezes seguidas e três ensaios seguidos na mesma placa;
 - o sistema completo, com a serial de verdade no caminho.
 
-**Situação: 57 de 57 casos idênticos ao modelo.** O teste foi conferido
+**Situação: 58 de 58 casos idênticos ao modelo.** O teste foi conferido
 estragando o Verilog de propósito: trocar `>` por `>=` no retrocesso derruba
 15 casos, e deixar de contar uma descontinuidade derruba o caso da lacuna.
+
+## Prova do cenário B antes da placa
+
+O testbench grava a resposta que o próprio Verilog devolveu.
+`sim/prova_cenario_b.py` decodifica essa resposta e confere os critérios do
+cenário B sem passar pelo modelo Python da placa:
+
+| Critério | O que foi conferido | Resultado |
+|---|---|---|
+| B-09 | Índice de cruzamento e de chegada, bandeira de truncado e oportunidades de decisão iguais aos de `04_detector/detector_ponto_fixo.py`, rodado sobre o sinal original | 90 de 90 canais, e 4 de 4 sinais sintéticos de retrocesso |
+| B-08 | Canal B igual ao A atrasado 40 amostras; todas as amostras reproduzidas com um índice só | 40 amostras de diferença na chegada e no cruzamento |
+| B-07 | Configuração lida de volta igual à enviada; o mesmo ensaio duas vezes, e com outro no meio | 45 de 45 configurações; resultados idênticos byte a byte |
+| B-06 | Bloco corrompido no enlace recusado pelo CRC, reenviado e aceito; bloco fora de sequência recusado | Resultado igual ao do ensaio sem corrupção; execução com lacuna recusada |
+
+Depois, o computador do cenário B roda os 45 ensaios lendo a resposta do
+Verilog, com a origem `simulacao_do_verilog`, e o avaliador independente
+compara com a verdade. Resultado: 30 detecções, nenhum falso alarme, erro
+mediano de 0,241 m, os mesmos números do cenário A. Os arquivos ficam em
+`resultados/` com `simulacao` no nome, separados dos da referência e dos da
+placa.
+
+A prova também foi conferida estragando de propósito um índice de chegada na
+resposta gravada: o B-09 cai para 89 de 90 e o script falha.
+
+O processamento na placa, do fim da mensagem EXECUTAR ao começo do
+RESULTADO, leva de mediana 16 103 ciclos e no máximo 32 338 ciclos (MX-039, 500
+amostras): 0,32 ms com relógio de 100 MHz, para um ensaio que cobre 0,2 s de
+sinal. São ciclos contados na simulação; em segundos, dependem do relógio que
+fechar tempo na placa.
 
 ## Síntese de conferência
 
@@ -83,7 +112,7 @@ tempo, vêm do Vivado ou do Quartus na placa escolhida.
 | `dimensionamento.py` | B-05 | Conta de memória e da serial contra cada placa candidata; decide a via 1 |
 | `preparo.py` | B-02, B-07 | Conversão do ensaio e parâmetros inteiros da placa |
 | `hospedeiro.py` | B-06, B-07, B-10 | Conversa com a placa: configura e confere, carrega com reenvio, executa e confirma |
-| `transporte.py` | — | Em memória (referência) ou porta serial (FPGA) |
+| `transporte.py` | — | Em memória (referência), resposta gravada do Verilog no simulador (para se a conversa sair do que foi simulado) ou porta serial (FPGA) |
 | `placa_referencia.py` | B-06 a B-10 | Modelo do que a FPGA faz, amostra a amostra, só com inteiros |
 | `registro_b.py` | B-11 | Δt pelos índices, decisão e posição com o código do cenário A, campo `origem` |
 | `comparador.py` | B-13 | Divergência com o software em amostras e em metros, com a causa apontada |
@@ -101,7 +130,7 @@ mesmos números do cenário A.
 ```bash
 python 06_fpga/computador/executar_cenario_b.py
 python -m unittest discover -s 06_fpga/computador/testes -p "teste_*.py"
-python 06_fpga/sim/rodar_simulacao.py
+python 06_fpga/sim/rodar_simulacao.py      # simula e, com tudo igual, roda a prova
 python 06_fpga/sim/sintetizar_yosys.py
 ```
 

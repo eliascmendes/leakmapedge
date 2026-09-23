@@ -11,8 +11,9 @@ o resto, com as mesmas regras do cenario A:
 
 O registro tem a mesma estrutura dos registros do cenario A, entao o
 avaliador independente (05_avaliacao/avaliador.py) le os dois do mesmo jeito.
-O campo `origem` e obrigatorio e diz de onde saiu o processamento: `fpga`
-ou `referencia_python_da_placa`. Nunca se misturam no mesmo arquivo.
+O campo `origem` e obrigatorio e diz de onde saiu o processamento: `fpga`,
+`simulacao_do_verilog` ou `referencia_python_da_placa`. Nunca se misturam no
+mesmo arquivo.
 """
 import math
 import os
