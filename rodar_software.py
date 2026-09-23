@@ -11,8 +11,11 @@ dependencia:
   5. 05_avaliacao/avaliador.py           A-17 avaliacao independente
   6. web/gerar_gabarito.py               gabarito do Python para o front-end
   7. web/gerar_dados_web.py              dados do simulador do painel
-  8. testes do detector e do avaliador (Python) e teste de paridade da
-     adaptacao em JavaScript contra o gabarito do Python (Node)
+  8. 06_fpga/computador                  cenario B, lado do computador: selos,
+                                         dimensionamento e execucao contra a
+                                         referencia Python da placa
+  9. testes do detector, do avaliador e do cenario B (Python) e teste de
+     paridade da adaptacao em JavaScript contra o gabarito do Python (Node)
 
 O passo 5 roda em processo separado do passo 2 de proposito: e o criterio de
 conclusao de A-17. O avaliador nunca importa modulo do detector.
@@ -49,11 +52,18 @@ PASSOS = [
      os.path.join('web', 'gerar_gabarito.py')),
     ('front-end    dados do simulador do painel',
      os.path.join('web', 'gerar_dados_web.py')),
+    ('cenario B    selos de verificacao (B-01)',
+     os.path.join('06_fpga', 'computador', 'selo.py')),
+    ('cenario B    dimensionamento (B-05)',
+     os.path.join('06_fpga', 'computador', 'dimensionamento.py')),
+    ('cenario B    execucao contra a referencia Python da placa',
+     os.path.join('06_fpga', 'computador', 'executar_cenario_b.py')),
 ]
 
 TESTES = [
     ('testes do detector', os.path.join('04_detector', 'testes')),
     ('testes do avaliador', os.path.join('05_avaliacao', 'testes')),
+    ('testes do cenario B', os.path.join('06_fpga', 'computador', 'testes')),
 ]
 
 

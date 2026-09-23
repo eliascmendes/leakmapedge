@@ -59,6 +59,46 @@ def para_codigo(sinal_m, degrau_m, minimo_m=0.0):
     return np.rint((x - float(minimo_m)) / float(degrau_m)).astype(np.int64)
 
 
+def coeficiente_do_filtro(corte_hz, ts):
+    """Coeficiente do passa-altas em Q`FRACAO`: round(tau / (tau + Ts) * 2^FRACAO)."""
+    tau = 1.0 / (2.0 * np.pi * float(corte_hz))
+    a = tau / (tau + ts)
+    return int(round(a * (1 << FRACAO)))
+
+
+def piso_em_ye(piso_m, degrau_m):
+    """Piso de amplitude levado para as unidades de Ye (codigo em Q(FRACAO-DESLOCA))."""
+    return int(round(piso_m / float(degrau_m) * (1 << (FRACAO - DESLOCA_ENERGIA))))
+
+
+def parametros_inteiros(cal, ts, degrau_m, resolucao_declarada_m=None):
+    """Todos os numeros que a maquina inteira usa, e so eles.
+
+    E o conjunto que o computador envia a FPGA no cenario B (etapa B-07).
+    Com estes parametros e o codigo de entrada, o detector inteiro fica
+    completamente determinado, sem nenhuma conta em ponto flutuante.
+    """
+    cal = dict(cal or D.calibracao_padrao())
+    limiar = int(round(cal['limiar_de_razao']))
+    if limiar != cal['limiar_de_razao']:
+        raise ValueError('o porte em ponto fixo exige limiar de razao '
+                         'inteiro; recebeu %r' % cal['limiar_de_razao'])
+    piso_m = D.piso_de_amplitude(cal, resolucao_declarada_m)
+    piso = piso_em_ye(piso_m, degrau_m)
+    return {
+        'fracao': FRACAO,
+        'desloca_energia': DESLOCA_ENERGIA,
+        'coeficiente_do_filtro': coeficiente_do_filtro(cal['corte_passa_altas_hz'], ts),
+        'n_curta': int(cal['n_curta']),
+        'n_guarda': int(cal['n_guarda']),
+        'n_longa': int(cal['n_longa']),
+        'limiar_de_razao': limiar,
+        'k2_faixa_de_ruido': int(round(cal['k_faixa_de_ruido'] ** 2)),
+        'piso_em_ye': piso,
+        'piso_energia_por_amostra': (piso * piso) // 12,
+    }
+
+
 def passa_altas_inteiro(codigo, corte_hz, ts, larguras):
     """y[n] = (A * (y[n-1] + (x[n]-x[n-1]) << FRACAO)) >> FRACAO.
 
@@ -67,9 +107,7 @@ def passa_altas_inteiro(codigo, corte_hz, ts, larguras):
     versao em ponto flutuante arredonda. A diferenca entre as duas e
     justamente o que o teste de comparacao mede.
     """
-    tau = 1.0 / (2.0 * np.pi * float(corte_hz))
-    a = tau / (tau + ts)
-    coeficiente = int(round(a * (1 << FRACAO)))
+    coeficiente = coeficiente_do_filtro(corte_hz, ts)
     larguras['coeficiente_do_filtro'] = _bits(coeficiente)
 
     x = np.asarray(codigo, dtype=np.int64)
@@ -124,8 +162,7 @@ def detectar_canal_inteiro(sinal_m, ts, degrau_m, cal=None,
 
     # Piso de amplitude e de energia, levados para as unidades de Ye.
     piso_m = D.piso_de_amplitude(cal, resolucao_declarada_m)
-    piso_ye = int(round(piso_m / float(degrau_m)
-                        * (1 << (FRACAO - DESLOCA_ENERGIA))))
+    piso_ye = piso_em_ye(piso_m, degrau_m)
     larguras['piso_em_ye'] = _bits(piso_ye)
     piso_energia_por_amostra = (piso_ye * piso_ye) // 12
 

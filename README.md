@@ -47,6 +47,7 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | A-17 | Avaliador independente, em processo separado, que nunca importa código do detector | [`05_avaliacao/avaliador.py`](05_avaliacao/avaliador.py) |
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
+| Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga`](06_fpga) |
 
 ### Resultados em simulação
 
@@ -72,7 +73,7 @@ Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avali
 | [`03_ensaios`](03_ensaios) | Dados de cada rodada, separados por quem pode lê-los |
 | [`04_detector`](04_detector) | Modelo de sensor, amostragem, detector, posição e porte em ponto fixo |
 | [`05_avaliacao`](05_avaliacao) | Avaliador independente e métricas |
-| [`06_fpga`](06_fpga) | Implementação em hardware |
+| [`06_fpga`](06_fpga) | Cenário B: especificação para o Verilog e todo o lado do computador |
 | [`web`](web) | Simulador interativo do painel: adaptação do detector para o navegador e teste de paridade com o Python |
 | [`leakmap_painel.html`](leakmap_painel.html) | Painel de apresentação do projeto |
 
@@ -87,7 +88,7 @@ pip install numpy
 python rodar_software.py
 ```
 
-O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado e roda os 73 testes automatizados em Python. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
+O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa e termina com os 105 testes automatizados em Python. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
 
 A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr; o ambiente está descrito em [`02_bancada/ambiente`](02_bancada/ambiente). Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela.
 

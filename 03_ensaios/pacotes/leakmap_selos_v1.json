@@ -1,0 +1,461 @@
+{
+  "descricao": "Selos de verificacao do cenario B (B-01). Um ensaio so e reexecutado na FPGA se tiver selo e se o seu conteudo ainda tiver a mesma impressao digital.",
+  "versao": "selos-v1",
+  "pacote_de_origem": "leakmap_pacote_matriz_v1.json",
+  "resultado_do_cenario_A": "leakmap_resultado_matriz_v1.json",
+  "n_selados": 45,
+  "n_recusados": 0,
+  "selos": {
+    "MX-001": {
+      "impressao_sha256": "e9aec8beba538662a6ff5379ad0de767d1acd64a921af4b3b843ada6ce55c407",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-002": {
+      "impressao_sha256": "73d3fee8a43e6e67d91f05932d8b421c077dca7db177859e1650681960042d01",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-003": {
+      "impressao_sha256": "fbce9128e6fb79040a70b184d896a71f015faf52144321da89e81a9d1356bb41",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-004": {
+      "impressao_sha256": "5ee1bee868a9268433b7ce249369d9ae193e785d9de2d3f1771aa020de64eba9",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-005": {
+      "impressao_sha256": "f9ca0dc0633cbf26fc70ec59c44fbd3172f16216c479131b33590f87e4a1e3d7",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-006": {
+      "impressao_sha256": "f12248438c5a8682d4d7a32c4e58f1da2cf0216b332678b9898951403ca34281",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-007": {
+      "impressao_sha256": "eac85f2dbe55e0ddb27ea9c7d12d03082fe1115b10fab3e1e2ce9e0c11102af8",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-008": {
+      "impressao_sha256": "6147000b8109ef22afe2054a6e84dc2f0effb0b7ed335a6ec3913e88de78940f",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-009": {
+      "impressao_sha256": "cf5ee4f88f07ed25a735f0c0e29b1ec786008d5fea5e3eed117c406a44852531",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-010": {
+      "impressao_sha256": "de15ce6058bd623763f92e85e47ee1d04ae4dab678a011bb34f68a9edb444794",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-011": {
+      "impressao_sha256": "456956d7fbbe79a760f71d89b459c5ac95a05098d2510427e581fc364bf4102f",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-012": {
+      "impressao_sha256": "b75dedfa751de3fad9f982dfdbff238a2baa17aea0dfe8932ee0058b820f6b5a",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-013": {
+      "impressao_sha256": "4dbc21e715fde663b422509170d9d25f38442fd88300c79430a9b0412e54c7e1",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-014": {
+      "impressao_sha256": "2fa4348fd613df441e3905e5768e0867ff05fd676face56cbcc991fd8f29f6ac",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-015": {
+      "impressao_sha256": "15ec9905d2d50bddf4df25c1d478046b0e72861aa8ce0673c04a7e3b6f6d91dd",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-016": {
+      "impressao_sha256": "6e604cdccf07978ed625b4183c335d12f22418f52661afead23298eaae0c4e0a",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-017": {
+      "impressao_sha256": "a87ba0d79ad2fa40ec726bff15198a7b38b680a2a1767b8b224e16b045ca653e",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-018": {
+      "impressao_sha256": "e078c093478e2f8e0bb047db99f36955bc6cf61284f6a6d9c49a9b42ab09250c",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-019": {
+      "impressao_sha256": "6f3c4b2f9dbaf5edf79faa3efb6ea0167730f3280b7139d08b549c6e3378c7f1",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-020": {
+      "impressao_sha256": "b7a7439bcd718696efb050006bbe63df8a7b66749c562c77fc25ae64c0f48a39",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-021": {
+      "impressao_sha256": "3e4bbb4afda95e45e30746a3a50f0952923f385bdae77fe618b5730c620782f6",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-022": {
+      "impressao_sha256": "cf49c080cfcb7b91c8c897daa04769c8b523cca61a5aa82b468e23312bcee703",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-023": {
+      "impressao_sha256": "b09be772971ecb764d43064f500c7c04f958039ab39d4f56c1cde6c5dfa8990c",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-024": {
+      "impressao_sha256": "3dde9bc4c6565a808c7a96bcf2864057d719ca1a25a28b2165706bddc9ccd38e",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-025": {
+      "impressao_sha256": "0ab6a4b8088e3615b82fb4ee852f9af8d45dedfdac3df765452508aaba272fe5",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-026": {
+      "impressao_sha256": "436f9897c3e260744ecc17e5a8eaa7040812249ca583d723c6a0a9dd1f959199",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-027": {
+      "impressao_sha256": "91d2d86e70d8b9e69bb43beb6ed3369f229ad64ba53ef28a23860b98fd8544bf",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-028": {
+      "impressao_sha256": "41f9a72d7f1b770d80c2a523c27c569fb9377c96874d06cd88b1a267fc200b0c",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-029": {
+      "impressao_sha256": "7300e6901d704eb0101ab4897106cde9eae46b0cb993a736dae3c290e1ec2290",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-030": {
+      "impressao_sha256": "78bf62f0df52fa3b8e3b955671fdc555d10b3b90c445cf0dc5546c2a39f4bbb1",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-031": {
+      "impressao_sha256": "655e6e3d77ccbc1182684ac72603196acc9c79d6892a988f55a9c177da1f04d2",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-032": {
+      "impressao_sha256": "fd7307d6f25cac85b662583bc571fbf1b53864af5b979381cb2c85a41cd4f158",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-033": {
+      "impressao_sha256": "a69f09f87c763f9a04f6e377aa84ad9f4e37c105410b026917efa031e02bfce4",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-034": {
+      "impressao_sha256": "6bdaaaeaafbea4e4d3b8b1bbecee213b3c367360f928334944269c2f9b48c858",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-035": {
+      "impressao_sha256": "1616fcd174b260635af61c0ec99ad161938de44ca131f57d6b23fd760fb0ee40",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-036": {
+      "impressao_sha256": "21b1ee8d42347fbdc2c9bc36294a1b10b88ab51b6fac3dd9f4737d52920603fa",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-037": {
+      "impressao_sha256": "93313da78268de016eb3c87b0746e8a20825b1b7dad4cf79760860c87c53f35c",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-038": {
+      "impressao_sha256": "ec125b189b9acb447e2a42121b43dbb1710767e481132b46f50fbe7e49a2bbc1",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-039": {
+      "impressao_sha256": "383bed3ca31c728df4db92d539c227b3f3e2ced50ecc05f514b631c8b52a4bdb",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-040": {
+      "impressao_sha256": "a1540b0ead45652ab45cc9f05942dade2e90bff1ab124e471c5d25fcf2b7633c",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-041": {
+      "impressao_sha256": "cfc84878f80c87397917bde63854d7af002a4006e0d0805cf7529c1a4fd5449a",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-042": {
+      "impressao_sha256": "5c983128907ebceefc2c40577132b2106aea0735c1375849898354fd1536b85e",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-043": {
+      "impressao_sha256": "70a35ebd6566a1861144c8dd549ec802ce1625c3ad23b555ecacc40e76c55eec",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-044": {
+      "impressao_sha256": "37369f3bd96a9236462d6eb935228b5e45e09fed7c60f9bc16a49d91f006f221",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    },
+    "MX-045": {
+      "impressao_sha256": "431063a24052a4284d060da441aa8cb85166476e32ba9eb55227da4c3f811ebb",
+      "verificacoes": [
+        "formato",
+        "valores_numericos",
+        "base_de_tempo_uniforme",
+        "comprimento_minimo",
+        "processado_no_cenario_A"
+      ]
+    }
+  },
+  "recusados": {}
+}
