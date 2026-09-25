@@ -17,6 +17,7 @@ instalação industrial.
 | [`rtl/`](rtl) | O Verilog da placa, em Verilog 2005 puro, sem nada de fabricante |
 | [`sim/`](sim) | Testbenches, o script que roda todos os casos e o de síntese de conferência |
 | [`computador/`](computador) | Todo o lado do computador, etapas B-01 a B-14, com testes |
+| [`placas/`](placas) | Projeto do Quartus da DE10-Standard e o topo para placas Intel que conversa pelo cabo de gravação, com o [roteiro do laboratório](placas/de10_standard/ROTEIRO.md) |
 | [`sintese/`](sintese) | Estatísticas de síntese do Yosys para Xilinx série 7 e Cyclone V |
 | [`resultados/`](resultados) | Dimensionamento e resultados do cenário B, sempre com a origem no nome do arquivo |
 
@@ -29,6 +30,7 @@ instalação industrial.
 | `leakmap_detector.v` | Detector de um canal em aritmética inteira: passa-altas, somas de energia, limiar, retrocesso e maior salto |
 | `leakmap_multiplicador.v` | Multiplicador sequencial de soma e deslocamento, compartilhado pelo detector |
 | `leakmap_uart.v` | Serial 8N1 de recepção e transmissão, e a fila de bytes |
+| `leakmap_ponte_jtag.v` | Ponte entre o JTAG virtual e o núcleo, para conversar pelo cabo de gravação; filas entre os dois relógios com ponteiros em código Gray |
 
 Escolhas de projeto que tornam o mesmo Verilog válido em qualquer placa:
 
@@ -112,7 +114,8 @@ tempo, vêm do Vivado ou do Quartus na placa escolhida.
 | `dimensionamento.py` | B-05 | Conta de memória e da serial contra cada placa candidata; decide a via 1 |
 | `preparo.py` | B-02, B-07 | Conversão do ensaio e parâmetros inteiros da placa |
 | `hospedeiro.py` | B-06, B-07, B-10 | Conversa com a placa: configura e confere, carrega com reenvio, executa e confirma |
-| `transporte.py` | — | Em memória (referência), resposta gravada do Verilog no simulador (para se a conversa sair do que foi simulado) ou porta serial (FPGA) |
+| `transporte.py` | — | Em memória (referência), resposta gravada do Verilog no simulador (para se a conversa sair do que foi simulado), porta serial ou cabo de gravação pelo JTAG (FPGA) |
+| `ponte_jtag.tcl` | — | Roda no `quartus_stp` e leva os deslocamentos do JTAG virtual entre o computador e a placa |
 | `placa_referencia.py` | B-06 a B-10 | Modelo do que a FPGA faz, amostra a amostra, só com inteiros |
 | `registro_b.py` | B-11 | Δt pelos índices, decisão e posição com o código do cenário A, campo `origem` |
 | `comparador.py` | B-13 | Divergência com o software em amostras e em metros, com a causa apontada |
@@ -171,6 +174,41 @@ corrompido nunca era reenviado; e respostas fora de hora se acumulavam na
 fila. Agora o computador descarta e conta as respostas fora de hora, e manda
 EXECUTAR de novo quando a placa acusa CRC inválido.
 
+## Pelo cabo de gravação, sem adaptador
+
+A serial pede um adaptador USB-serial ligado nos pinos da placa. Para não
+depender dele, o computador também conversa com a FPGA pelo próprio cabo que a
+grava (USB-Blaster), pelo JTAG virtual da Intel. As mensagens são as mesmas;
+só o fio muda.
+
+- [`rtl/leakmap_ponte_jtag.v`](rtl/leakmap_ponte_jtag.v): a ponte, em
+  Verilog puro. Recebe os sinais do JTAG virtual e entrega ao núcleo a mesma
+  interface de bytes da serial.
+- [`placas/intel/leakmap_topo_jtag.v`](placas/intel/leakmap_topo_jtag.v): o
+  topo para placas Intel, com o `sld_virtual_jtag`. É o único arquivo do
+  projeto com módulo de fabricante.
+- [`computador/ponte_jtag.tcl`](computador/ponte_jtag.tcl) roda no
+  `quartus_stp` e abre uma porta TCP local; o `TransporteJtag` conecta nela.
+  TCP e não a entrada e saída padrão, porque o `quartus_stp` só entrega o que
+  escreve quando termina.
+- [`placas/de10_standard/`](placas/de10_standard): o projeto do Quartus da
+  DE10-Standard. [`placas/preparar_quartus.py`](placas/preparar_quartus.py)
+  copia o projeto para uma pasta sem acento, porque o Quartus não aceita
+  acento no caminho, e compila.
+
+Ao conectar, o computador lê o registro de estado da ponte e confere a marca
+"LK": uma placa sem o projeto gravado para com mensagem clara, e a mesma
+leitura descobre a ordem em que o cabo desloca os bits.
+
+Os testes ([`computador/testes/teste_ponte_jtag.py`](computador/testes/teste_ponte_jtag.py))
+ligam o computador inteiro do cenário B ao Verilog da ponte e do núcleo no
+Icarus, por [`sim/tb_ponte_jtag.v`](sim/tb_ponte_jtag.v), que fala as mesmas
+linhas do `quartus_stp`. Os ensaios chegam iguais aos da referência, inclusive
+com o cabo deslocando os bits na ordem inversa. Com o Quartus instalado, o
+teste também conversa com o `quartus_stp` de verdade pela porta local.
+
+O passo a passo do dia está em [`placas/de10_standard/ROTEIRO.md`](placas/de10_standard/ROTEIRO.md).
+
 ## Como rodar
 
 ```bash
@@ -191,16 +229,19 @@ python 06_fpga/computador/executar_cenario_b.py --serial socket://127.0.0.1:5555
 ```
 
 A placa simulada aceita `--ruido 1e-4`, `--perder-resultado 0.1`,
-`--semente 7` e `--baud 0` (sem o tempo de fio). Com a FPGA na porta serial:
+`--semente 7` e `--baud 0` (sem o tempo de fio). Com a FPGA gravada, pelo
+cabo de gravação ou pela porta serial:
 
 ```bash
+python 06_fpga/computador/executar_cenario_b.py --jtag
 python 06_fpga/computador/executar_cenario_b.py --serial COM5
 ```
 
 ## O que falta
 
-- O arquivo de pinos e relógio da placa escolhida (XDC no Vivado, QSF no
-  Quartus), ligando `clk`, `reinicio`, `uart_rx`, `uart_tx` e os LEDs, e o
-  parâmetro `FREQUENCIA_HZ` do topo com o relógio da placa.
-- Síntese, fechamento de tempo e gravação na placa.
-- A tela do modo FPGA no painel, com o rótulo de origem (B-12).
+- Gravar a DE10-Standard e rodar os 45 ensaios pelo cabo de gravação,
+  seguindo o [roteiro do laboratório](placas/de10_standard/ROTEIRO.md).
+- Para outra placa: o arquivo de pinos dela (QSF no Quartus, XDC no Vivado).
+  Numa placa Xilinx, o topo pelo cabo de gravação usaria o `BSCANE2` no
+  lugar do `sld_virtual_jtag`, com as instruções USER no papel do `ir_in` da
+  ponte; o computador precisaria de outro script no lugar do `quartus_stp`.

@@ -4,8 +4,9 @@ Uso:
   python executar_cenario_b.py                         referencia Python da placa
   python executar_cenario_b.py --serial socket://127.0.0.1:5555
                                                        placa simulada (placa_simulada.py)
+  python executar_cenario_b.py --jtag                  FPGA pelo cabo de gravacao (USB-Blaster)
+  python executar_cenario_b.py --jtag --ensaios MX-001 MX-002
   python executar_cenario_b.py --serial COM5           FPGA na porta serial
-  python executar_cenario_b.py --serial COM5 --ensaios MX-001 MX-002
 
 Para cada ensaio: seleciona pelo selo (B-01), converte (B-02, B-03),
 configura e confere (B-07), carrega os blocos (B-04, B-05, B-06), executa e
@@ -240,18 +241,28 @@ def main():
     ap.add_argument('--serial', help=('porta serial da FPGA (ex.: COM5) ou endereco da placa simulada '
                                       '(ex.: socket://127.0.0.1:5555). Sem ela, usa a referencia Python.'))
     ap.add_argument('--baud', type=int, default=115200)
+    ap.add_argument('--jtag', action='store_true',
+                    help='FPGA pelo cabo USB-Blaster, pelo JTAG virtual, sem adaptador serial')
+    ap.add_argument('--cabo', help='com --jtag: nome do cabo, se houver mais de um')
+    ap.add_argument('--dispositivo', help='com --jtag: dispositivo da cadeia, se nao for achado sozinho')
     ap.add_argument('--ensaios', nargs='*', help='identificadores; sem eles, todos os ensaios do pacote')
     ap.add_argument('--tempo-limite', type=float, default=2.0)
     ap.add_argument('--saida', default=SAIDA, help='pasta dos arquivos gravados (padrao 06_fpga/resultados)')
     args = ap.parse_args()
 
-    if args.serial:
+    if args.jtag:
+        try:
+            transporte = TR.TransporteJtag(cabo=args.cabo, dispositivo=args.dispositivo)
+        except TR.FalhaNaConexao as e:
+            raise SystemExit('nao foi possivel falar com a placa pelo JTAG: %s' % e)
+        print('placa pelo JTAG: %s' % transporte.descricao)
+    elif args.serial:
         transporte = TR.TransporteSerial(args.serial, args.baud)
     else:
         transporte = TR.TransporteMemoria(PLACA.PlacaReferencia())
     try:
         rel = executar(transporte, args.ensaios, tempo_limite_s=args.tempo_limite, saida=args.saida,
-                       mostrar=print if args.serial else None)
+                       mostrar=print if (args.serial or args.jtag) else None)
     finally:
         transporte.fechar()
 

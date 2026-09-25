@@ -13,3 +13,9 @@ __pycache__/
 06_fpga/sim/*.vcd
 # rodadas contra a placa simulada: sao teste do computador, nao resultado
 06_fpga/resultados/*_placa_simulada_v1.json
+# projeto do Quartus: so os arquivos-fonte vao para o git; a compilacao e feita
+# numa copia sem acento no caminho (06_fpga/placas/preparar_quartus.py)
+06_fpga/placas/*/db/
+06_fpga/placas/*/incremental_db/
+06_fpga/placas/*/output_files/
+06_fpga/placas/*/*.qws

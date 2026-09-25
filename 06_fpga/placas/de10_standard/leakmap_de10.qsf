@@ -1,0 +1,33 @@
+# LEAKMAP Edge - projeto do Quartus para a Terasic DE10-Standard (Cyclone V SX).
+# O computador conversa com a placa pelo cabo USB-Blaster (JTAG virtual),
+# sem adaptador serial. Pinos da DE10-Standard: CLOCK_50, SW0 e LEDR0 a LEDR3.
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CSXFC6D6F31C6
+set_global_assignment -name TOP_LEVEL_ENTITY leakmap_topo_jtag
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
+
+set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_multiplicador.v
+set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_detector.v
+set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_nucleo.v
+set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_ponte_jtag.v
+set_global_assignment -name VERILOG_FILE ../intel/leakmap_topo_jtag.v
+set_global_assignment -name SDC_FILE leakmap_de10.sdc
+
+# CLOCK_50, cristal de 50 MHz
+set_location_assignment PIN_AF14 -to clk
+# SW0: deixar para baixo (0); para cima reinicia a placa
+set_location_assignment PIN_AB30 -to reinicio
+# LEDR0 pisca; LEDR1 ocupada; LEDR2 resultado esperando; LEDR3 erro
+set_location_assignment PIN_AA24 -to led_vivo
+set_location_assignment PIN_AB23 -to led_ocupado
+set_location_assignment PIN_AC23 -to led_resultado
+set_location_assignment PIN_AD24 -to led_erro
+
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to clk
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to reinicio
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to led_vivo
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to led_ocupado
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to led_resultado
+set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to led_erro

@@ -46,6 +46,9 @@ import protocolo as PR  # noqa: E402
 import selo as SE  # noqa: E402
 import transporte as TR  # noqa: E402
 
+sys.path.insert(0, AQUI)
+import rodar_simulacao as RS  # noqa: E402
+
 VETORES = os.path.join(FPGA, 'vetores')
 SAIDA = os.path.join(FPGA, 'resultados', 'leakmap_cenario_b_prova_simulacao_v1.json')
 PONTO_FIXO = os.path.join(RAIZ, '04_detector', 'resultados', 'leakmap_ponto_fixo_v1.json')
@@ -359,7 +362,7 @@ def main():
                       'Icarus Verilog. Nao e resultado de FPGA fisica; a placa confirma o que esta '
                       'prova ja mostra.'),
         'origem': 'simulacao_do_verilog',
-        'verilog': sorted('06_fpga/rtl/' + f for f in os.listdir(os.path.join(FPGA, 'rtl')) if f.endswith('.v')),
+        'verilog': sorted('06_fpga/' + f for f in RS.RTL_TOPO),
         'casos_simulados': len(casos),
         'casos_identicos_ao_modelo_byte_a_byte': len(identicos),
         'criterios': criterios,
