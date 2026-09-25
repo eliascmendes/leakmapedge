@@ -91,9 +91,14 @@ entrada transbordou (não deve acontecer).
 | `quartus_stp nao encontrado` | O Quartus está em outra pasta: defina a variável `QUARTUS_ROOTDIR` com a pasta `...\quartus`. |
 | Trava ou diz que o cabo está ocupado | Feche o Programmer do Quartus e rode de novo. |
 | Mais de um cabo ligado | Informe qual: `--cabo "DE-SoC [USB-1]"`. |
-| `a placa nao confirmou a configuracao` | Confira a SW0 para baixo e o LEDR0 piscando; grave de novo. |
+| `a placa nao confirmou a configuracao` | Quase sempre é a SW0 para cima: o núcleo fica em reinício, mas a ponte continua respondendo. Deixe a SW0 para baixo, igual às outras nove chaves. Para ver o que a placa devolve byte a byte: `python 06_fpga/computador/diagnostico_jtag.py`. |
 | Algum ensaio diferente do software | Não apague nada: o relatório em `06_fpga/resultados` diz qual ensaio, em que canal e quanto. |
 
-A primeira conversa confere sozinha a ordem em que o cabo desloca os bits, e
-uma placa sem o projeto gravado para com mensagem clara, antes de mandar
-qualquer ensaio.
+A primeira conversa confere sozinha a ordem em que o cabo desloca os bits e
+mede o atraso com que os bits chegam ao circuito (7 na DE10-Standard), e uma
+placa sem o projeto gravado para com mensagem clara, antes de mandar qualquer
+ensaio.
+
+Em 25/09/2026 este roteiro rodou na DE10-Standard: 45 de 45 ensaios
+concluídos, iguais ao Verilog simulado, com 30 detecções, nenhum falso alarme
+e erro mediano de 0,241 m contra a verdade.

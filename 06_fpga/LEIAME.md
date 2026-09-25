@@ -54,9 +54,15 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
   mensagens mal formadas, cabeçalho absurdo, tipo desconhecido, execução sem
   configuração, ensaio acima da capacidade, pedido de resultado repetido, o
   mesmo ensaio duas vezes seguidas e três ensaios seguidos na mesma placa;
-- o sistema completo, com a serial de verdade no caminho.
+- o sistema completo, com a serial de verdade no caminho;
+- o topo da DE10-Standard pelo cabo de gravação, `placas/intel/leakmap_topo_jtag.v`
+  sem alteração, com um modelo no lugar do `sld_virtual_jtag` da Intel:
+  [`sim/tb_leakmap_jtag.v`](sim/tb_leakmap_jtag.v), 9 casos e 109 mensagens,
+  conferindo também os LEDs e o registro de estado da ponte. O mesmo
+  testbench roda no Questa que vem com o Quartus; ver
+  [`sim/questa/LEIAME.md`](sim/questa/LEIAME.md).
 
-**Situação: 58 de 58 casos idênticos ao modelo.** O teste foi conferido
+**Situação: 59 de 59 casos idênticos ao modelo.** O teste foi conferido
 estragando o Verilog de propósito: trocar `>` por `>=` no retrocesso derruba
 15 casos, e deixar de contar uma descontinuidade derruba o caso da lacuna.
 
@@ -198,7 +204,22 @@ só o fio muda.
 
 Ao conectar, o computador lê o registro de estado da ponte e confere a marca
 "LK": uma placa sem o projeto gravado para com mensagem clara, e a mesma
-leitura descobre a ordem em que o cabo desloca os bits.
+leitura descobre a ordem em que o cabo desloca os bits. Depois mede o atraso
+do tdi pela passagem da ponte (instrução 0). Na DE10-Standard, o hub JTAG da
+Intel entrega ao circuito os bits que o computador manda 7 bordas depois do
+começo do deslocamento, enquanto o tdo sai alinhado. O computador compensa:
+cada mensagem vai num deslocamento só, precedida de bits de enchimento que
+formam um byte de lixo, e o núcleo o ignora porque só começa a ler uma
+mensagem no `A5 5A`.
+
+**Na placa, em 25/09/2026:** DE10-Standard (`5CSXFC6D6F31C6N`), pelo cabo de
+gravação, os 45 ensaios da matriz. 45 concluídos, sem nenhum reenvio nem falha
+de CRC, e os registros iguais, um a um, aos do Verilog simulado. Contra o
+software: mesma chegada nos 90 canais e mesma posição nos 45 ensaios; em
+MX-021 e MX-022 o cruzamento do limiar sai uma amostra depois, como a
+simulação já mostrava. Contra a verdade: 30 detecções, nenhum falso alarme,
+erro mediano de 0,241 m e máximo de 1,046 m, os números do cenário A.
+Resultados em `resultados/` com `fpga` no nome.
 
 Os testes ([`computador/testes/teste_ponte_jtag.py`](computador/testes/teste_ponte_jtag.py))
 ligam o computador inteiro do cenário B ao Verilog da ponte e do núcleo no
@@ -239,8 +260,8 @@ python 06_fpga/computador/executar_cenario_b.py --serial COM5
 
 ## O que falta
 
-- Gravar a DE10-Standard e rodar os 45 ensaios pelo cabo de gravação,
-  seguindo o [roteiro do laboratório](placas/de10_standard/ROTEIRO.md).
+- O tempo de processamento na placa medido na própria placa; hoje ele vem da
+  contagem de ciclos na simulação.
 - Para outra placa: o arquivo de pinos dela (QSF no Quartus, XDC no Vivado).
   Numa placa Xilinx, o topo pelo cabo de gravação usaria o `BSCANE2` no
   lugar do `sld_virtual_jtag`, com as instruções USER no papel do `ir_in` da

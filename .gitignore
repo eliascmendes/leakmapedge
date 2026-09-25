@@ -19,3 +19,7 @@ __pycache__/
 06_fpga/placas/*/incremental_db/
 06_fpga/placas/*/output_files/
 06_fpga/placas/*/*.qws
+# saida do Questa (06_fpga/sim/questa; a compilacao em si fica em %TEMP%\leakmap_questa)
+06_fpga/sim/questa/transcript
+06_fpga/sim/questa/work/
+06_fpga/sim/questa/*.wlf

@@ -19,13 +19,18 @@
 // Com +invertido, o valor e deslocado a partir do bit mais significativo,
 // como faria um cabo que le a cadeia na outra ordem. O TransporteJtag tem de
 // perceber isso sozinho, pela marca do registro de estado.
+//
+// Com +atraso=N, os bits que o computador manda chegam N bordas depois do
+// comeco do deslocamento, e os primeiros N sao zero; o tdo continua alinhado.
+// E o que o hub JTAG da Intel faz na DE10-Standard (N = 7, medido na placa em
+// 25/09/2026). O TransporteJtag mede N pela passagem da ponte e compensa.
 `timescale 1ns / 1ps
 `default_nettype none
 
 module tb_ponte_jtag;
     localparam integer ENTRADA = 32'h8000_0000;
     localparam integer SAIDA   = 32'h8000_0001;
-    localparam integer MAXIMO  = 1024;
+    localparam integer MAXIMO  = 2048;          // uma mensagem inteira num deslocamento
 
     reg clk = 1'b0;
     always #10 clk = ~clk;
@@ -58,11 +63,12 @@ module tb_ponte_jtag;
 
     reg [8*8-1:0]    comando;
     reg [MAXIMO-1:0] valor, capturado;
-    integer          comprimento, i, k, lidos;
+    integer          comprimento, i, k, lidos, atraso, origem;
     reg              invertido;
 
     initial begin
         invertido = $test$plusargs("invertido");
+        if (!$value$plusargs("atraso=%d", atraso)) atraso = 0;
         repeat (8) @(posedge clk);
         rst = 1'b0;
         repeat (300) @(posedge clk);            // reinicio do nucleo
@@ -86,7 +92,8 @@ module tb_ponte_jtag;
                 sdr = 1'b1;
                 for (i = 0; i < comprimento; i = i + 1) begin
                     k = invertido ? comprimento - 1 - i : i;
-                    tdi = valor[k];
+                    origem = i - atraso;
+                    tdi = (origem < 0) ? 1'b0 : valor[invertido ? comprimento - 1 - origem : origem];
                     capturado[k] = tdo;
                     pulso;
                 end

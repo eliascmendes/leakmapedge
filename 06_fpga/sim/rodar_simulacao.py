@@ -4,7 +4,10 @@
 2. compila 06_fpga/rtl com o testbench no Icarus Verilog;
 3. roda cada caso e exige a resposta do Verilog igual, byte a byte, a do
    modelo de referencia (criterios 1 a 4 de 06_fpga/ESPECIFICACAO.md);
-4. roda o modulo de topo inteiro, com a serial, num ensaio curto;
+4. roda o modulo de topo inteiro, com a serial, num ensaio curto; roda o
+   topo da DE10-Standard pelo JTAG (tb_leakmap_jtag.v, o mesmo testbench do
+   Questa) e confere que o roteiro dele, gravado no git, e o que o modelo da
+   placa gera hoje;
 5. com tudo igual, roda prova_cenario_b.py, que decodifica a resposta gravada
    do proprio Verilog e confere os criterios B-06 a B-09.
 
@@ -24,6 +27,10 @@ RAIZ = os.path.dirname(FPGA)
 
 RTL_NUCLEO = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_nucleo.v']
 RTL_TOPO = RTL_NUCLEO + ['rtl/leakmap_uart.v', 'rtl/leakmap_topo.v']
+# topo da DE10-Standard pelo JTAG, com o modelo do sld_virtual_jtag no lugar do da Intel
+RTL_JTAG = RTL_NUCLEO + ['rtl/leakmap_ponte_jtag.v', 'placas/intel/leakmap_topo_jtag.v',
+                         'sim/modelos/sld_virtual_jtag.v']
+ROTEIRO_JTAG = 'sim/questa/roteiro_jtag.hex'
 
 
 def achar(programa):
@@ -82,6 +89,24 @@ def main():
     else:
         falharam.append(linha or processo.stdout[-400:])
         print(processo.stdout[-800:])
+
+    # topo pelo JTAG: o roteiro no git tem de ser o que o modelo gera hoje
+    novo = os.path.join(FPGA, 'vetores', 'roteiro_jtag.hex')
+    subprocess.run([sys.executable, os.path.join(FPGA, 'computador', 'gerar_roteiro_jtag.py'), novo],
+                   check=True, cwd=RAIZ, capture_output=True)
+    with open(os.path.join(FPGA, ROTEIRO_JTAG)) as gravado, open(novo) as gerado:
+        if gravado.read() != gerado.read():
+            falharam.append('o roteiro %s esta desatualizado: rode 06_fpga/computador/gerar_roteiro_jtag.py'
+                            % ROTEIRO_JTAG)
+    compilar(iverilog, RTL_JTAG, 'sim/tb_leakmap_jtag.v', 'sim/tb_leakmap_jtag.vvp')
+    processo = subprocess.run([vvp, '-n', 'sim/tb_leakmap_jtag.vvp', '+roteiro=' + ROTEIRO_JTAG],
+                              cwd=FPGA, capture_output=True, text=True)
+    linha = next((l for l in processo.stdout.splitlines() if l.startswith('RESULTADO tb_leakmap_jtag')), None)
+    if linha and ' PASSOU ' in linha:
+        passaram.append(linha)
+    else:
+        falharam.append(linha or processo.stdout[-400:])
+        print(processo.stdout[-1500:])
 
     ciclos = [int(m.group(1)) for l in passaram for m in [re.search(r'ciclos=(\d+)', l)] if m]
     print('casos: %d | passaram: %d | falharam: %d' % (len(passaram) + len(falharam),

@@ -71,6 +71,7 @@ class PonteJtagNoSimulador(unittest.TestCase):
             self.assertEqual(transporte.estado['versao'], 1)
             self.assertFalse(transporte.estado['fila_de_entrada_transbordou'])
             self.assertFalse(transporte.invertido)
+            self.assertEqual(transporte.atraso_tdi, 0)
         finally:
             transporte.fechar()
 
@@ -78,6 +79,13 @@ class PonteJtagNoSimulador(unittest.TestCase):
         ids = ['MX-001', 'MX-021', 'MX-039', 'MX-044']
         _, relatorio, registros = self.rodar(ids)
         self.assertEqual(relatorio['ensaios']['concluidos'], len(ids))
+        self.conferir(registros)
+
+    def test_atraso_do_hub_da_de10_e_medido_e_compensado(self):
+        # na DE10-Standard o tdi chega 7 bits depois do comeco do deslocamento
+        transporte, relatorio, registros = self.rodar(['MX-001', 'MX-039'], '+atraso=7')
+        self.assertEqual(transporte.atraso_tdi, 7)
+        self.assertEqual(relatorio['ensaios']['concluidos'], 2)
         self.conferir(registros)
 
     def test_cabo_que_desloca_na_outra_ordem_e_percebido_sozinho(self):

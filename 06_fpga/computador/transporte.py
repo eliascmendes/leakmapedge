@@ -224,6 +224,7 @@ class TransporteJtag:
     sincrono = False
     IR_ESCREVER, IR_LER, IR_ESTADO = 1, 2, 3
     LER_MAX = 64            # igual ao parametro LER_MAX da ponte
+    ESCREVER_MAX = 240      # bytes por deslocamento; a fila de entrada da ponte tem 256
     MARCA = 0x4C4B          # "LK"
     ESPERA_ENTRE_LEITURAS_S = 0.002
 
@@ -254,6 +255,8 @@ class TransporteJtag:
                 raise FalhaNaConexao(resposta)
             self.descricao = resposta[len('PRONTO '):]
             self.estado = self._conferir()
+            self.atraso_tdi = self._medir_atraso()
+            self.estado['atraso_tdi'] = self.atraso_tdi
         except FalhaNaConexao:
             self.fechar()
             raise
@@ -368,13 +371,41 @@ class TransporteJtag:
                                  'esta gravado na placa?' % valor)
         return {'versao': (valor >> 8) & 0xFF, 'fila_de_entrada_transbordou': bool(valor & 1)}
 
+    def _medir_atraso(self):
+        """Quantos bits o que o computador manda chega atrasado ao circuito.
+
+        Na DE10-Standard, o hub JTAG da Intel entrega o tdi 7 bits depois do
+        comeco do deslocamento; o tdo sai alinhado. A instrucao 0 da ponte e
+        uma passagem de um bit: o padrao volta deslocado de 1 + atraso.
+        """
+        padrao, largura = 0xA5C30F81, 32
+        self._ir(0)
+        self.ir_atual = 0
+        volta = self._dr(largura + 32, padrao)
+        for deslocamento in range(1, 33):
+            if (volta >> deslocamento) & ((1 << largura) - 1) == padrao:
+                return deslocamento - 1
+        raise FalhaNaConexao('a passagem da ponte nao devolveu o padrao (0x%x): o JTAG virtual '
+                             'nao esta deslocando os bits como esperado' % volta)
+
     # --- a interface dos transportes ------------------------------------------------------------
     def enviar(self, dados):
-        self._ir(self.IR_ESCREVER)
+        """Manda os bytes, compensando o atraso do tdi.
+
+        O circuito recebe primeiro `atraso_tdi` bits que nao sao nossos. Mais
+        `enchimento` bits de zero completam bytes inteiros de lixo, que o nucleo
+        ignora (so comeca a ler uma mensagem no A5 5A); os bytes da mensagem
+        caem alinhados logo depois. Cada mensagem vai num deslocamento so, para
+        o lixo nunca cair no meio dela; a maior (um bloco de amostras) tem 149
+        bytes, e a fila de entrada da ponte tem 256.
+        """
         dados = bytes(dados)
-        for k in range(0, len(dados), self.LER_MAX):
-            pedaco = dados[k:k + self.LER_MAX]
-            self._dr(8 * len(pedaco), int.from_bytes(pedaco, 'little'))
+        if len(dados) > self.ESCREVER_MAX:
+            raise FalhaNaConexao('mensagem de %d bytes: o maximo num deslocamento e %d'
+                                 % (len(dados), self.ESCREVER_MAX))
+        self._ir(self.IR_ESCREVER)
+        enchimento = (8 - self.atraso_tdi % 8) % 8
+        self._dr(8 * len(dados) + enchimento + self.atraso_tdi, int.from_bytes(dados, 'little') << enchimento)
 
     def receber(self, tempo_limite_s):
         """Devolve assim que a placa tiver algum byte, ou vazio no tempo limite."""
