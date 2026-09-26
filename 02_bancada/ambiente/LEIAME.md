@@ -1,12 +1,43 @@
-# Ambiente
+# Ambiente do TSNet
 
-Combinacao validada em 18/09/2026, instalada sem ajuste:
+O detector, o avaliador e o painel rodam no Python do sistema, so com NumPy.
+O TSNet so e preciso para refazer as simulacoes hidraulicas do zero
+(`02_bancada/codigo`). Ele pede versoes antigas: Python 3.11 ou 3.12, NumPy
+1.26 e wntr 1.3.2.
 
-    python -m venv leakmap_env
-    pip install numpy==1.26.4 wntr==1.3.2
-    pip install tsnet
+## Numa maquina nova: um comando
 
-Resultado: numpy 1.26.4, wntr 1.3.2, tsnet 0.3.1 (wheel), pandas 3.0.6.
+Windows, no PowerShell, a partir da raiz do repositorio:
+
+    powershell -ExecutionPolicy Bypass -File 02_bancada\ambiente\preparar_ambiente.ps1
+
+Linux ou macOS:
+
+    bash 02_bancada/ambiente/preparar_ambiente.sh
+
+O script acha um Python 3.11 ou 3.12 (o lancador `py` ou o `uv` no Windows;
+`python3.11`, `python3.12`, `python3` ou o `uv` no Linux), cria o ambiente
+virtual `leakmap_env` na pasta do usuario, instala as versoes congeladas e
+termina rodando a conferencia. Com `-Completo` (Windows) ou `--completo`
+(Linux, como segundo argumento, depois do destino), confere tambem a linha e a
+rede do cais, cerca de 3 minutos a mais.
+
+| Arquivo | O que e |
+|---|---|
+| `requirements-congelado.txt` | Todas as versoes, congeladas do ambiente conferido |
+| `requirements.txt` | So as tres que importam (numpy, wntr, tsnet) |
+| `preparar_ambiente.ps1`, `preparar_ambiente.sh` | Criam o ambiente e rodam a conferencia |
+| `conferir_ambiente.py` | Refaz simulacoes gravadas e compara ponto a ponto; sai com 0 quando confere |
+
+A conferencia compara a carga nos sensores e a base de tempo com o que esta
+gravado em `03_ensaios/amostras`: o evento EV-01 da matriz de 200 m e, com a
+opcao completa, o vazamento LC-05 da linha do cais e o RC-01 da rede. A
+tolerancia e 1e-4 m de carga; a diferenca medida e de 5e-6 m, o
+arredondamento do arquivo de rede.
+
+Conferido em 26/09/2026 no Windows 11 com Python 3.11.16, num ambiente criado
+do zero pelo script. O GitHub Actions faz o mesmo no Linux a cada envio (job
+`ambiente-do-tsnet` em `.github/workflows/testes.yml`).
 
 ## Armadilhas conhecidas
 
@@ -31,19 +62,24 @@ Resultado: numpy 1.26.4, wntr 1.3.2, tsnet 0.3.1 (wheel), pandas 3.0.6.
    manobra, use retirada de vazao no no com `add_demand_pulse` (reduzir a
    retirada e o mesmo que fechar a valvula daquele ramal), que parte em
    equilibrio.
+7. `set_roughness` troca a RUGOSIDADE do modelo (em metros, no wntr), nao o
+   fator de atrito. Passar 0.02 pensando em f = 0,02 da 20 mm de rugosidade:
+   o EPANET calcula o regime com f perto de 0,1, o TSNet corta para 0,03
+   (armadilha 4), e o regime nao fica em equilibrio no transiente. Numa rede
+   so com reservatorios isso quase nao aparece na carga; com bomba, a carga
+   da descarga escorrega desde o instante zero. Para a linha do cais: nao
+   chame `set_roughness`, e ponha a rugosidade real no `.inp` em metros
+   (aco comercial: 0.046e-3). O trecho de 200 m da matriz (rodada v1) usa
+   `set_roughness(0.02)` e ficou como esta, para nao mudar a referencia.
 
-## No Windows
+## Instalacao a mao
 
-O NumPy 1.26 e o wntr 1.3.2 nao tem pacote pronto para Python 3.13 ou 3.14.
-Use um Python 3.11 ou 3.12 so para a bancada, num ambiente virtual fora de
-caminho com acento:
+Se preferir nao usar o script: um Python 3.11 ou 3.12, num ambiente virtual
+fora de caminho com acento (o NumPy 1.26 e o wntr 1.3.2 nao tem pacote pronto
+para Python 3.13 ou 3.14):
 
     py -3.11 -m venv C:\Users\<usuario>\leakmap_env
-    C:\Users\<usuario>\leakmap_env\Scripts\python -m pip install numpy==1.26.4 wntr==1.3.2
-    C:\Users\<usuario>\leakmap_env\Scripts\python -m pip install tsnet
+    C:\Users\<usuario>\leakmap_env\Scripts\python -m pip install -r 02_bancada\ambiente\requirements-congelado.txt
+    C:\Users\<usuario>\leakmap_env\Scripts\python 02_bancada\ambiente\conferir_ambiente.py
 
-Conferido em 26/09/2026 com Python 3.11.16: o ambiente reproduz os sinais
-gravados de `03_ensaios/amostras/leakmap_amostras_v1.json` com diferenca
-maxima de 5e-6 m de carga (arredondamento do arquivo de rede) e o mesmo passo
-de tempo efetivo. O resto do projeto continua no Python do sistema; so as
-simulacoes do TSNet usam este ambiente.
+Sem o arquivo congelado, instale numpy e wntr ANTES do tsnet (armadilha 1).

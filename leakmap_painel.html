@@ -376,6 +376,8 @@ footer p{max-width:80ch;margin-top:10px}
 .quebra button.sair:hover{color:var(--ink);border-color:var(--lime-dim);background:none}
 .quebra button[hidden]{display:none}
 .motivo.retida{border-left-color:var(--amber)}
+.chk .simulado{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--dim);
+  border:1px solid var(--rule);padding:3px 5px;margin-left:2px}
 .saude{margin-top:8px;font:500 12.5px/1.45 var(--mono);color:var(--dim)}
 .saude.degradado{color:var(--amber)}
 .ajuste select{background:var(--panel);border:1px solid var(--rule);color:var(--ink);
@@ -619,6 +621,11 @@ footer p{max-width:80ch;margin-top:10px}
         <div class="glab"><b>3</b> Velocidade de onda declarada</div>
         <input type="range" id="simC" min="-5" max="5" step="0.5" value="0" aria-label="Desvio da velocidade de onda declarada, em porcentagem">
         <div class="rangeval num" id="simCval"></div>
+      </div>
+      <div class="grp">
+        <div class="glab"><b>4</b> Confirmação por gás</div>
+        <label class="chk"><input type="checkbox" id="simGas"> O sensor de gás acusa vapor na região <span class="simulado">simulado</span></label>
+        <p class="hint">Confirmação por uma segunda física: com a onda de pressão e o vapor apontando o mesmo lugar, o alerta provável sobe para confirmado.</p>
       </div>
 
       <details class="ajuste" id="simAjuste">
@@ -1170,7 +1177,7 @@ footer p{max-width:80ch;margin-top:10px}
   <div class="base">
     <span class="st ok">Validado em simulação · 19/09/2026</span>
     <h3>Cenário A · a cadeia completa já roda em software</h3>
-    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 164 testes automatizados em Python. É a referência contra a qual a placa é comparada, amostra a amostra, no cenário B.</p>
+    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 182 testes automatizados em Python. É a referência contra a qual a placa é comparada, amostra a amostra, no cenário B.</p>
     <ul class="tick">
       <li>Geometria do trecho, evento de ruptura, solucionador hidráulico e extração das séries nos dois pontos de medição.<em>executado</em></li>
       <li>Modelo de sensores com banda, atraso de canal, jitter, ruído, offset, saturação e conversor A/D, cada efeito ajustável sozinho.<em>executado</em></li>
@@ -1244,14 +1251,20 @@ footer p{max-width:80ch;margin-top:10px}
   <p class="sub" id="caisLead"></p>
   <div class="sim">
     <div class="simctl caisctl">
-      <div class="glab"><b>1</b> Vazamento grande · cerca de 18% da vazão</div>
+      <div class="glab"><b>1</b> Vazamento grande · cerca de 23% da vazão</div>
       <div class="seg seg4" id="caisGrande" role="group" aria-label="Vazamento grande"></div>
-      <div class="glab"><b>2</b> Vazamento pequeno · cerca de 4% da vazão</div>
+      <div class="glab"><b>2</b> Vazamento pequeno · cerca de 5% da vazão</div>
       <div class="seg seg4" id="caisPequeno" role="group" aria-label="Vazamento pequeno"></div>
       <div class="glab"><b>3</b> Manobra de operação</div>
       <div class="seg seg3" id="caisManobras" role="group" aria-label="Manobra"></div>
       <div class="glab"><b>4</b> Transmissor</div>
       <div class="seg seg3" id="caisTx" role="group" aria-label="Transmissor"></div>
+      <div class="glab"><b>5</b> Registro de operação</div>
+        <label class="chk"><input type="checkbox" id="caisOperacoes" checked> O sistema de controle informa quando cada válvula e bomba é operada <span class="simulado">simulado</span></label>
+        <p class="hint">Com o registro, uma onda que nasce numa válvula ou bomba operada naquele instante vira manobra registrada. Sem ele, a abertura da válvula do 106 e um vazamento ali dão a mesma onda, e as duas alarmam.</p>
+      <div class="glab"><b>6</b> Confirmação por gás</div>
+        <label class="chk"><input type="checkbox" id="caisGas"> O sensor de gás acusa vapor na região <span class="simulado">simulado</span></label>
+        <p class="hint">Confirmação por uma segunda física: com a onda de pressão e o vapor apontando o mesmo lugar, o alerta provável sobe para confirmado.</p>
     </div>
     <div class="simres caisres">
       <div class="diagram"><svg id="caisSvg" viewBox="0 0 1000 200" role="img" aria-label="Esquemático da linha do cais com o evento e o resultado do detector"></svg></div>
@@ -1275,10 +1288,45 @@ footer p{max-width:80ch;margin-top:10px}
   </div>
 </section>
 
+<section id="rede">
+  <div class="eyebrow">Rede do cais · simulação com premissas</div>
+  <h2>Da linha reta à rede com manifold e três ramais</h2>
+  <p class="sub" id="redeLead"></p>
+  <div class="sim">
+    <div class="simctl caisctl">
+      <div class="glab"><b>1</b> Vazamento grande</div>
+      <div class="seg seg4" id="redeGrande" role="group" aria-label="Vazamento grande"></div>
+      <div class="glab"><b>2</b> Vazamento pequeno</div>
+      <div class="seg seg4" id="redePequeno" role="group" aria-label="Vazamento pequeno"></div>
+      <div class="glab"><b>3</b> Transmissor</div>
+      <div class="seg seg3" id="redeTx" role="group" aria-label="Transmissor"></div>
+    </div>
+    <div class="simres caisres">
+      <div class="diagram"><svg id="redeSvg" viewBox="0 0 1000 260" role="img" aria-label="Esquemático da rede do cais com manifold, três ramais, o vazamento e o resultado do detector"></svg></div>
+      <div class="tiles">
+        <div class="tile acc"><div class="lab">Nível do alerta</div><div class="val" id="redeNivel">—</div></div>
+        <div class="tile"><div class="lab">Classificação</div><div class="val" id="redeClasse">—</div></div>
+        <div class="tile"><div class="lab">Posição no trecho</div><div class="val num" id="redeEst">—</div></div>
+        <div class="tile"><div class="lab">Erro pela tubulação</div><div class="val num" id="redeErro">—</div></div>
+      </div>
+      <p class="motivo" id="redeMotivo" aria-live="polite"></p>
+      <h3>Quatro sensores, o trecho e o ponto</h3>
+      <div class="cmp cmp5" id="redeResumo" role="table" aria-label="Localização na rede por tipo de transmissor">
+        <div class="h" role="columnheader">Transmissor</div>
+        <div class="h" role="columnheader">Vazamentos localizados</div>
+        <div class="h" role="columnheader">Erro mediano · grande · pequeno</div>
+        <div class="h" role="columnheader">Pior caso</div>
+        <div class="h" role="columnheader">Falsos alarmes</div>
+      </div>
+      <p class="stnote" id="redeFontes"></p>
+    </div>
+  </div>
+</section>
+
 <section id="proximos">
   <div class="eyebrow">No hackathon</div>
   <h2>Do software validado ao cais</h2>
-  <p class="sub">A detecção e a localização já funcionam de ponta a ponta: em software, no Verilog simulado ciclo a ciclo e na FPGA física, com os 45 ensaios processados na DE10-Standard, também em tempo real. No evento, a equipe leva a mesma cadeia para mais perto da instalação real: posição mais fina, o transmissor que já está na linha e a rede do cais.</p>
+  <p class="sub">A detecção e a localização já funcionam de ponta a ponta: em software, no Verilog simulado ciclo a ciclo e na FPGA física, com os 45 ensaios processados na DE10-Standard, também em tempo real. No evento, a equipe leva a mesma cadeia para mais perto da instalação real: posição mais fina, o transmissor que já está na linha, os dados da planta no lugar das premissas e a ligação com o sistema de controle.</p>
   <ol class="next">
     <li>
       <div>
@@ -1296,16 +1344,16 @@ footer p{max-width:80ch;margin-top:10px}
     </li>
     <li>
       <div>
-        <h3>Estender à rede com três berços e manifold</h3>
-        <p>A linha de produto do cais já está simulada, com sensores a 700 m um do outro, vazamentos, manobras e o ramal de um berço intermediário. O passo seguinte é a rede com ramificações, com um sensor em cada ponta e em cada junção, e os comprimentos reais da planta no lugar das premissas.</p>
+        <h3>Trocar as premissas pelos dados da planta</h3>
+        <p>A linha do cais e a rede com manifold e três ramais já estão simuladas, com o detector apontando o ramal e o ponto do vazamento. Com o isométrico da linha, os comprimentos, a espessura e a posição de cada válvula e bomba entram no lugar das premissas, e as simulações são refeitas com um comando.</p>
         <em>escala</em>
       </div>
     </li>
     <li>
       <div>
-        <h3>Entregar a bancada pronta para qualquer máquina</h3>
-        <p>A trilha de detecção e avaliação roda com um comando e se confere sozinha: 164 testes em Python, 71 casos do Verilog e 11 de paridade do painel. O solucionador hidráulico já tem o ambiente documentado e conferido contra as simulações gravadas; a equipe empacota esse ambiente para qualquer avaliador refazer os ensaios do zero.</p>
-        <em>reprodutibilidade</em>
+        <h3>Ligar ao sistema de controle da planta</h3>
+        <p>A abertura da válvula de um ramal e a parada de uma bomba dão a mesma onda de um vazamento; o LEAKMAP separa as duas pelo registro de operação. Falta ler esse registro do sistema de controle e devolver o alarme a ele, por contato seco ou Modbus, com a equipe de automação do terminal.</p>
+        <em>integração</em>
       </div>
     </li>
   </ol>
@@ -1487,6 +1535,8 @@ const DADOS={"trecho_m":200.0,"diametro_m":0.3,"sensorA":40.0,"sensorB":160.0,"L
 <script src="web/modo_fpga.js"></script>
 <script src="web/leakmap_dados_cais.js"></script>
 <script src="web/cais.js"></script>
+<script src="web/leakmap_dados_rede.js"></script>
+<script src="web/rede.js"></script>
 <script>
 (function(){
   "use strict";

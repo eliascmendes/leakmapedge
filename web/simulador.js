@@ -68,7 +68,8 @@
     cPct: 0,
     realizacao: 0,
     ajuste: null,
-    caso: null
+    caso: null,
+    gas: false
   };
 
   /* Casos de "tente quebrar". Os numeros dos textos foram medidos nos cinco
@@ -497,7 +498,7 @@
 
     var saude = sim.saude;
     var reprovados = L.alerta.canaisReprovados(saude);
-    var nivel = L.alerta.nivelDoEvento(reg, false, saude);
+    var nivel = L.alerta.nivelDoEvento(reg, estado.gas, saude);
     var loc = reg.classe === L.detector.CLASSE_LOCALIZADO && !reprovados.length;
     var vazio = '<span class="vazio">—</span>';
     $("sEst").innerHTML = loc ? fmt(reg.posicao_estimada_m, 2) + "<small>m</small>" : vazio;
@@ -507,7 +508,9 @@
     $("sClasse").className = "val " + (loc ? "ok" : "alerta");
     $("sReal").textContent = "real " + fmt(real, 0) + " m";
     $("sIncerteza").textContent = loc ? "± " + fmt(reg.incerteza_de_posicao_m, 2) + " m declarados" : "";
-    $("sMotivo").textContent = explicar(reg, saude);
+    $("sMotivo").textContent = explicar(reg, saude) + (nivel === "confirmado" ?
+      " O sensor de gás (simulado) acusou vapor na região: duas físicas independentes apontam o mesmo lugar, " +
+      "e o alerta sobe para confirmado." : "");
     $("sMotivo").className = "motivo" + (loc ? "" : " retida");
     $("sClasseSub").textContent = nivel ? "alerta: " + NOMES_DOS_NIVEIS[nivel].toLowerCase() : "sem alerta";
     var partesSaude = ["A", "B"].map(function (c) {
@@ -574,6 +577,7 @@
     $("aj_faixa_max").value = String(a.faixa.max);
     $("aj_faixa_min").disabled = $("aj_faixa_max").disabled = !a.faixa.on;
     $("aj_falha").value = a.falha;
+    $("simGas").checked = estado.gas;
     rodarUm();
   }
 
@@ -613,9 +617,10 @@
       inp.addEventListener("change", function () { lerAjuste(); estado.caso = null; sincronizar(); });
     });
     $("simNovo").addEventListener("click", function () { estado.realizacao += 1; sincronizar(); });
+    $("simGas").addEventListener("change", function () { estado.gas = this.checked; sincronizar(); });
     function voltarAoPadrao(manterPonto) {
       if (!manterPonto) { estado.evento = "EV-02"; }
-      estado.tx = "bom"; estado.cPct = 0; estado.realizacao = 0; estado.caso = null;
+      estado.tx = "bom"; estado.cPct = 0; estado.realizacao = 0; estado.caso = null; estado.gas = false;
       estado.ajuste = ajustePadrao("bom"); $("simAjuste").open = false; sincronizar();
     }
     $("simReset").addEventListener("click", function () { voltarAoPadrao(false); });

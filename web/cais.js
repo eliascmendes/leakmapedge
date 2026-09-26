@@ -30,10 +30,27 @@
     return (v < 0 && Number(v.toFixed(casas)) !== 0 ? "−" : "") + s.join(",");
   }
 
+  var ACOES = { abertura: "abertura", fechamento: "fechamento", parada: "parada", partida: "partida" };
   var NIVEIS = { registro: "Registro", suspeita: "Suspeita", provavel: "Provável", confirmado: "Confirmado" };
-  var estado = { evento: C.eventos[2].id, tx: C.configuracoes[0].configuracao };
+  var estado = { evento: C.eventos[2].id, tx: C.configuracoes[0].configuracao, gas: false, operacoes: true };
+  var L = window.LEAKMAP;
 
-  function caso() { return C.casos[estado.evento + "/" + estado.tx]; }
+  /* nivel da escala de alerta, com a confirmacao por gas simulada: a mesma
+   * funcao do navegador conferida contra 07_servico/alerta.py */
+  function nivel(r) {
+    return L ? L.alerta.nivelDoEvento({ classe: r.classe }, estado.gas, null) : r.nivel;
+  }
+
+  /* sem o registro de operacao, o resultado do detector sem a conferencia com o
+   * cadastro (07_servico/cadastro.py), quando ela mudou alguma coisa */
+  function caso() {
+    var r = C.casos[estado.evento + "/" + estado.tx];
+    if (estado.operacoes || !r.sem_cadastro) { return r; }
+    var s = {};
+    Object.keys(r).forEach(function (k) { s[k] = r[k]; });
+    Object.keys(r.sem_cadastro).forEach(function (k) { s[k] = r.sem_cadastro[k]; });
+    return s;
+  }
   function evento() { return C.eventos.filter(function (e) { return e.id === estado.evento; })[0]; }
 
   function classificacao(r, ev) {
@@ -46,9 +63,18 @@
   }
 
   function explicar(r, ev) {
+    var cad = r.cadastro;
     if (r.classe === "localizado") {
       return "Queda de pressão nos dois sensores, com diferença de tempo possível dentro do trecho: vazamento, " +
-        "com a posição publicada junto com o alerta.";
+        "com a posição publicada junto com o alerta." + (cad && cad.decisao === "conferir" ?
+        " A posição coincide com " + cad.equipamento + ", mas não há operação registrada dele: o alerta " +
+        "continua, com a anotação para conferir." : "");
+    }
+    if (r.classe === "manobra" && cad && cad.reclassificado) {
+      return "A onda é de queda, a mesma de um vazamento, e nasceu " + (r.lado ? "do lado " + r.lado +
+        ", onde fica " : "na posição de ") + cad.equipamento + ". O sistema de controle registrou a " +
+        (ACOES[cad.acao] || "operação") + " de " + cad.equipamento + " naquele instante: é manobra registrada. " +
+        "Fica no histórico, não alarma.";
     }
     if (r.classe === "manobra") {
       var pa = r.polaridade[0], pb = r.polaridade[1], onde;
@@ -56,7 +82,8 @@
       else if (pa && pb) { onde = "alta de pressão nos dois sensores"; }
       else { onde = "alta de pressão no sensor " + (pa ? "A" : "B"); }
       return "A onda é de " + onde + ". Um rompimento sempre derruba a pressão: é manobra de operação, " +
-        "não vazamento. Fica no histórico, nunca alarma.";
+        "não vazamento. Fica no histórico, nunca alarma." + (cad && cad.decisao === "manobra_registrada" ?
+        " O registro de operação confirma: " + (ACOES[cad.acao] || "operação") + " de " + cad.equipamento + "." : "");
     }
     if (r.classe === "fora_do_trecho") {
       return "A onda chegou ao sensor " + r.lado + " com a diferença de tempo no limite físico: nasceu no sensor " +
@@ -64,7 +91,10 @@
     }
     if (r.classe === "detectado_sem_localizacao") {
       var m = r.motivo || "", porque;
-      if (/faixa fisica/.test(m)) {
+      if (/faixa fisica/.test(m) && ev.tipo === "manobra") {
+        porque = "a frente da manobra é lenta, a marca no sensor mais distante sai tarde e a diferença de tempo " +
+          "passou do limite físico do trecho";
+      } else if (/faixa fisica/.test(m)) {
         porque = "a diferença de tempo passou do limite físico do trecho, além do que o ruído de tempo explica. " +
           "Com transmissor lento, a saída em degraus embaralha os tempos";
       } else if (/nao declarou/.test(m)) {
@@ -112,7 +142,10 @@
     /* ramal do berco 106 */
     el("line", { x1: px(P.berco_106), y1: y, x2: px(P.berco_106), y2: y - 40, stroke: "#5b655d",
       "stroke-width": 4 }, svg);
-    txt(px(ini), y + 30, "#828d80", MONO, cp ? "11" : "12", "500", "bomba", "start");
+    /* na parada da bomba, o rotulo do evento ja marca o lugar */
+    if (Math.abs(ev.posicao_real_m - P.bomba) > 1) {
+      txt(px(ini), y + 30, "#828d80", MONO, cp ? "11" : "12", "500", "bomba", "start");
+    }
     txt(px(P.berco_104), y + 30, "#828d80", MONO, cp ? "11" : "12", "500", "berço 104");
     /* na tela estreita, acima da faixa dos rotulos dos sensores */
     txt(px(P.berco_106), y - (cp ? 64 : 48), "#828d80", MONO, cp ? "11" : "12", "500", "berço 106");
@@ -127,12 +160,21 @@
     });
     txt(px(P.sensor_B_berco_108), y + 30, "#828d80", MONO, cp ? "11" : "12", "500", "berço 108", "end");
 
+    /* equipamentos do cadastro: valvulas e bomba */
+    (C.equipamentos || []).forEach(function (e) {
+      var X = px(e.posicao_m), g = el("g", {}, svg);
+      el("title", { texto: e.nome + " · " + e.tipo + " em " + fmt(e.posicao_m, 0) + " m" }, g);
+      el("rect", { x: X - 4, y: y - 4, width: 8, height: 8, fill: "#06080a", stroke: "#828d80",
+        "stroke-width": 1.5, transform: "rotate(45 " + X + " " + y + ")" }, g);
+    });
+
     /* onde o evento aconteceu */
     var XR = px(ev.posicao_real_m);
     el("circle", { cx: XR, cy: y, r: 7, fill: ev.tipo === "manobra" ? "#2fd6e8" : "#f5a524",
       stroke: "#06080a", "stroke-width": 2 }, svg);
     txt(XR, y + 52, ev.tipo === "manobra" ? "#2fd6e8" : "#f5a524", MONO, "12", "600",
-      (ev.tipo === "manobra" ? "manobra em " : "real ") + fmt(ev.posicao_real_m, 0) + " m");
+      (ev.tipo === "manobra" ? (Math.abs(ev.posicao_real_m - P.bomba) > 1 ? "manobra em " : "bomba · ") : "real ") +
+      fmt(ev.posicao_real_m, 0) + " m");
 
     /* o que o detector disse */
     if (r.classe === "localizado") {
@@ -142,12 +184,13 @@
       el("circle", { cx: XE, cy: y, r: 13, fill: "none", stroke: "#b3f000", "stroke-width": 2.5 }, svg);
       txt(Math.min(Math.max(XE, x0 + 70), x1 - 70), y + 72, "#b3f000", MONO, "12", "600",
         "estimada " + fmt(r.posicao_estimada_m, 1) + " m");
-    } else if (r.classe === "fora_do_trecho") {
+    } else if (r.classe === "fora_do_trecho" || (r.classe === "manobra" && r.lado &&
+        (r.posicao_da_origem_m === null || r.posicao_da_origem_m === undefined))) {
       var XA = px(r.lado === "A" ? P.sensor_A : P.sensor_B_berco_108), d = r.lado === "A" ? -1 : 1;
       el("path", { d: "M" + XA + " " + (y - 20) + " l" + (d * 34) + " 0 m" + (-d * 8) + " -6 l" + (d * 8) +
         " 6 l" + (-d * 8) + " 6", stroke: "#f5a524", fill: "none", "stroke-width": 2.5 }, svg);
-      txt(XA + d * 20, y + 72, "#f5a524", MONO, "12", "600", "origem fora do trecho, lado " + r.lado,
-        d < 0 ? "start" : "end");
+      txt(XA + d * 20, y + 72, "#f5a524", MONO, "12", "600", (r.classe === "manobra" ?
+        "manobra registrada, lado " : "origem fora do trecho, lado ") + r.lado, d < 0 ? "start" : "end");
     } else if (r.classe === "manobra" && r.posicao_da_origem_m !== null && r.posicao_da_origem_m !== undefined) {
       var XO = px(r.posicao_da_origem_m);
       el("circle", { cx: XO, cy: y, r: 13, fill: "none", stroke: "#2fd6e8", "stroke-width": 2,
@@ -166,15 +209,18 @@
       b.setAttribute("aria-pressed", String(b.dataset.tx === estado.tx));
     });
     desenhar();
-    var alarme = r.nivel === "provavel" || r.nivel === "confirmado";
-    $("caisNivel").textContent = r.nivel ? NIVEIS[r.nivel] : "Sem alerta";
+    var n = nivel(r);
+    var alarme = n === "provavel" || n === "confirmado";
+    $("caisNivel").textContent = n ? NIVEIS[n] : "Sem alerta";
     $("caisNivel").className = "val " + (alarme ? "alerta" : "ok");
     $("caisClasse").textContent = classificacao(r, ev);
     $("caisEst").innerHTML = r.posicao_estimada_m !== null && r.posicao_estimada_m !== undefined ?
       fmt(r.posicao_estimada_m, 1) + "<small>m</small>" : '<span class="vazio">—</span>';
     $("caisErro").innerHTML = r.erro_m !== null && r.erro_m !== undefined ?
       fmt(r.erro_m, 2) + "<small>m</small>" : '<span class="vazio">—</span>';
-    $("caisMotivo").textContent = explicar(r, ev);
+    $("caisMotivo").textContent = explicar(r, ev) + (n === "confirmado" ?
+      " O sensor de gás (simulado) acusou vapor na região: duas físicas independentes apontam o mesmo lugar, " +
+      "e o alerta sobe para confirmado." : "");
   }
 
   function montar() {
@@ -197,6 +243,8 @@
       el("span", { class: "s", texto: c.sub }, b);
       b.addEventListener("click", function () { estado.tx = c.configuracao; mostrar(); });
     });
+    $("caisGas").addEventListener("change", function () { estado.gas = this.checked; mostrar(); });
+    $("caisOperacoes").addEventListener("change", function () { estado.operacoes = this.checked; mostrar(); });
     var t = $("caisResumo");
     C.resumo.forEach(function (l) {
       el("div", { class: "rl", role: "rowheader", texto: l.nome }, t);

@@ -9,14 +9,15 @@
   "posicoes_m": {
    "bomba": -300.0,
    "sensor_A": 0.0,
+   "berco_104": 200.0,
    "berco_106": 450.0,
    "sensor_B_berco_108": 700.0,
-   "navio": 720.0,
-   "berco_104": 200.0
+   "navio": 720.0
   },
   "pressao_da_bomba_bar": 7.0,
   "carga_da_bomba_m": 84.94733265375467,
-  "carga_no_navio_m": 29.94733265375467,
+  "carga_no_navio_m": 74.46614193913335,
+  "atrito": "Darcy-Weisbach, rugosidade 0.046 mm, viscosidade 3.0 cSt, fator 0.0192 a 1.46 m/s",
   "unidade_de_carga": "metro de coluna de diesel (1 bar = 12.14 m)",
   "evento": "abertura de vazamento (add_burst do TSNet) em 0.100 s, desenvolvimento em 0.0010 s",
   "tamanhos_de_vazamento_coeficiente_emissor": {
@@ -27,7 +28,14 @@
    "berco_106_em_450_m": 0.015,
    "navio_108_em_710_m": 0.04
   },
-  "manobra": "a retirada do ponto cai 50% em rampa de 0.3 s a partir de 0.10 s"
+  "bomba": "bomba centrifuga em -300 m, succao num tanque a 5 m de coluna, curva parabolica com 80 m de ganho em 0.055 m3/s e 100 m sem vazao",
+  "manobras": {
+   "fechamento_navio": "a retirada do no muda -50% em rampa de 0.3 s",
+   "fechamento_106": "a retirada do no muda -50% em rampa de 0.3 s",
+   "abertura_106": "a retirada do no muda +100% em rampa de 0.3 s",
+   "parada_bomba": "a bomba perde rotacao ate parar em 2.0 s"
+  },
+  "instante_das_manobras_s": 0.1
  },
  "descricao": "VERDADE das manobras na linha do cais. Uso exclusivo do avaliador.",
  "ensaios": [
@@ -38,10 +46,11 @@
    "posicao_da_manobra_m": 710.0,
    "dentro_do_trecho_entre_sensores": false,
    "onda_esperada": "alta",
+   "equipamento": "XV-108",
    "instante_da_manobra_s": 0.1,
-   "maior_variacao_no_sensor_A_m": 24.55779278985615,
-   "maior_variacao_no_sensor_B_m": 41.75657463268675,
-   "carga_minima_m": 19.939388040212673
+   "maior_variacao_no_sensor_A_m": 43.933276535058724,
+   "maior_variacao_no_sensor_B_m": 53.29611528905163,
+   "carga_minima_m": 72.63201281205387
   },
   {
    "id": "MN-02",
@@ -50,10 +59,37 @@
    "posicao_da_manobra_m": 450.0,
    "dentro_do_trecho_entre_sensores": true,
    "onda_esperada": "alta",
+   "equipamento": "XV-106",
    "instante_da_manobra_s": 0.1,
-   "maior_variacao_no_sensor_A_m": 18.260888342504842,
-   "maior_variacao_no_sensor_B_m": 16.025200912381003,
-   "carga_minima_m": 19.939388040212673
+   "maior_variacao_no_sensor_A_m": 13.135408342641355,
+   "maior_variacao_no_sensor_B_m": 13.26991163024195,
+   "carga_minima_m": 72.63187580207592
+  },
+  {
+   "id": "MN-03",
+   "tem_evento": false,
+   "manobra": "abertura_106",
+   "posicao_da_manobra_m": 450.0,
+   "dentro_do_trecho_entre_sensores": true,
+   "onda_esperada": "queda",
+   "equipamento": "XV-106",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_no_sensor_A_m": -20.061305718382762,
+   "maior_variacao_no_sensor_B_m": -19.474577844640002,
+   "carga_minima_m": 53.157845556238904
+  },
+  {
+   "id": "MN-04",
+   "tem_evento": false,
+   "manobra": "parada_bomba",
+   "posicao_da_manobra_m": -300.0,
+   "dentro_do_trecho_entre_sensores": false,
+   "onda_esperada": "queda",
+   "equipamento": "B-01",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_no_sensor_A_m": -55.199389558330594,
+   "maior_variacao_no_sensor_B_m": -15.852096368288038,
+   "carga_minima_m": 25.50285806129831
   }
  ]
 }

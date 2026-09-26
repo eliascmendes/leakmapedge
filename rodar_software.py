@@ -68,10 +68,19 @@ PASSOS = [
     # manobras_cais.py, no ambiente de 02_bancada/ambiente) e ficam gravados
     ('linha do cais  detector com seis transmissores, com e sem classificacao',
      os.path.join('04_detector', 'linha_cais.py')),
+    ('linha do cais  cadastro de equipamentos e registro de operacao',
+     os.path.join('07_servico', 'cadastro_linha_cais.py')),
     ('linha do cais  avaliacao independente',
      os.path.join('05_avaliacao', 'avaliar_linha_cais.py')),
     ('front-end    dados da tela da linha do cais',
      os.path.join('web', 'gerar_dados_cais.py')),
+    # a rede com manifold e tres ramais (02_bancada/codigo/rede_cais.py, com TSNet)
+    ('rede do cais  detector e localizacao na rede, seis transmissores',
+     os.path.join('04_detector', 'rede_cais.py')),
+    ('rede do cais  avaliacao independente',
+     os.path.join('05_avaliacao', 'avaliar_rede_cais.py')),
+    ('front-end    dados da tela da rede do cais',
+     os.path.join('web', 'gerar_dados_rede.py')),
 ]
 
 TESTES = [

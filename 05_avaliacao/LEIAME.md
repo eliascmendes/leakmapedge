@@ -25,6 +25,8 @@ sem `04_detector` no caminho de busca, e confere que a tabela sai igual.
 | `gerar_verdade_matriz.py` | Monta a verdade do cenario da matriz a partir do plano e da verdade v1 |
 | `leakmap_avaliacao_matriz_v1.json` | Resultado da matriz de ensaios |
 | `leakmap_avaliacao_v1.json` | Rodada v1 de referencia, mantida para conferencia de regressao |
+| `avaliar_linha_cais.py`, `leakmap_avaliacao_linha_cais_v1.json` | Linha do cais: seis transmissores, manobras, com e sem classificacao e cadastro |
+| `avaliar_rede_cais.py`, `leakmap_avaliacao_rede_cais_v1.json` | Rede do cais com manifold e tres ramais, erro medido pela tubulacao |
 | `testes/teste_avaliador.py` | Testes de A-17 e os criterios de A-12 e A-14 que precisam da posicao real |
 
 Os testes que precisam da posicao real do vazamento ficam aqui, e nao em
@@ -85,8 +87,8 @@ que ele nao cobre e a mudanca de forma de onda que outro `c` produziria.
 `avaliar_linha_cais.py` avalia, do mesmo jeito independente, uma linha de
 produto do cais simulada no TSNet (`02_bancada/codigo/linha_cais.py` e
 `manobras_cais.py`): 8" em aco carbono com diesel, onda a ~1.227 m/s, sensores
-a 700 m um do outro, vazamentos grandes (~18% da vazao) e pequenos (~4%) em
-sete posicoes, um vazamento fora do trecho e duas manobras. Comprimentos,
+a 700 m um do outro, vazamentos grandes (~23% da vazao) e pequenos (~5%) em
+sete posicoes, um vazamento fora do trecho e quatro manobras. Comprimentos,
 espessura e vazao sao premissas, gravadas junto com os sinais, ate chegar o
 dado da instalacao real.
 
@@ -95,13 +97,13 @@ O mesmo detector, com seis configuracoes de transmissor (0 a 15 bar, 16 bits):
 | Transmissor | Vazamento grande: localizados, erro mediano / maximo | Pequeno | Falsos alarmes (5 sem evento) |
 |---|---|---|---|
 | ideal (hidraulica pura) | 7/7, 0,11 / 0,25 m | 7/7, 0,11 / 0,25 m | 0 |
-| rapido dedicado | 7/7, 0,11 / 0,25 m | 7/7, 0,14 / 0,32 m | 0 |
+| rapido dedicado | 7/7, 0,18 / 0,25 m | 7/7, 0,11 / 0,25 m | 0 |
 | inteligente, saida a cada 1 ms | 7/7, 0,18 / 0,56 m | 7/7, 0,25 / 0,39 m | 0 |
 | inteligente, 10 ms | 7/7, 1,58 / 3,02 m | 7/7, 0,88 / 2,74 m | 0 |
 | inteligente, 50 ms | 7/7, 13,73 / 21,18 m | 5/7, 5,73 / 23,71 m | 0 |
-| inteligente, 100 ms | 6/7, 50,61 / 300,81 m | 4/7, 18,65 / 271,62 m | 0 |
+| inteligente, 100 ms | 5/7, 51,32 / 300,81 m | 4/7, 18,65 / 271,62 m | 0 |
 
-Todos os 84 vazamentos dentro do trecho foram detectados; os 6 que nao foram
+Todos os 84 vazamentos dentro do trecho foram detectados; os 7 que nao foram
 localizados (transmissor de 50 e 100 ms) sairam com a posicao retida, como
 suspeita, porque a saida em degraus deixou a diferenca de tempo fora do que o
 trecho permite.
@@ -116,20 +118,114 @@ Leitura:
 - Com transmissor rapido, o erro fica no tamanho de uma amostra (0,25 m), o
   mesmo da matriz.
 
-Classificacao por polaridade e origem, com e sem ela (o detector de antes):
+Atrito: a simulacao usa o atrito de Darcy-Weisbach do aco comercial
+(rugosidade 0,046 mm) com a viscosidade do diesel, e parte em equilibrio. A
+versao anterior passava 0,02 a `set_roughness`, que o TSNet le como
+rugosidade de 20 mm, e o regime nao ficava em equilibrio
+(`02_bancada/ambiente/LEIAME.md`, armadilha 7). Com a correcao, a carga ao
+longo da linha subiu e os mesmos coeficientes de vazamento passaram de ~18% e
+~4% para ~23% e ~5% da vazao. Os erros de posicao praticamente nao mudaram;
+um vazamento a mais, com transmissor de 100 ms, saiu sem localizacao.
+
+### Manobras: polaridade, origem e cadastro
+
+As quatro manobras, cada uma com os seis transmissores:
+
+| Manobra | Onda | Onde nasce |
+|---|---|---|
+| fim de carregamento no navio do 108 | alta | fora do trecho, lado B |
+| fechamento no ramal do berco 106 | alta | dentro do trecho, 450 m |
+| abertura no ramal do berco 106 | queda | dentro do trecho, 450 m |
+| parada da bomba | queda, lenta (a bomba perde rotacao em 2 s) | fora do trecho, lado A |
+
+O nivel da escala de alerta em cada modo (24 ensaios de manobra):
+
+| | Sem classificacao | Com classificacao | Com classificacao e cadastro |
+|---|---|---|---|
+| Alarme de vazamento, com posicao (provavel) | 14 | 6 | 1 |
+| Suspeita, sem posicao | 10 | 6 | 0 |
+| Registro, sem alarme | 0 | 12 | 23 |
+
+- A **classificacao por polaridade e origem** resolve as duas manobras de
+  alta (12 de 12 viram registro). A abertura no 106 e uma onda de queda que
+  nasce em 450 m, a mesma assinatura de um vazamento ali: continua alarmando
+  nos 6 transmissores.
+- A **parada da bomba** sai como suspeita, sem posicao: a frente e lenta, a
+  marca no sensor B sai tarde, e a diferenca de tempo passa de L/c (0,574 s
+  contra 0,571 s) alem da tolerancia.
+- O **cadastro de equipamentos com o registro de operacao**
+  (`07_servico/cadastro.py`) resolve as duas: a origem coincide com a valvula
+  XV-106 ou fica do lado da bomba B-01, e o sistema de controle registrou a
+  operacao no mesmo instante. Sobra 1 caso, a abertura no 106 com transmissor
+  de 100 ms: a posicao saiu longe da valvula, a coincidencia nao fecha e o
+  alerta continua. E o lado seguro da regra.
+
+Vazamentos, nos tres modos: os mesmos 84 detectados e 77 localizados, com os
+mesmos erros. Nos ensaios de vazamento nao ha operacao registrada, entao o
+cadastro nao rebaixou nenhum: os vazamentos em 450 m saem com a anotacao
+"coincide com XV-106, sem operacao registrada: conferir" e continuam
+provaveis.
+
+Vazamento fora do trecho (-150 m, antes do sensor A):
 
 | | Sem classificacao | Com classificacao |
 |---|---|---|
-| Manobras que viram alarme de vazamento (2 manobras x 6 transmissores) | 9 de 12 (6 com posicao) | 0 de 12 |
-| Vazamento fora do trecho apontado como "fora do trecho, lado A" | 0 de 12 | 7 de 12 |
-| Vazamentos dentro do trecho: detectados · localizados | 84 · 78 de 84 | 84 · 78 de 84, os mesmos erros |
+| Apontado como "fora do trecho, lado A" | 0 de 12 | 8 de 12 |
+| Localizado dentro do trecho, perto de A | 8 de 12 | 4 de 12 |
 
-Os 5 vazamentos fora do trecho que nao saem como "fora" sao todos de
-transmissor inteligente: 4 saem localizados perto do sensor A (a 0,4 m com
-1 ms; 6 e 10 m com 50 ms; 31 m com 100 ms), porque o erro de tempo empurra a
-posicao para dentro do trecho, e 1 sai sem localizacao (100 ms). Com
-transmissor rapido, os 4 casos (ideal e rapido, grande e pequeno) saem como
-"fora do trecho, lado A".
+Os 4 que ainda saem localizados sao de transmissor inteligente (a 0,4 m do
+sensor A com 1 ms; 6 e 10 m com 50 ms; 31 m com 100 ms): o erro de tempo
+empurra a posicao para dentro do trecho. Com transmissor rapido, os 4 casos
+saem como "fora do trecho, lado A".
+
+## Rede do cais com manifold e tres ramais (simulacao com premissas)
+
+`avaliar_rede_cais.py` avalia a localizacao em rede (`04_detector/rede.py`)
+sobre a rede simulada em `02_bancada/codigo/rede_cais.py`: tronco de 300 m do
+sensor A ate o manifold e tres ramais de 250, 400 e 550 m ate os sensores dos
+bercos 104, 106 e 108, com os tres navios carregando. Quatro sensores. Sete
+vazamentos dentro da rede (um no tronco e dois em cada ramal, um deles a 30 m
+do manifold) e um antes do sensor A, em dois tamanhos, com os mesmos seis
+transmissores. O erro e medido pela tubulacao.
+
+Com mais de dois sensores, a posicao sai do ponto da rede cujos tempos de
+chegada pela tubulacao batem com os medidos, e o detector diz tambem em que
+trecho o vazamento esta. O periodo de atualizacao de cada transmissor
+inteligente entra declarado, como dado de folha de dados.
+
+| Transmissor | Localizados, no trecho certo | Erro mediano, grande · pequeno | Pior caso | Falsos alarmes (5 sem evento) |
+|---|---|---|---|---|
+| rapido dedicado | 14 de 14, 14 | 0,10 · 0,15 m | 0,25 m | 0 |
+| inteligente, 1 ms | 14 de 14, 14 | 0,20 · 0,15 m | 0,40 m | 0 |
+| inteligente, 10 ms | 14 de 14, 14 | 2,35 · 2,40 m | 4,80 m | 0 |
+| inteligente, 50 ms | 13 de 14, 13 | 8,35 · 8,40 m | 18,75 m | 0 |
+| inteligente, 100 ms | 13 de 14, 13 | 11,10 · 22,15 m | 29,40 m | 0 |
+| ideal (hidraulica pura) | 14 de 14, 14 | 0,25 · 0,25 m | 1,55 m | 0 |
+
+Leitura:
+
+- Todos os 82 vazamentos localizados cairam no trecho certo. Os 2 que nao
+  foram localizados sao o vazamento a 30 m do manifold, com transmissor de 50
+  e 100 ms: com esse erro de tempo, o tronco perto do manifold explica as
+  chegadas tao bem quanto o ramal, e o detector retem a posicao como ambigua
+  em vez de escolher.
+- Com transmissor lento, os quatro sensores ajudam: o erro mediano com 50 ms
+  fica em 8 m (14 m na linha reta de dois sensores) e o pior caso com 100 ms
+  em 29 m (301 m na linha reta). As chegadas a mais amarram a posicao.
+- Sem o periodo de atualizacao declarado, a mesma rede localiza 8 de 14 com
+  10 ms e nenhum com 50 ou 100 ms: a redundancia denuncia chegadas que nao
+  batem, e o detector retem a posicao. Declarar o periodo e o que torna
+  possivel usar o transmissor inteligente que ja esta instalado.
+- O caso ideal, sem nenhum ruido, erra mais que o transmissor rapido (ate
+  1,55 m): as retiradas dos navios nao ficam em equilibrio perfeito no
+  TSNet, e um degrau de 0,1 mm antes da frente, invisivel com o ruido de
+  qualquer instrumento, puxa a marca de chegada algumas amostras para tras.
+  E um artefato da simulacao sem ruido, nao do detector.
+
+Vazamento antes do sensor A (-150 m): sai como "fora da rede, lado A" em 7
+de 12; nos outros 5, a posicao sai no tronco, perto de A (1,3 m no caso
+ideal, pelo mesmo artefato; 1,5 a 33 m com transmissor inteligente de 10 a
+100 ms), como na linha reta.
 
 ## Refino da posicao por correlacao cruzada
 
@@ -142,10 +238,10 @@ localizacao, mediano / maximo, so marcas e com o refino:
 | Caso | So marcas | Com o refino |
 |---|---|---|
 | Linha do cais, ideal | 0,11 / 0,25 m | 0,09 / 0,19 m |
-| Linha do cais, transmissor rapido, grande | 0,11 / 0,25 m | 0,12 / 0,26 m |
-| Linha do cais, transmissor rapido, pequeno | 0,14 / 0,32 m | 0,10 / 0,26 m |
+| Linha do cais, transmissor rapido, grande | 0,18 / 0,25 m | 0,12 / 0,26 m |
+| Linha do cais, transmissor rapido, pequeno | 0,11 / 0,25 m | 0,11 / 0,26 m |
 | Linha do cais, inteligente 1 ms, grande | 0,18 / 0,56 m | 0,08 / 0,35 m |
-| Linha do cais, inteligente 1 ms, pequeno | 0,25 / 0,39 m | 0,07 / 0,30 m |
+| Linha do cais, inteligente 1 ms, pequeno | 0,25 / 0,39 m | 0,08 / 0,30 m |
 | Linha do cais, inteligente 10 ms ou mais | 0,9 a 51 m | igual ou ate 4% pior |
 | Matriz de 200 m, ruido baixo e sem ruido | 0,00 m | 0,00 a 0,06 m |
 

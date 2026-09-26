@@ -18,6 +18,10 @@ calculado em outro processo, por `05_avaliacao/avaliador.py`.
 | `gerar_ensaios.py` | A-09, A-10 | Aplica o modelo de sensor e grava as amostras e o pacote |
 | `rodar_detector.py` | A-11 a A-15 | Roda o detector sobre o pacote e grava um registro por ensaio |
 | `detector_ponto_fixo.py` | bonus | Porte de referencia em aritmetica inteira de A-11 e A-12 |
+| `refino.py` | — | Refino da diferenca de tempo por correlacao cruzada, gravado ao lado da posicao |
+| `linha_cais.py` | A-09 a A-15 | Linha do cais: seis transmissores, com e sem a classificacao por polaridade e origem |
+| `rede.py` | A-14 em rede | Localizacao numa rede em arvore com N sensores: o trecho e o ponto cujos tempos pela tubulacao batem com as chegadas |
+| `rede_cais.py` | A-09 a A-15 | Rede do cais com manifold e tres ramais, quatro sensores, seis transmissores |
 
 ## Cadeia de deteccao
 

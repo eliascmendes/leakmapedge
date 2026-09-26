@@ -1,0 +1,37 @@
+{
+ "descricao": "Registro de operacao dos equipamentos durante os ensaios de manobra, como o sistema de controle da planta daria. Instantes na base de tempo do ensaio.",
+ "operacoes_por_ensaio": {
+  "MN-01": [
+   {
+    "equipamento": "XV-108",
+    "acao": "fechamento",
+    "instante_s": 0.1,
+    "origem": "sistema de controle (simulado)"
+   }
+  ],
+  "MN-02": [
+   {
+    "equipamento": "XV-106",
+    "acao": "fechamento",
+    "instante_s": 0.1,
+    "origem": "sistema de controle (simulado)"
+   }
+  ],
+  "MN-03": [
+   {
+    "equipamento": "XV-106",
+    "acao": "abertura",
+    "instante_s": 0.1,
+    "origem": "sistema de controle (simulado)"
+   }
+  ],
+  "MN-04": [
+   {
+    "equipamento": "B-01",
+    "acao": "parada",
+    "instante_s": 0.1,
+    "origem": "sistema de controle (simulado)"
+   }
+  ]
+ }
+}

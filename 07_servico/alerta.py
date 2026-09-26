@@ -115,4 +115,6 @@ def montar_evento(registro, linha, sensores, origem_do_processamento, saude=None
         'saude': estado_do_monitoramento(saude),
         'origem_do_processamento': origem_do_processamento,
         'id_do_ensaio': registro.get('id'),
+        # conferencia com o cadastro de equipamentos e o registro de operacao (cadastro.py)
+        'cadastro': registro.get('cadastro'),
     }

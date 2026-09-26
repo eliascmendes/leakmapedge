@@ -13,7 +13,9 @@ Grupos (linha_da_matriz):
   manobra/<manobra>/<configuracao>  manobra operacional: a resposta certa e
                                     nao alarmar vazamento
 
-Avalia o detector com a classificacao por polaridade e origem e sem ela.
+Avalia tres modos: sem a classificacao por polaridade e origem (o detector de
+antes), com ela, e com ela mais a conferencia com o cadastro de equipamentos e
+o registro de operacao (07_servico/cadastro_linha_cais.py).
 
 Grava 05_avaliacao/leakmap_avaliacao_linha_cais_v1.json.
 """
@@ -28,6 +30,8 @@ RESULTADOS = {
     'com_classificacao': os.path.join(RAIZ, '04_detector', 'resultados', 'leakmap_resultado_linha_cais_v1.json'),
     'sem_classificacao': os.path.join(RAIZ, '04_detector', 'resultados',
                                       'leakmap_resultado_linha_cais_sem_classificacao_v1.json'),
+    'com_cadastro': os.path.join(RAIZ, '07_servico', 'resultados',
+                                 'leakmap_resultado_linha_cais_com_cadastro_v1.json'),
 }
 PLANO = os.path.join(RAIZ, '03_ensaios', 'matriz', 'leakmap_plano_linha_cais_v1.json')
 VERDADES = [os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario', 'leakmap_verdade_linha_cais_v1.json'),
@@ -69,7 +73,8 @@ def resumo_fora_e_manobras(relatorio, resultado):
                           'desfecho': d['desfecho'], 'lado_da_origem': r.get('lado_da_origem'),
                           'posicao_estimada_m': r.get('posicao_estimada_m'),
                           'posicao_da_origem_m': r.get('posicao_da_origem_m'),
-                          'motivo': r.get('motivo')})
+                          'motivo': r.get('motivo'),
+                          'cadastro': (r.get('cadastro') or {}).get('decisao')})
     return saida
 
 
@@ -88,6 +93,8 @@ def main():
                            'por configuracao de transmissor, com e sem a classificacao por polaridade e origem.'),
              'premissas_da_simulacao': premissas}
     for modo, caminho in RESULTADOS.items():
+        if not os.path.exists(caminho):
+            continue
         resultado = ler(caminho)
         relatorio = AV.avaliar(resultado, verdade)
         relatorio['resultado_de_origem'] = os.path.basename(caminho)
@@ -109,7 +116,7 @@ def main():
         print('%-34s %3d %4d %9s %9s %7d' % (nome, linha['n_ensaios'], c['deteccao'],
                                              ('%.2f m' % e['mediano_m']) if e else '-',
                                              ('%.2f m' % e['maximo_m']) if e else '-', c['falso_alarme']))
-    for modo in ('sem_classificacao', 'com_classificacao'):
+    for modo in [m for m in RESULTADOS if m in saida]:
         itens = saida[modo]['vazamentos_fora_do_trecho_e_manobras']
         manobras = [i for i in itens if i['linha_da_matriz'].startswith('manobra/')]
         fora = [i for i in itens if i['linha_da_matriz'].endswith('/fora')]

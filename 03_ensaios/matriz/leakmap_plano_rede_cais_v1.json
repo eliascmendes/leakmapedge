@@ -1,0 +1,887 @@
+{
+ "descricao": "Plano dos ensaios da rede do cais: configuracao de transmissor e simulacao de origem de cada ensaio. Nao contem a posicao do vazamento.",
+ "ensaios": [
+  {
+   "id": "RQ-001",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-002",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-003",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-004",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-005",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-006",
+   "ensaio_de_origem": "RC-01",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 407
+  },
+  {
+   "id": "RQ-007",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-008",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-009",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-010",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-011",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-012",
+   "ensaio_de_origem": "RC-02",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 414
+  },
+  {
+   "id": "RQ-013",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-014",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-015",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-016",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-017",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-018",
+   "ensaio_de_origem": "RC-03",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 421
+  },
+  {
+   "id": "RQ-019",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-020",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-021",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-022",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-023",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-024",
+   "ensaio_de_origem": "RC-04",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 428
+  },
+  {
+   "id": "RQ-025",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-026",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-027",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-028",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-029",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-030",
+   "ensaio_de_origem": "RC-05",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 435
+  },
+  {
+   "id": "RQ-031",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-032",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-033",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-034",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-035",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-036",
+   "ensaio_de_origem": "RC-06",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 442
+  },
+  {
+   "id": "RQ-037",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-038",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-039",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-040",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-041",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-042",
+   "ensaio_de_origem": "RC-07",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 449
+  },
+  {
+   "id": "RQ-043",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-044",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-045",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-046",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-047",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-048",
+   "ensaio_de_origem": "RC-08",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 456
+  },
+  {
+   "id": "RQ-049",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-050",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-051",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-052",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-053",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-054",
+   "ensaio_de_origem": "RC-09",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 463
+  },
+  {
+   "id": "RQ-055",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-056",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-057",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-058",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-059",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-060",
+   "ensaio_de_origem": "RC-10",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 470
+  },
+  {
+   "id": "RQ-061",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-062",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-063",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-064",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-065",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-066",
+   "ensaio_de_origem": "RC-11",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 477
+  },
+  {
+   "id": "RQ-067",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-068",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-069",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-070",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-071",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-072",
+   "ensaio_de_origem": "RC-12",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 484
+  },
+  {
+   "id": "RQ-073",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-074",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-075",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-076",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-077",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-078",
+   "ensaio_de_origem": "RC-13",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 491
+  },
+  {
+   "id": "RQ-079",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-080",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-081",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-082",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-083",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-084",
+   "ensaio_de_origem": "RC-14",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 498
+  },
+  {
+   "id": "RQ-085",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-086",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-087",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-088",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-089",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-090",
+   "ensaio_de_origem": "RC-15",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 505
+  },
+  {
+   "id": "RQ-091",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "ideal",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-092",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "rapido",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-093",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-094",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-095",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-096",
+   "ensaio_de_origem": "RC-16",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": true,
+   "semente": 512
+  },
+  {
+   "id": "RQ-097",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "ideal",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-098",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "rapido",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-099",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-100",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-101",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-102",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": false,
+   "semente": 201
+  },
+  {
+   "id": "RQ-103",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "ideal",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-104",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "rapido",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-105",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-106",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-107",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-108",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": false,
+   "semente": 202
+  },
+  {
+   "id": "RQ-109",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "ideal",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-110",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "rapido",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-111",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-112",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-113",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-114",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": false,
+   "semente": 203
+  },
+  {
+   "id": "RQ-115",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "ideal",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-116",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "rapido",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-117",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-118",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-119",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-120",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": false,
+   "semente": 204
+  },
+  {
+   "id": "RQ-121",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "ideal",
+   "tem_evento": false,
+   "semente": 205
+  },
+  {
+   "id": "RQ-122",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "rapido",
+   "tem_evento": false,
+   "semente": 205
+  },
+  {
+   "id": "RQ-123",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_1ms",
+   "tem_evento": false,
+   "semente": 205
+  },
+  {
+   "id": "RQ-124",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_10ms",
+   "tem_evento": false,
+   "semente": 205
+  },
+  {
+   "id": "RQ-125",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_50ms",
+   "tem_evento": false,
+   "semente": 205
+  },
+  {
+   "id": "RQ-126",
+   "ensaio_de_origem": "RC-REGIME",
+   "configuracao": "inteligente_100ms",
+   "tem_evento": false,
+   "semente": 205
+  }
+ ]
+}

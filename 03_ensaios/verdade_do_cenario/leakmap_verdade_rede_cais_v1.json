@@ -1,0 +1,340 @@
+{
+ "ferramenta": "TSNet 0.3.1 / wntr 1.3.2 / numpy 1.26.4",
+ "premissas": {
+  "observacao": "premissas de simulacao no lugar dos dados que ainda faltam da linha real; comprimentos, espessura e vazao a confirmar com a planta e o isometrico",
+  "produto": "diesel",
+  "massa_especifica_kg_m3": 840.0,
+  "tubo": "8\" aco_carbono sch40",
+  "diametro_interno_m": 0.20273999999999998,
+  "velocidade_de_onda_korteweg_m_s": 1227.1127232118436,
+  "posicoes_m": {
+   "bomba": -300.0,
+   "sensor_A": 0.0,
+   "berco_104": 200.0,
+   "berco_106": 450.0,
+   "sensor_B_berco_108": 700.0,
+   "navio": 720.0
+  },
+  "pressao_da_bomba_bar": 7.0,
+  "carga_da_bomba_m": 84.94733265375467,
+  "carga_no_navio_m": 74.46614193913335,
+  "atrito": "Darcy-Weisbach, rugosidade 0.046 mm, viscosidade 3.0 cSt, fator 0.0192 a 1.46 m/s",
+  "unidade_de_carga": "metro de coluna de diesel (1 bar = 12.14 m)",
+  "evento": "abertura de vazamento (add_burst do TSNet) em 0.100 s, desenvolvimento em 0.0010 s",
+  "tamanhos_de_vazamento_coeficiente_emissor": {
+   "grande": 0.0012,
+   "pequeno": 0.00025
+  },
+  "rede": "tronco de 300 m do sensor A ao manifold, ramais de 250, 400, 550 m ate os sensores dos bercos, navios a 20 m depois de cada sensor retirando 0.020 m3/s cada"
+ },
+ "topologia": {
+  "descricao": "arvore com um manifold: o tronco vai do sensor A (s = 0) ao manifold (s = 300 m); cada ramal vai do manifold (s = 0) ao sensor do berco",
+  "no_de_juncao": "manifold",
+  "trechos": {
+   "tronco": {
+    "comprimento_monitorado_m": 300.0,
+    "juncao_em_s_m": 300.0
+   },
+   "ramal_104": {
+    "comprimento_monitorado_m": 250.0,
+    "juncao_em_s_m": 0.0
+   },
+   "ramal_106": {
+    "comprimento_monitorado_m": 400.0,
+    "juncao_em_s_m": 0.0
+   },
+   "ramal_108": {
+    "comprimento_monitorado_m": 550.0,
+    "juncao_em_s_m": 0.0
+   }
+  },
+  "sensores": {
+   "A": {
+    "trecho": "tronco",
+    "s_m": 0.0
+   },
+   "B104": {
+    "trecho": "ramal_104",
+    "s_m": 250.0
+   },
+   "B106": {
+    "trecho": "ramal_106",
+    "s_m": 400.0
+   },
+   "B108": {
+    "trecho": "ramal_108",
+    "s_m": 550.0
+   }
+  },
+  "velocidade_de_onda_m_s": 1225.8051351780637
+ },
+ "velocidade_de_onda_korteweg_m_s": 1227.1127232118436,
+ "passo_de_tempo_efetivo_s": 0.00020037367109151095,
+ "descricao": "VERDADE DO CENARIO da rede do cais. Uso exclusivo do avaliador. Nunca entra no detector.",
+ "ensaios": [
+  {
+   "id": "RC-REGIME",
+   "tem_evento": false,
+   "trecho_real": null,
+   "s_real_m": null,
+   "instante_do_evento_s": null,
+   "evento": "nenhum: regime permanente"
+  },
+  {
+   "id": "RC-01",
+   "tem_evento": true,
+   "trecho_real": "tronco",
+   "s_real_m": 150.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 18.088331906136595,
+    "B104": 12.308579802372549,
+    "B106": 12.249590413934236,
+    "B108": 12.132440736224169
+   }
+  },
+  {
+   "id": "RC-02",
+   "tem_evento": true,
+   "trecho_real": "ramal_104",
+   "s_real_m": 100.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 11.398135635125797,
+    "B104": 22.508192809040196,
+    "B106": 14.803925304663146,
+    "B108": 14.656828524625027
+   }
+  },
+  {
+   "id": "RC-03",
+   "tem_evento": true,
+   "trecho_real": "ramal_104",
+   "s_real_m": 200.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 11.234562483160161,
+    "B104": 22.507655186814468,
+    "B106": 14.572041994194173,
+    "B108": 13.83198653590349
+   }
+  },
+  {
+   "id": "RC-04",
+   "tem_evento": true,
+   "trecho_real": "ramal_106",
+   "s_real_m": 30.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 10.679754543242453,
+    "B104": 12.278357857063732,
+    "B106": 22.340924233716166,
+    "B108": 12.145084781173125
+   }
+  },
+  {
+   "id": "RC-05",
+   "tem_evento": true,
+   "trecho_real": "ramal_106",
+   "s_real_m": 250.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 10.685400522858629,
+    "B104": 14.533479445811317,
+    "B106": 22.4477079418134,
+    "B108": 11.185234284734975
+   }
+  },
+  {
+   "id": "RC-06",
+   "tem_evento": true,
+   "trecho_real": "ramal_108",
+   "s_real_m": 150.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 10.56244319042328,
+    "B104": 12.14118405412205,
+    "B106": 12.083121465917678,
+    "B108": 22.30421995246399
+   }
+  },
+  {
+   "id": "RC-07",
+   "tem_evento": true,
+   "trecho_real": "ramal_108",
+   "s_real_m": 450.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 10.520307397843254,
+    "B104": 13.791841810978362,
+    "B106": 11.133305058001191,
+    "B108": 22.333760428828633
+   }
+  },
+  {
+   "id": "RC-08",
+   "tem_evento": true,
+   "trecho_real": "tronco",
+   "s_real_m": -150.0,
+   "tamanho_do_vazamento": "grande",
+   "coeficiente_emissor": 0.0012,
+   "dentro_da_rede_monitorada": false,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 18.730218772760303,
+    "B104": 11.708299428498016,
+    "B106": 11.618638742376838,
+    "B108": 11.524254189184255
+   }
+  },
+  {
+   "id": "RC-09",
+   "tem_evento": true,
+   "trecho_real": "tronco",
+   "s_real_m": 150.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 4.191450532467584,
+    "B104": 2.752061816961941,
+    "B106": 2.7381682445612228,
+    "B108": 2.710066070927411
+   }
+  },
+  {
+   "id": "RC-10",
+   "tem_evento": true,
+   "trecho_real": "ramal_104",
+   "s_real_m": 100.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.650511452723336,
+    "B104": 5.3386291177664305,
+    "B106": 3.4898254857721724,
+    "B108": 3.4641244430724214
+   }
+  },
+  {
+   "id": "RC-11",
+   "tem_evento": true,
+   "trecho_real": "ramal_104",
+   "s_real_m": 200.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.6356507798644486,
+    "B104": 5.3411768441974345,
+    "B106": 3.4638057118776686,
+    "B108": 3.4071645389781366
+   }
+  },
+  {
+   "id": "RC-12",
+   "tem_evento": true,
+   "trecho_real": "ramal_106",
+   "s_real_m": 30.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.3804992094508037,
+    "B104": 2.734183240175028,
+    "B106": 5.293691000573048,
+    "B108": 2.703021939657347
+   }
+  },
+  {
+   "id": "RC-13",
+   "tem_evento": true,
+   "trecho_real": "ramal_106",
+   "s_real_m": 250.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.6011032626687864,
+    "B104": 3.4711098670176597,
+    "B106": 5.328957578782493,
+    "B108": 2.622743246805939
+   }
+  },
+  {
+   "id": "RC-14",
+   "tem_evento": true,
+   "trecho_real": "ramal_108",
+   "s_real_m": 150.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.366419856133035,
+    "B104": 2.718540971971464,
+    "B106": 2.7048495439906475,
+    "B108": 5.289143779818318
+   }
+  },
+  {
+   "id": "RC-15",
+   "tem_evento": true,
+   "trecho_real": "ramal_108",
+   "s_real_m": 450.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": true,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 2.561143386000225,
+    "B104": 3.4009947054490226,
+    "B106": 2.612064795177247,
+    "B108": 5.3204218832115515
+   }
+  },
+  {
+   "id": "RC-16",
+   "tem_evento": true,
+   "trecho_real": "tronco",
+   "s_real_m": -150.0,
+   "tamanho_do_vazamento": "pequeno",
+   "coeficiente_emissor": 0.00025,
+   "dentro_da_rede_monitorada": false,
+   "instante_do_evento_s": 0.1,
+   "queda_por_sensor_m": {
+    "A": 4.3239811299694395,
+    "B104": 2.7299158444156433,
+    "B106": 2.7068395794536286,
+    "B108": 2.6821917990893382
+   }
+  }
+ ]
+}

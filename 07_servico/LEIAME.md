@@ -11,7 +11,10 @@ evento num formato fixo, por webhook.
 | [`integracao.py`](integracao.py) | Saída por webhook (HTTP POST com JSON), desligada por padrão, com fila local para o que não conseguiu sair |
 | [`integracao.exemplo.json`](integracao.exemplo.json) | Configuração de exemplo; copie para `integracao.json` para ligar |
 | [`receptor_teste.py`](receptor_teste.py) | Receptor mínimo, para testar a integração sem instalar nada |
-| [`testes/`](testes) | Escala, evento e webhook de ponta a ponta com o receptor |
+| [`cadastro.py`](cadastro.py) | Confronta o evento com o cadastro de válvulas e bombas e com o registro de operação |
+| [`cadastro.exemplo.json`](cadastro.exemplo.json) | Cadastro de exemplo da linha simulada do cais |
+| [`cadastro_linha_cais.py`](cadastro_linha_cais.py) | Aplica o cadastro aos ensaios da linha do cais e grava `resultados/` |
+| [`testes/`](testes) | Escala, evento, cadastro e webhook de ponta a ponta com o receptor |
 
 ## Escala de alerta
 
@@ -24,6 +27,45 @@ evento num formato fixo, por webhook.
 
 Cada evento leva também o estado do **monitoramento**: `normal`, `degradado`
 (com o motivo, vindo do autoteste dos canais) ou `sem_autoteste`.
+
+## Cadastro de equipamentos e registro de operação
+
+A classificação por polaridade separa sozinha as manobras que **sobem** a
+pressão (fechar uma válvula, partir uma bomba). As que **derrubam** a pressão
+(abrir a válvula de um ramal para começar um carregamento, parar uma bomba)
+geram a mesma onda de um vazamento. Nem a polaridade nem a posição separam as
+duas coisas. O que separa é saber que o equipamento foi operado naquele
+instante.
+
+`cadastro.py` aplica uma regra conservadora:
+
+| A origem do evento… | Registro de operação do equipamento, compatível com a onda, na janela do evento | Resultado |
+|---|---|---|
+| coincide com uma válvula ou bomba do cadastro | sim | `manobra` (nível `registro`), com o equipamento e a operação no motivo |
+| coincide com uma válvula ou bomba do cadastro | não | o alerta continua como estava, com a anotação "coincide com X, sem operação registrada: conferir" |
+| não coincide com nenhum equipamento | — | nada muda |
+
+As regras de coincidência e de compatibilidade são estas:
+
+- **Posição.** A posição estimada está a menos de `max(15 m, 3 × incerteza
+  declarada)` do equipamento. Num evento fora do trecho, só o lado é
+  conhecido, e vale qualquer equipamento além do sensor daquele lado (por
+  exemplo, a bomba antes do sensor A).
+- **Tempo.** A operação foi registrada de 5 s antes a 2 s depois do evento.
+- **Onda.** Abrir e parar geram queda; fechar e partir geram alta. Uma operação
+  incompatível com a polaridade medida não explica o evento.
+
+**Só o registro de operação rebaixa um alerta.** A coincidência de posição
+sozinha nunca rebaixa.
+
+O risco que fica é o de um vazamento na própria válvula, no mesmo instante em
+que ela é operada: esse sai como manobra registrada. É o preço da regra, e por
+isso o evento continua no histórico, com o equipamento e a operação.
+
+O **cadastro** (nome, tipo e posição de cada equipamento, na referência dos
+sensores) vem do isométrico da linha. O **registro de operação** vem do sistema
+de controle da planta (os eventos de abrir, fechar, partir e parar) ou de um
+lançamento do operador. No evento, a conferência sai no campo `cadastro`.
 
 ## O evento (`leakmap.evento`, versão 1)
 
@@ -60,6 +102,7 @@ Cada evento leva também o estado do **monitoramento**: `normal`, `degradado`
 | `canais.*.polaridade` | `queda` ou `alta`: a frente de onda em cada sensor |
 | `saude` | estado do monitoramento, com os motivos da degradação |
 | `origem_do_processamento` | `fpga`, `simulacao_do_verilog`, `notebook` ou `software` |
+| `cadastro` | conferência com o cadastro: `decisao` (`manobra_registrada`, `conferir` ou `sem_equipamento`), `equipamento`, `operacao`, `texto`; `null` quando não houve conferência |
 
 A versão só muda se um campo existente mudar de sentido; campos novos podem
 entrar sem mudar a versão.

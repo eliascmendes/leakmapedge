@@ -46,8 +46,9 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | A-14 | Cálculo da posição e propagação de erro | [`04_detector/posicao.py`](04_detector/posicao.py) |
 | A-17 | Avaliador independente, em processo separado, que nunca importa código do detector | [`05_avaliacao/avaliador.py`](05_avaliacao/avaliador.py) |
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
-| Linha de produto do cais | Simulação no TSNet de uma linha de 8" com diesel e sensores a 700 m um do outro, com o mesmo detector e seis tipos de transmissor. Com transmissor rápido: 14 de 14 vazamentos localizados, erro mediano de 0,11 a 0,14 m. Com transmissor inteligente, o erro cresce com o tempo de atualização da saída (0,2 m com 1 ms; 1 a 1,6 m com 10 ms; 6 a 14 m com 50 ms), e com 50 ou 100 ms parte dos vazamentos pequenos sai com a posição retida. Premissas declaradas até chegar o dado da instalação real | [`02_bancada/codigo/linha_cais.py`](02_bancada/codigo/linha_cais.py) |
-| Manobra × vazamento | Classificação pela física: vazamento é queda de pressão nos dois sensores, dentro do trecho; onda de alta é manobra; diferença de tempo no limite físico é origem fora do trecho, com o lado. Nas manobras simuladas (fim de carregamento, fechamento num ramal dentro do trecho), 0 de 12 viraram alarme, contra 9 de 12 sem a classificação, e a classificação não tirou a posição de nenhum vazamento | [`04_detector/detector.py`](04_detector/detector.py) |
+| Linha de produto do cais | Simulação no TSNet de uma linha de 8" com diesel e sensores a 700 m um do outro, com o mesmo detector e seis tipos de transmissor. Com transmissor rápido: 14 de 14 vazamentos localizados, erro mediano de 0,11 a 0,18 m. Com transmissor inteligente, o erro cresce com o tempo de atualização da saída (0,2 m com 1 ms; 1 a 1,6 m com 10 ms; 6 a 14 m com 50 ms), e com 50 ou 100 ms parte dos vazamentos pequenos sai com a posição retida. Premissas declaradas até chegar o dado da instalação real | [`02_bancada/codigo/linha_cais.py`](02_bancada/codigo/linha_cais.py) |
+| Manobra × vazamento | Classificação pela física: vazamento é queda de pressão nos dois sensores, dentro do trecho; onda de alta é manobra; diferença de tempo no limite físico é origem fora do trecho, com o lado. As manobras que derrubam a pressão (abrir a válvula de um ramal, parar a bomba) têm a mesma onda de um vazamento: para elas, o cadastro de válvulas e bombas com o registro de operação do sistema de controle. Nas quatro manobras simuladas com seis transmissores, 1 de 24 virou alarme, contra 14 de 24 sem classificação nem cadastro, e nenhum vazamento perdeu a posição | [`04_detector/detector.py`](04_detector/detector.py), [`07_servico/cadastro.py`](07_servico/cadastro.py) |
+| Rede do cais com manifold | Tronco e três ramais até os berços 104, 106 e 108, com quatro sensores. A posição sai do ponto da rede cujos tempos de chegada pela tubulação batem com os medidos, e o detector diz em que ramal está o vazamento: com transmissor rápido, 14 de 14 localizados, todos no trecho certo, erro mediano de 0,10 a 0,15 m; com transmissor inteligente, o período de atualização entra declarado e os quatro sensores amarram a posição (8 m de erro mediano com 50 ms, contra 14 m na linha reta). Nenhum falso alarme | [`04_detector/rede.py`](04_detector/rede.py) |
 | Escala de alerta e integração | Suspeita, provável e confirmado, com o estado do monitoramento; cada evento sai num JSON padronizado, por webhook configurável, para qualquer automação da empresa | [`07_servico`](07_servico) |
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
 | Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga/computador`](06_fpga/computador) |
@@ -85,7 +86,7 @@ Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avali
 | [`05_avaliacao`](05_avaliacao) | Avaliador independente e métricas |
 | [`06_fpga`](06_fpga) | Cenário B: especificação, Verilog da placa, simulação e o lado do computador |
 | [`web`](web) | Simulador interativo do painel: adaptação do detector para o navegador e teste de paridade com o Python |
-| [`07_servico`](07_servico) | Escala de alerta, evento padronizado e saída por webhook para integração |
+| [`07_servico`](07_servico) | Escala de alerta, evento padronizado, cadastro de equipamentos e saída por webhook para integração |
 | [`leakmap_painel.html`](leakmap_painel.html) | Painel de apresentação do projeto |
 
 Uma regra organiza os dados: o detector só lê `parametros`, `amostras` e `pacotes`. A posição real do vazamento fica em `03_ensaios/verdade_do_cenario` e só o avaliador a abre. Assim nenhum limiar é ajustado olhando a resposta.
@@ -99,9 +100,15 @@ pip install numpy pyserial
 python rodar_software.py
 ```
 
-O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa, roda o detector e a avaliação da linha do cais e termina com os 164 testes automatizados em Python, inclusive os de ponta a ponta pela serial contra a placa simulada e os do serviço de alerta. Com o Icarus Verilog instalado, simula também o Verilog da placa e confere os critérios do cenário B. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
+O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa, roda o detector e a avaliação da linha e da rede do cais e termina com os 182 testes automatizados em Python, inclusive os de ponta a ponta pela serial contra a placa simulada e os do serviço de alerta e do cadastro de equipamentos. Com o Icarus Verilog instalado, simula também o Verilog da placa e confere os critérios do cenário B. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
 
-A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr; o ambiente está descrito em [`02_bancada/ambiente`](02_bancada/ambiente). Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela.
+A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr, que pedem Python 3.11 ou 3.12. Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela. Para refazer as simulações do zero, um comando cria o ambiente com as versões congeladas e confere que ele reproduz os sinais gravados:
+
+```bash
+bash 02_bancada/ambiente/preparar_ambiente.sh
+```
+
+No Windows, `powershell -ExecutionPolicy Bypass -File 02_bancada\ambiente\preparar_ambiente.ps1`. Detalhes em [`02_bancada/ambiente`](02_bancada/ambiente).
 
 Para ver o painel, abra `leakmap_painel.html` no navegador. O arquivo `vercel.json` publica esse mesmo painel na Vercel.
 
@@ -119,8 +126,8 @@ A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra
 
 1. Amostrar mais rápido: a 10 mil amostras por segundo, uma amostra vale 6 cm. O refino por correlação cruzada entre os dois canais já é calculado ao lado da posição e ajuda pouco a 2,5 mil por segundo, porque a frente dura poucas amostras.
 2. Ajustar o modelo de sensores à folha de dados do transmissor instalado: o tempo de atualização da saída decide se ele localiza por metro ou por berço.
-3. Estender a simulação à rede do cais, com três berços, manifold e os comprimentos reais da planta.
-4. Empacotar o ambiente da simulação hidráulica para que qualquer máquina refaça os ensaios do zero.
+3. Trocar as premissas pelos dados da planta: comprimentos e espessura do isométrico e a posição de cada válvula e bomba, na linha e na rede com manifold que já estão simuladas.
+4. Ligar ao sistema de controle da planta: ler o registro de operação das válvulas e bombas, que separa manobra de vazamento, e devolver o alarme por contato seco ou Modbus.
 
 **Na visão do produto**, descrita na proposta:
 

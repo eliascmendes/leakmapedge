@@ -36,7 +36,7 @@ SAIDA = os.path.join(RAIZ, '05_avaliacao', 'leakmap_avaliacao_matriz_v1.json')
 
 MODULOS_DO_DETECTOR = ('detector', 'modelo_sensor', 'amostragem', 'posicao', 'refino',
                        'matriz', 'gerar_ensaios', 'rodar_detector',
-                       'detector_ponto_fixo')
+                       'detector_ponto_fixo', 'rede', 'rede_cais', 'linha_cais')
 
 CLASSE_LOCALIZADO = 'localizado'
 CLASSE_SEM_LOCALIZACAO = 'detectado_sem_localizacao'

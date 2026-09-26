@@ -18,13 +18,15 @@ Na rodada v1 o solicitado foi 1e-4 s e 1200 m/s; o efetivo saiu
 | `build_model.py`, `simular.py`, `rodar_tudo.py` | O trecho reto de 200 m da matriz de ensaios (rodada v1) |
 | `velocidade_de_onda.py` | Velocidade da onda por produto e por linha, pela formula de Korteweg, com valores tipicos de produto e de tubo |
 | `linha_cais.py` | Uma linha de produto do cais: 8" em aco carbono com diesel, sensores a 700 m um do outro, vazamentos grandes e pequenos em sete posicoes e um fora do trecho. Premissas no lugar do que falta da instalacao real, gravadas junto com os sinais |
-| `manobras_cais.py` | Manobras na mesma linha: fim de carregamento no navio (fora do trecho) e fechamento no ramal de um berco intermediario (dentro do trecho) |
+| `manobras_cais.py` | Manobras na mesma linha, agora com uma bomba de verdade no modelo: fim de carregamento no navio (fora do trecho), fechamento e abertura no ramal de um berco intermediario (dentro do trecho) e parada da bomba (fora do trecho, lado A). Grava tambem o registro de operacao que o sistema de controle daria |
+| `rede_cais.py` | A rede com manifold: tronco de 300 m do sensor A ao manifold e tres ramais (250, 400 e 550 m) ate os sensores dos bercos 104, 106 e 108, com vazamentos no tronco, em cada ramal e antes do sensor A |
 
-Os dois ultimos precisam do ambiente com TSNet (`../ambiente/LEIAME.md`) e
+Os tres ultimos precisam do ambiente com TSNet (`../ambiente/LEIAME.md`) e
 levam cerca de 1 minuto por simulacao:
 
     python linha_cais.py          # regime e 16 vazamentos, ~17 min
-    python manobras_cais.py       # 2 manobras, ~2 min
+    python manobras_cais.py       # 4 manobras, ~5 min
+    python rede_cais.py           # regime e 16 vazamentos na rede, ~35 min
 
 Os sinais ficam em `03_ensaios/amostras` e as posicoes em
 `03_ensaios/verdade_do_cenario`, separados como na matriz. O detector e o

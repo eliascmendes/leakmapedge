@@ -11,10 +11,12 @@ dado real e rode de novo.
   - linha de 8" em aco carbono, schedule 40, com diesel;
   - velocidade da onda pela formula de Korteweg (velocidade_de_onda.py);
   - bomba como carga constante de 7 bar (85 m de coluna de diesel) e o navio
-    como carga constante ajustada para cerca de 1,5 m/s na linha (~170 m3/h);
+    como carga constante ajustada para cerca de 1,5 m/s na linha (~170 m3/h),
+    com o atrito de Darcy-Weisbach do aco comercial (rugosidade 0,046 mm) e a
+    viscosidade do diesel;
   - sensor A no inicio do rack e sensor B no berco 108 (700 m de distancia);
   - vazamentos em sete posicoes entre os sensores e em uma antes do sensor A,
-    em dois tamanhos: grande (~20% da vazao) e pequeno (~4% da vazao).
+    em dois tamanhos: grande (~23% da vazao) e pequeno (~5% da vazao).
 
 As cargas saem em metros de coluna de diesel. Grava:
   03_ensaios/amostras/leakmap_amostras_linha_cais_v1.json   (sinais, sem posicao)
@@ -56,15 +58,37 @@ POS_EVENTO = [50.0, 150.0, 250.0, 350.0, 450.0, 550.0, 650.0, -150.0]
 
 PRESSAO_BOMBA_BAR = 7.0
 H_BOMBA = PRESSAO_BOMBA_BAR * 1e5 / (RHO * G)
-H_NAVIO = H_BOMBA - 55.0          # ~1,5 m/s na linha (~170 m3/h) com o atrito que o TSNet aplica
-RUGOSIDADE_MM = 0.046             # aco carbono comercial
-FRICCAO_DW = 0.02
+RUGOSIDADE_M = 0.046e-3           # aco carbono comercial; o wntr guarda a rugosidade de D-W em metros
+VISCOSIDADE_M2_S = 3.0e-6         # diesel, 3 cSt (a especificacao admite 2,0 a 4,5 cSt a 40 C)
+VELOCIDADE_ALVO_M_S = 1.46        # ~170 m3/h na linha de 8"
 DT_SOLICITADO = 2e-4              # s; decimacao por 2 chega a 2,5 kHz
 TF = 0.95                         # s
 TS_EVENTO = 0.10                  # s
 TC_EVENTO = 0.001                 # s
 # coeficiente emissor final (m3/s por raiz de m): Q = k * sqrt(H)
 TAMANHOS = {'grande': 1.2e-3, 'pequeno': 2.5e-4}
+
+
+def fator_de_atrito(v, d):
+    """Darcy-Weisbach pela formula de Swamee-Jain, a mesma do EPANET no escoamento turbulento."""
+    re = v * d / VISCOSIDADE_M2_S
+    return 0.25 / math.log10(RUGOSIDADE_M / (3.7 * d) + 5.74 / re ** 0.9) ** 2
+
+
+def carga_no_navio(d):
+    """Carga no navio que da a velocidade alvo, com a perda de carga da bomba ao navio."""
+    comprimento = POS_NAVIO - POS_BOMBA
+    return H_BOMBA - fator_de_atrito(VELOCIDADE_ALVO_M_S, d) * comprimento / d * VELOCIDADE_ALVO_M_S ** 2 / (2 * G)
+
+
+def rede_base():
+    """Modelo wntr vazio com as opcoes comuns: Darcy-Weisbach e viscosidade do diesel."""
+    import wntr
+    wn = wntr.network.WaterNetworkModel()
+    wn.options.hydraulic.headloss = 'D-W'
+    wn.options.hydraulic.viscosity = VISCOSIDADE_M2_S / 1.0e-6     # relativa a agua a 20 C
+    wn.options.time.duration = 0
+    return wn
 
 
 def nome_no(x):
@@ -89,7 +113,10 @@ def premissas(c):
                        'berco_106': POS_BERCO_106, 'sensor_B_berco_108': POS_SENSOR_B, 'navio': POS_NAVIO},
         'pressao_da_bomba_bar': PRESSAO_BOMBA_BAR,
         'carga_da_bomba_m': H_BOMBA,
-        'carga_no_navio_m': H_NAVIO,
+        'carga_no_navio_m': carga_no_navio(d),
+        'atrito': ('Darcy-Weisbach, rugosidade %.3f mm, viscosidade %.1f cSt, fator %.4f a %.2f m/s'
+                   % (RUGOSIDADE_M * 1e3, VISCOSIDADE_M2_S * 1e6, fator_de_atrito(VELOCIDADE_ALVO_M_S, d),
+                      VELOCIDADE_ALVO_M_S)),
         'unidade_de_carga': 'metro de coluna de %s (1 bar = %.2f m)' % (PRODUTO, 1e5 / (RHO * G)),
         'evento': ('abertura de vazamento (add_burst do TSNet) em %.3f s, desenvolvimento em %.4f s'
                    % (TS_EVENTO, TC_EVENTO)),
@@ -99,11 +126,9 @@ def premissas(c):
 
 def escrever_inp(caminho, d):
     import wntr
-    wn = wntr.network.WaterNetworkModel()
-    wn.options.hydraulic.headloss = 'D-W'
-    wn.options.time.duration = 0
+    wn = rede_base()
     wn.add_reservoir('BOMBA', base_head=H_BOMBA, coordinates=(POS_BOMBA, 0.0))
-    wn.add_reservoir('NAVIO', base_head=H_NAVIO, coordinates=(POS_NAVIO, 0.0))
+    wn.add_reservoir('NAVIO', base_head=carga_no_navio(d), coordinates=(POS_NAVIO, 0.0))
     xs = pontos()
     for x in xs:
         wn.add_junction(nome_no(x), base_demand=0.0, elevation=0.0, coordinates=(x, 0.0))
@@ -111,7 +136,7 @@ def escrever_inp(caminho, d):
     pos = [POS_BOMBA] + xs + [POS_NAVIO]
     for i in range(len(seq) - 1):
         wn.add_pipe('T%d' % (i + 1), seq[i], seq[i + 1], length=pos[i + 1] - pos[i],
-                    diameter=d, roughness=RUGOSIDADE_MM, minor_loss=0.0)
+                    diameter=d, roughness=RUGOSIDADE_M, minor_loss=0.0)
     wntr.network.write_inpfile(wn, caminho, units='LPS')
     return caminho
 
@@ -121,7 +146,8 @@ def rodar(inp, c, posicao=None, coeficiente=None, pasta='.'):
     tm = tsnet.network.TransientModel(inp)
     tm.set_wavespeed(c)
     tm.set_time(TF, DT_SOLICITADO)
-    tm.set_roughness(FRICCAO_DW)
+    # o atrito sai do regime do EPANET (rugosidade do .inp); nao usar set_roughness aqui: ele
+    # troca a rugosidade do modelo, e nao o fator de atrito
     if posicao is not None:
         tm.add_burst(nome_no(posicao), TS_EVENTO, TC_EVENTO, coeficiente)
     tm = tsnet.simulation.Initializer(tm, 0, 'DD')

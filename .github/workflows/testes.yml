@@ -26,3 +26,16 @@ jobs:
 
       - name: Trilha completa, testes do Python e da placa simulada, simulacao do Verilog e paridade do JavaScript
         run: python rodar_software.py
+
+  ambiente-do-tsnet:
+    # numa maquina limpa: instala as versoes congeladas e refaz simulacoes gravadas
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Ambiente do TSNet e conferencia contra as simulacoes gravadas
+        run: bash 02_bancada/ambiente/preparar_ambiente.sh "$HOME/leakmap_env" --completo

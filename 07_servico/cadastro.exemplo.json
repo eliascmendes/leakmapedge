@@ -1,0 +1,14 @@
+{
+  "descricao": "Cadastro de exemplo da linha simulada do cais. Posicoes na mesma referencia dos sensores (sensor A em 0 m, sensor B em 700 m). Troque pelos equipamentos e posicoes do isometrico da linha real.",
+  "linha": "L-01",
+  "equipamentos": [
+    {"nome": "B-01", "tipo": "bomba", "posicao_m": -300.0},
+    {"nome": "XV-104", "tipo": "valvula", "posicao_m": 200.0},
+    {"nome": "XV-106", "tipo": "valvula", "posicao_m": 450.0},
+    {"nome": "XV-108", "tipo": "valvula", "posicao_m": 710.0}
+  ],
+  "operacoes_de_exemplo": [
+    {"equipamento": "XV-106", "acao": "abertura", "instante_s": 1790000000.0, "origem": "sistema de controle"},
+    {"equipamento": "B-01", "acao": "parada", "instante_s": 1790000600.0, "origem": "lancamento do operador"}
+  ]
+}

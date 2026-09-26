@@ -11,14 +11,15 @@
   "posicoes_m": {
    "bomba": -300.0,
    "sensor_A": 0.0,
+   "berco_104": 200.0,
    "berco_106": 450.0,
    "sensor_B_berco_108": 700.0,
-   "navio": 720.0,
-   "berco_104": 200.0
+   "navio": 720.0
   },
   "pressao_da_bomba_bar": 7.0,
   "carga_da_bomba_m": 84.94733265375467,
-  "carga_no_navio_m": 29.94733265375467,
+  "carga_no_navio_m": 74.46614193913335,
+  "atrito": "Darcy-Weisbach, rugosidade 0.046 mm, viscosidade 3.0 cSt, fator 0.0192 a 1.46 m/s",
   "unidade_de_carga": "metro de coluna de diesel (1 bar = 12.14 m)",
   "evento": "abertura de vazamento (add_burst do TSNet) em 0.100 s, desenvolvimento em 0.0010 s",
   "tamanhos_de_vazamento_coeficiente_emissor": {
@@ -27,8 +28,8 @@
   }
  },
  "velocidade_de_onda_efetiva_m_s": 1226.6265605455458,
- "vazao_de_regime_m3_s": 0.047045936732892674,
- "velocidade_do_escoamento_m_s": 1.4573147296905522,
+ "vazao_de_regime_m3_s": 0.04705393368340794,
+ "velocidade_do_escoamento_m_s": 1.4575624465942387,
  "passo_de_tempo_efetivo_s": 0.00020044637587435083,
  "descricao": "VERDADE DO CENARIO da linha do cais. Uso exclusivo do avaliador. Nunca entra no detector.",
  "ensaios": [
@@ -47,10 +48,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 17.107992400401763,
-   "queda_no_sensor_B_m": 15.536128937423383
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 18.91477815649087,
+   "queda_no_sensor_B_m": 17.905900929343467
   },
   {
    "id": "LC-02",
@@ -60,10 +61,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 16.13009324884711,
-   "queda_no_sensor_B_m": 14.920883076968753
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 18.670155906859797,
+   "queda_no_sensor_B_m": 17.85117607959662
   },
   {
    "id": "LC-03",
@@ -73,10 +74,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 15.131975113879086,
-   "queda_no_sensor_B_m": 14.293787346543567
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 18.42677490143526,
+   "queda_no_sensor_B_m": 17.838579264682863
   },
   {
    "id": "LC-04",
@@ -86,10 +87,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 14.111221083553694,
-   "queda_no_sensor_B_m": 13.580477171779343
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 18.186936258662,
+   "queda_no_sensor_B_m": 17.78349481937797
   },
   {
    "id": "LC-05",
@@ -99,10 +100,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 13.018891586680681,
-   "queda_no_sensor_B_m": 12.820558031515908
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 17.92603659273739,
+   "queda_no_sensor_B_m": 17.7457925830796
   },
   {
    "id": "LC-06",
@@ -112,10 +113,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 11.759635517945313,
-   "queda_no_sensor_B_m": 11.989650552360722
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 17.521609729554157,
+   "queda_no_sensor_B_m": 17.706345066813824
   },
   {
    "id": "LC-07",
@@ -125,10 +126,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 10.499003201300752,
-   "queda_no_sensor_B_m": 11.072355105149974
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 17.118267924748125,
+   "queda_no_sensor_B_m": 17.662220886487496
   },
   {
    "id": "LC-08",
@@ -138,10 +139,10 @@
    "coeficiente_emissor": 0.0012,
    "dentro_do_trecho_entre_sensores": false,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.009951384205597826,
-   "fracao_da_vazao_de_regime_estimada": 0.21152483926715415,
-   "queda_no_sensor_A_m": 18.04783359193045,
-   "queda_no_sensor_B_m": 16.580330773497764
+   "vazao_do_vazamento_estimada_m3_s": 0.010857489101080328,
+   "fracao_da_vazao_de_regime_estimada": 0.2307456199970986,
+   "queda_no_sensor_A_m": 18.823375115960673,
+   "queda_no_sensor_B_m": 17.941756522232836
   },
   {
    "id": "LC-09",
@@ -151,10 +152,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 4.015178029293622,
-   "queda_no_sensor_B_m": 3.617904053826752
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.377195019704942,
+   "queda_no_sensor_B_m": 4.12526189413569
   },
   {
    "id": "LC-10",
@@ -164,10 +165,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 3.806136017214399,
-   "queda_no_sensor_B_m": 3.492913520889335
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.324374059724292,
+   "queda_no_sensor_B_m": 4.11622720439118
   },
   {
    "id": "LC-11",
@@ -177,10 +178,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 3.5923903021551524,
-   "queda_no_sensor_B_m": 3.365953968047851
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.271776524879655,
+   "queda_no_sensor_B_m": 4.11692830051085
   },
   {
    "id": "LC-12",
@@ -190,10 +191,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 3.3739500474107444,
-   "queda_no_sensor_B_m": 3.219166993595639
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.220460100325397,
+   "queda_no_sensor_B_m": 4.107341826436738
   },
   {
    "id": "LC-13",
@@ -203,10 +204,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 3.1366725221297713,
-   "queda_no_sensor_B_m": 3.062976193648346
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.16337621508103,
+   "queda_no_sensor_B_m": 4.10231857016629
   },
   {
    "id": "LC-14",
@@ -216,10 +217,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 2.852364286471399,
-   "queda_no_sensor_B_m": 2.8912564665979197
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.068094803538159,
+   "queda_no_sensor_B_m": 4.096927329824979
   },
   {
    "id": "LC-15",
@@ -229,10 +230,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": true,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 2.568733143383511,
-   "queda_no_sensor_B_m": 2.701008663969695
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 3.97354886102093,
+   "queda_no_sensor_B_m": 4.091015582438658
   },
   {
    "id": "LC-16",
@@ -242,10 +243,10 @@
    "coeficiente_emissor": 0.00025,
    "dentro_do_trecho_entre_sensores": false,
    "instante_do_evento_s": 0.1,
-   "vazao_do_vazamento_estimada_m3_s": 0.0020732050428328807,
-   "fracao_da_vazao_de_regime_estimada": 0.04406767484732379,
-   "queda_no_sensor_A_m": 4.18398385635092,
-   "queda_no_sensor_B_m": 3.8257555861711907
+   "vazao_do_vazamento_estimada_m3_s": 0.002261976896058402,
+   "fracao_da_vazao_de_regime_estimada": 0.04807200416606222,
+   "queda_no_sensor_A_m": 4.341121037760544,
+   "queda_no_sensor_B_m": 4.125653134783363
   }
  ]
 }

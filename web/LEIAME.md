@@ -18,7 +18,8 @@ só existe para o painel. Ele nunca gera número do repositório.
 | `gerar_dados_web.py` | Gera `leakmap_dados_web.js` a partir dos arquivos versionados |
 | `gabarito/leakmap_gabarito_js_v1.json` | Saídas do Python: modelo de sensor, cadeia completa e os 45 ensaios da matriz |
 | `testes/teste_paridade.js` | Confere o JavaScript contra o gabarito do Python |
-| `gerar_dados_cais.py`, `leakmap_dados_cais.js`, `cais.js` | Tela da linha do cais: o esquemático da linha com o evento simulado, a posição que o detector deu, a classificação e o nível do alerta, por tipo de transmissor. Resumo dos arquivos gravados, sem os sinais |
+| `gerar_dados_cais.py`, `leakmap_dados_cais.js`, `cais.js` | Tela da linha do cais: o esquemático da linha com o evento simulado, a posição que o detector deu, a classificação e o nível do alerta, por tipo de transmissor, e a chave do registro de operação que liga ou desliga a conferência com o cadastro de equipamentos. Resumo dos arquivos gravados, sem os sinais |
+| `gerar_dados_rede.py`, `leakmap_dados_rede.js`, `rede.js` | Tela da rede com manifold e três ramais: o esquemático da rede, o vazamento simulado, o trecho e o ponto que a localização em rede deu e o nível do alerta, por tipo de transmissor |
 | `modo_fpga.js` | Tela do cenário B: resultado da placa ao lado do software, ensaio a ensaio, com o rótulo de origem fixo |
 | `leakmap_dados_fpga.js` | Dados dessa tela: amostras inteiras que a placa recebeu e os resultados gravados em `04_detector` e `06_fpga/resultados` |
 | `gerar_dados_fpga.py` | Gera `leakmap_dados_fpga.js`; com resultados de origem `fpga` gravados, a tela passa a abrir neles |

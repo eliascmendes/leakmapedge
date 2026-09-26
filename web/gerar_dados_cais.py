@@ -1,7 +1,8 @@
 """LEAKMAP - dados da tela da linha do cais no painel.
 
 Junta o plano dos ensaios, os registros do detector (com a classificacao por
-polaridade e origem) e a verdade da simulacao da linha do cais num resumo
+polaridade e origem e a conferencia com o cadastro de equipamentos, de
+07_servico/cadastro_linha_cais.py) e a verdade da simulacao da linha do cais num resumo
 leve, sem os sinais, para o mapa do painel:
 
   web/leakmap_dados_cais.js
@@ -19,7 +20,10 @@ sys.path.insert(0, os.path.join(RAIZ, '07_servico'))
 import alerta as AL  # noqa: E402
 
 PLANO = os.path.join(RAIZ, '03_ensaios', 'matriz', 'leakmap_plano_linha_cais_v1.json')
-RESULTADO = os.path.join(RAIZ, '04_detector', 'resultados', 'leakmap_resultado_linha_cais_v1.json')
+RESULTADO = os.path.join(RAIZ, '07_servico', 'resultados', 'leakmap_resultado_linha_cais_com_cadastro_v1.json')
+CADASTRO = os.path.join(RAIZ, '07_servico', 'cadastro.exemplo.json')
+# o mesmo detector sem a conferencia com o cadastro: o que o painel mostra sem o registro de operacao
+RESULTADO_SEM_CADASTRO = os.path.join(RAIZ, '04_detector', 'resultados', 'leakmap_resultado_linha_cais_v1.json')
 AVALIACAO = os.path.join(RAIZ, '05_avaliacao', 'leakmap_avaliacao_linha_cais_v1.json')
 VERDADES = [os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario', 'leakmap_verdade_linha_cais_v1.json'),
             os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario', 'leakmap_verdade_manobras_cais_v1.json')]
@@ -34,7 +38,9 @@ CONFIGURACOES = [
     ('ideal', 'Ideal', 'hidráulica pura, sem transmissor'),
 ]
 NOMES_DAS_MANOBRAS = {'fechamento_navio': 'Fim de carregamento no navio (108)',
-                      'fechamento_106': 'Fechamento no ramal do berço 106'}
+                      'fechamento_106': 'Fechamento no ramal do berço 106',
+                      'abertura_106': 'Abertura no ramal do berço 106',
+                      'parada_bomba': 'Parada da bomba'}
 
 
 def ler(caminho):
@@ -54,6 +60,7 @@ def main():
         premissas = premissas or v['premissas']
         verdade.update({e['id']: e for e in v['ensaios']})
     registros = {r['id']: r for r in resultado['resultados']}
+    sem_cadastro = {r['id']: r for r in ler(RESULTADO_SEM_CADASTRO)['resultados']}
 
     eventos, casos = {}, {}
     for p in plano['ensaios']:
@@ -73,10 +80,23 @@ def main():
         r = registros[p['id']]
         real = eventos[origem]['posicao_real_m']
         estimada = r.get('posicao_estimada_m')
+        s = sem_cadastro[p['id']]
+        diferenca = None
+        if s['classe'] != r['classe']:
+            e = s.get('posicao_estimada_m')
+            diferenca = {'classe': s['classe'], 'nivel': AL.nivel_do_evento(s), 'motivo': s.get('motivo'),
+                         'posicao_estimada_m': e, 'posicao_da_origem_m': s.get('posicao_da_origem_m'),
+                         'incerteza_m': s.get('incerteza_de_posicao_m'), 'lado': s.get('lado_da_origem'),
+                         'erro_m': None, 'cadastro': None}
         casos['%s/%s' % (origem, p['configuracao'])] = {
+            'sem_cadastro': diferenca,
             'classe': r['classe'],
             'nivel': AL.nivel_do_evento(r),
             'motivo': r.get('motivo'),
+            'cadastro': (dict({k: r['cadastro'][k] for k in ('decisao', 'equipamento', 'texto')},
+                              acao=(r['cadastro'].get('operacao') or {}).get('acao'),
+                              reclassificado='classe_antes_do_cadastro' in r)
+                         if r.get('cadastro') else None),
             'posicao_estimada_m': estimada,
             'posicao_da_origem_m': r.get('posicao_da_origem_m'),
             'incerteza_m': r.get('incerteza_de_posicao_m'),
@@ -85,7 +105,7 @@ def main():
             'polaridade': [(r.get(c) or {}).get('polaridade') for c in ('canal_A', 'canal_B')],
         }
 
-    av = ler(AVALIACAO)['com_classificacao']
+    av = ler(AVALIACAO)['com_cadastro']
     por_linha = {l['linha_da_matriz']: l for l in av['por_linha_da_matriz']}
     resumo = []
     for chave, nome, sub in CONFIGURACOES:
@@ -109,10 +129,11 @@ def main():
             'observacao': premissas['observacao'],
         },
         'configuracoes': [{'configuracao': k, 'nome': n, 'sub': s} for k, n, s in CONFIGURACOES],
+        'equipamentos': ler(CADASTRO)['equipamentos'],
         'eventos': ordem,
         'casos': casos,
         'resumo': resumo,
-        'fontes': [rel(PLANO), rel(RESULTADO), rel(AVALIACAO)] + [rel(v) for v in VERDADES],
+        'fontes': [rel(PLANO), rel(RESULTADO), rel(RESULTADO_SEM_CADASTRO), rel(CADASTRO), rel(AVALIACAO)] + [rel(v) for v in VERDADES],
     }
     with open(SAIDA, 'w', encoding='utf-8') as f:
         f.write('/* Gerado por web/gerar_dados_cais.py. Nao editar a mao. */\n')
