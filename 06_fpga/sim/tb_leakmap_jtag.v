@@ -29,7 +29,7 @@
 
 module tb_leakmap_jtag;
     localparam integer MAXIMO       = 2048;     // igual ao modelo do JTAG
-    localparam integer TAM_ROTEIRO  = 16384;    // igual a TAMANHO de gerar_roteiro_jtag.py
+    localparam integer TAM_ROTEIRO  = 32768;    // igual a TAMANHO de gerar_roteiro_jtag.py
     localparam integer LER_MAX      = 64;       // igual a leakmap_ponte_jtag
     localparam integer LEITURAS_MAX = 4000;     // por resposta (~150 ms simulados)
     localparam [1:0]   IR_ESCREVER  = 2'd1, IR_LER = 2'd2, IR_ESTADO = 2'd3;
@@ -158,6 +158,36 @@ module tb_leakmap_jtag;
         end
     endtask
 
+    // TEMPOS: A5 5A 87 tamanho(2) | id(8) situacao modo frequencia(4) periodo(4) n(2)
+    //        contado ciclos(4) min(2) max(2) atrasadas(2) declA(4) latA(2) declB(4) latB(2)
+    function integer u16;
+        input integer i;
+        u16 = recebidos[i] + 256 * recebidos[i + 1];
+    endfunction
+    function integer u32;
+        input integer i;
+        u32 = recebidos[i] + 256 * recebidos[i + 1] + 65536 * recebidos[i + 2] + 16777216 * recebidos[i + 3];
+    endfunction
+
+    task mostrar_tempos;
+        begin
+            $write("    TEMPOS contados pelo circuito: %0s, execucao de %0d ciclos, %0d a %0d ciclos por amostra",
+                   recebidos[14] ? "tempo real" : "lote", u32(26), u16(30), u16(32));
+            if (recebidos[14]) $write(", uma amostra a cada %0d ciclos, %0d atrasadas", u32(19), u16(34));
+            if (u32(36) != 32'hFFFFFFFF) $write(", declaracao A %0d ciclos depois da entrega", u16(40));
+            if (u32(42) != 32'hFFFFFFFF) $write(", B %0d", u16(46));
+            $write("\n");
+            if (recebidos[25] != 8'd1) begin
+                $display("    TEMPOS sem a marca de contado pelo circuito");
+                erros = erros + 1;
+            end
+            if (recebidos[14] && u16(34) != 0) begin
+                $display("    tempo real com amostras atrasadas");
+                erros = erros + 1;
+            end
+        end
+    endtask
+
     initial begin
         if (!$value$plusargs("roteiro=%s", arquivo)) arquivo = "roteiro_jtag.hex";
         $readmemh(arquivo, roteiro);
@@ -202,8 +232,11 @@ module tb_leakmap_jtag;
                     $display("    mensagem %0d: chegaram %0d bytes, esperados %0d", msg + 1, n_recebidos, n_resp);
                     erros = erros + 1;
                 end
+                // bandeiras depois da resposta; com o bit 1, segue a mascara
+                bandeiras = roteiro[p + n_resp];
                 for (k = 0; k < n_resp && k < n_recebidos; k = k + 1)
-                    if (recebidos[k] !== roteiro[p + k]) begin
+                    if ((!bandeiras[1] || roteiro[p + n_resp + 1 + k] != 8'h00)
+                        && recebidos[k] !== roteiro[p + k]) begin
                         if (erros == erros_antes)
                             $display("    mensagem %0d, byte %0d: chegou %02h, esperado %02h",
                                      msg + 1, k, recebidos[k], roteiro[p + k]);
@@ -213,9 +246,9 @@ module tb_leakmap_jtag;
                     mostrar_resultado;
                     resultados = resultados + 1;
                 end
-                p = p + n_resp;
-                bandeiras = roteiro[p];
-                p = p + 1;
+                if (n_resp >= 50 && roteiro[p + 2] == 8'h87)
+                    mostrar_tempos;
+                p = p + n_resp + 1 + (bandeiras[1] ? n_resp : 0);
                 if (led_resultado !== bandeiras[0]) begin
                     $display("    mensagem %0d: led_resultado = %b, esperado %b", msg + 1, led_resultado, bandeiras[0]);
                     erros = erros + 1;

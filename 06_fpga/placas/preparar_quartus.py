@@ -11,6 +11,7 @@ Uso:
   python preparar_quartus.py --destino D:/leakmap_quartus --compilar
 
 Padrao: placa de10_standard, destino <pasta do usuario>/leakmap_quartus/de10_standard.
+A demonstracao autonoma: --placa de10_standard/demo.
 O arquivo para gravar a placa sai em <destino>/output_files/<projeto>.sof.
 """
 import argparse
@@ -46,7 +47,7 @@ def copiar(placa, destino):
     linhas = []
     with open(qsf, encoding='utf-8') as f:
         for linha in f:
-            m = re.match(r'(set_global_assignment -name VERILOG_FILE )(\S+)', linha)
+            m = re.match(r'(set_global_assignment -name VERILOG_(?:INCLUDE_)?FILE )(\S+)', linha)
             if m:
                 fonte = os.path.normpath(os.path.join(origem, m.group(2)))
                 shutil.copy(fonte, destino)

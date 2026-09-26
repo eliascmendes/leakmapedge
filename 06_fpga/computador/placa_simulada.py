@@ -71,7 +71,7 @@ class MotorReferencia:
 class MotorVerilog:
     """O nucleo em Verilog rodando no Icarus, conversando por 06_fpga/sim/tb_interativo.v."""
     descricao = 'Verilog da placa (06_fpga/rtl) no Icarus Verilog'
-    FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_nucleo.v',
+    FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_saude.v', 'rtl/leakmap_nucleo.v',
               'sim/tb_interativo.v']
 
     def __init__(self, tempo_limite_s=30.0):

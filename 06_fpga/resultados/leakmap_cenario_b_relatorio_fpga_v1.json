@@ -44,9 +44,35 @@
   "amostras_saturadas_na_conversao": 0,
   "tempos": {
     "tempo_simulado_total_s": 5.424849086683275,
-    "comunicacao_medida_no_computador_s": 0.998231399920769,
+    "comunicacao_medida_no_computador_s": 1.0235127001069486,
     "observacao": "tempo simulado, tempo de reproducao e latencia de processamento sao grandezas diferentes. Os tempos de comunicacao medidos aqui nao sao tempo real de processamento, e a expressao tempo real so vale com ensaio que demonstre a taxa sustentada sem perdas."
   },
+  "execucao": "lote",
+  "tempos_na_placa": {
+    "ensaios_com_tempos": 45,
+    "modo": [
+      "lote"
+    ],
+    "frequencia_hz": [
+      50000000
+    ],
+    "execucao_us": {
+      "min": 99.0,
+      "max": 646.7
+    },
+    "ciclos_por_amostra": {
+      "min": 13,
+      "max": 102
+    },
+    "processamento_por_amostra_max_us": 2.04,
+    "latencia_de_declaracao_us": {
+      "min": 1.7799999999999998,
+      "max": 2.04
+    },
+    "amostras_atrasadas": 0,
+    "observacao": "ciclos contados pelo proprio circuito (mensagem TEMPOS). Latencia de declaracao: da entrega da amostra do cruzamento ao evento declarado."
+  },
+  "autoteste_dos_canais": null,
   "avaliacao_contra_a_verdade": {
     "arquivo": "leakmap_cenario_b_avaliacao_fpga_v1.json",
     "contagens": {

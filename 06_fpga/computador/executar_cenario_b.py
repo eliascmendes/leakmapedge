@@ -6,6 +6,8 @@ Uso:
                                                        placa simulada (placa_simulada.py)
   python executar_cenario_b.py --jtag                  FPGA pelo cabo de gravacao (USB-Blaster)
   python executar_cenario_b.py --jtag --ensaios MX-001 MX-002
+  python executar_cenario_b.py --jtag --tempo-real       uma amostra por periodo de amostragem,
+                                                       no ritmo do relogio da placa
   python executar_cenario_b.py --serial COM5           FPGA na porta serial
 
 Para cada ensaio: seleciona pelo selo (B-01), converte (B-02, B-03),
@@ -82,18 +84,66 @@ def gravar(caminho, dados):
     print('escrito: %s' % os.path.relpath(caminho, RAIZ))
 
 
-def caminhos(origem, saida=SAIDA):
-    s = SUFIXO[origem]
+def caminhos(origem, saida=SAIDA, tempo_real=False):
+    s = SUFIXO[origem] + ('_tempo_real' if tempo_real else '')
     return {n: os.path.join(saida, 'leakmap_cenario_b_%s_%s_v1.json' % (n, s))
             for n in ('tentativas', 'resultado', 'comparacao', 'avaliacao', 'relatorio')}
 
 
+def resumo_dos_tempos(registros):
+    """Ciclos contados pelo circuito em todos os ensaios que os trouxeram."""
+    tempos = [r['tempos_na_placa'] for r in registros if r.get('tempos_na_placa')]
+    if not tempos:
+        return None
+
+    def faixa(chave):
+        valores = [t[chave] for t in tempos if t.get(chave) is not None]
+        return {'min': min(valores), 'max': max(valores)} if valores else None
+
+    latencias_us = [t['latencia_de_declaracao_%s_us' % c] for t in tempos for c in 'AB'
+                    if t.get('latencia_de_declaracao_%s_us' % c) is not None]
+    return {
+        'ensaios_com_tempos': len(tempos),
+        'modo': sorted({t['modo'] for t in tempos}),
+        'frequencia_hz': sorted({t['frequencia_hz'] for t in tempos}),
+        'execucao_us': faixa('execucao_us'),
+        'ciclos_por_amostra': {'min': faixa('ciclos_por_amostra_min')['min'],
+                               'max': faixa('ciclos_por_amostra_max')['max']},
+        'processamento_por_amostra_max_us': faixa('processamento_por_amostra_max_us')['max'],
+        'latencia_de_declaracao_us': ({'min': min(latencias_us), 'max': max(latencias_us)}
+                                      if latencias_us else None),
+        'amostras_atrasadas': sum(t['amostras_atrasadas'] for t in tempos),
+        'observacao': ('ciclos contados pelo proprio circuito (mensagem TEMPOS). Latencia de '
+                       'declaracao: da entrega da amostra do cruzamento ao evento declarado.'),
+    }
+
+
+def resumo_do_autoteste(registros):
+    """Autoteste dos canais (SAUDE) em todos os ensaios que o trouxeram."""
+    autotestes = [(r['id'], r['autoteste_na_placa']) for r in registros if r.get('autoteste_na_placa')]
+    if not autotestes:
+        return None
+    com_falha = [{'id': i, 'canal': canal, 'falhas': a[canal]['falhas']}
+                 for i, a in autotestes for canal in ('canal_A', 'canal_B') if a[canal]['falhas']]
+    return {
+        'ensaios_com_autoteste': len(autotestes),
+        'canais_conferidos': 2 * len(autotestes),
+        'canais_saudaveis': sum(a['canais_saudaveis'] for _, a in autotestes),
+        'canais_com_falha': com_falha,
+        'observacao': ('autoteste feito pela placa amostra a amostra durante a execucao (mensagem '
+                       'SAUDE): canal congelado, saturado, fora da faixa do transmissor ou com salto '
+                       'impossivel entre duas amostras.'),
+    }
+
+
 def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0, saida=SAIDA,
-             mostrar=None):
+             mostrar=None, tempo_real=False):
+    """Roda o cenario B. Com `tempo_real`, a placa entrega uma amostra a cada periodo
+    de amostragem do ensaio, marcado pelo proprio relogio (EXECUTAR_TEMPO_REAL)."""
     if hasattr(transporte, 'identificar'):
         transporte.identificar()
     origem = transporte.origem
-    arquivos = caminhos(origem, saida)
+    arquivos = caminhos(origem, saida, tempo_real)
     pacote, selos, resultado_a = ler(PACOTE), ler(SELOS), ler(RESULTADO_A)
     escala = pacote.get('escala') or {}
     cal = D.calibracao_padrao()
@@ -110,6 +160,14 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
     })
 
     hospedeiro = HO.Hospedeiro(transporte, tentativas=tentativas, tempo_limite_s=tempo_limite_s)
+    frequencia_hz = None
+    if tempo_real:
+        # a placa informa o proprio relogio em TEMPOS, mesmo antes de executar
+        t = hospedeiro.pedir_tempos()
+        if not t or not t['frequencia_hz']:
+            raise HO.FalhaNaPlaca('a placa nao informou a frequencia do relogio (TEMPOS): '
+                                  'o projeto gravado e anterior ao tempo real?')
+        frequencia_hz = t['frequencia_hz']
     registros, linhas = [], []
     recusados_pelo_selo, falhas_de_comunicacao = [], []
     for identificador in ids:
@@ -122,10 +180,12 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
             continue
         preparo = PP.preparar_ensaio(ensaio, escala, cal)
         try:
+            periodo_ciclos = round(frequencia_hz * RB.periodo(ensaio)) if tempo_real else None
             rodada = hospedeiro.rodar(identificador,
                                       preparo['conversao']['canal_A']['codigos'],
                                       preparo['conversao']['canal_B']['codigos'],
-                                      preparo['parametros'])
+                                      preparo['parametros'], periodo_ciclos,
+                                      limites_de_saude=preparo['limites_de_saude'])
         except HO.FalhaNaPlaca as e:
             falhas_de_comunicacao.append({'id': identificador, 'motivo': str(e)})
             rodada = None
@@ -225,6 +285,9 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
                            'tempo real de processamento, e a expressao tempo real so vale com '
                            'ensaio que demonstre a taxa sustentada sem perdas.'),
         },
+        'execucao': 'tempo real, uma amostra por periodo de amostragem' if tempo_real else 'lote',
+        'tempos_na_placa': resumo_dos_tempos(registros),
+        'autoteste_dos_canais': resumo_do_autoteste(registros),
         'avaliacao_contra_a_verdade': None if avaliacao is None else {
             'arquivo': os.path.basename(arquivos['avaliacao']),
             'contagens': avaliacao['contagens'],
@@ -248,6 +311,8 @@ def main():
     ap.add_argument('--ensaios', nargs='*', help='identificadores; sem eles, todos os ensaios do pacote')
     ap.add_argument('--tempo-limite', type=float, default=2.0)
     ap.add_argument('--saida', default=SAIDA, help='pasta dos arquivos gravados (padrao 06_fpga/resultados)')
+    ap.add_argument('--tempo-real', action='store_true',
+                    help='a placa entrega uma amostra por periodo de amostragem, no ritmo do proprio relogio')
     args = ap.parse_args()
 
     if args.jtag:
@@ -262,7 +327,7 @@ def main():
         transporte = TR.TransporteMemoria(PLACA.PlacaReferencia())
     try:
         rel = executar(transporte, args.ensaios, tempo_limite_s=args.tempo_limite, saida=args.saida,
-                       mostrar=print if (args.serial or args.jtag) else None)
+                       mostrar=print if (args.serial or args.jtag) else None, tempo_real=args.tempo_real)
     finally:
         transporte.fechar()
 
@@ -277,6 +342,22 @@ def main():
              dv['maior_divergencia_de_posicao_m']))
     if dv['contagem_por_causa']:
         print('causas: %r' % dv['contagem_por_causa'])
+    tp = rel['tempos_na_placa']
+    if tp:
+        latencia = tp['latencia_de_declaracao_us']
+        print('tempos contados pela placa (%s, %s Hz): execucao de %.1f a %.1f us, ate %d ciclos por '
+              'amostra, amostras atrasadas: %d%s'
+              % (', '.join(tp['modo']), ', '.join(str(f) for f in tp['frequencia_hz']),
+                 tp['execucao_us']['min'], tp['execucao_us']['max'], tp['ciclos_por_amostra']['max'],
+                 tp['amostras_atrasadas'],
+                 '' if not latencia else '; declaracao %.2f a %.2f us depois da amostra do cruzamento'
+                 % (latencia['min'], latencia['max'])))
+    at = rel['autoteste_dos_canais']
+    if at:
+        print('autoteste da placa: %d de %d canais saudaveis%s'
+              % (at['canais_saudaveis'], at['canais_conferidos'],
+                 ''.join('; %s %s: %s' % (f['id'], f['canal'], ', '.join(f['falhas']))
+                         for f in at['canais_com_falha'])))
     av = rel['avaliacao_contra_a_verdade']
     if av:
         g = av['erro_de_localizacao_geral'] or {}

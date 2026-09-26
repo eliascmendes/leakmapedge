@@ -14,8 +14,23 @@ Casos:
     de resultado repetido, mensagem de tipo desconhecido, o mesmo ensaio duas
     vezes seguidas e tres ensaios seguidos na mesma placa.
 
+  - tempos: TEMPOS antes de qualquer execucao, depois de uma execucao em
+    lote e em tempo real; tempo real com resultado igual ao do lote, com
+    amostras atrasadas de proposito, mal formado e sem configuracao.
+
+  - autoteste dos canais (SAUDE): todos os ensaios pedem o autoteste com os
+    limites do transmissor; e canais doentes de proposito: congelado, cabo
+    rompido (codigo 0), pico isolado, e o pedido antes de executar, depois
+    de uma execucao recusada e mal formado.
+
 casos.json guarda, para cada caso, os ensaios que ele roda na ordem, que e
 o que 06_fpga/sim/prova_cenario_b.py usa para conferir os criterios.
+
+Ao lado de cada saida vai uma mascara (<caso>.mascara.hex, 01 = comparar,
+00 = nao comparar). So a parte de TEMPOS que o circuito mede (ciclos contados)
+e o CRC dela ficam de fora; todo o resto e comparado byte a byte. Os ciclos
+sao conferidos a parte, em prova_cenario_b.py, contra a contagem do proprio
+simulador.
 
 Grava 06_fpga/vetores/ (gerado, fora do git) com um byte hexadecimal por linha.
 """
@@ -61,13 +76,17 @@ class TransporteGravado(TR.TransporteMemoria):
         self.recebido += resposta
 
 
-def conversa(execucoes, corromper=None):
-    """Roda uma ou mais execucoes do hospedeiro na mesma placa e grava os bytes."""
-    placa = PLACA.PlacaReferencia(capacidade_de_amostras=CAPACIDADE)
+def conversa(execucoes, corromper=None, frequencia_hz=100_000_000):
+    """Roda uma ou mais execucoes do hospedeiro na mesma placa e grava os bytes.
+
+    `frequencia_hz` e a que a placa informa em TEMPOS: a do nucleo simulado.
+    """
+    placa = PLACA.PlacaReferencia(capacidade_de_amostras=CAPACIDADE, frequencia_hz=frequencia_hz)
     transporte = TransporteGravado(placa, corromper)
     host = HO.Hospedeiro(transporte)
-    for identificador, codigos_a, codigos_b, parametros in execucoes:
-        host.rodar(identificador, codigos_a, codigos_b, parametros)
+    for identificador, codigos_a, codigos_b, parametros, *limites in execucoes:
+        host.rodar(identificador, codigos_a, codigos_b, parametros,
+                   limites_de_saude=limites[0] if limites else None)
     return bytes(transporte.entrada), bytes(transporte.saida)
 
 
@@ -81,13 +100,29 @@ def fluxo_bruto(quadros):
     return bytes(entrada), bytes(saida)
 
 
+def mascara_da_saida(saida):
+    """1 para cada byte comparado; 0 na parte medida de TEMPOS e no CRC dela."""
+    mascara = bytearray([1]) * len(saida)
+    i = 0
+    while i + 5 <= len(saida):
+        tamanho = int.from_bytes(saida[i + 3:i + 5], 'little')
+        if saida[i + 2] == PR.TEMPOS:
+            inicio, fim = PR.CAMPOS_MEDIDOS_DOS_TEMPOS
+            for k in range(i + 5 + inicio, i + 5 + fim + 2):
+                mascara[k] = 0
+        i += 7 + tamanho
+    return bytes(mascara)
+
+
 def gravar(nome, entrada, saida, descricao, indice, ensaios=()):
     os.makedirs(SAIDA, exist_ok=True)
-    for sufixo, dados in (('entrada', entrada), ('saida', saida)):
+    mascara = mascara_da_saida(saida)
+    for sufixo, dados in (('entrada', entrada), ('saida', saida), ('mascara', mascara)):
         with open(os.path.join(SAIDA, '%s.%s.hex' % (nome, sufixo)), 'w') as f:
             f.write(''.join('%02x\n' % b for b in dados))
     indice[nome] = {'descricao': descricao, 'ensaios': list(ensaios),
-                    'bytes_de_entrada': len(entrada), 'bytes_de_saida_esperados': len(saida)}
+                    'bytes_de_entrada': len(entrada), 'bytes_de_saida_esperados': len(saida),
+                    'bytes_nao_comparados': mascara.count(0)}
 
 
 def main():
@@ -101,7 +136,7 @@ def main():
         ensaio = SE.selecionar(identificador, pacote, selos)
         p = PP.preparar_ensaio(ensaio, escala, cal)
         return (identificador, p['conversao']['canal_A']['codigos'],
-                p['conversao']['canal_B']['codigos'], p['parametros'])
+                p['conversao']['canal_B']['codigos'], p['parametros'], p['limites_de_saude'])
 
     # --- os 45 ensaios da matriz ---------------------------------------------------
     for ensaio in pacote['ensaios']:
@@ -130,7 +165,7 @@ def main():
 
     base = execucao('MX-005')
     atraso = [base[1][0]] * 40 + list(base[1][:-40])
-    e, s = conversa([('ATRASO40', base[1], atraso, base[3])])
+    e, s = conversa([('ATRASO40', base[1], atraso, base[3], base[4])])
     gravar('sintetico_atraso_40', e, s, 'canal B igual ao A atrasado 40 amostras', indice, ['ATRASO40'])
 
     # --- protocolo -------------------------------------------------------------------------
@@ -151,7 +186,7 @@ def main():
     gravar('protocolo_tres_ensaios_seguidos', e, s, 'MX-021, MX-001 e MX-021 na mesma placa', indice,
            ['MX-021', 'MX-001', 'MX-021'])
 
-    ident, ca, cb, par = execucao('MX-003')
+    ident, ca, cb, par, _ = execucao('MX-003')
     blocos = PR.blocos_do_ensaio(ident, ca, cb)
     configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(ident, par, len(ca)))
     executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(ident, len(blocos), len(ca)))
@@ -186,6 +221,96 @@ def main():
     e, s = fluxo_bruto([outro, amostra_solta, grande, blocos[0], executar])
     gravar('protocolo_sem_configuracao_e_capacidade', e, s,
            'execucao e bloco sem configuracao; ensaio acima da capacidade', indice)
+
+    # o topo com a serial (tb_topo.v) roda o relogio a 1 MHz; so ele usa este vetor,
+    # que por isso fica fora do indice dos casos do nucleo
+    e, s = conversa([execucao('MX-005')], frequencia_hz=1_000_000)
+    gravar('topo_serial_MX-005', e, s, 'MX-005 pelo topo com a serial, relogio de 1 MHz', {}, ['MX-005'])
+
+    # --- tempos contados pelo circuito e execucao em tempo real ----------------------
+    def quadros_do_ensaio(ident):
+        _, ca, cb, par, _ = execucao(ident)
+        blocos = PR.blocos_do_ensaio(ident, ca, cb)
+        configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(ident, par, len(ca)))
+        return configurar, blocos, len(blocos), len(ca)
+
+    def pedir_tempos(ident):
+        return PR.montar_quadro(PR.PEDIR_TEMPOS, PR.carga_so_id(ident))
+
+    def confirmar(ident):
+        return PR.montar_quadro(PR.CONFIRMAR_RESULTADO, PR.carga_so_id(ident))
+
+    e, s = fluxo_bruto([pedir_tempos('')])
+    gravar('tempos_antes_de_executar', e, s, 'TEMPOS numa placa que ainda nao executou nada', indice)
+
+    configurar, blocos, nb, na = quadros_do_ensaio('MX-013')
+    e, s = fluxo_bruto([configurar] + blocos + [
+        PR.montar_quadro(PR.EXECUTAR, PR.carga_executar('MX-013', nb, na)),
+        pedir_tempos('MX-013'), confirmar('MX-013')])
+    gravar('tempos_lote_MX-013', e, s, 'execucao em lote e os ciclos que ela levou', indice, ['MX-013'])
+
+    for ident, periodo in (('MX-001', 400), ('MX-039', 300)):
+        configurar, blocos, nb, na = quadros_do_ensaio(ident)
+        e, s = fluxo_bruto([configurar] + blocos + [
+            PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real(ident, nb, na, periodo)),
+            pedir_tempos(ident), confirmar(ident)])
+        gravar('tempo_real_%s' % ident, e, s,
+               'tempo real, uma amostra a cada %d ciclos: resultado igual ao do lote' % periodo,
+               indice, [ident])
+
+    configurar, blocos, nb, na = quadros_do_ensaio('MX-005')
+    e, s = fluxo_bruto([configurar] + blocos + [
+        PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real('MX-005', nb, na, 8)),
+        pedir_tempos('MX-005'), confirmar('MX-005')])
+    gravar('tempo_real_atrasado', e, s,
+           'tempo real com periodo menor que o processamento: amostras atrasadas contadas', indice, ['MX-005'])
+
+    e, s = fluxo_bruto([
+        PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real('MX-005', nb, na, 400)),
+        pedir_tempos('MX-005'),
+        PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real('MX-005', nb, na, 0)),
+        PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar('MX-005', nb, na)),
+        PR.montar_quadro(PR.PEDIR_TEMPOS, b'\x00' * 9),
+    ])
+    gravar('tempo_real_mal_formado', e, s,
+           'tempo real sem configuracao, com periodo zero e com tamanhos errados', indice)
+
+    # --- autoteste dos canais: canais doentes de proposito ---------------------------------
+    ident, ca, cb, par, limites = execucao('MX-013')
+    congelado = list(cb[:60]) + [cb[60]] * (len(cb) - 60)
+    configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar('CONGELA', par, len(ca)))
+    blocos = PR.blocos_do_ensaio('CONGELA', ca, congelado)
+    e, s = fluxo_bruto([configurar] + blocos + [
+        PR.montar_quadro(PR.EXECUTAR, PR.carga_executar('CONGELA', len(blocos), len(ca))),
+        PR.montar_quadro(PR.PEDIR_SAUDE, PR.carga_pedir_saude('CONGELA', limites)),
+        PR.montar_quadro(PR.PEDIR_SAUDE, PR.carga_pedir_saude('CONGELA', PR.LIMITES_ABERTOS)),
+        confirmar('CONGELA')])
+    gravar('saude_canal_congelado', e, s,
+           'canal B congelado a partir da amostra 60 (MX-013): acusado com os limites do '
+           'transmissor, e nao acusado com os limites abertos', indice, ['CONGELA'])
+
+    rompido = list(ca[:100]) + [0] * (len(ca) - 100)
+    e, s = conversa([('ROMPIDO', rompido, cb, par, limites)])
+    gravar('saude_cabo_rompido', e, s,
+           'canal A cai a codigo 0 na amostra 100 (MX-013): congelado, saturado e fora da faixa',
+           indice, ['ROMPIDO'])
+
+    ident, ca, cb, par, limites = execucao('MX-021')
+    pico = list(cb)
+    pico[90] -= limites['limite_salto'] + 60
+    e, s = conversa([('PICO', ca, pico, par, limites)])
+    gravar('saude_pico_isolado', e, s,
+           'uma amostra isolada do canal B cai mais que meia faixa (MX-021): salto', indice, ['PICO'])
+
+    pedir_saude = PR.montar_quadro(PR.PEDIR_SAUDE, PR.carga_pedir_saude('', limites))
+    e, s = fluxo_bruto([
+        pedir_saude,
+        PR.montar_quadro(PR.EXECUTAR, PR.carga_executar('NADA', 1, 10)),
+        pedir_saude,
+        PR.montar_quadro(PR.PEDIR_SAUDE, bytes(15)),
+    ])
+    gravar('saude_sem_execucao_e_mal_formado', e, s,
+           'SAUDE antes de executar, depois de uma execucao recusada e com tamanho errado', indice)
 
     with open(os.path.join(SAIDA, 'casos.json'), 'w', encoding='utf-8') as f:
         json.dump({'capacidade_de_amostras': CAPACIDADE, 'casos': indice}, f, ensure_ascii=False, indent=2)

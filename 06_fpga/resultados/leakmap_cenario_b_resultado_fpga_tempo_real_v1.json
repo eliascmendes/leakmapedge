@@ -83,17 +83,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0033636000007390976,
-          "carga_s": 0.02698170000803657,
-          "execucao_ate_resultado_s": 0.004622099979314953
+          "configuracao_s": 0.0022634999768342823,
+          "carga_s": 0.016246900020632893,
+          "execucao_ate_resultado_s": 0.1111275999865029
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 14221,
-        "execucao_us": 284.42,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -249,17 +249,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002122799982316792,
-          "carga_s": 0.013857999991159886,
-          "execucao_ate_resultado_s": 0.002913300006184727
+          "configuracao_s": 0.002258399996208027,
+          "carga_s": 0.01619700001901947,
+          "execucao_ate_resultado_s": 0.11115739998058416
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 14221,
-        "execucao_us": 284.42,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -415,17 +415,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.001741299987770617,
-          "carga_s": 0.009393700020154938,
-          "execucao_ate_resultado_s": 0.002645700005814433
+          "configuracao_s": 0.002071700000669807,
+          "carga_s": 0.011133099993458018,
+          "execucao_ate_resultado_s": 0.07823499999358319
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 9649,
-        "execucao_us": 192.98000000000002,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -581,17 +581,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0017669000080786645,
-          "carga_s": 0.009129099984420463,
-          "execucao_ate_resultado_s": 0.0026783000212162733
+          "configuracao_s": 0.0019859000167343765,
+          "carga_s": 0.010990999988280237,
+          "execucao_ate_resultado_s": 0.07705170000554062
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 9649,
-        "execucao_us": 192.98000000000002,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -747,17 +747,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.001632300001801923,
-          "carga_s": 0.005838500015670434,
-          "execucao_ate_resultado_s": 0.0027243999938946217
+          "configuracao_s": 0.0018115999992005527,
+          "carga_s": 0.007395100023131818,
+          "execucao_ate_resultado_s": 0.042799799994099885
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 4950,
-        "execucao_us": 99.0,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006598,
+        "execucao_us": 40131.96,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -913,17 +913,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0018487999914214015,
-          "carga_s": 0.006258600013097748,
-          "execucao_ate_resultado_s": 0.0025849000085145235
+          "configuracao_s": 0.001963999995496124,
+          "carga_s": 0.00704799999948591,
+          "execucao_ate_resultado_s": 0.04251569998450577
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 4950,
-        "execucao_us": 99.0,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006598,
+        "execucao_us": 40131.96,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -1079,17 +1079,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0018779000092763454,
-          "carga_s": 0.00918290001573041,
-          "execucao_ate_resultado_s": 0.003204099979484454
+          "configuracao_s": 0.00223280000500381,
+          "carga_s": 0.010701399995014071,
+          "execucao_ate_resultado_s": 0.07690700000966899
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 9648,
-        "execucao_us": 192.96,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -1245,17 +1245,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0021718999778386205,
-          "carga_s": 0.010475800023414195,
-          "execucao_ate_resultado_s": 0.003333200002089143
+          "configuracao_s": 0.002193199994508177,
+          "carga_s": 0.015352100017480552,
+          "execucao_ate_resultado_s": 0.07739599997876212
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 9648,
-        "execucao_us": 192.96,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -1411,17 +1411,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002278300002217293,
-          "carga_s": 0.016650800011120737,
-          "execucao_ate_resultado_s": 0.002872499986551702
+          "configuracao_s": 0.0018847000028472394,
+          "carga_s": 0.015826999995624647,
+          "execucao_ate_resultado_s": 0.11092600002302788
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 14211,
-        "execucao_us": 284.22,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -1577,17 +1577,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020739999890793115,
-          "carga_s": 0.016098699998110533,
-          "execucao_ate_resultado_s": 0.0031996000034268945
+          "configuracao_s": 0.0021561000030487776,
+          "carga_s": 0.01662070001475513,
+          "execucao_ate_resultado_s": 0.11131809998187236
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 14211,
-        "execucao_us": 284.22,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 97,
         "processamento_por_amostra_max_us": 1.9400000000000002,
@@ -1743,17 +1743,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0017598999838810414,
-          "carga_s": 0.013690299994777888,
-          "execucao_ate_resultado_s": 0.0025907000235747546
+          "configuracao_s": 0.002110400004312396,
+          "carga_s": 0.016650599980494007,
+          "execucao_ate_resultado_s": 0.11111530000925995
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16352,
-        "execucao_us": 327.04,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -1909,17 +1909,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.001962499984074384,
-          "carga_s": 0.014836100017419085,
-          "execucao_ate_resultado_s": 0.002675299998372793
+          "configuracao_s": 0.0022010999964550138,
+          "carga_s": 0.01673599999048747,
+          "execucao_ate_resultado_s": 0.11222770001040772
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16352,
-        "execucao_us": 327.04,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2075,17 +2075,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0016596000059507787,
-          "carga_s": 0.009388100006617606,
-          "execucao_ate_resultado_s": 0.0026343000063207
+          "configuracao_s": 0.0018733999750111252,
+          "carga_s": 0.010994300013408065,
+          "execucao_ate_resultado_s": 0.07805499999085441
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10970,
-        "execucao_us": 219.4,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2241,17 +2241,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.001732900011120364,
-          "carga_s": 0.009454999992158264,
-          "execucao_ate_resultado_s": 0.0027005999872926623
+          "configuracao_s": 0.0021751000022049993,
+          "carga_s": 0.010435400006826967,
+          "execucao_ate_resultado_s": 0.07760289998259395
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10970,
-        "execucao_us": 219.4,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2407,17 +2407,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.001794100011466071,
-          "carga_s": 0.006572999991476536,
-          "execucao_ate_resultado_s": 0.0026387000107206404
+          "configuracao_s": 0.0018501000013202429,
+          "carga_s": 0.00744059999124147,
+          "execucao_ate_resultado_s": 0.04359590000240132
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 5498,
-        "execucao_us": 109.96,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006598,
+        "execucao_us": 40131.96,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2573,17 +2573,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0016142000094987452,
-          "carga_s": 0.006507599988253787,
-          "execucao_ate_resultado_s": 0.002477100002579391
+          "configuracao_s": 0.0022210000024642795,
+          "carga_s": 0.0071706000017002225,
+          "execucao_ate_resultado_s": 0.04305359997670166
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 5498,
-        "execucao_us": 109.96,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006598,
+        "execucao_us": 40131.96,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2739,17 +2739,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0016334999818354845,
-          "carga_s": 0.009190800017677248,
-          "execucao_ate_resultado_s": 0.002544499991927296
+          "configuracao_s": 0.0020895999914500862,
+          "carga_s": 0.010845899989362806,
+          "execucao_ate_resultado_s": 0.07809480000287294
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10936,
-        "execucao_us": 218.72,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -2905,17 +2905,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020367999968584627,
-          "carga_s": 0.010358700004871935,
-          "execucao_ate_resultado_s": 0.0030857000092510134
+          "configuracao_s": 0.0021262999798636883,
+          "carga_s": 0.01086920002126135,
+          "execucao_ate_resultado_s": 0.07830769999418408
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10936,
-        "execucao_us": 218.72,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671993,
+        "execucao_us": 73439.86,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -3071,17 +3071,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0021852999925613403,
-          "carga_s": 0.016258100018603727,
-          "execucao_ate_resultado_s": 0.0033478999976068735
+          "configuracao_s": 0.0018740000086836517,
+          "carga_s": 0.015643099992303178,
+          "execucao_ate_resultado_s": 0.11155400000279769
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16431,
-        "execucao_us": 328.62,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -3237,17 +3237,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0021826000011060387,
-          "carga_s": 0.015569699986372143,
-          "execucao_ate_resultado_s": 0.0027402999985497445
+          "configuracao_s": 0.002011300006415695,
+          "carga_s": 0.016039100009948015,
+          "execucao_ate_resultado_s": 0.11043749999953434
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16431,
-        "execucao_us": 328.62,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337388,
+        "execucao_us": 106747.76,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 92,
         "processamento_por_amostra_max_us": 1.8399999999999999,
@@ -3403,17 +3403,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0018186999950557947,
-          "carga_s": 0.016338699992047623,
-          "execucao_ate_resultado_s": 0.003329600003780797
+          "configuracao_s": 0.002064600004814565,
+          "carga_s": 0.016529499989701435,
+          "execucao_ate_resultado_s": 0.10928570001851767
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16140,
-        "execucao_us": 322.8,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337380,
+        "execucao_us": 106747.59999999999,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -3569,17 +3569,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020246999920345843,
-          "carga_s": 0.017578200000571087,
-          "execucao_ate_resultado_s": 0.0032596999953966588
+          "configuracao_s": 0.002190700004575774,
+          "carga_s": 0.015948500018566847,
+          "execucao_ate_resultado_s": 0.10999269998865202
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16140,
-        "execucao_us": 322.8,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337380,
+        "execucao_us": 106747.59999999999,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -3735,17 +3735,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0021215999731794,
-          "carga_s": 0.011874000017996877,
-          "execucao_ate_resultado_s": 0.003530799993313849
+          "configuracao_s": 0.0018979999877046794,
+          "carga_s": 0.011111200001323596,
+          "execucao_ate_resultado_s": 0.07648570000310428
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10767,
-        "execucao_us": 215.34,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671985,
+        "execucao_us": 73439.7,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -3901,17 +3901,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002080500009469688,
-          "carga_s": 0.01214770000660792,
-          "execucao_ate_resultado_s": 0.003863599995383993
+          "configuracao_s": 0.0019396999850869179,
+          "carga_s": 0.010845700016943738,
+          "execucao_ate_resultado_s": 0.07751879998249933
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10767,
-        "execucao_us": 215.34,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671985,
+        "execucao_us": 73439.7,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4067,17 +4067,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002123399986885488,
-          "carga_s": 0.009280400001443923,
-          "execucao_ate_resultado_s": 0.003957600012654439
+          "configuracao_s": 0.0020659000147134066,
+          "carga_s": 0.007056500006001443,
+          "execucao_ate_resultado_s": 0.04481510000186972
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 5418,
-        "execucao_us": 108.36,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006590,
+        "execucao_us": 40131.8,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4233,17 +4233,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002194700005929917,
-          "carga_s": 0.009167999989585951,
-          "execucao_ate_resultado_s": 0.003677800006698817
+          "configuracao_s": 0.0018348000012338161,
+          "carga_s": 0.0073438999825157225,
+          "execucao_ate_resultado_s": 0.04295649999403395
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 5418,
-        "execucao_us": 108.36,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 2006590,
+        "execucao_us": 40131.8,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4399,17 +4399,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0026596999960020185,
-          "carga_s": 0.012345700000878423,
-          "execucao_ate_resultado_s": 0.00449380002100952
+          "configuracao_s": 0.0019644999993033707,
+          "carga_s": 0.011059500015107915,
+          "execucao_ate_resultado_s": 0.07788629998685792
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10702,
-        "execucao_us": 214.04,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671985,
+        "execucao_us": 73439.7,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4565,17 +4565,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0022527000110130757,
-          "carga_s": 0.013074799993773922,
-          "execucao_ate_resultado_s": 0.0035567000159062445
+          "configuracao_s": 0.0019141000229865313,
+          "carga_s": 0.01079339999705553,
+          "execucao_ate_resultado_s": 0.07761099998606369
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 10702,
-        "execucao_us": 214.04,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 3671985,
+        "execucao_us": 73439.7,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4731,17 +4731,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.002532799990149215,
-          "carga_s": 0.018824800004949793,
-          "execucao_ate_resultado_s": 0.003438100015046075
+          "configuracao_s": 0.0018850000051315874,
+          "carga_s": 0.016046399978222325,
+          "execucao_ate_resultado_s": 0.11102820001542568
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16100,
-        "execucao_us": 322.0,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337380,
+        "execucao_us": 106747.59999999999,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -4897,17 +4897,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0019460000039543957,
-          "carga_s": 0.015280499996151775,
-          "execucao_ate_resultado_s": 0.0028720999835059047
+          "configuracao_s": 0.0021784999989904463,
+          "carga_s": 0.016807699983473867,
+          "execucao_ate_resultado_s": 0.10900110000511631
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 16100,
-        "execucao_us": 322.0,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 5337380,
+        "execucao_us": 106747.59999999999,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 102,
         "processamento_por_amostra_max_us": 2.04,
@@ -5063,17 +5063,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0032294999982696027,
-          "carga_s": 0.02627179998671636,
-          "execucao_ate_resultado_s": 0.0028328000043984503
+          "configuracao_s": 0.002205199998570606,
+          "carga_s": 0.02821429999312386,
+          "execucao_ate_resultado_s": 0.20268489999580197
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 26762,
-        "execucao_us": 535.24,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012533,
+        "execucao_us": 200250.66,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 54,
         "processamento_por_amostra_max_us": 1.08,
@@ -5183,17 +5183,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0018874999950639904,
-          "carga_s": 0.025032900011865422,
-          "execucao_ate_resultado_s": 0.0026151000056415796
+          "configuracao_s": 0.0019868999952450395,
+          "carga_s": 0.028588100016349927,
+          "execucao_ate_resultado_s": 0.20486539998091757
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 26762,
-        "execucao_us": 535.24,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012533,
+        "execucao_us": 200250.66,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 54,
         "processamento_por_amostra_max_us": 1.08,
@@ -5303,17 +5303,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020032000029459596,
-          "carga_s": 0.024845600011758506,
-          "execucao_ate_resultado_s": 0.0027145999774802476
+          "configuracao_s": 0.0021342999825719744,
+          "carga_s": 0.029401600011624396,
+          "execucao_ate_resultado_s": 0.20319830000516959
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 26762,
-        "execucao_us": 535.24,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012533,
+        "execucao_us": 200250.66,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 54,
         "processamento_por_amostra_max_us": 1.08,
@@ -5423,17 +5423,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0017828000127337873,
-          "carga_s": 0.024559499986935407,
-          "execucao_ate_resultado_s": 0.0033140000014100224
+          "configuracao_s": 0.0018800999969244003,
+          "carga_s": 0.0290411000023596,
+          "execucao_ate_resultado_s": 0.20292280000285245
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 26762,
-        "execucao_us": 535.24,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012533,
+        "execucao_us": 200250.66,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 54,
         "processamento_por_amostra_max_us": 1.08,
@@ -5543,17 +5543,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020441999949980527,
-          "carga_s": 0.02521100000012666,
-          "execucao_ate_resultado_s": 0.002653300005476922
+          "configuracao_s": 0.0019208999874535948,
+          "carga_s": 0.0287034000211861,
+          "execucao_ate_resultado_s": 0.2041797999991104
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 26762,
-        "execucao_us": 535.24,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012533,
+        "execucao_us": 200250.66,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 54,
         "processamento_por_amostra_max_us": 1.08,
@@ -5663,17 +5663,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0017155999958049506,
-          "carga_s": 0.025912400014931336,
-          "execucao_ate_resultado_s": 0.0025468000094406307
+          "configuracao_s": 0.0019392000103835016,
+          "carga_s": 0.02836840000236407,
+          "execucao_ate_resultado_s": 0.20363709999946877
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32277,
-        "execucao_us": 645.54,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012544,
+        "execucao_us": 200250.88,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 67,
         "processamento_por_amostra_max_us": 1.34,
@@ -5783,17 +5783,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0017536000232212245,
-          "carga_s": 0.025785499979974702,
-          "execucao_ate_resultado_s": 0.002938400022685528
+          "configuracao_s": 0.0020972000202164054,
+          "carga_s": 0.02848069998435676,
+          "execucao_ate_resultado_s": 0.2034554000128992
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32309,
-        "execucao_us": 646.18,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012544,
+        "execucao_us": 200250.88,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 67,
         "processamento_por_amostra_max_us": 1.34,
@@ -5903,17 +5903,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0022029999818187207,
-          "carga_s": 0.02487030002521351,
-          "execucao_ate_resultado_s": 0.0030439999827649444
+          "configuracao_s": 0.0023898000072222203,
+          "carga_s": 0.028343599988147616,
+          "execucao_ate_resultado_s": 0.2053285000147298
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32317,
-        "execucao_us": 646.34,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012544,
+        "execucao_us": 200250.88,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 67,
         "processamento_por_amostra_max_us": 1.34,
@@ -6023,17 +6023,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0022363000025507063,
-          "carga_s": 0.02623190000304021,
-          "execucao_ate_resultado_s": 0.0025750000204425305
+          "configuracao_s": 0.002314399986062199,
+          "carga_s": 0.03461610001977533,
+          "execucao_ate_resultado_s": 0.20495729998219758
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32335,
-        "execucao_us": 646.7,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012544,
+        "execucao_us": 200250.88,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 67,
         "processamento_por_amostra_max_us": 1.34,
@@ -6143,17 +6143,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0019966000108979642,
-          "carga_s": 0.03228169999783859,
-          "execucao_ate_resultado_s": 0.0031959000043570995
+          "configuracao_s": 0.002001499990001321,
+          "carga_s": 0.03108400001656264,
+          "execucao_ate_resultado_s": 0.20444859997951426
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32304,
-        "execucao_us": 646.08,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012544,
+        "execucao_us": 200250.88,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 67,
         "processamento_por_amostra_max_us": 1.34,
@@ -6263,17 +6263,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0021018999977968633,
-          "carga_s": 0.033187399996677414,
-          "execucao_ate_resultado_s": 0.003565799997886643
+          "configuracao_s": 0.0019844000053126365,
+          "carga_s": 0.028198199986945838,
+          "execucao_ate_resultado_s": 0.2049591000250075
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 31960,
-        "execucao_us": 639.2,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012540,
+        "execucao_us": 200250.80000000002,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 66,
         "processamento_por_amostra_max_us": 1.32,
@@ -6383,17 +6383,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0022112999868113548,
-          "carga_s": 0.034577000013086945,
-          "execucao_ate_resultado_s": 0.0030901999853085726
+          "configuracao_s": 0.0022461999906226993,
+          "carga_s": 0.028638599993428215,
+          "execucao_ate_resultado_s": 0.20514790000743233
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 31992,
-        "execucao_us": 639.84,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012540,
+        "execucao_us": 200250.80000000002,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 66,
         "processamento_por_amostra_max_us": 1.32,
@@ -6503,17 +6503,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0024195000005420297,
-          "carga_s": 0.0314057000214234,
-          "execucao_ate_resultado_s": 0.003216099983546883
+          "configuracao_s": 0.0020570000051520765,
+          "carga_s": 0.028763199981767684,
+          "execucao_ate_resultado_s": 0.20512090000556782
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 31939,
-        "execucao_us": 638.7800000000001,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012539,
+        "execucao_us": 200250.78,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 66,
         "processamento_por_amostra_max_us": 1.32,
@@ -6623,17 +6623,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0022025000071153045,
-          "carga_s": 0.02984420000575483,
-          "execucao_ate_resultado_s": 0.003561899997293949
+          "configuracao_s": 0.0020032999746035784,
+          "carga_s": 0.02871820001746528,
+          "execucao_ate_resultado_s": 0.20486639998853207
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 32009,
-        "execucao_us": 640.18,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012539,
+        "execucao_us": 200250.78,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 66,
         "processamento_por_amostra_max_us": 1.32,
@@ -6743,17 +6743,17 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": {
-          "configuracao_s": 0.0020348000107333064,
-          "carga_s": 0.029717700002947822,
-          "execucao_ate_resultado_s": 0.0030968999781180173
+          "configuracao_s": 0.0021237000182736665,
+          "carga_s": 0.028434000007109717,
+          "execucao_ate_resultado_s": 0.20334849998471327
         }
       },
       "tempos_na_placa": {
-        "modo": "lote",
+        "modo": "tempo_real",
         "frequencia_hz": 50000000,
-        "periodo_de_entrega_ciclos": null,
-        "ciclos_execucao": 31975,
-        "execucao_us": 639.5,
+        "periodo_de_entrega_ciclos": 20065,
+        "ciclos_execucao": 10012540,
+        "execucao_us": 200250.80000000002,
         "ciclos_por_amostra_min": 13,
         "ciclos_por_amostra_max": 66,
         "processamento_por_amostra_max_us": 1.32,

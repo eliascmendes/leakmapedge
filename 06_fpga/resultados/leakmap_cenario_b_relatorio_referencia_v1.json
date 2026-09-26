@@ -47,6 +47,15 @@
     "comunicacao_medida_no_computador_s": null,
     "observacao": "tempo simulado, tempo de reproducao e latencia de processamento sao grandezas diferentes. Os tempos de comunicacao medidos aqui nao sao tempo real de processamento, e a expressao tempo real so vale com ensaio que demonstre a taxa sustentada sem perdas."
   },
+  "execucao": "lote",
+  "tempos_na_placa": null,
+  "autoteste_dos_canais": {
+    "ensaios_com_autoteste": 45,
+    "canais_conferidos": 90,
+    "canais_saudaveis": 90,
+    "canais_com_falha": [],
+    "observacao": "autoteste feito pela placa amostra a amostra durante a execucao (mensagem SAUDE): canal congelado, saturado, fora da faixa do transmissor ou com salto impossivel entre duas amostras."
+  },
   "avaliacao_contra_a_verdade": {
     "arquivo": "leakmap_cenario_b_avaliacao_referencia_v1.json",
     "contagens": {

@@ -15,6 +15,16 @@ confere os criterios do cenario B sem passar pelo modelo Python da placa:
   B-06  bloco corrompido no enlace recusado pelo CRC, reenviado e aceito,
         com o resultado igual ao do ensaio sem corrupcao; bloco fora de
         sequencia recusado e execucao recusada.
+  Tempos os ciclos que o proprio circuito conta (mensagem TEMPOS) conferidos
+        contra a contagem do simulador; em tempo real, a amostra k entregue
+        exatamente k periodos depois da primeira, a declaracao dentro do
+        periodo da amostra do cruzamento, nenhuma amostra atrasada, e o
+        resultado identico ao da execucao em lote.
+  Autoteste o autoteste que o circuito faz em cada canal (mensagem SAUDE):
+        as estatisticas do Verilog iguais as contadas aqui, direto nas
+        amostras enviadas, nos 90 canais da matriz, todos saudaveis com os
+        limites do transmissor; e cada canal doente de proposito acusado com
+        a falha certa, e so ela.
 
 Depois liga o computador do cenario B (hospedeiro, registro, comparacao com o
 cenario A e avaliador independente) a essas respostas gravadas, com a origem
@@ -100,6 +110,9 @@ class Caso:
         self.info = info
         self.entrada = ler_hex(os.path.join(VETORES, nome + '.entrada.hex'))
         self.esperado = ler_hex(os.path.join(VETORES, nome + '.saida.hex'))
+        arquivo_mascara = os.path.join(VETORES, nome + '.mascara.hex')
+        self.mascara = (ler_hex(arquivo_mascara) if os.path.exists(arquivo_mascara)
+                        else bytes([1]) * len(self.esperado))
         self.linhas = ler_verilog(os.path.join(VETORES, nome + '.verilog.txt'))
         self.obtido = bytes(l[0] for l in self.linhas)
         self.recebidos = quadros(self.entrada)
@@ -107,6 +120,17 @@ class Caso:
 
     def do_tipo(self, tipo, lado='devolvidos'):
         return [(i, c) for i, t, c in getattr(self, lado) if t == tipo]
+
+    def igual_ao_modelo(self):
+        """Byte a byte, fora a parte de TEMPOS que so o circuito mede."""
+        return len(self.obtido) == len(self.esperado) and all(
+            m == 0 or a == b for a, b, m in zip(self.obtido, self.esperado, self.mascara))
+
+    def tempos(self):
+        return [(i, PR.ler_tempos(c)) for i, c in self.do_tipo(PR.TEMPOS)]
+
+    def saudes(self):
+        return [(i, PR.ler_saude(c)) for i, c in self.do_tipo(PR.SAUDE)]
 
     def resultados(self):
         return [(i, PR.ler_resultado(c), c) for i, c in self.do_tipo(PR.RESULTADO)]
@@ -325,6 +349,171 @@ def criterio_b06(casos):
     }
 
 
+def criterio_tempos(casos):
+    falhas = []
+
+    def exigir(condicao, texto):
+        if not condicao:
+            falhas.append(texto)
+
+    (_, t0), = casos['tempos_antes_de_executar'].tempos()
+    exigir(t0['situacao'] == PR.TEMPOS_SEM_EXECUCAO and t0['contado_pelo_circuito']
+           and t0['frequencia_hz'] == RELOGIO_HZ and t0['ciclos_execucao'] == 0,
+           'TEMPOS antes de qualquer execucao')
+
+    # lote: o contador do circuito contra a contagem do simulador
+    caso = casos['tempos_lote_MX-013']
+    (deslocamento, res, _), = caso.resultados()
+    (_, lote), = caso.tempos()
+    no_simulador = caso.latencia(deslocamento)
+    (desl_ensaio, _, _), = casos['ensaio_MX-013'].resultados()
+    folga = no_simulador - lote['ciclos_execucao']
+    exigir(0 <= folga <= 8, 'ciclos_execucao %d contra %d contados no simulador'
+           % (lote['ciclos_execucao'], no_simulador))
+    exigir(no_simulador == casos['ensaio_MX-013'].latencia(desl_ensaio),
+           'a mesma execucao levou ciclos diferentes em dois casos')
+    exigir(lote['modo'] == PR.MODO_LOTE and lote['amostras_atrasadas'] == 0
+           and lote['n_amostras'] == res['n_amostras_reproduzidas'], 'TEMPOS do lote')
+    for canal in 'AB':
+        detectou = res['canal_' + canal]['detectado']
+        exigir((lote['ciclo_declaracao_' + canal] is not None) == detectou, 'declaracao no canal ' + canal)
+        if detectou:
+            exigir(lote['latencia_declaracao_' + canal] <= lote['ciclos_por_amostra_max']
+                   and lote['ciclo_declaracao_' + canal] <= lote['ciclos_execucao'],
+                   'latencia de declaracao no canal ' + canal)
+
+    # tempo real: ritmo marcado pelo relogio do circuito
+    tempo_real = []
+    for nome, ident in (('tempo_real_MX-001', 'MX-001'), ('tempo_real_MX-039', 'MX-039')):
+        caso = casos[nome]
+        (_, res, carga), = caso.resultados()
+        (_, t), = caso.tempos()
+        (_, _, carga_lote), = casos['ensaio_' + ident].resultados()
+        periodo, n = t['periodo_ciclos'], t['n_amostras']
+        exigir(carga == carga_lote, '%s: resultado diferente do lote' % nome)
+        exigir(t['modo'] == PR.MODO_TEMPO_REAL and t['amostras_atrasadas'] == 0, '%s: amostras atrasadas' % nome)
+        exigir(t['ciclos_por_amostra_max'] < periodo, '%s: amostra mais longa que o periodo' % nome)
+        exigir(t['ciclos_execucao'] >= (n - 1) * periodo, '%s: execucao mais curta que o ritmo' % nome)
+        bases, latencias = [], {}
+        for canal in 'AB':
+            if res['canal_' + canal]['detectado']:
+                entrega = t['ciclo_declaracao_' + canal] - t['latencia_declaracao_' + canal]
+                bases.append(entrega - res['canal_' + canal]['indice_de_cruzamento'] * periodo)
+                latencias[canal] = t['latencia_declaracao_' + canal]
+                exigir(t['latencia_declaracao_' + canal] < periodo, '%s: declaracao fora do periodo' % nome)
+        # a amostra k sai k periodos depois da primeira, que sai logo depois do
+        # preparo do detector: a mesma base nos dois canais, menor que um periodo
+        exigir(len(set(bases)) <= 1 and all(0 <= b < periodo for b in bases),
+               '%s: amostras fora do ritmo (%r)' % (nome, bases))
+        tempo_real.append({
+            'caso': nome, 'periodo_ciclos': periodo, 'amostras': n,
+            'ciclos_execucao': t['ciclos_execucao'],
+            'ciclos_por_amostra_min': t['ciclos_por_amostra_min'],
+            'ciclos_por_amostra_max': t['ciclos_por_amostra_max'],
+            'latencia_de_declaracao_ciclos': latencias,
+            'primeira_amostra_no_ciclo': bases[0] if bases else None,
+            'amostras_atrasadas': t['amostras_atrasadas'],
+        })
+
+    (_, _, carga), = casos['tempo_real_atrasado'].resultados()
+    (_, atrasado), = casos['tempo_real_atrasado'].tempos()
+    (_, _, carga_lote), = casos['ensaio_MX-005'].resultados()
+    exigir(atrasado['amostras_atrasadas'] > 0 and carga == carga_lote,
+           'periodo curto: atrasos contados e resultado igual ao lote')
+
+    tempos_mal = casos['tempo_real_mal_formado'].tempos()
+    exigir(len(tempos_mal) == 1 and tempos_mal[0][1]['situacao'] == PR.RESULTADO_RECUSADO_SEM_CONFIGURACAO
+           and tempos_mal[0][1]['modo'] == PR.MODO_TEMPO_REAL, 'tempo real sem configuracao')
+
+    return {
+        'criterio': ('os ciclos contados pelo circuito conferem com o simulador, e o tempo real segue o '
+                     'relogio da placa sem mudar o resultado'),
+        'lote_MX-013': {
+            'ciclos_execucao_contados_pelo_circuito': lote['ciclos_execucao'],
+            'ciclos_contados_pelo_simulador': no_simulador,
+            'ciclos_por_amostra_min': lote['ciclos_por_amostra_min'],
+            'ciclos_por_amostra_max': lote['ciclos_por_amostra_max'],
+            'latencia_de_declaracao_ciclos': {c: lote['latencia_declaracao_' + c] for c in 'AB'},
+        },
+        'tempo_real': tempo_real,
+        'amostras_atrasadas_com_periodo_de_8_ciclos': atrasado['amostras_atrasadas'],
+        'falhas': falhas,
+        'passou': not falhas,
+    }
+
+
+def estatisticas_das_amostras(codigos):
+    """O autoteste de um canal contado aqui, direto nas amostras, sem o modelo da placa."""
+    c = np.asarray(codigos, dtype=np.int64)
+    iguais = np.flatnonzero(np.diff(c) != 0)                 # onde cada sequencia termina
+    fronteiras = np.concatenate([[-1], iguais, [c.size - 1]])
+    return {
+        'codigo_min': int(c.min()), 'codigo_max': int(c.max()),
+        'maior_sequencia': int(np.diff(fronteiras).max()),
+        'maior_variacao': int(np.abs(np.diff(c)).max()) if c.size > 1 else 0,
+        'amostras_no_extremo': int(np.count_nonzero((c == 0) | (c == 0xFFFF))),
+    }
+
+
+def criterio_autoteste(casos):
+    falhas = []
+
+    def exigir(condicao, texto):
+        if not condicao:
+            falhas.append(texto)
+
+    campos = PR.CAMPOS_DA_SAUDE[1:]
+    canais, saudaveis, iguais = 0, 0, 0
+    for nome, caso in casos.items():
+        if not nome.startswith('ensaio_'):
+            continue
+        saudes = caso.saudes()
+        exigir(len(saudes) == 1 and saudes[0][1]['situacao'] == PR.RESULTADO_CONCLUIDO,
+               '%s: sem SAUDE da execucao' % nome)
+        if len(saudes) != 1:
+            continue
+        saude = saudes[0][1]
+        for canal, codigos in zip(('canal_A', 'canal_B'), caso.codigos()):
+            canais += 1
+            saudaveis += not saude[canal]['falhas']
+            iguais += all(saude[canal][k] == v for k, v in estatisticas_das_amostras(codigos).items())
+    exigir(canais == 90 and saudaveis == canais and iguais == canais,
+           'matriz: %d canais, %d saudaveis, %d com as estatisticas certas' % (canais, saudaveis, iguais))
+
+    def falhas_de(nome):
+        return [(s['canal_A']['falhas'], s['canal_B']['falhas']) for _, s in casos[nome].saudes()]
+
+    doentes = {
+        'saude_canal_congelado': [([], ['congelado']), ([], [])],
+        'saude_cabo_rompido': [(['congelado', 'saturado', 'fora_da_faixa'], [])],
+        'saude_pico_isolado': [([], ['salto'])],
+    }
+    acusados = {}
+    for nome, esperado in doentes.items():
+        obtido = falhas_de(nome)
+        acusados[nome] = obtido
+        exigir(obtido == esperado, '%s: acusou %r, esperado %r' % (nome, obtido, esperado))
+
+    caso = casos['saude_sem_execucao_e_mal_formado']
+    situacoes = [s['situacao'] for _, s in caso.saudes()]
+    zerados = all(s[c][k] == 0 for _, s in caso.saudes() for c in ('canal_A', 'canal_B') for k in campos)
+    recibos = [PR.ler_bloco_recebido(c)[2] for _, c in caso.do_tipo(PR.BLOCO_RECEBIDO)]
+    exigir(situacoes == [PR.SAUDE_SEM_EXECUCAO, PR.RESULTADO_RECUSADO_SEM_CONFIGURACAO] and zerados
+           and recibos == [PR.BLOCO_MAL_FORMADO],
+           'SAUDE sem execucao, depois de execucao recusada e mal formado')
+
+    return {
+        'criterio': ('o circuito acompanha cada canal amostra a amostra e acusa canal congelado, saturado, '
+                     'fora da faixa do transmissor ou com salto impossivel, sem acusar canal saudavel'),
+        'canais_da_matriz': canais,
+        'canais_saudaveis': saudaveis,
+        'canais_com_estatisticas_iguais_as_das_amostras': iguais,
+        'canais_doentes_de_proposito': acusados,
+        'falhas': falhas,
+        'passou': not falhas,
+    }
+
+
 # --- cadeia completa do computador sobre a resposta do Verilog --------------------------------
 
 def cadeia_completa(casos, pacote):
@@ -346,15 +535,18 @@ def main():
     cal = D.calibracao_padrao()
     ts = float(pacote['amostragem']['periodo_de_amostragem_s'])
 
-    identicos = [n for n, c in casos.items() if c.obtido == c.esperado]
+    identicos = [n for n, c in casos.items() if c.igual_ao_modelo()]
     b09, linhas, latencias = criterio_b09(casos, pacote, cal, ts)
     b08 = criterio_b08(casos, linhas)
     b07 = criterio_b07(casos, pacote)
     b06 = criterio_b06(casos)
+    tempos = criterio_tempos(casos)
+    autoteste = criterio_autoteste(casos)
     relatorio = cadeia_completa(casos, pacote)
 
     maior = max(linhas, key=lambda l: l['ciclos_de_processamento'])
-    criterios = {'B-06': b06, 'B-07': b07, 'B-08': b08, 'B-09': b09}
+    criterios = {'B-06': b06, 'B-07': b07, 'B-08': b08, 'B-09': b09, 'Tempos': tempos,
+                 'Autoteste': autoteste}
     prova = {
         'descricao': ('Prova do cenario B no simulador: a resposta gravada do proprio Verilog da placa, '
                       'decodificada e conferida contra a referencia em ponto fixo e contra os criterios '
@@ -405,6 +597,16 @@ def main():
           % (b06['bloco_corrompido']['recibos_de_crc_invalido'],
              b06['bloco_corrompido']['resultado_igual_ao_do_ensaio_sem_corrupcao'],
              'passou' if b06['passou'] else 'FALHOU'))
+    print('Tempos contador do circuito %d ciclos contra %d no simulador; tempo real sem atraso -> %s'
+          % (tempos['lote_MX-013']['ciclos_execucao_contados_pelo_circuito'],
+             tempos['lote_MX-013']['ciclos_contados_pelo_simulador'], 'passou' if tempos['passou'] else 'FALHOU'))
+    for f in tempos['falhas']:
+        print('   ' + f)
+    print('Autoteste %d de %d canais da matriz saudaveis, 4 canais doentes acusados -> %s'
+          % (autoteste['canais_saudaveis'], autoteste['canais_da_matriz'],
+             'passou' if autoteste['passou'] else 'FALHOU'))
+    for f in autoteste['falhas']:
+        print('   ' + f)
     p = prova['processamento_na_placa']
     print('processamento: mediana %d ciclos, maximo %d ciclos (%s, %.1f us a 100 MHz)'
           % (p['ciclos_mediano'], p['ciclos_maximo'], p['ensaio_mais_longo'], p['microssegundos_maximo_a_100_mhz']))

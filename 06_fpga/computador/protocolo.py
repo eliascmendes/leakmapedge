@@ -29,18 +29,25 @@ CONFIRMAR_RESULTADO = 0x04
 PEDIR_RESULTADO = 0x05
 # so a placa simulada responde; a FPGA ignora, como todo tipo que nao conhece
 IDENTIFICAR = 0x06
+EXECUTAR_TEMPO_REAL = 0x07
+PEDIR_TEMPOS = 0x08
+PEDIR_SAUDE = 0x09
 
 # placa -> computador
 CONFIGURACAO_LIDA = 0x81
 BLOCO_RECEBIDO = 0x82
 RESULTADO = 0x83
 IDENTIDADE = 0x86
+TEMPOS = 0x87
+SAUDE = 0x88
 
 NOMES = {
     CONFIGURAR: 'CONFIGURAR', AMOSTRAS: 'AMOSTRAS', EXECUTAR: 'EXECUTAR',
     CONFIRMAR_RESULTADO: 'CONFIRMAR_RESULTADO', PEDIR_RESULTADO: 'PEDIR_RESULTADO',
     CONFIGURACAO_LIDA: 'CONFIGURACAO_LIDA', BLOCO_RECEBIDO: 'BLOCO_RECEBIDO',
     RESULTADO: 'RESULTADO', IDENTIFICAR: 'IDENTIFICAR', IDENTIDADE: 'IDENTIDADE',
+    EXECUTAR_TEMPO_REAL: 'EXECUTAR_TEMPO_REAL', PEDIR_TEMPOS: 'PEDIR_TEMPOS', TEMPOS: 'TEMPOS',
+    PEDIR_SAUDE: 'PEDIR_SAUDE', SAUDE: 'SAUDE',
 }
 
 # situacao do bloco recebido
@@ -253,10 +260,154 @@ def carga_so_id(identificador):
     return codificar_id(identificador)
 
 
+# --- execucao em tempo real: a mesma execucao, uma amostra a cada `periodo` ciclos ---------
+_EXECUTAR_TR = struct.Struct('<8sHHI')
+
+
+def carga_executar_tempo_real(identificador, n_blocos, n_amostras, periodo_ciclos):
+    return _EXECUTAR_TR.pack(codificar_id(identificador), n_blocos, n_amostras, periodo_ciclos)
+
+
+def ler_executar_tempo_real(carga):
+    ident, n_blocos, n_amostras, periodo = _EXECUTAR_TR.unpack(carga)
+    return decodificar_id(ident), n_blocos, n_amostras, periodo
+
+
+# --- autoteste dos canais: limites que o computador manda em PEDIR_SAUDE ------------------
+#
+# id (8), limite_congelado u16 (amostras seguidas com o mesmo codigo; 0 = nao
+# confere), codigo_minimo u16 e codigo_maximo u16 (faixa aceita), limite_salto
+# u16 (maior variacao aceita entre duas amostras, em codigos; 0 = nao confere).
+_PEDIR_SAUDE = struct.Struct('<8sHHHH')
+CAMPOS_DOS_LIMITES = ('limite_congelado', 'codigo_minimo', 'codigo_maximo', 'limite_salto')
+LIMITES_ABERTOS = {'limite_congelado': 0, 'codigo_minimo': 0, 'codigo_maximo': 0xFFFF, 'limite_salto': 0}
+
+
+def carga_pedir_saude(identificador, limites):
+    return _PEDIR_SAUDE.pack(codificar_id(identificador), *[int(limites[c]) for c in CAMPOS_DOS_LIMITES])
+
+
+def ler_pedir_saude(carga):
+    ident, *valores = _PEDIR_SAUDE.unpack(carga)
+    return decodificar_id(ident), dict(zip(CAMPOS_DOS_LIMITES, valores))
+
+
 # tamanho exato da carga util de cada mensagem que a placa recebe;
 # AMOSTRAS e conferida a parte, porque o tamanho depende de n_pares
 TAMANHO_EXATO = {CONFIGURAR: _CONFIG.size, EXECUTAR: _EXECUTAR.size,
-                 CONFIRMAR_RESULTADO: TAMANHO_DO_ID, PEDIR_RESULTADO: TAMANHO_DO_ID}
+                 CONFIRMAR_RESULTADO: TAMANHO_DO_ID, PEDIR_RESULTADO: TAMANHO_DO_ID,
+                 EXECUTAR_TEMPO_REAL: _EXECUTAR_TR.size, PEDIR_TEMPOS: TAMANHO_DO_ID,
+                 PEDIR_SAUDE: _PEDIR_SAUDE.size}
+
+
+# --- TEMPOS: ciclos de relogio da ultima execucao, contados pelo circuito ----------------
+#
+# id (8), situacao u8 (a do RESULTADO; 0xFF = nenhuma execucao ainda), modo u8
+# (0 lote, 1 tempo real), frequencia_hz u32, periodo_ciclos u32, n_amostras u16,
+# e a parte medida, que so o circuito sabe: contado u8 (1 = contado pelo
+# circuito), ciclos_execucao u32, ciclos por amostra min u16 e max u16,
+# amostras_atrasadas u16, e por canal (A, depois B) ciclo_declaracao u32 e
+# latencia_declaracao u16 (0xFFFFFFFF / 0xFFFF = o canal nao declarou).
+_TEMPOS = struct.Struct('<8sBBIIHBIHHHIHIH')
+CAMPOS_MEDIDOS_DOS_TEMPOS = (20, _TEMPOS.size)   # bytes da carga que o modelo nao conhece
+TEMPOS_SEM_EXECUCAO = 0xFF
+NAO_DECLAROU = 0xFFFFFFFF
+MODO_LOTE, MODO_TEMPO_REAL = 0, 1
+
+
+def carga_tempos(identificador, situacao, modo, frequencia_hz, periodo_ciclos, n_amostras, medidos=None):
+    """Carga de TEMPOS. `medidos` = None: o modelo nao tem relogio e zera a parte medida."""
+    m = medidos or {}
+    return _TEMPOS.pack(codificar_id(identificador), situacao, modo, frequencia_hz, periodo_ciclos,
+                        n_amostras, 1 if medidos else 0, m.get('ciclos_execucao', 0),
+                        m.get('ciclos_por_amostra_min', 0), m.get('ciclos_por_amostra_max', 0),
+                        m.get('amostras_atrasadas', 0),
+                        m.get('ciclo_declaracao_A', 0), m.get('latencia_declaracao_A', 0),
+                        m.get('ciclo_declaracao_B', 0), m.get('latencia_declaracao_B', 0))
+
+
+def ler_tempos(carga):
+    if len(carga) != _TEMPOS.size:
+        raise QuadroInvalido('TEMPOS com tamanho %d' % len(carga))
+    (ident, situacao, modo, frequencia, periodo, n_amostras, contado, ciclos, amostra_min,
+     amostra_max, atrasadas, decl_a, lat_a, decl_b, lat_b) = _TEMPOS.unpack(carga)
+    tempos = {
+        'id': decodificar_id(ident), 'situacao': situacao, 'modo': modo,
+        'frequencia_hz': frequencia, 'periodo_ciclos': periodo, 'n_amostras': n_amostras,
+        'contado_pelo_circuito': bool(contado), 'ciclos_execucao': ciclos,
+        'ciclos_por_amostra_min': amostra_min, 'ciclos_por_amostra_max': amostra_max,
+        'amostras_atrasadas': atrasadas,
+    }
+    for canal, decl, lat in (('A', decl_a, lat_a), ('B', decl_b, lat_b)):
+        declarou = decl != NAO_DECLAROU
+        tempos['ciclo_declaracao_' + canal] = decl if declarou else None
+        tempos['latencia_declaracao_' + canal] = lat if declarou else None
+    return tempos
+
+
+# --- SAUDE: autoteste dos dois canais na ultima execucao -----------------------------------
+#
+# Enquanto executa, a placa acompanha cada canal amostra a amostra: menor e
+# maior codigo, maior sequencia de codigos iguais, maior variacao entre duas
+# amostras seguidas e amostras no extremo da palavra (0 ou 65 535). Ao receber
+# PEDIR_SAUDE, compara com os limites pedidos e devolve:
+#
+# id (8, o da ultima execucao), situacao u8 (a do RESULTADO; 0xFF = nenhuma
+# execucao), os quatro limites (u16, como vieram), e por canal (A, depois B):
+# bandeiras u8, codigo_min u16, codigo_max u16, maior_sequencia u16,
+# maior_variacao u16, amostras_no_extremo u16. Sem execucao concluida, os
+# canais vem zerados.
+_SAUDE = struct.Struct('<8sBHHHH')
+_SAUDE_CANAL = struct.Struct('<BHHHHH')
+CAMPOS_DA_SAUDE = ('bandeiras', 'codigo_min', 'codigo_max', 'maior_sequencia', 'maior_variacao',
+                   'amostras_no_extremo')
+SAUDE_CONGELADO = 0x01        # maior_sequencia >= limite_congelado (limite diferente de 0)
+SAUDE_SATURADO = 0x02         # alguma amostra em 0 ou 65 535
+SAUDE_FORA_DA_FAIXA = 0x04    # codigo_min < codigo_minimo ou codigo_max > codigo_maximo
+SAUDE_SALTO = 0x08            # maior_variacao > limite_salto (limite diferente de 0)
+NOMES_DA_SAUDE = ((SAUDE_CONGELADO, 'congelado'), (SAUDE_SATURADO, 'saturado'),
+                  (SAUDE_FORA_DA_FAIXA, 'fora_da_faixa'), (SAUDE_SALTO, 'salto'))
+SAUDE_SEM_EXECUCAO = 0xFF
+
+
+def bandeiras_de_saude(canal, limites):
+    """As bandeiras do canal, a partir das estatisticas e dos limites; igual ao Verilog."""
+    b = 0
+    if limites['limite_congelado'] and canal['maior_sequencia'] >= limites['limite_congelado']:
+        b |= SAUDE_CONGELADO
+    if canal['amostras_no_extremo']:
+        b |= SAUDE_SATURADO
+    if canal['codigo_min'] < limites['codigo_minimo'] or canal['codigo_max'] > limites['codigo_maximo']:
+        b |= SAUDE_FORA_DA_FAIXA
+    if limites['limite_salto'] and canal['maior_variacao'] > limites['limite_salto']:
+        b |= SAUDE_SALTO
+    return b
+
+
+def carga_saude(identificador, situacao, limites, canal_a=None, canal_b=None):
+    """Carga de SAUDE. `canal_a`/`canal_b` = estatisticas sem as bandeiras; None zera o canal."""
+    corpo = b''
+    for canal in (canal_a, canal_b):
+        if canal is None:
+            corpo += _SAUDE_CANAL.pack(0, 0, 0, 0, 0, 0)
+        else:
+            corpo += _SAUDE_CANAL.pack(bandeiras_de_saude(canal, limites),
+                                       *[int(canal[c]) for c in CAMPOS_DA_SAUDE[1:]])
+    return _SAUDE.pack(codificar_id(identificador), situacao,
+                       *[int(limites[c]) for c in CAMPOS_DOS_LIMITES]) + corpo
+
+
+def ler_saude(carga):
+    if len(carga) != _SAUDE.size + 2 * _SAUDE_CANAL.size:
+        raise QuadroInvalido('SAUDE com tamanho %d' % len(carga))
+    ident, situacao, *limites = _SAUDE.unpack_from(carga)
+    saude = {'id': decodificar_id(ident), 'situacao': situacao,
+             'limites': dict(zip(CAMPOS_DOS_LIMITES, limites))}
+    for k, nome in enumerate(('canal_A', 'canal_B')):
+        canal = dict(zip(CAMPOS_DA_SAUDE, _SAUDE_CANAL.unpack_from(carga, _SAUDE.size + k * _SAUDE_CANAL.size)))
+        canal['falhas'] = [n for bit, n in NOMES_DA_SAUDE if canal['bandeiras'] & bit]
+        saude[nome] = canal
+    return saude
 
 
 # --- B-10: resultado ---------------------------------------------------------------------

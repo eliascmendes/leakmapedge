@@ -352,6 +352,147 @@ class B09CasosQueForcamORetrocesso(unittest.TestCase):
         self.assertGreater(max(retrocessos), 1, 'os casos precisam exercitar retrocesso longo')
 
 
+class TemposEExecucaoEmTempoReal(unittest.TestCase):
+    """Mensagens TEMPOS e EXECUTAR_TEMPO_REAL no modelo e no computador.
+
+    Os ciclos de verdade so o circuito conta; aqui se confere o que o modelo
+    sabe e o caminho do computador. Os ciclos sao conferidos na simulacao do
+    Verilog (06_fpga/sim/prova_cenario_b.py, criterio Tempos).
+    """
+
+    def test_tempo_real_da_o_mesmo_resultado_que_o_lote(self):
+        ensaio = POR_ID['MX-021']
+        preparo = PP.preparar_ensaio(ensaio, ESCALA, CAL)
+        args = (ensaio['id'], preparo['conversao']['canal_A']['codigos'],
+                preparo['conversao']['canal_B']['codigos'], preparo['parametros'])
+        lote = HO.Hospedeiro(TR.TransporteMemoria(PLACA.PlacaReferencia())).rodar(*args)
+        real = HO.Hospedeiro(TR.TransporteMemoria(PLACA.PlacaReferencia())).rodar(*args, periodo_ciclos=20065)
+        self.assertEqual(real['resultado'], lote['resultado'])
+
+    def test_tempos_do_modelo_dizem_o_que_ele_sabe_e_nao_inventam_ciclos(self):
+        placa = PLACA.PlacaReferencia(frequencia_hz=50_000_000)
+        antes = PR.ler_tempos(PR.LeitorDeQuadros().alimentar(
+            placa.receber(PR.montar_quadro(PR.PEDIR_TEMPOS, PR.carga_so_id(''))))[0][2])
+        self.assertEqual(antes['situacao'], PR.TEMPOS_SEM_EXECUCAO)
+        self.assertEqual(antes['frequencia_hz'], 50_000_000)
+        _, rodada, _ = rodar_na_referencia(POR_ID['MX-001'], placa=placa)
+        t = rodada['tempos_na_placa']
+        self.assertEqual((t['id'], t['situacao'], t['modo'], t['n_amostras']),
+                         ('MX-001', PR.RESULTADO_CONCLUIDO, PR.MODO_LOTE, POR_ID['MX-001']['n_pontos']))
+        self.assertFalse(t['contado_pelo_circuito'])
+        self.assertIsNone(RB.tempos_na_placa(t))       # sem ciclos contados, o registro nao traz tempos
+
+    def test_periodo_zero_e_tamanho_errado_sao_mal_formados(self):
+        placa = PLACA.PlacaReferencia()
+        for carga in (PR.carga_executar_tempo_real('MX-001', 1, 10, 0), PR.carga_executar('MX-001', 1, 10)):
+            eventos = PR.LeitorDeQuadros().alimentar(placa.receber(PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, carga)))
+            self.assertEqual(PR.ler_bloco_recebido(eventos[0][2])[2], PR.BLOCO_MAL_FORMADO)
+
+    def test_registro_converte_ciclos_contados_em_microssegundos(self):
+        t = PR.ler_tempos(PR.carga_tempos('MX-001', 0, PR.MODO_TEMPO_REAL, 50_000_000, 20065, 267, {
+            'ciclos_execucao': 5_000_000, 'ciclos_por_amostra_min': 13, 'ciclos_por_amostra_max': 97,
+            'ciclo_declaracao_A': 1_000_097, 'latencia_declaracao_A': 97,
+            'ciclo_declaracao_B': PR.NAO_DECLAROU}))
+        r = RB.tempos_na_placa(t)
+        self.assertEqual(r['modo'], 'tempo_real')
+        self.assertAlmostEqual(r['execucao_us'], 100_000.0)
+        self.assertAlmostEqual(r['latencia_de_declaracao_A_us'], 1.94)
+        self.assertIsNone(r['latencia_de_declaracao_B_us'])
+
+
+class AutotesteDosCanais(unittest.TestCase):
+    """Mensagem SAUDE: o autoteste que a placa faz em cada canal durante a execucao.
+
+    Aqui, o modelo e o computador; o Verilog e conferido byte a byte contra o
+    modelo na simulacao (06_fpga/sim/prova_cenario_b.py, criterio Autoteste).
+    """
+
+    def rodar(self, ensaio_id, placa=None, mexer=None):
+        preparo = PP.preparar_ensaio(POR_ID[ensaio_id], ESCALA, CAL)
+        a = list(preparo['conversao']['canal_A']['codigos'])
+        b = list(preparo['conversao']['canal_B']['codigos'])
+        if mexer:
+            a, b = mexer(a, b)
+        host = HO.Hospedeiro(TR.TransporteMemoria(placa or PLACA.PlacaReferencia()))
+        rodada = host.rodar(ensaio_id, a, b, preparo['parametros'],
+                            limites_de_saude=preparo['limites_de_saude'])
+        return rodada, host
+
+    def test_estatisticas_de_um_canal_amostra_a_amostra(self):
+        canal = PLACA.SaudeDoCanal()
+        for c in (100, 100, 100, 90, 0, 0, 65535, 65535, 65535, 65535):
+            canal.amostra(c)
+        self.assertEqual(canal.estatisticas, {'codigo_min': 0, 'codigo_max': 65535, 'maior_sequencia': 4,
+                                              'maior_variacao': 65535, 'amostras_no_extremo': 6})
+
+    def test_limites_saem_do_transmissor_declarado(self):
+        ideal = PP.preparar_ensaio(POR_ID['MX-001'], ESCALA, CAL)['limites_de_saude']
+        self.assertEqual(ideal, PR.LIMITES_ABERTOS)       # sem transmissor: so a saturacao da palavra
+        doze_bits = PP.preparar_ensaio(POR_ID['MX-021'], ESCALA, CAL)['limites_de_saude']
+        self.assertEqual(doze_bits, {'limite_congelado': PP.SEQUENCIA_DE_CONGELAMENTO,
+                                     'codigo_minimo': 1, 'codigo_maximo': 4094, 'limite_salto': 2048})
+
+    def test_canal_saudavel_nao_e_acusado(self):
+        for ensaio_id in ('MX-001', 'MX-013', 'MX-021', 'MX-041'):
+            rodada, _ = self.rodar(ensaio_id)
+            saude = rodada['saude_na_placa']
+            self.assertEqual((saude['id'], saude['situacao']), (ensaio_id, PR.RESULTADO_CONCLUIDO))
+            self.assertEqual((saude['canal_A']['falhas'], saude['canal_B']['falhas']), ([], []))
+
+    def test_canal_congelado_e_cabo_rompido_sao_acusados(self):
+        def congelar_b(a, b):
+            return a, b[:60] + [b[60]] * (len(b) - 60)
+
+        def romper_a(a, b):
+            return a[:100] + [0] * (len(a) - 100), b
+
+        rodada, _ = self.rodar('MX-013', mexer=congelar_b)
+        self.assertEqual(rodada['saude_na_placa']['canal_B']['falhas'], ['congelado'])
+        self.assertEqual(rodada['saude_na_placa']['canal_A']['falhas'], [])
+        rodada, _ = self.rodar('MX-013', mexer=romper_a)
+        self.assertEqual(rodada['saude_na_placa']['canal_A']['falhas'], ['congelado', 'saturado', 'fora_da_faixa'])
+        registro = RB.montar_registro(POR_ID['MX-013'], PP.preparar_ensaio(POR_ID['MX-013'], ESCALA, CAL),
+                                      rodada, ESCALA, CAL, 'referencia_python_da_placa')
+        self.assertEqual(registro['autoteste_na_placa']['canais_saudaveis'], 1)
+
+    def test_pico_isolado_e_salto(self):
+        def pico_em_b(a, b):
+            b = list(b)
+            b[90] -= 2048 + 60
+            return a, b
+        rodada, _ = self.rodar('MX-021', mexer=pico_em_b)
+        self.assertEqual(rodada['saude_na_placa']['canal_B']['falhas'], ['salto'])
+
+    def test_sem_execucao_concluida_os_canais_vem_zerados(self):
+        placa = PLACA.PlacaReferencia()
+        pedir = PR.montar_quadro(PR.PEDIR_SAUDE, PR.carga_pedir_saude('', PR.LIMITES_ABERTOS))
+        saude = PR.ler_saude(PR.LeitorDeQuadros().alimentar(placa.receber(pedir))[0][2])
+        self.assertEqual(saude['situacao'], PR.SAUDE_SEM_EXECUCAO)
+        self.assertTrue(all(v == 0 for v in saude['canal_A'].values() if not isinstance(v, list)))
+        mal = PR.LeitorDeQuadros().alimentar(placa.receber(PR.montar_quadro(PR.PEDIR_SAUDE, bytes(15))))
+        self.assertEqual(PR.ler_bloco_recebido(mal[0][2])[2], PR.BLOCO_MAL_FORMADO)
+
+    def test_placa_sem_autoteste_fica_sem_e_nao_e_perguntada_de_novo(self):
+        class PlacaAntiga(PLACA.PlacaReferencia):
+            pedidos = 0
+
+            def _tratar(self, tipo, carga):
+                if tipo == PR.PEDIR_SAUDE:
+                    PlacaAntiga.pedidos += 1
+                    return b''                    # tipo desconhecido: a FPGA antiga ignora
+                return super()._tratar(tipo, carga)
+
+        placa = PlacaAntiga()
+        rodada, host = self.rodar('MX-001', placa=placa)
+        self.assertIsNone(rodada['saude_na_placa'])
+        self.assertIsNotNone(rodada['resultado'])
+        self.assertFalse(host.responde_saude)
+        preparo = PP.preparar_ensaio(POR_ID['MX-005'], ESCALA, CAL)
+        host.rodar('MX-005', preparo['conversao']['canal_A']['codigos'], preparo['conversao']['canal_B']['codigos'],
+                   preparo['parametros'], limites_de_saude=preparo['limites_de_saude'])
+        self.assertEqual(PlacaAntiga.pedidos, 1)
+
+
 class B10Resultado(unittest.TestCase):
 
     def test_resultado_perdido_e_pedido_de_novo(self):

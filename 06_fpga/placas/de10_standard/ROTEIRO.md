@@ -9,7 +9,7 @@ pinos. O computador conversa com a FPGA pelo JTAG virtual, através do
 1. Tenha o projeto do Quartus compilado, numa pasta **sem acento** no caminho
    (o Quartus não aceita "Área de Trabalho"). Ele usa o topo
    `leakmap_topo_jtag`, com os arquivos `rtl/leakmap_multiplicador.v`,
-   `rtl/leakmap_detector.v`, `rtl/leakmap_nucleo.v`,
+   `rtl/leakmap_detector.v`, `rtl/leakmap_saude.v`, `rtl/leakmap_nucleo.v`,
    `rtl/leakmap_ponte_jtag.v` e `placas/intel/leakmap_topo_jtag.v`, mais os
    pinos e o `.sdc` de `placas/de10_standard`. Quem ainda não tem projeto pode
    montar e compilar um com:

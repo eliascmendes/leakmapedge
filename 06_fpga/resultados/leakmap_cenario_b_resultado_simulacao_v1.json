@@ -84,6 +84,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 14221,
+        "execucao_us": 142.21,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 20083,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 17516,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 14408,
+          "codigo_max": 52000,
+          "maior_sequencia": 217,
+          "maior_variacao": 16104,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -230,6 +270,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 14221,
+        "execucao_us": 142.21,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 20083,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 17516,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 14408,
+          "codigo_max": 52000,
+          "maior_sequencia": 217,
+          "maior_variacao": 16104,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -378,6 +458,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 9649,
+        "execucao_us": 96.49000000000001,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 20699,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15957,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 14850,
+          "codigo_max": 52000,
+          "maior_sequencia": 134,
+          "maior_variacao": 15918,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -524,6 +644,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 9649,
+        "execucao_us": 96.49000000000001,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 20699,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15957,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 14850,
+          "codigo_max": 52000,
+          "maior_sequencia": 134,
+          "maior_variacao": 15918,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -672,6 +832,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 4950,
+        "execucao_us": 49.5,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 21323,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15718,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 15295,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15730,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -818,6 +1018,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 4950,
+        "execucao_us": 49.5,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 21323,
+          "codigo_max": 58000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15718,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 15295,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15730,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -966,6 +1206,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 9648,
+        "execucao_us": 96.48,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 21889,
+          "codigo_max": 58000,
+          "maior_sequencia": 134,
+          "maior_variacao": 15479,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 15689,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15540,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1112,6 +1392,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 9648,
+        "execucao_us": 96.48,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 21889,
+          "codigo_max": 58000,
+          "maior_sequencia": 134,
+          "maior_variacao": 15479,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 15689,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 15540,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1260,6 +1580,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 14211,
+        "execucao_us": 142.11,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 22456,
+          "codigo_max": 58000,
+          "maior_sequencia": 217,
+          "maior_variacao": 15238,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 16096,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 16750,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1406,6 +1766,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 14211,
+        "execucao_us": 142.11,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 97,
+        "processamento_por_amostra_max_us": 0.9700000000000001,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 97,
+        "latencia_de_declaracao_A_us": 0.9700000000000001,
+        "latencia_de_declaracao_B_ciclos": 97,
+        "latencia_de_declaracao_B_us": 0.9700000000000001
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 22456,
+          "codigo_max": 58000,
+          "maior_sequencia": 217,
+          "maior_variacao": 15238,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 16096,
+          "codigo_max": 52000,
+          "maior_sequencia": 51,
+          "maior_variacao": 16750,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1554,6 +1954,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16352,
+        "execucao_us": 163.52,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13165,
+          "codigo_max": 38038,
+          "maior_sequencia": 3,
+          "maior_variacao": 8496,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9414,
+          "codigo_max": 34076,
+          "maior_sequencia": 2,
+          "maior_variacao": 8127,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1700,6 +2140,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16352,
+        "execucao_us": 163.52,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13165,
+          "codigo_max": 38038,
+          "maior_sequencia": 3,
+          "maior_variacao": 8496,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9414,
+          "codigo_max": 34076,
+          "maior_sequencia": 2,
+          "maior_variacao": 8127,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1848,6 +2328,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10970,
+        "execucao_us": 109.7,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13568,
+          "codigo_max": 38038,
+          "maior_sequencia": 3,
+          "maior_variacao": 8353,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9697,
+          "codigo_max": 34078,
+          "maior_sequencia": 2,
+          "maior_variacao": 8063,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1994,6 +2514,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10970,
+        "execucao_us": 109.7,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13568,
+          "codigo_max": 38038,
+          "maior_sequencia": 3,
+          "maior_variacao": 8353,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9697,
+          "codigo_max": 34078,
+          "maior_sequencia": 2,
+          "maior_variacao": 8063,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -2142,6 +2702,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 5498,
+        "execucao_us": 54.98,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 92,
+        "latencia_de_declaracao_B_us": 0.9199999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13980,
+          "codigo_max": 38034,
+          "maior_sequencia": 2,
+          "maior_variacao": 8240,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9998,
+          "codigo_max": 34069,
+          "maior_sequencia": 2,
+          "maior_variacao": 7865,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2288,6 +2888,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 5498,
+        "execucao_us": 54.98,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 92,
+        "latencia_de_declaracao_B_us": 0.9199999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 13980,
+          "codigo_max": 38034,
+          "maior_sequencia": 2,
+          "maior_variacao": 8240,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 9998,
+          "codigo_max": 34069,
+          "maior_sequencia": 2,
+          "maior_variacao": 7865,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -2436,6 +3076,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10936,
+        "execucao_us": 109.36,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 14345,
+          "codigo_max": 38041,
+          "maior_sequencia": 2,
+          "maior_variacao": 8240,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 10257,
+          "codigo_max": 34066,
+          "maior_sequencia": 2,
+          "maior_variacao": 7933,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2582,6 +3262,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10936,
+        "execucao_us": 109.36,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 14345,
+          "codigo_max": 38041,
+          "maior_sequencia": 2,
+          "maior_variacao": 8240,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 10257,
+          "codigo_max": 34066,
+          "maior_sequencia": 2,
+          "maior_variacao": 7933,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -2730,6 +3450,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16431,
+        "execucao_us": 164.31,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 14723,
+          "codigo_max": 38044,
+          "maior_sequencia": 3,
+          "maior_variacao": 8081,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 10524,
+          "codigo_max": 34074,
+          "maior_sequencia": 4,
+          "maior_variacao": 7880,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2876,6 +3636,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16431,
+        "execucao_us": 164.31,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "processamento_por_amostra_max_us": 0.9199999999999999,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 92,
+        "latencia_de_declaracao_A_us": 0.9199999999999999,
+        "latencia_de_declaracao_B_ciclos": 90,
+        "latencia_de_declaracao_B_us": 0.8999999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 14723,
+          "codigo_max": 38044,
+          "maior_sequencia": 3,
+          "maior_variacao": 8081,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 10524,
+          "codigo_max": 34074,
+          "maior_sequencia": 4,
+          "maior_variacao": 7880,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3024,6 +3824,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16140,
+        "execucao_us": 161.4,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 818,
+          "codigo_max": 2389,
+          "maior_sequencia": 3,
+          "maior_variacao": 314,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 575,
+          "codigo_max": 2133,
+          "maior_sequencia": 3,
+          "maior_variacao": 288,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -3170,6 +4010,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16140,
+        "execucao_us": 161.4,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 818,
+          "codigo_max": 2389,
+          "maior_sequencia": 3,
+          "maior_variacao": 314,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 575,
+          "codigo_max": 2133,
+          "maior_sequencia": 3,
+          "maior_variacao": 288,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3318,6 +4198,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10767,
+        "execucao_us": 107.67,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 840,
+          "codigo_max": 2390,
+          "maior_sequencia": 3,
+          "maior_variacao": 271,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 594,
+          "codigo_max": 2132,
+          "maior_sequencia": 3,
+          "maior_variacao": 304,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -3464,6 +4384,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10767,
+        "execucao_us": 107.67,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 840,
+          "codigo_max": 2390,
+          "maior_sequencia": 3,
+          "maior_variacao": 271,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 594,
+          "codigo_max": 2132,
+          "maior_sequencia": 3,
+          "maior_variacao": 304,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3612,6 +4572,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 5418,
+        "execucao_us": 54.18,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 868,
+          "codigo_max": 2393,
+          "maior_sequencia": 3,
+          "maior_variacao": 292,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 613,
+          "codigo_max": 2133,
+          "maior_sequencia": 2,
+          "maior_variacao": 282,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -3758,6 +4758,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 5418,
+        "execucao_us": 54.18,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 868,
+          "codigo_max": 2393,
+          "maior_sequencia": 3,
+          "maior_variacao": 292,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 613,
+          "codigo_max": 2133,
+          "maior_sequencia": 2,
+          "maior_variacao": 282,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3906,6 +4946,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10702,
+        "execucao_us": 107.02,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 89,
+        "latencia_de_declaracao_B_us": 0.8899999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 891,
+          "codigo_max": 2388,
+          "maior_sequencia": 3,
+          "maior_variacao": 293,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 625,
+          "codigo_max": 2132,
+          "maior_sequencia": 3,
+          "maior_variacao": 273,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4052,6 +5132,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 10702,
+        "execucao_us": 107.02,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 89,
+        "latencia_de_declaracao_B_us": 0.8899999999999999
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 891,
+          "codigo_max": 2388,
+          "maior_sequencia": 3,
+          "maior_variacao": 293,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 625,
+          "codigo_max": 2132,
+          "maior_sequencia": 3,
+          "maior_variacao": 273,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4200,6 +5320,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16100,
+        "execucao_us": 161.0,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 916,
+          "codigo_max": 2393,
+          "maior_sequencia": 3,
+          "maior_variacao": 284,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 648,
+          "codigo_max": 2134,
+          "maior_sequencia": 2,
+          "maior_variacao": 293,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4346,6 +5506,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 16100,
+        "execucao_us": 161.0,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 102,
+        "processamento_por_amostra_max_us": 1.02,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": 102,
+        "latencia_de_declaracao_A_us": 1.02,
+        "latencia_de_declaracao_B_ciclos": 102,
+        "latencia_de_declaracao_B_us": 1.02
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 916,
+          "codigo_max": 2393,
+          "maior_sequencia": 3,
+          "maior_variacao": 284,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 648,
+          "codigo_max": 2134,
+          "maior_sequencia": 2,
+          "maior_variacao": 293,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4494,6 +5694,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 26762,
+        "execucao_us": 267.62,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 54,
+        "processamento_por_amostra_max_us": 0.54,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 58000,
+          "codigo_max": 58000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 52000,
+          "codigo_max": 52000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4594,6 +5834,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 26762,
+        "execucao_us": 267.62,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 54,
+        "processamento_por_amostra_max_us": 0.54,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 58000,
+          "codigo_max": 58000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 52000,
+          "codigo_max": 52000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4696,6 +5976,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 26762,
+        "execucao_us": 267.62,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 54,
+        "processamento_por_amostra_max_us": 0.54,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 58000,
+          "codigo_max": 58000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 52000,
+          "codigo_max": 52000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4796,6 +6116,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 26762,
+        "execucao_us": 267.62,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 54,
+        "processamento_por_amostra_max_us": 0.54,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 58000,
+          "codigo_max": 58000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 52000,
+          "codigo_max": 52000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4898,6 +6258,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 26762,
+        "execucao_us": 267.62,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 54,
+        "processamento_por_amostra_max_us": 0.54,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 0,
+          "codigo_minimo": 0,
+          "codigo_maximo": 65535,
+          "limite_salto": 0
+        },
+        "canal_A": {
+          "codigo_min": 58000,
+          "codigo_max": 58000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 52000,
+          "codigo_max": 52000,
+          "maior_sequencia": 500,
+          "maior_variacao": 0,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4998,6 +6398,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32277,
+        "execucao_us": 322.77,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 67,
+        "processamento_por_amostra_max_us": 0.67,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 38004,
+          "codigo_max": 38052,
+          "maior_sequencia": 3,
+          "maior_variacao": 29,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 34041,
+          "codigo_max": 34076,
+          "maior_sequencia": 2,
+          "maior_variacao": 25,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5100,6 +6540,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32309,
+        "execucao_us": 323.09,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 67,
+        "processamento_por_amostra_max_us": 0.67,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 38000,
+          "codigo_max": 38044,
+          "maior_sequencia": 2,
+          "maior_variacao": 33,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 34041,
+          "codigo_max": 34081,
+          "maior_sequencia": 3,
+          "maior_variacao": 30,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5200,6 +6680,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32317,
+        "execucao_us": 323.17,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 67,
+        "processamento_por_amostra_max_us": 0.67,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 38006,
+          "codigo_max": 38045,
+          "maior_sequencia": 2,
+          "maior_variacao": 28,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 34044,
+          "codigo_max": 34081,
+          "maior_sequencia": 3,
+          "maior_variacao": 25,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5302,6 +6822,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32335,
+        "execucao_us": 323.35,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 67,
+        "processamento_por_amostra_max_us": 0.67,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 38005,
+          "codigo_max": 38044,
+          "maior_sequencia": 3,
+          "maior_variacao": 30,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 34040,
+          "codigo_max": 34078,
+          "maior_sequencia": 2,
+          "maior_variacao": 28,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5402,6 +6962,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32304,
+        "execucao_us": 323.04,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 67,
+        "processamento_por_amostra_max_us": 0.67,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 65534,
+          "limite_salto": 32768
+        },
+        "canal_A": {
+          "codigo_min": 38000,
+          "codigo_max": 38040,
+          "maior_sequencia": 3,
+          "maior_variacao": 29,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 34040,
+          "codigo_max": 34077,
+          "maior_sequencia": 3,
+          "maior_variacao": 26,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5504,6 +7104,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 31960,
+        "execucao_us": 319.6,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 66,
+        "processamento_por_amostra_max_us": 0.66,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 2368,
+          "codigo_max": 2392,
+          "maior_sequencia": 3,
+          "maior_variacao": 18,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 2111,
+          "codigo_max": 2136,
+          "maior_sequencia": 3,
+          "maior_variacao": 16,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5604,6 +7244,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 31992,
+        "execucao_us": 319.92,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 66,
+        "processamento_por_amostra_max_us": 0.66,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 2369,
+          "codigo_max": 2392,
+          "maior_sequencia": 3,
+          "maior_variacao": 16,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 2111,
+          "codigo_max": 2137,
+          "maior_sequencia": 3,
+          "maior_variacao": 18,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5706,6 +7386,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 31939,
+        "execucao_us": 319.39000000000004,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 66,
+        "processamento_por_amostra_max_us": 0.66,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 2368,
+          "codigo_max": 2390,
+          "maior_sequencia": 3,
+          "maior_variacao": 18,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 2111,
+          "codigo_max": 2137,
+          "maior_sequencia": 3,
+          "maior_variacao": 21,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5807,6 +7527,46 @@
         },
         "tempos_de_comunicacao": null
       },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 32009,
+        "execucao_us": 320.09,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 66,
+        "processamento_por_amostra_max_us": 0.66,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 2368,
+          "codigo_max": 2394,
+          "maior_sequencia": 2,
+          "maior_variacao": 18,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 2113,
+          "codigo_max": 2135,
+          "maior_sequencia": 4,
+          "maior_variacao": 18,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5907,6 +7667,46 @@
           "respostas_fora_de_hora_descartadas": 0
         },
         "tempos_de_comunicacao": null
+      },
+      "tempos_na_placa": {
+        "modo": "lote",
+        "frequencia_hz": 100000000,
+        "periodo_de_entrega_ciclos": null,
+        "ciclos_execucao": 31975,
+        "execucao_us": 319.75,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 66,
+        "processamento_por_amostra_max_us": 0.66,
+        "amostras_atrasadas": 0,
+        "latencia_de_declaracao_A_ciclos": null,
+        "latencia_de_declaracao_A_us": null,
+        "latencia_de_declaracao_B_ciclos": null,
+        "latencia_de_declaracao_B_us": null
+      },
+      "autoteste_na_placa": {
+        "limites": {
+          "limite_congelado": 32,
+          "codigo_minimo": 1,
+          "codigo_maximo": 4094,
+          "limite_salto": 2048
+        },
+        "canal_A": {
+          "codigo_min": 2367,
+          "codigo_max": 2391,
+          "maior_sequencia": 3,
+          "maior_variacao": 17,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canal_B": {
+          "codigo_min": 2109,
+          "codigo_max": 2134,
+          "maior_sequencia": 3,
+          "maior_variacao": 19,
+          "amostras_no_extremo": 0,
+          "falhas": []
+        },
+        "canais_saudaveis": 2
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,

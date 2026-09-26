@@ -5,11 +5,12 @@
     "06_fpga/rtl/leakmap_detector.v",
     "06_fpga/rtl/leakmap_multiplicador.v",
     "06_fpga/rtl/leakmap_nucleo.v",
+    "06_fpga/rtl/leakmap_saude.v",
     "06_fpga/rtl/leakmap_topo.v",
     "06_fpga/rtl/leakmap_uart.v"
   ],
-  "casos_simulados": 57,
-  "casos_identicos_ao_modelo_byte_a_byte": 57,
+  "casos_simulados": 67,
+  "casos_identicos_ao_modelo_byte_a_byte": 67,
   "criterios": {
     "B-06": {
       "criterio": "bloco corrompido rejeitado; so segue com o bloco certo",
@@ -239,6 +240,89 @@
           "igual": true
         }
       ],
+      "passou": true
+    },
+    "Tempos": {
+      "criterio": "os ciclos contados pelo circuito conferem com o simulador, e o tempo real segue o relogio da placa sem mudar o resultado",
+      "lote_MX-013": {
+        "ciclos_execucao_contados_pelo_circuito": 10970,
+        "ciclos_contados_pelo_simulador": 10973,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "latencia_de_declaracao_ciclos": {
+          "A": 92,
+          "B": 90
+        }
+      },
+      "tempo_real": [
+        {
+          "caso": "tempo_real_MX-001",
+          "periodo_ciclos": 400,
+          "amostras": 267,
+          "ciclos_execucao": 106498,
+          "ciclos_por_amostra_min": 13,
+          "ciclos_por_amostra_max": 97,
+          "latencia_de_declaracao_ciclos": {
+            "A": 97,
+            "B": 97
+          },
+          "primeira_amostra_no_ciclo": 43,
+          "amostras_atrasadas": 0
+        },
+        {
+          "caso": "tempo_real_MX-039",
+          "periodo_ciclos": 300,
+          "amostras": 500,
+          "ciclos_execucao": 149809,
+          "ciclos_por_amostra_min": 13,
+          "ciclos_por_amostra_max": 67,
+          "latencia_de_declaracao_ciclos": {},
+          "primeira_amostra_no_ciclo": null,
+          "amostras_atrasadas": 0
+        }
+      ],
+      "amostras_atrasadas_com_periodo_de_8_ciclos": 100,
+      "falhas": [],
+      "passou": true
+    },
+    "Autoteste": {
+      "criterio": "o circuito acompanha cada canal amostra a amostra e acusa canal congelado, saturado, fora da faixa do transmissor ou com salto impossivel, sem acusar canal saudavel",
+      "canais_da_matriz": 90,
+      "canais_saudaveis": 90,
+      "canais_com_estatisticas_iguais_as_das_amostras": 90,
+      "canais_doentes_de_proposito": {
+        "saude_canal_congelado": [
+          [
+            [],
+            [
+              "congelado"
+            ]
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "saude_cabo_rompido": [
+          [
+            [
+              "congelado",
+              "saturado",
+              "fora_da_faixa"
+            ],
+            []
+          ]
+        ],
+        "saude_pico_isolado": [
+          [
+            [],
+            [
+              "salto"
+            ]
+          ]
+        ]
+      },
+      "falhas": [],
       "passou": true
     }
   },

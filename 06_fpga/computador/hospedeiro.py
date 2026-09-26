@@ -11,7 +11,14 @@ placa, ver dimensionamento.py):
   3. EXECUTAR e esperar o resultado; sem resposta, pedir de novo, e se a
      placa acusar CRC invalido, mandar EXECUTAR de novo; ao receber,
      confirmar. Sem resultado depois das tentativas, o ensaio sai marcado
-     como sem resultado, nunca some (B-10).
+     como sem resultado, nunca some (B-10). Com `periodo_ciclos`, a execucao
+     e em tempo real: a placa entrega uma amostra a cada `periodo_ciclos`
+     ciclos do proprio relogio;
+  4. pedir TEMPOS: os ciclos de relogio que a execucao levou, contados pelo
+     circuito. Uma placa que nao responde (projeto antigo) fica sem tempos;
+  5. pedir SAUDE, com os limites do transmissor: o autoteste que a placa fez
+     em cada canal durante a execucao. Sem resposta, o ensaio fica sem
+     autoteste e o computador nao pergunta mais nesta placa.
 
 Num enlace de verdade chegam respostas atrasadas: o recibo de um bloco que
 ja foi confirmado, a resposta a uma mensagem reenviada. O computador as
@@ -37,6 +44,7 @@ class Hospedeiro:
         self.tempo_limite_s = tempo_limite_s
         self.leitor = PR.LeitorDeQuadros()
         self.pendentes = []
+        self.responde_saude = True
         self._zerar_eventos()
 
     def _zerar_eventos(self):
@@ -123,8 +131,24 @@ class Hospedeiro:
                                    % (seq, self.tentativas))
 
     # --- B-10 ------------------------------------------------------------------------------
-    def executar(self, identificador, n_blocos, n_amostras):
-        executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(identificador, n_blocos, n_amostras))
+    def pedir_tempos(self, identificador=''):
+        """TEMPOS da ultima execucao; None se a placa nao responder."""
+        self.transporte.enviar(PR.montar_quadro(PR.PEDIR_TEMPOS, PR.carga_so_id(identificador)))
+        tipo, carga = self._esperar({PR.TEMPOS})
+        return PR.ler_tempos(carga) if tipo == PR.TEMPOS else None
+
+    def pedir_saude(self, identificador, limites):
+        """SAUDE da ultima execucao, julgada com `limites`; None se a placa nao responder."""
+        self.transporte.enviar(PR.montar_quadro(PR.PEDIR_SAUDE, PR.carga_pedir_saude(identificador, limites)))
+        tipo, carga = self._esperar({PR.SAUDE})
+        return PR.ler_saude(carga) if tipo == PR.SAUDE else None
+
+    def executar(self, identificador, n_blocos, n_amostras, periodo_ciclos=None):
+        if periodo_ciclos:
+            executar = PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real(
+                identificador, n_blocos, n_amostras, periodo_ciclos))
+        else:
+            executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(identificador, n_blocos, n_amostras))
         pedir = PR.montar_quadro(PR.PEDIR_RESULTADO, PR.carga_so_id(identificador))
         self.transporte.enviar(executar)
         crc_acusado = False
@@ -158,7 +182,8 @@ class Hospedeiro:
         return None
 
     # --- ensaio completo -----------------------------------------------------------------------
-    def rodar(self, identificador, codigos_a, codigos_b, parametros):
+    def rodar(self, identificador, codigos_a, codigos_b, parametros, periodo_ciclos=None,
+              medir_tempos=True, limites_de_saude=None):
         self._zerar_eventos()
         n = len(codigos_a)
         blocos = PR.blocos_do_ensaio(identificador, codigos_a, codigos_b)
@@ -167,8 +192,15 @@ class Hospedeiro:
         t1 = time.perf_counter()
         self.carregar(identificador, blocos)
         t2 = time.perf_counter()
-        resultado = self.executar(identificador, len(blocos), n)
+        resultado = self.executar(identificador, len(blocos), n, periodo_ciclos)
         t3 = time.perf_counter()
+        tempos_na_placa = None
+        if medir_tempos and resultado is not None:
+            tempos_na_placa = self.pedir_tempos(identificador)
+        saude = None
+        if limites_de_saude and self.responde_saude and resultado is not None:
+            saude = self.pedir_saude(identificador, limites_de_saude)
+            self.responde_saude = saude is not None
         tempos = {'configuracao_s': t1 - t0, 'carga_s': t2 - t1,
                   'execucao_ate_resultado_s': t3 - t2}
         if getattr(self.transporte, 'sincrono', False):
@@ -180,4 +212,6 @@ class Hospedeiro:
             'bytes_de_amostras_enviados': sum(len(b) for b in blocos),
             'eventos_de_comunicacao': dict(self.eventos),
             'tempos_de_comunicacao': tempos,
+            'tempos_na_placa': tempos_na_placa,
+            'saude_na_placa': saude,
         }

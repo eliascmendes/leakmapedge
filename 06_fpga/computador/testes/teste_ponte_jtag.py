@@ -29,7 +29,7 @@ import transporte as TR  # noqa: E402
 
 VVP = RS.achar('vvp')
 IVERILOG = RS.achar('iverilog')
-FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_nucleo.v',
+FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_saude.v', 'rtl/leakmap_nucleo.v',
           'rtl/leakmap_ponte_jtag.v']
 REFERENCIA = {r['id']: r for r in json.load(open(os.path.join(
     FPGA, 'resultados', 'leakmap_cenario_b_resultado_referencia_v1.json'), encoding='utf-8'))['resultados']}

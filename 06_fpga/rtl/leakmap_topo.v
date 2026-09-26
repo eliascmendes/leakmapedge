@@ -62,7 +62,7 @@ module leakmap_topo #(
         .sai_dado(fila_dado), .sai_valido(fila_valido), .sai_pronto(nucleo_pronto),
         .transbordou(transbordou));
 
-    leakmap_nucleo #(.MAX_AMOSTRAS(MAX_AMOSTRAS), .BITS_ENDERECO(BITS_ENDERECO)) u_nucleo (
+    leakmap_nucleo #(.FREQUENCIA_HZ(FREQUENCIA_HZ), .MAX_AMOSTRAS(MAX_AMOSTRAS), .BITS_ENDERECO(BITS_ENDERECO)) u_nucleo (
         .clk(clk), .rst(rst),
         .rx_dado(fila_dado), .rx_valido(fila_valido), .rx_pronto(nucleo_pronto),
         .tx_dado(tx_byte), .tx_valido(tx_byte_valido), .tx_pronto(tx_livre),

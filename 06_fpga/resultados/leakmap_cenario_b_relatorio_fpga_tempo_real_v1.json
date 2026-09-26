@@ -1,6 +1,6 @@
 {
   "descricao": "Relatorio do cenario B (B-14).",
-  "origem": "simulacao_do_verilog",
+  "origem": "fpga",
   "o_que_este_cenario_valida": "o processamento digital na placa (deteccao e marcacao das chegadas) nas condicoes ensaiadas",
   "o_que_nao_valida": "sensores fisicos, resposta de transmissores, entrada analogica, conversor analogico-digital real e instalacao industrial",
   "nome_correto": "reproducao de sinais digitais em FPGA fisica",
@@ -44,43 +44,37 @@
   "amostras_saturadas_na_conversao": 0,
   "tempos": {
     "tempo_simulado_total_s": 5.424849086683275,
-    "comunicacao_medida_no_computador_s": null,
+    "comunicacao_medida_no_computador_s": 6.487227699923096,
     "observacao": "tempo simulado, tempo de reproducao e latencia de processamento sao grandezas diferentes. Os tempos de comunicacao medidos aqui nao sao tempo real de processamento, e a expressao tempo real so vale com ensaio que demonstre a taxa sustentada sem perdas."
   },
-  "execucao": "lote",
+  "execucao": "tempo real, uma amostra por periodo de amostragem",
   "tempos_na_placa": {
     "ensaios_com_tempos": 45,
     "modo": [
-      "lote"
+      "tempo_real"
     ],
     "frequencia_hz": [
-      100000000
+      50000000
     ],
     "execucao_us": {
-      "min": 49.5,
-      "max": 323.35
+      "min": 40131.8,
+      "max": 200250.88
     },
     "ciclos_por_amostra": {
       "min": 13,
       "max": 102
     },
-    "processamento_por_amostra_max_us": 1.02,
+    "processamento_por_amostra_max_us": 2.04,
     "latencia_de_declaracao_us": {
-      "min": 0.8899999999999999,
-      "max": 1.02
+      "min": 1.7799999999999998,
+      "max": 2.04
     },
     "amostras_atrasadas": 0,
     "observacao": "ciclos contados pelo proprio circuito (mensagem TEMPOS). Latencia de declaracao: da entrega da amostra do cruzamento ao evento declarado."
   },
-  "autoteste_dos_canais": {
-    "ensaios_com_autoteste": 45,
-    "canais_conferidos": 90,
-    "canais_saudaveis": 90,
-    "canais_com_falha": [],
-    "observacao": "autoteste feito pela placa amostra a amostra durante a execucao (mensagem SAUDE): canal congelado, saturado, fora da faixa do transmissor ou com salto impossivel entre duas amostras."
-  },
+  "autoteste_dos_canais": null,
   "avaliacao_contra_a_verdade": {
-    "arquivo": "leakmap_cenario_b_avaliacao_simulacao_v1.json",
+    "arquivo": "leakmap_cenario_b_avaliacao_fpga_tempo_real_v1.json",
     "contagens": {
       "deteccao": 30,
       "nao_deteccao": 0,

@@ -89,6 +89,49 @@ def _canal(bruto, conv, preparo, escala, ts, tempo, cal):
     return det, i
 
 
+def tempos_na_placa(t):
+    """Ciclos contados pelo circuito (TEMPOS), com os mesmos valores em microssegundos.
+
+    None quando nao ha TEMPOS ou quando quem respondeu nao conta ciclos (o
+    modelo Python da placa).
+    """
+    if not t or not t['contado_pelo_circuito'] or t['situacao'] == PR.TEMPOS_SEM_EXECUCAO:
+        return None
+    f = float(t['frequencia_hz'])
+
+    def us(ciclos):
+        return None if ciclos is None else ciclos / f * 1e6
+
+    saida = {
+        'modo': 'tempo_real' if t['modo'] == PR.MODO_TEMPO_REAL else 'lote',
+        'frequencia_hz': t['frequencia_hz'],
+        'periodo_de_entrega_ciclos': t['periodo_ciclos'] or None,
+        'ciclos_execucao': t['ciclos_execucao'],
+        'execucao_us': us(t['ciclos_execucao']),
+        'ciclos_por_amostra_min': t['ciclos_por_amostra_min'],
+        'ciclos_por_amostra_max': t['ciclos_por_amostra_max'],
+        'processamento_por_amostra_max_us': us(t['ciclos_por_amostra_max']),
+        'amostras_atrasadas': t['amostras_atrasadas'],
+    }
+    for canal in 'AB':
+        saida['latencia_de_declaracao_%s_ciclos' % canal] = t['latencia_declaracao_' + canal]
+        saida['latencia_de_declaracao_%s_us' % canal] = us(t['latencia_declaracao_' + canal])
+    return saida
+
+
+def autoteste_na_placa(saude, identificador):
+    """O autoteste dos dois canais (SAUDE), em unidades do registro; None sem autoteste."""
+    if not saude or saude['situacao'] != PR.RESULTADO_CONCLUIDO or saude['id'] != identificador:
+        return None
+    saida = {'limites': saude['limites']}
+    for canal in ('canal_A', 'canal_B'):
+        c = saude[canal]
+        saida[canal] = {k: c[k] for k in PR.CAMPOS_DA_SAUDE[1:]}
+        saida[canal]['falhas'] = c['falhas']
+    saida['canais_saudaveis'] = sum(1 for canal in ('canal_A', 'canal_B') if not saude[canal]['falhas'])
+    return saida
+
+
 def montar_registro(ensaio, preparo, rodada, escala, cal, origem):
     """Um registro por ensaio, inclusive quando nao houve resultado (A-15)."""
     registro = {
@@ -106,6 +149,12 @@ def montar_registro(ensaio, preparo, rodada, escala, cal, origem):
         registro['comunicacao'] = {k: rodada[k] for k in ('n_blocos', 'bytes_de_amostras_enviados',
                                                          'eventos_de_comunicacao',
                                                          'tempos_de_comunicacao')}
+        tempos = tempos_na_placa(rodada.get('tempos_na_placa'))
+        if tempos:
+            registro['tempos_na_placa'] = tempos
+        autoteste = autoteste_na_placa(rodada.get('saude_na_placa'), ensaio['id'])
+        if autoteste:
+            registro['autoteste_na_placa'] = autoteste
     resultado = rodada and rodada['resultado']
     if not resultado:
         registro['classe'] = D.CLASSE_FALHA

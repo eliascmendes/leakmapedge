@@ -39,6 +39,7 @@ RESULTADO_A = os.path.join(RAIZ, '04_detector', 'resultados', 'leakmap_resultado
 AVALIACAO_A = os.path.join(RAIZ, '05_avaliacao', 'leakmap_avaliacao_matriz_v1.json')
 RESULTADOS_B = os.path.join(RAIZ, '06_fpga', 'resultados')
 PROVA = os.path.join(RESULTADOS_B, 'leakmap_cenario_b_prova_simulacao_v1.json')
+LATENCIA = os.path.join(RESULTADOS_B, 'leakmap_latencia_fpga_e_cpu_v1.json')
 SAIDA = os.path.join(RAIZ, 'web', 'leakmap_dados_fpga.js')
 
 NOME_DO_CENARIO = 'reprodução de sinais digitais em FPGA física'
@@ -104,6 +105,37 @@ def conferir(a, b):
     else:
         mesma_posicao = abs(a['posicao_m'] - b['posicao_m']) < 1e-9
     return canais, mesma_posicao and a['classe'] == b['classe']
+
+
+def latencia_fpga_e_notebook():
+    """FPGA x notebook, de 06_fpga/computador/comparar_latencia.py; so com medicao na placa."""
+    if not os.path.exists(LATENCIA):
+        return None
+    m = ler(LATENCIA)
+    f, c = m.get('fpga'), m['notebook']
+    if not f:
+        return None
+    return {
+        'arquivo': rel(LATENCIA),
+        'ensaios': len(m['ensaios']),
+        'repeticoes': m['repeticoes'],
+        'frequencia_hz': f['frequencia_hz'],
+        'fpga': {
+            'mediana_us': f['latencia_de_declaracao_us']['mediana'],
+            'min_us': f['latencia_de_declaracao_us']['min'],
+            'max_us': f['latencia_de_declaracao_us']['max'],
+            'ensaios_sem_variacao': f['ensaios_com_o_mesmo_numero_de_ciclos_em_todas_as_repeticoes'],
+            'amostras_atrasadas': f['amostras_atrasadas'],
+        },
+        'notebook': {
+            'mediana_us': c['latencia_de_declaracao_us']['mediana'],
+            'p99_us': c['latencia_de_declaracao_us']['p99'],
+            'max_us': c['latencia_de_declaracao_us']['max'],
+            'desvio_us': c['latencia_de_declaracao_us']['desvio_padrao'],
+            'maior_atraso_de_entrega_us': c['atraso_da_entrega_us']['max'],
+            'amostras': c['atraso_da_entrega_us']['n'],
+        },
+    }
 
 
 def main():
@@ -185,7 +217,10 @@ def main():
         'fontes': sorted(set(fontes)),
         'bar_por_metro': 0.0981,
         'ensaios': ensaios,
+        'latencia': latencia_fpga_e_notebook(),
     }
+    if dados['latencia']:
+        dados['fontes'] = sorted(set(dados['fontes']) | {rel(LATENCIA)})
     corpo = json.dumps(dados, ensure_ascii=False, separators=(',', ':'))
     with open(SAIDA, 'w', encoding='utf-8') as f:
         f.write('/* Gerado por web/gerar_dados_fpga.py a partir de 03_ensaios, 04_detector e '

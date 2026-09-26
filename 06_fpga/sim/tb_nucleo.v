@@ -3,7 +3,11 @@
 // Le dois arquivos gravados por 06_fpga/computador/gerar_vetores.py: os bytes
 // que o computador envia e os bytes que placa_referencia.py devolveu. Alimenta
 // o nucleo com o primeiro, respeitando rx_pronto, e exige o segundo byte a
-// byte. Uso:  vvp tb_nucleo.vvp +caso=NOME +entrada=ARQ +esperado=ARQ [+obtido=ARQ]
+// byte. Uso:  vvp tb_nucleo.vvp +caso=NOME +entrada=ARQ +esperado=ARQ [+mascara=ARQ] [+obtido=ARQ]
+//
+// Com +mascara, so os bytes marcados com 01 sao comparados; a parte de TEMPOS
+// que o circuito mede (ciclos) vem marcada com 00 e e conferida em
+// prova_cenario_b.py contra a contagem do proprio simulador.
 //
 // Com +obtido, grava cada byte que o Verilog devolveu, numa linha:
 //   byte  bytes_de_entrada_consumidos  ciclo_do_byte  ciclo_da_ultima_entrada
@@ -23,9 +27,10 @@ module tb_nucleo;
     reg [7:0] entrada  [0:MAX_BYTES-1];
     reg [7:0] esperado [0:MAX_BYTES-1];
     reg [7:0] obtido   [0:MAX_BYTES-1];
+    reg [7:0] mascara  [0:MAX_BYTES-1];
     integer n_entrada, n_esperado, n_obtido, posicao, ciclos, ociosos, erros, primeiro, i, fd, lidos;
     integer relogio, ultima_entrada, fd_obtido;
-    reg [8*400-1:0] caso, arq_entrada, arq_esperado, arq_obtido;
+    reg [8*400-1:0] caso, arq_entrada, arq_esperado, arq_obtido, arq_mascara;
     reg [7:0] valor;
 
     wire       rx_pronto;
@@ -81,6 +86,18 @@ module tb_nucleo;
         end
         $fclose(fd);
 
+        for (i = 0; i < MAX_BYTES; i = i + 1) mascara[i] = 8'h01;
+        if ($value$plusargs("mascara=%s", arq_mascara)) begin
+            fd = $fopen(arq_mascara, "r");
+            if (fd == 0) begin $display("ERRO: nao abriu %0s", arq_mascara); $finish; end
+            i = 0;
+            while (!$feof(fd)) begin
+                lidos = $fscanf(fd, "%h\n", valor);
+                if (lidos == 1) begin mascara[i] = valor; i = i + 1; end
+            end
+            $fclose(fd);
+        end
+
         fd_obtido = 0;
         if ($value$plusargs("obtido=%s", arq_obtido)) begin
             fd_obtido = $fopen(arq_obtido, "w");
@@ -107,7 +124,7 @@ module tb_nucleo;
         erros = 0;
         primeiro = -1;
         for (i = 0; i < n_esperado && i < n_obtido; i = i + 1)
-            if (obtido[i] !== esperado[i]) begin
+            if (mascara[i] != 8'h00 && obtido[i] !== esperado[i]) begin
                 if (primeiro < 0) primeiro = i;
                 erros = erros + 1;
             end

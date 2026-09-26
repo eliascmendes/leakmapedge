@@ -105,6 +105,62 @@ ensaio ou sem configuração, 4 fora da memória, 5 mal formado.
 Situação do resultado: 0 concluído, 1 recusado por amostras faltando, 2
 recusado por falta de configuração, 3 recusado por estouro de largura.
 
+### Tempo real e tempos contados pelo circuito
+
+| Tipo | Nome | Carga útil (bytes) |
+|---|---|---|
+| `0x07` | EXECUTAR_TEMPO_REAL (16) | os 12 bytes de EXECUTAR, depois periodo_ciclos u32 |
+| `0x08` | PEDIR_TEMPOS (8) | id (8) |
+| `0x87` | TEMPOS (43) | id (8), situacao u8, modo u8, frequencia_hz u32, periodo_ciclos u32, n_amostras u16, contado u8, ciclos_execucao u32, ciclos por amostra mín. u16 e máx. u16, amostras_atrasadas u16, depois por canal (A e B) ciclo_declaracao u32 e latencia_declaracao u16 |
+
+EXECUTAR_TEMPO_REAL faz as mesmas conferências de EXECUTAR e dá o mesmo
+resultado, mas entrega ao detector a amostra k no ciclo entrega(0) + k ×
+periodo_ciclos, contado pelo relógio da placa. Se o circuito chega depois da
+hora de uma amostra, ela conta como atrasada. Período zero ou tamanho errado:
+recibo mal formado (situação 5).
+
+TEMPOS descreve a última execução, em lote ou em tempo real, inclusive
+recusada: `situacao` é a do RESULTADO, 0xFF antes de qualquer execução.
+`frequencia_hz` é o relógio da placa, para o computador converter ciclos em
+segundos; a placa informa mesmo antes de executar, e o computador usa isso para
+calcular `periodo_ciclos`. A partir de `contado` (1 no circuito), os campos são
+medidos pelo circuito: `ciclos_execucao` conta da entrada na execução até o
+resultado pronto; `latencia_declaracao` conta da entrega da amostra do
+cruzamento até o evento declarado (0xFFFFFFFF e 0xFFFF quando o canal não
+declara). O modelo de referência não tem relógio e zera a parte medida; nos
+testes ela fica fora da comparação byte a byte e é conferida contra a contagem
+do simulador.
+
+### Autoteste dos canais
+
+| Tipo | Nome | Carga útil (bytes) |
+|---|---|---|
+| `0x09` | PEDIR_SAUDE (16) | id (8), limite_congelado u16, codigo_minimo u16, codigo_maximo u16, limite_salto u16 |
+| `0x88` | SAUDE (39) | id (8) e situacao u8 da última execução, os quatro limites como vieram, depois por canal (A e B) bandeiras u8, codigo_min u16, codigo_max u16, maior_sequencia u16, maior_variacao u16, amostras_no_extremo u16 |
+
+Durante a execução, em lote ou em tempo real, a placa acompanha cada canal
+amostra a amostra, no mesmo ciclo em que o detector recebe a amostra
+([`rtl/leakmap_saude.v`](rtl/leakmap_saude.v)): menor e maior código, maior
+sequência de códigos iguais seguidos, maior variação entre duas amostras
+seguidas e quantas amostras caíram em 0 ou 65 535. Ao receber PEDIR_SAUDE,
+julga com os limites do pedido:
+
+| Bit | Falha | Condição |
+|---|---|---|
+| 0 | congelado | maior_sequencia ≥ limite_congelado (limite 0 = não confere) |
+| 1 | saturado | alguma amostra em 0 ou 65 535 |
+| 2 | fora da faixa | codigo_min < codigo_minimo ou codigo_max > codigo_maximo |
+| 3 | salto | maior_variacao > limite_salto (limite 0 = não confere) |
+
+O computador manda os limites do transmissor declarado no ensaio
+([`computador/preparo.py`](computador/preparo.py)): a faixa de medição sem os
+extremos, meia faixa como salto, e 32 amostras iguais como congelamento, só
+quando o ensaio tem ruído de sensor (sinal ideal fica constante de verdade).
+Sem execução concluída (antes da primeira, ou recusada), os canais vêm
+zerados e `situacao` diz por quê (0xFF antes de qualquer execução). Tamanho
+errado: recibo mal formado. Uma placa gravada antes do autoteste ignora
+PEDIR_SAUDE; o computador fica sem autoteste e não pergunta de novo.
+
 ### Identificação da placa simulada
 
 | Tipo | Nome | Carga útil (bytes) |
@@ -210,7 +266,7 @@ de 1 mm, 16 bits ou 12 bits.
 ## 8. Critério de aceitação do Verilog
 
 **Situação:** o Verilog em [`rtl/`](rtl) cumpre os cinco critérios abaixo em
-simulação (Icarus Verilog), nos 57 casos gerados por
+simulação (Icarus Verilog), nos 67 casos gerados por
 [`computador/gerar_vetores.py`](computador/gerar_vetores.py) e no sistema
 completo com a serial. A resposta do próprio Verilog também é decodificada e
 conferida direto contra `04_detector/detector_ponto_fixo.py`, sem passar pelo

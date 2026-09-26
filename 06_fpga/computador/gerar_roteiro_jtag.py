@@ -13,13 +13,21 @@ entre eles):
   - B-07: o mesmo ensaio duas vezes seguidas;
   - B-08: canal B igual ao A atrasado 40 amostras;
   - protocolo: IDENTIFICAR sem resposta (so a placa simulada responde) e
-    resultado pedido de novo, antes e depois da confirmacao.
+    resultado pedido de novo, antes e depois da confirmacao;
+  - tempo real: MX-005 no ritmo verdadeiro da placa, uma amostra a cada
+    periodo de amostragem (20 065 ciclos de 50 MHz), com o mesmo resultado.
+
+Depois de cada ensaio o computador pede TEMPOS, como faz com a placa. A parte
+de TEMPOS que so o circuito mede (ciclos contados) vai marcada numa mascara e
+nao e comparada; o testbench mostra esses ciclos.
 
 Formato (um byte hexadecimal por linha, para $readmemh):
   n_casos (2 bytes, little-endian)
   por caso:   tamanho do nome (1), nome em ASCII, n_mensagens (2)
   por mensagem: n_enviados (2), bytes enviados, n_respondidos (2), bytes
-                respondidos, bandeiras (1; bit 0 = resultado esperando confirmacao)
+                respondidos, bandeiras (1; bit 0 = resultado esperando
+                confirmacao, bit 1 = segue uma mascara), e com o bit 1 a mascara:
+                um byte por byte respondido (1 = comparar, 0 = medido)
 
 O arquivo e completado com zeros ate TAMANHO bytes, o tamanho da memoria do
 testbench, para o $readmemh nao reclamar de arquivo curto.
@@ -41,12 +49,15 @@ import hospedeiro as HO  # noqa: E402
 import placa_referencia as PLACA  # noqa: E402
 import preparo as PP  # noqa: E402
 import protocolo as PR  # noqa: E402
+import registro_b as RB  # noqa: E402
 import selo as SE  # noqa: E402
 import transporte as TR  # noqa: E402
+from gerar_vetores import mascara_da_saida  # noqa: E402
 
 SAIDA = os.path.join(RAIZ, '06_fpga', 'sim', 'questa', 'roteiro_jtag.hex')
-TAMANHO = 16384   # bytes; igual a TAM_ROTEIRO do testbench, que le o arquivo inteiro
+TAMANHO = 32768   # bytes; igual a TAM_ROTEIRO do testbench, que le o arquivo inteiro
 ENSAIOS = ['MX-001', 'MX-013', 'MX-021', 'MX-030', 'MX-039']
+FREQUENCIA_DE10 = 50_000_000   # relogio da DE10-Standard, parametro de leakmap_topo_jtag
 
 
 class TransporteRoteiro(TR.TransporteMemoria):
@@ -69,20 +80,20 @@ def main(saida=SAIDA):
     pacote = json.load(open(SE.PACOTE, encoding='utf-8'))
     selos = json.load(open(SE.SELOS, encoding='utf-8'))
     cal = D.calibracao_padrao()
-    placa = PLACA.PlacaReferencia()
+    placa = PLACA.PlacaReferencia(frequencia_hz=FREQUENCIA_DE10)
     casos = []
 
     def execucao(identificador):
         ensaio = SE.selecionar(identificador, pacote, selos)
         p = PP.preparar_ensaio(ensaio, pacote['escala'], cal)
         return (identificador, p['conversao']['canal_A']['codigos'],
-                p['conversao']['canal_B']['codigos'], p['parametros'])
+                p['conversao']['canal_B']['codigos'], p['parametros'], p['limites_de_saude'])
 
-    def pelo_computador(nome, execucoes, corromper=None):
+    def pelo_computador(nome, execucoes, corromper=None, periodo_ciclos=None):
         transporte = TransporteRoteiro(placa, corromper)
         host = HO.Hospedeiro(transporte)
-        for e in execucoes:
-            rodada = host.rodar(*e)
+        for ident, ca, cb, par, limites in execucoes:
+            rodada = host.rodar(ident, ca, cb, par, periodo_ciclos=periodo_ciclos, limites_de_saude=limites)
             if rodada['resultado'] is None:
                 raise SystemExit('o caso %s ficou sem resultado no modelo' % nome)
         casos.append((nome, transporte.mensagens))
@@ -107,9 +118,18 @@ def main(saida=SAIDA):
 
     base = execucao('MX-005')
     atrasado = [base[1][0]] * 40 + list(base[1][:-40])
-    pelo_computador('B-08 canal B atrasado 40 amostras', [('ATRASO40', base[1], atrasado, base[3])])
+    pelo_computador('B-08 canal B atrasado 40 amostras', [('ATRASO40', base[1], atrasado, base[3], base[4])])
 
-    ident, ca, cb, par = execucao('MX-001')
+    ruidoso = execucao('MX-013')
+    congelado = list(ruidoso[2][:60]) + [ruidoso[2][60]] * (len(ruidoso[2]) - 60)
+    pelo_computador('autoteste: canal B congelado (MX-013)',
+                    [('CONGELA', ruidoso[1], congelado, ruidoso[3], ruidoso[4])])
+
+    ensaio_005 = SE.selecionar('MX-005', pacote, selos)
+    pelo_computador('tempo real MX-005, uma amostra a cada 20065 ciclos', [execucao('MX-005')],
+                    periodo_ciclos=round(FREQUENCIA_DE10 * RB.periodo(ensaio_005)))
+
+    ident, ca, cb, par, _ = execucao('MX-001')
     blocos = PR.blocos_do_ensaio(ident, ca, cb)
     pedir = PR.montar_quadro(PR.PEDIR_RESULTADO, PR.carga_so_id(ident))
     quadros_soltos('protocolo: IDENTIFICAR sem resposta e resultado pedido de novo', [
@@ -130,7 +150,11 @@ def main(saida=SAIDA):
         for enviado, resposta, pendente in mensagens:
             dados += len(enviado).to_bytes(2, 'little') + enviado
             dados += len(resposta).to_bytes(2, 'little') + resposta
-            dados += bytes([1 if pendente else 0])
+            mascara = mascara_da_saida(resposta)
+            tem_mascara = 0 in mascara
+            dados += bytes([(1 if pendente else 0) | (2 if tem_mascara else 0)])
+            if tem_mascara:
+                dados += mascara
             total += 1
     if len(dados) > TAMANHO:
         raise SystemExit('roteiro com %d bytes passa de %d: aumente TAMANHO aqui e TAM_ROTEIRO no testbench'

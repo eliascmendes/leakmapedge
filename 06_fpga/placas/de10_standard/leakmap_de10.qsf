@@ -10,6 +10,7 @@ set_global_assignment -name NUM_PARALLEL_PROCESSORS ALL
 
 set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_multiplicador.v
 set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_detector.v
+set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_saude.v
 set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_nucleo.v
 set_global_assignment -name VERILOG_FILE ../../rtl/leakmap_ponte_jtag.v
 set_global_assignment -name VERILOG_FILE ../intel/leakmap_topo_jtag.v

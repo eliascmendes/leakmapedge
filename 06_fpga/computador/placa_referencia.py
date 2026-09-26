@@ -147,16 +147,56 @@ class DetectorInteiro:
         return saida
 
 
+class SaudeDoCanal:
+    """Autoteste de um canal, amostra a amostra, como o circuito faz (leakmap_saude.v)."""
+
+    EXTREMOS = (0, 0xFFFF)
+
+    def __init__(self):
+        self.n = 0
+        self.anterior = None
+        self.sequencia = 0
+        self.estatisticas = {c: 0 for c in PR.CAMPOS_DA_SAUDE[1:]}
+
+    def amostra(self, codigo):
+        e = self.estatisticas
+        if self.n == 0:
+            e['codigo_min'] = e['codigo_max'] = codigo
+            self.sequencia = e['maior_sequencia'] = 1
+        else:
+            e['codigo_min'] = min(e['codigo_min'], codigo)
+            e['codigo_max'] = max(e['codigo_max'], codigo)
+            self.sequencia = self.sequencia + 1 if codigo == self.anterior else 1
+            e['maior_sequencia'] = max(e['maior_sequencia'], self.sequencia)
+            e['maior_variacao'] = max(e['maior_variacao'], abs(codigo - self.anterior))
+        if codigo in self.EXTREMOS:
+            e['amostras_no_extremo'] += 1
+        self.anterior = codigo
+        self.n += 1
+
+
 class PlacaReferencia:
     """Maquina de estados da placa: recebe bytes, devolve bytes.
 
     `perder_resultados` descarta as N primeiras mensagens de resultado, para
     testar a repeticao com confirmacao de B-10.
+
+    EXECUTAR_TEMPO_REAL da o mesmo resultado que EXECUTAR: o ritmo de entrega das
+    amostras nao muda a conta. TEMPOS devolve o que o modelo sabe (ensaio,
+    situacao, modo, frequencia informada, periodo, amostras) e zera a parte
+    medida: o modelo nao tem relogio, quem conta os ciclos e o circuito.
+    `frequencia_hz` e a frequencia do relogio que a placa informa em TEMPOS.
+
+    PEDIR_SAUDE devolve o autoteste dos dois canais na ultima execucao,
+    julgado com os limites que vieram no pedido.
     """
 
-    def __init__(self, capacidade_de_amostras=4096, perder_resultados=0):
+    def __init__(self, capacidade_de_amostras=4096, perder_resultados=0, frequencia_hz=100_000_000):
         self.capacidade = capacidade_de_amostras
         self.perder_resultados = perder_resultados
+        self.frequencia_hz = frequencia_hz
+        self.tempos = PR.carga_tempos('', PR.TEMPOS_SEM_EXECUCAO, PR.MODO_LOTE, frequencia_hz, 0, 0)
+        self.saude = ('', PR.SAUDE_SEM_EXECUCAO, None, None)   # id, situacao, canal A, canal B
         self.leitor = PR.LeitorDeQuadros()
         self._zerar()
         self.configurado = False
@@ -194,6 +234,18 @@ class PlacaReferencia:
             return self._amostras(carga)
         if tipo == PR.EXECUTAR:
             return self._executar(carga)
+        if tipo == PR.EXECUTAR_TEMPO_REAL:
+            periodo = PR.ler_executar_tempo_real(carga)[3]
+            if periodo == 0:
+                return self._recibo('', PR.CONTAGEM_NAO_CONFIAVEL, PR.BLOCO_MAL_FORMADO)
+            return self._executar(carga[:12], PR.MODO_TEMPO_REAL, periodo)
+        if tipo == PR.PEDIR_TEMPOS:
+            return PR.montar_quadro(PR.TEMPOS, self.tempos)
+        if tipo == PR.PEDIR_SAUDE:
+            limites = PR.ler_pedir_saude(carga)[1]
+            identificador, situacao, canal_a, canal_b = self.saude
+            return PR.montar_quadro(PR.SAUDE, PR.carga_saude(identificador, situacao, limites,
+                                                             canal_a, canal_b))
         if tipo == PR.PEDIR_RESULTADO:
             return self._enviar_resultado()
         if tipo == PR.CONFIRMAR_RESULTADO:
@@ -248,8 +300,20 @@ class PlacaReferencia:
         return PR.montar_quadro(PR.BLOCO_RECEBIDO, PR.carga_bloco_recebido(identificador, seq, situacao))
 
     # --- B-08, B-09, B-10 ------------------------------------------------------------
-    def _executar(self, carga):
+    def _executar(self, carga, modo=PR.MODO_LOTE, periodo=0):
+        resposta = self._executar_conta(carga)
+        r = PR.ler_resultado(self.resultado_pendente)
+        self.tempos = PR.carga_tempos(r['id'], r['situacao'], modo, self.frequencia_hz, periodo,
+                                      r['n_amostras_reproduzidas'])
+        concluido = r['situacao'] == PR.RESULTADO_CONCLUIDO
+        self.saude = (r['id'], r['situacao'],
+                      self._saude_a.estatisticas if concluido else None,
+                      self._saude_b.estatisticas if concluido else None)
+        return resposta
+
+    def _executar_conta(self, carga):
         identificador, n_blocos, n_amostras = PR.ler_executar(carga)
+        self._saude_a, self._saude_b = SaudeDoCanal(), SaudeDoCanal()
         vazio = {k: 0 for k in PR.CAMPOS_DO_CANAL}
         if not self.configurado or identificador != self.identificador:
             self.resultado_pendente = PR.carga_resultado(
@@ -270,6 +334,8 @@ class PlacaReferencia:
             for indice in range(self.n_amostras):          # indice comum aos dois canais
                 detector_a.amostra(self.memoria_a[indice])
                 detector_b.amostra(self.memoria_b[indice])
+                self._saude_a.amostra(self.memoria_a[indice])
+                self._saude_b.amostra(self.memoria_b[indice])
             canal_a, canal_b = detector_a.resultado(), detector_b.resultado()
         except EstouroDeLargura:
             situacao, canal_a, canal_b = PR.RESULTADO_RECUSADO_ESTOURO, vazio, vazio

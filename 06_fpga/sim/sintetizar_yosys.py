@@ -16,7 +16,7 @@ import sys
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 FPGA = os.path.dirname(AQUI)
-FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_nucleo.v',
+FONTES = ['rtl/leakmap_multiplicador.v', 'rtl/leakmap_detector.v', 'rtl/leakmap_saude.v', 'rtl/leakmap_nucleo.v',
           'rtl/leakmap_uart.v', 'rtl/leakmap_topo.v']
 ALVOS = {
     'yosys_xilinx_serie7.txt': 'synth_xilinx -family xc7 -top leakmap_topo -flatten',

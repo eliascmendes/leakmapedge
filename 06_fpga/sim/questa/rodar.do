@@ -26,6 +26,7 @@ if {[info exists ::env(LEAKMAP_QUESTA_TRABALHO)]} {
 set fontes {
     rtl/leakmap_multiplicador.v
     rtl/leakmap_detector.v
+    rtl/leakmap_saude.v
     rtl/leakmap_nucleo.v
     rtl/leakmap_ponte_jtag.v
     placas/intel/leakmap_topo_jtag.v

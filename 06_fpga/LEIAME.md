@@ -29,15 +29,19 @@ instalação industrial.
 | `leakmap_nucleo.v` | Lê quadros e confere CRC, guarda a configuração, grava as amostras, executa com índice comum aos dois canais e devolve o resultado |
 | `leakmap_detector.v` | Detector de um canal em aritmética inteira: passa-altas, somas de energia, limiar, retrocesso e maior salto |
 | `leakmap_multiplicador.v` | Multiplicador sequencial de soma e deslocamento, compartilhado pelo detector |
+| `leakmap_saude.v` | Autoteste de um canal, amostra a amostra: congelado, saturado, fora da faixa, salto |
 | `leakmap_uart.v` | Serial 8N1 de recepção e transmissão, e a fila de bytes |
 | `leakmap_ponte_jtag.v` | Ponte entre o JTAG virtual e o núcleo, para conversar pelo cabo de gravação; filas entre os dois relógios com ponteiros em código Gray |
+| `leakmap_demo.v` | Demonstração autônoma: gera os sinais dos dois sensores na própria placa, entrega as amostras aos mesmos detectores e calcula a posição |
+| `leakmap_sete_segmentos.v` | Decodificador dos displays de 7 segmentos, para a demonstração |
 
 Escolhas de projeto que tornam o mesmo Verilog válido em qualquer placa:
 
 - **Sem multiplicador combinacional grande.** As multiplicações de até 64 × 32
   bits são feitas uma de cada vez por um multiplicador sequencial. Não
   dependem de bloco DSP de fabricante e fecham tempo com folga. O ensaio mais
-  longo da matriz é processado em 32 338 ciclos, 0,32 ms a 100 MHz.
+  longo da matriz é processado em 32 335 ciclos: 646,7 µs na DE10-Standard, a
+  50 MHz, contados pelo próprio circuito.
 - **Memórias escritas no padrão que as duas ferramentas reconhecem.** As
   amostras viram blocos de memória dedicados no Vivado e no Quartus.
 - **Reinício interno na energização.** Não depende de botão da placa.
@@ -55,6 +59,10 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
   configuração, ensaio acima da capacidade, pedido de resultado repetido, o
   mesmo ensaio duas vezes seguidas e três ensaios seguidos na mesma placa;
 - o sistema completo, com a serial de verdade no caminho;
+- o autoteste dos canais: a mensagem SAUDE em todos os ensaios da matriz e em
+  canais estragados de propósito (congelado, cabo rompido, pico isolado);
+- a demonstração autônoma, contra o modelo em 242 posições e em 18 casos com
+  sensor estragado, e o topo dela na DE10-Standard, com botões e displays;
 - o topo da DE10-Standard pelo cabo de gravação, `placas/intel/leakmap_topo_jtag.v`
   sem alteração, com um modelo no lugar do `sld_virtual_jtag` da Intel:
   [`sim/tb_leakmap_jtag.v`](sim/tb_leakmap_jtag.v), 9 casos e 109 mensagens,
@@ -62,7 +70,7 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
   testbench roda no Questa que vem com o Quartus; ver
   [`sim/questa/LEIAME.md`](sim/questa/LEIAME.md).
 
-**Situação: 59 de 59 casos idênticos ao modelo.** O teste foi conferido
+**Situação: 71 de 71 casos idênticos ao modelo.** O teste foi conferido
 estragando o Verilog de propósito: trocar `>` por `>=` no retrocesso derruba
 15 casos, e deixar de contar uma descontinuidade derruba o caso da lacuna.
 
@@ -91,9 +99,160 @@ resposta gravada: o B-09 cai para 89 de 90 e o script falha.
 
 O processamento na placa, do fim da mensagem EXECUTAR ao começo do
 RESULTADO, leva de mediana 16 103 ciclos e no máximo 32 338 ciclos (MX-039, 500
-amostras): 0,32 ms com relógio de 100 MHz, para um ensaio que cobre 0,2 s de
-sinal. São ciclos contados na simulação; em segundos, dependem do relógio que
-fechar tempo na placa.
+amostras) na simulação. Na DE10-Standard, o próprio circuito conta 32 335
+ciclos para a mesma execução (os 3 de diferença são a leitura e a resposta da
+mensagem, fora da execução): 646,7 µs a 50 MHz, para um ensaio que cobre 0,2 s
+de sinal.
+
+## Tempo na placa: contagem de ciclos, tempo real e comparação com a CPU
+
+A vantagem própria da FPGA é o tempo: latência fixa, igual em todas as
+execuções. Três partes medem isso na própria placa.
+
+**Contagem de ciclos (TEMPOS).** O núcleo conta, em cada execução, os ciclos
+da execução inteira, os ciclos de cada amostra (menor e maior), e, em cada
+canal, o ciclo em que declarou o evento e a latência da declaração: da entrega
+da amostra do cruzamento ao evento declarado. O computador pede esses números
+com PEDIR_TEMPOS depois de cada ensaio. Na simulação, o contador confere com a
+contagem do próprio simulador (critério Tempos de `sim/prova_cenario_b.py`); na
+placa, deu os mesmos números da simulação.
+
+**Tempo real (EXECUTAR_TEMPO_REAL).** A mesma execução, mas a placa entrega ao
+detector uma amostra a cada período de amostragem, marcado pelo próprio
+relógio, como um conversor entregaria. O resultado é idêntico ao da execução
+em lote. Na DE10-Standard, os 45 ensaios em tempo real: 45 concluídos, os
+mesmos resultados, nenhuma amostra atrasada, a execução levando exatamente a
+duração do sinal (de 40,1 ms a 200,3 ms) e a declaração saindo de 1,78 a
+2,04 µs depois da amostra do cruzamento.
+
+```bash
+python 06_fpga/computador/executar_cenario_b.py --jtag --tempo-real
+```
+
+**FPGA × notebook** ([`computador/comparar_latencia.py`](computador/comparar_latencia.py)).
+O mesmo detector em aritmética inteira, nos 30 ensaios com evento, 10 vezes
+cada, uma amostra por período de amostragem. No notebook, em Python, com espera
+ativa pela hora de cada amostra (o melhor caso para a CPU):
+
+| | FPGA (DE10-Standard, 50 MHz) | Notebook (Python) |
+|---|---|---|
+| Declaração depois da amostra do cruzamento, mediana | 1,94 µs | 14,5 µs |
+| Pior caso | 2,04 µs | 45,6 µs |
+| Repetições do mesmo ensaio | mesmo número de ciclos em 30 de 30 ensaios | desvio de 4,9 µs |
+| Amostras processadas depois da hora | 0 | uma com 860 µs de atraso, em 60 180 |
+
+Um detector em C no notebook seria mais rápido que em Python; o que a tabela
+mostra de próprio da FPGA é a variação: a placa faz a mesma conta sempre no
+mesmo número de ciclos, e nunca perde a hora de uma amostra. Resultado em
+[`resultados/leakmap_latencia_fpga_e_cpu_v1.json`](resultados/leakmap_latencia_fpga_e_cpu_v1.json).
+
+```bash
+python 06_fpga/computador/comparar_latencia.py --jtag
+```
+
+## Autoteste dos canais na placa
+
+Um canal que falha em silêncio é pior que um canal que não existe: um
+transmissor travado ou um cabo rompido pode virar uma "chegada" e uma posição
+errada. Por isso a placa acompanha cada canal, amostra a amostra, no mesmo
+ciclo em que o detector recebe a amostra
+([`rtl/leakmap_saude.v`](rtl/leakmap_saude.v)), e acusa quatro falhas:
+
+| Falha | Como a placa vê |
+|---|---|
+| Congelado | o mesmo código muitas amostras seguidas (32 amostras, 12,8 ms) |
+| Saturado | amostra no extremo da palavra, 0 ou 65 535 |
+| Fora da faixa | código fora da faixa de medição do transmissor |
+| Salto | variação entre duas amostras seguidas maior que meia faixa, que nenhuma onda faz |
+
+O computador pede o autoteste depois de cada ensaio (PEDIR_SAUDE), com os
+limites do transmissor declarado no ensaio, e grava o resultado no registro
+(`autoteste_na_placa`) e no relatório (`autoteste_dos_canais`). Detalhes da
+mensagem em [`ESPECIFICACAO.md`](ESPECIFICACAO.md).
+
+Na simulação do Verilog: os 90 canais da matriz saem saudáveis, com as
+estatísticas iguais às contadas direto nas amostras; e cada canal estragado de
+propósito é acusado com a falha certa, e só ela (critério Autoteste de
+`sim/prova_cenario_b.py`):
+
+| Canal estragado de propósito | A placa acusa |
+|---|---|
+| Canal B congelado a partir da amostra 60 (MX-013) | congelado |
+| Canal A cai a código 0 na amostra 100, cabo rompido (MX-013) | congelado, saturado, fora da faixa |
+| Uma amostra isolada do canal B cai mais que meia faixa (MX-021) | salto |
+
+O mesmo canal congelado, julgado com os limites abertos, não é acusado: quem
+decide o que é falha é o transmissor declarado, não um número fixo no
+circuito.
+
+Na placa, o autoteste ainda não rodou: o `leakmap.sof` gravado na
+DE10-Standard em 25/09/2026 é anterior a ele. Com o projeto recompilado, o
+teste é o passo B.6 do
+[roteiro de testes](placas/de10_standard/ROTEIRO_DE_TESTES.txt).
+
+## Demonstração autônoma na placa
+
+Um segundo projeto da DE10-Standard, sem computador: escolhe-se nos botões
+onde a linha rompe, e a placa gera os sinais dos dois sensores, entrega uma
+amostra a cada período de amostragem aos mesmos detectores do cenário B
+(`rtl/leakmap_detector.v`), marca as chegadas e mostra a posição calculada
+nos displays. Serve para mostrar a placa funcionando sozinha, de mão em mão.
+
+| Na placa | Função |
+|---|---|
+| KEY3, KEY2, KEY1, KEY0 | −10 m, −1 m, +1 m, +10 m na posição do rompimento, de 40 m a 160 m |
+| SW1 | para cima: ruído nos dois sinais |
+| SW2 | para cima: estraga o sensor A, cabo rompido (código 0) |
+| SW3 | para cima: estraga o sensor B, transmissor travado (repete o último código) |
+| SW0 | reinício; para baixo em uso |
+| HEX5..HEX3 | posição escolhida, em metros |
+| HEX2..HEX0 | posição que a placa calculou; `---` enquanto calcula, `E` sem as duas chegadas, `F A`, `F b` ou `FAb` quando o autoteste acusa o sensor A, o B ou os dois |
+| LEDR0 · LEDR1 · LEDR2 · LEDR3 | pisca · calculando · chegada no sensor A · chegada no sensor B |
+| LEDR4 · LEDR5 | autoteste acusou o sensor A · o sensor B |
+
+Os sensores ficam em 40 m e 160 m. O sinal é sintético: pressão constante e,
+a partir da chegada da onda em cada sensor, uma queda em rampa; com ruído, cada
+canal soma de −3 a +4 códigos de um LFSR de 16 bits. São 512 amostras por
+sensor, entregues no período de amostragem dos ensaios (20 065 ciclos a
+50 MHz): cada cálculo leva cerca de 0,2 s, o tempo de o sinal passar.
+
+Com SW2 ou SW3, o sensor estraga na amostra 100, antes da onda chegar. O
+cabo rompido mostra por que o autoteste importa: a queda até 0 parece uma
+chegada, e sem autoteste a placa calcularia 38 m para um rompimento em 60 m.
+Com o autoteste, ela mostra `F A` no lugar da posição. O transmissor travado
+só é distinguível com ruído (SW1 para cima): sem ruído o sinal é ideal e fica
+constante de verdade, e a placa mostra só que falta a chegada no B (`E`).
+
+O modelo de referência é [`computador/demo_autonoma.py`](computador/demo_autonoma.py):
+gera as constantes do Verilog (`rtl/leakmap_demo_parametros.vh`, com os
+parâmetros do detector em inteiros) e a resposta esperada. Em simulação, o
+Verilog dá a mesma chegada e a mesma posição que o modelo nas 242 combinações
+de 40 m a 160 m, com e sem ruído, e a posição calculada acerta a escolhida em
+todas; e o mesmo autoteste nos 18 casos com sensor estragado
+([`sim/tb_demo.v`](sim/tb_demo.v)). O topo da placa também é simulado
+inteiro ([`sim/tb_demo_de10.v`](sim/tb_demo_de10.v)): aperta os botões, lê os
+displays de volta, inclusive `F A`, `F b` e `FAb` com as chaves SW2 e SW3, e
+confere uma amostra exatamente a cada período.
+
+**Na DE10-Standard (25/09/2026):** compilada no Quartus (37% da lógica, folga
+de tempo de +4,187 ns a 50 MHz), gravada e rodando: ao ligar, a placa mostrou
+80 m escolhido e 80 m calculado, sozinha, sem computador. Os botões, as chaves
+de ruído e de sensor estragado e o autoteste ainda não foram testados na
+placa; o passo a passo está em
+[`placas/de10_standard/ROTEIRO_DE_TESTES.txt`](placas/de10_standard/ROTEIRO_DE_TESTES.txt).
+
+Para gravar, a partir da raiz do repositório:
+
+```bash
+python 06_fpga/placas/preparar_quartus.py --placa de10_standard/demo
+```
+
+O projeto é copiado para `leakmap_quartus/de10_standard/demo`, na pasta do
+usuário (o Quartus não aceita caminho com acento). Abrir `leakmap_demo_de10.qpf` no Quartus, compilar e gravar
+`output_files/leakmap_demo_de10.sof` pelo Programmer, como no
+[roteiro do laboratório](placas/de10_standard/ROTEIRO.md). A gravação troca o
+circuito da placa: para voltar ao cenário B pelo cabo, gravar de novo o
+`leakmap.sof`.
 
 ## Síntese de conferência
 
@@ -260,8 +419,6 @@ python 06_fpga/computador/executar_cenario_b.py --serial COM5
 
 ## O que falta
 
-- O tempo de processamento na placa medido na própria placa; hoje ele vem da
-  contagem de ciclos na simulação.
 - Para outra placa: o arquivo de pinos dela (QSF no Quartus, XDC no Vivado).
   Numa placa Xilinx, o topo pelo cabo de gravação usaria o `BSCANE2` no
   lugar do `sld_virtual_jtag`, com as instruções USER no papel do `ir_in` da

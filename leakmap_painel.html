@@ -416,6 +416,13 @@ footer p{max-width:80ch;margin-top:10px}
   input[type="range"]{height:36px}
 }
 /* ---- modo FPGA: cenario B lado a lado com o software ---- */
+.fpgalat{margin-top:22px;border:1px solid var(--rule);background:var(--panel);padding:20px 20px 16px}
+.fpgalat h3{font-size:18px;font-weight:600;letter-spacing:-.01em}
+.fpgalat .sub{font-size:14.5px;margin-top:8px}
+.fpgalat .cmp{margin-top:16px}
+.fpgalat .cmp > div{font-family:var(--mono);font-size:13px}
+.fpgalat .cmp .rl{font-family:var(--sans)}
+@media (max-width:640px){ .fpgalat{padding:14px 10px 12px} }
 #modo-fpga .simtabs{margin-top:22px}
 #modo-fpga .simtabs[hidden]{display:none}
 .fpgagrade{margin-top:22px;border:1px solid var(--rule);background:var(--panel);padding:16px 16px 12px}
@@ -1134,7 +1141,7 @@ footer p{max-width:80ch;margin-top:10px}
       <div class="kick">O detector já está escrito para a placa</div>
       <div class="row">
         <div><div class="v num">90<small>/ 90</small></div><div class="d">canais da matriz com a mesma marca de chegada no Verilog da placa, simulado ciclo a ciclo, e no software</div></div>
-        <div><div class="v num">0,32<small>ms</small></div><div class="d">para a placa processar o maior ensaio da matriz, 500 amostras nos dois canais, com relógio de 100 MHz</div></div>
+        <div><div class="v num">0,65<small>ms</small></div><div class="d">para a placa processar o maior ensaio da matriz, 500 amostras nos dois canais, contados pelo próprio circuito a 50 MHz</div></div>
         <div><div class="v num">2<small>famílias</small></div><div class="d">Spartan-7 e Cyclone V com o mesmo Verilog, sem nenhum bloco de fabricante</div></div>
       </div>
       <p class="stnote" style="margin-top:14px">Ensaio a ensaio, na <a href="#modo-fpga">tela do cenário B</a>. Fonte: <a class="src num" data-src="06_fpga/rtl" href="#">06_fpga/rtl</a> e <a class="src num" data-src="06_fpga/resultados/leakmap_cenario_b_prova_simulacao_v1.json" href="#">06_fpga/resultados/leakmap_cenario_b_prova_simulacao_v1.json</a>.</p>
@@ -1176,6 +1183,17 @@ footer p{max-width:80ch;margin-top:10px}
 
   <div class="simtabs" id="fpgaOrigens" role="tablist" aria-label="Origem do processamento" hidden></div>
   <div class="tiles" id="fpgaTiles"></div>
+
+  <div class="fpgalat" id="fpgaLatencia" hidden>
+    <h3>O mesmo detector, na placa e no notebook</h3>
+    <p class="sub" id="fpgaLatenciaLead"></p>
+    <div class="cmp" id="fpgaLatenciaCmp" role="table" aria-label="Latência de declaração na FPGA e no notebook">
+      <div class="h" role="columnheader"></div>
+      <div class="h me" role="columnheader">FPGA · DE10-Standard</div>
+      <div class="h" role="columnheader">Notebook · mesmo detector</div>
+    </div>
+    <p class="stnote" id="fpgaLatenciaFonte"></p>
+  </div>
 
   <div class="fpgagrade" id="fpgaGrade" role="group" aria-label="Escolher ensaio da matriz"></div>
 

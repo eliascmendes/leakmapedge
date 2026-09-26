@@ -11,6 +11,7 @@
 `default_nettype none
 
 module leakmap_topo_jtag #(
+    parameter integer FREQUENCIA_HZ = 50_000_000,   // CLOCK_50 da DE10-Standard; informado em TEMPOS
     parameter integer MAX_AMOSTRAS  = 4096,
     parameter integer BITS_ENDERECO = 12
 ) (
@@ -71,7 +72,7 @@ module leakmap_topo_jtag #(
         .tx_dado(tx_dado), .tx_valido(tx_valido), .tx_pronto(tx_pronto),
         .transbordou(led_erro));
 
-    leakmap_nucleo #(.MAX_AMOSTRAS(MAX_AMOSTRAS), .BITS_ENDERECO(BITS_ENDERECO)) u_nucleo (
+    leakmap_nucleo #(.FREQUENCIA_HZ(FREQUENCIA_HZ), .MAX_AMOSTRAS(MAX_AMOSTRAS), .BITS_ENDERECO(BITS_ENDERECO)) u_nucleo (
         .clk(clk), .rst(rst),
         .rx_dado(rx_dado), .rx_valido(rx_valido), .rx_pronto(rx_pronto),
         .tx_dado(tx_dado), .tx_valido(tx_valido), .tx_pronto(tx_pronto),

@@ -1,0 +1,491 @@
+===============================================================================
+ LEAKMAP Edge - ROTEIRO DE TESTES NA DE10-STANDARD
+ Projetos: leakmap (cenario B pelo cabo) e leakmap_demo (demonstracao autonoma)
+===============================================================================
+
+Como usar este roteiro
+----------------------
+- Siga as partes na ordem. Marque [x] em cada passo que deu certo.
+- Quando um passo nao der o resultado esperado, NAO siga em frente: anote o que
+  apareceu (foto do display ou copia do terminal) e va para a Parte D
+  (problemas comuns).
+- No fim, preencha a Parte E (folha de registro).
+
+
+-------------------------------------------------------------------------------
+ VISAO GERAL: DOIS PROJETOS, UMA PLACA
+-------------------------------------------------------------------------------
+
+                     leakmap                          leakmap_demo
+  Pasta              C:\Users\Elias\OneDrive\         C:\Users\Elias\OneDrive\
+                     Documentos\leakmap               Documentos\leakmap_demo
+  Abrir no Quartus   leakmap.qpf                      leakmap_demo_de10.qpf
+  Gravar na placa    output_files\leakmap.sof         output_files\leakmap_demo_de10.sof
+  Usa computador?    Sim: o Python manda os           Nao: a placa funciona sozinha,
+                     ensaios pelo cabo USB            com botoes, chaves e displays
+  Para que serve     Rodar os 45 ensaios, medir       Mostrar para a banca
+                     tempos, comparar com o software
+
+- A placa guarda UM circuito por vez. Gravou um, o outro sai.
+- A gravacao some quando a placa e desligada. Ao religar, grave de novo.
+- Cada projeto so precisa ser compilado uma vez. Trocar entre eles e so gravar
+  o outro .sof no Programmer (segundos).
+- O leakmap_demo ja inclui o autoteste dos canais (chaves SW2 e SW3).
+- O leakmap.sof que voce compilou ate hoje NAO tem o autoteste. Para testar o
+  autoteste pelo cabo (passo B6), o projeto leakmap precisa ser compilado de
+  novo. Esse passo e opcional.
+
+
+-------------------------------------------------------------------------------
+ PARTE 0 - ANTES DE IR AO LABORATORIO
+-------------------------------------------------------------------------------
+
+[ ] 0.1  O leakmap_demo esta compilado: existe o arquivo
+         C:\Users\Elias\OneDrive\Documentos\leakmap_demo\output_files\leakmap_demo_de10.sof
+         Se nao existir, compile (Parte A, passos A.1 a A.3).
+
+[ ] 0.2  O leakmap esta compilado: existe o arquivo
+         C:\Users\Elias\OneDrive\Documentos\leakmap\output_files\leakmap.sof
+
+[ ] 0.3  (Opcional, para o passo B6) Recompilar o leakmap com o autoteste:
+         abrir leakmap.qpf, conferir em Project > Add/Remove Files in Project
+         que aparece o arquivo leakmap_saude.v (se nao aparecer, adicione
+         C:\Users\Elias\OneDrive\Documentos\leakmap_saude.v), e
+         Processing > Start Compilation (cerca de 20 minutos).
+
+[ ] 0.4  Os testes sem placa passam. Num terminal:
+
+         cd "C:\Users\Elias\OneDrive\Área de Trabalho\Documentos\LEAKMAP Edge"
+         python -m unittest discover -s 06_fpga/computador/testes -p "teste_ponte_jtag.py"
+
+         Esperado: a ultima linha diz OK.
+
+[ ] 0.5  Levar: notebook com o Quartus, carregador do notebook. Pedir no
+         laboratorio a fonte da placa e o cabo USB do USB-Blaster.
+
+
+-------------------------------------------------------------------------------
+ PARTE 1 - PREPARACAO NA BANCADA
+-------------------------------------------------------------------------------
+
+[ ] 1.1  Conferir o chip grande da placa: 5CSXFC6D6F31C6 (o N no fim nao
+         importa). Se for outro codigo, PARE: os pinos sao so da DE10-Standard.
+
+[ ] 1.2  TODAS as chaves SW0 a SW9 para BAIXO (SW0 para cima deixa a placa
+         reiniciando).
+
+[ ] 1.3  Ligar a fonte da placa e o cabo USB no conector do USB-Blaster.
+
+[ ] 1.4  No Gerenciador de Dispositivos do Windows aparece "USB-Blaster II"
+         sem triangulo amarelo. Com triangulo: instalar o driver da pasta
+         E:\altera\25.1std\quartus\drivers\usb-blaster-ii
+
+[ ] 1.5  Abrir o Quartus > Tools > Programmer > Hardware Setup > escolher o
+         cabo (algo como "DE-SoC [USB-1]") > Close > Auto Detect.
+         Esperado: aparecem dois dispositivos, SOCVHPS e 5CSXFC6D6.
+
+
+-------------------------------------------------------------------------------
+ PARTE A - leakmap_demo (DEMONSTRACAO AUTONOMA)
+-------------------------------------------------------------------------------
+
+A.0  O QUE A PLACA ESTA FAZENDO (leia antes de comecar)
+-------------------------------------------------------
+
+   sensor A                        meio                        sensor B
+   40 m ------------------------- 100 m ------------------------- 160 m
+                         ^
+                         rompimento na posicao escolhida (40 a 160 m)
+
+Cada vez que voce aperta um botao ou muda uma chave, a placa roda uma
+"rodada" inteira, sozinha, do zero:
+
+ 1. SIMULA O ROMPIMENTO. Na posicao escolhida, uma onda de pressao sai na
+    amostra 150 e anda a 1200,9 m/s para os dois lados. Ela chega primeiro ao
+    sensor mais perto. Em cada sensor, a pressao cai de 58 m para 57,6 m em
+    rampa.
+
+ 2. GERA OS SINAIS DOS DOIS SENSORES. Sao 512 amostras por sensor, uma a cada
+    0,401 ms (2 491,9 amostras por segundo), no ritmo real de um conversor:
+    a rodada inteira leva 0,205 s. Com SW1, soma um ruido de -3 a +4 mm a
+    cada amostra.
+
+ 3. DETECTA. Cada amostra vai, no mesmo instante, para dois detectores, um
+    por sensor. Sao os mesmos detectores do cenario B (o leakmap), que ja
+    marcaram na placa as mesmas chegadas que o software nos 45 ensaios.
+    Cada detector marca a amostra em que a onda chegou ao seu sensor.
+
+ 4. CALCULA A POSICAO, em numeros inteiros, sem divisao:
+        posicao = 100 m + (chegada no A - chegada no B) x 0,241 m
+    (0,241 m e o que vale uma amostra de diferenca: velocidade da onda x
+    periodo da amostra / 2.)
+
+ 5. AUTOTESTE. Ao mesmo tempo, a placa confere cada amostra de cada sensor:
+    codigo travado (congelado), no extremo (saturado), fora da faixa ou com
+    salto impossivel. Se um sensor e acusado, a placa NAO mostra posicao:
+    mostra a falha.
+
+Exemplo em 80 m (a posicao ao ligar):
+    - ate o sensor A sao 40 m: a onda leva 33,3 ms = 83 amostras e chega
+      na amostra 150 + 83 = 233;
+    - ate o sensor B sao 80 m: 166 amostras, chega na amostra 316;
+    - os detectores marcam 234 e 317 (uma amostra depois nos dois; como e
+      igual nos dois, se cancela na diferenca);
+    - posicao = 100 + (234 - 317) x 0,241 = 100 - 20,0 = 80 m.
+
+Chegadas que a placa marca em cada posicao (com ou sem ruido, sao as mesmas):
+
+    posicao | chegada no A | chegada no B | diferenca | placa mostra
+    --------+--------------+--------------+-----------+-------------
+      40 m  |     151      |     400      |   -249    |    40
+      69 m  |     211      |     340      |   -129    |    69
+      70 m  |     213      |     338      |   -125    |    70
+      71 m  |     215      |     336      |   -121    |    71
+      72 m  |     217      |     334      |   -117    |    72
+      80 m  |     234      |     317      |    -83    |    80
+      90 m  |     255      |     296      |    -41    |    90
+     100 m  |     275      |     275      |      0    |   100
+     125 m  |     327      |     224      |   +103    |   125
+     160 m  |     400      |     151      |   +249    |   160
+
+Os displays e LEDs:
+
+   HEX5 HEX4 HEX3      = posicao ESCOLHIDA nos botoes (metros)
+   HEX2 HEX1 HEX0      = posicao CALCULADA pela placa (metros)
+                         "---"  rodada em andamento (0,205 s)
+                         "  E"  a onda nao foi detectada em um dos sensores
+                         "F A"  autoteste acusou o sensor A
+                         "F b"  autoteste acusou o sensor B
+                         "FAb"  autoteste acusou os dois
+
+   KEY3 = -10 m   KEY2 = -1 m   KEY1 = +1 m   KEY0 = +10 m   (de 40 a 160 m)
+   SW0  = reinicio (deixar para baixo)
+   SW1  = para cima: ruido nos sinais dos dois sensores
+   SW2  = para cima: estraga o sensor A (cabo rompido: o sinal cai a zero)
+   SW3  = para cima: estraga o sensor B (transmissor travado: repete o
+          ultimo valor)
+
+   LEDR0 pisca: a placa esta viva (cerca de 1,3 s)
+   LEDR1 aceso durante a rodada (um piscar rapido, 0,2 s)
+   LEDR2 a onda foi detectada no sensor A
+   LEDR3 a onda foi detectada no sensor B
+   LEDR4 o autoteste acusou o sensor A
+   LEDR5 o autoteste acusou o sensor B
+
+A demonstracao NAO grava nada: nao ha computador ligado a ela e a placa nao
+tem onde guardar. O "registro" e o que voce anota na folha (Parte E) e as
+fotos dos displays.
+
+
+Compilar (se ainda nao compilou)
+--------------------------------
+
+[ ] A.1  Quartus > File > Open Project >
+         C:\Users\Elias\OneDrive\Documentos\leakmap_demo\leakmap_demo_de10.qpf
+[ ] A.2  Processing > Start Compilation. Nao precisa mexer no Pin Planner.
+[ ] A.3  Esperado: "Full Compilation was successful". Avisos (warnings) sao
+         normais; erros (em vermelho) nao.
+
+
+Gravar (atencao: e aqui que costuma dar errado)
+-----------------------------------------------
+
+[ ] A.4  Tools > Programmer.
+         Na lista aparecem duas linhas: SOCVHPS (o processador ARM, NAO mexer)
+         e 5CSXFC6D6 (a FPGA).
+         - Clique na linha 5CSXFC6D6 > Change File... > escolha
+           C:\Users\Elias\OneDrive\Documentos\leakmap_demo\output_files\leakmap_demo_de10.sof
+         - CONFIRA na coluna File: tem de estar escrito leakmap_demo_de10.sof,
+           e NAO leakmap.sof. O Programmer lembra o ultimo arquivo usado.
+         - Marque Program/Configure nessa linha > Start.
+         Esperado: barra Progress em 100% (Successful).
+         Se os displays continuarem apagados e so o LEDR0 piscar, a placa
+         ainda esta com o leakmap.sof: repita este passo.
+
+
+Testes (SW0 a SW9 para baixo no comeco)
+---------------------------------------
+
+[ ] A.5  FACA:       nada; so observe logo depois de gravar.
+         VEJA:       esquerda " 80"; direita "---" por um instante e depois
+                     " 80". LEDR0 piscando, LEDR2 e LEDR3 acesos, LEDR4 e
+                     LEDR5 apagados.
+         POR DENTRO: ao ligar, a placa roda uma vez em 80 m (o exemplo do
+                     A.0): chegada no A na amostra 234, no B na 317,
+                     posicao 100 + (-83 x 0,241) = 80 m. LEDR2 e LEDR3
+                     acesos = a onda foi detectada nos dois sensores.
+
+[ ] A.6  FACA:       apertar KEY0 uma vez.
+         VEJA:       esquerda " 90"; direita "---" rapido e depois " 90".
+         POR DENTRO: o botao pede uma rodada nova em 90 m. O "---" e a rodada
+                     em andamento (0,205 s de sinal). Agora o rompimento
+                     esta mais perto do meio: chegadas 255 e 296, diferenca
+                     -41 amostras, 100 - 41 x 0,241 = 90 m.
+
+[ ] A.7  FACA:       apertar KEY3 duas vezes.
+         VEJA:       " 70" e " 70".
+         POR DENTRO: cada aperto pede uma rodada nova; so a ultima fica na
+                     tela. Em 70 m: chegadas 213 e 338, diferenca -125.
+
+[ ] A.8  FACA:       apertar KEY2 uma vez.
+         VEJA:       " 69" e " 69".
+         POR DENTRO: 1 m a menos muda a chegada em cerca de 2 amostras em cada
+                     sensor (a onda anda 0,48 m por amostra). Chegadas 211 e
+                     340, diferenca -129: a placa distingue 1 m.
+
+[ ] A.9  FACA:       apertar KEY1 duas vezes.
+         VEJA:       " 71" e " 71".
+         POR DENTRO: chegadas 215 e 336, diferenca -121.
+
+[ ] A.10 FACA:       segurar KEY1 apertado por 2 segundos e soltar.
+         VEJA:       sobe so 1 m: " 72" e " 72".
+         POR DENTRO: a placa filtra o repique do botao (20 ms) e conta so o
+                     momento em que ele foi apertado, nao o tempo segurado.
+
+[ ] A.11 FACA:       apertar KEY0 varias vezes, ate parar de subir.
+         VEJA:       para em "160"; a direita mostra "160".
+         POR DENTRO: 160 m e o proprio sensor B: a onda chega nele na
+                     amostra 151 e no A so na 400. Diferenca +249,
+                     100 + 249 x 0,241 = 160 m. Acima disso a placa nao deixa
+                     escolher, porque o rompimento estaria fora do trecho
+                     entre os sensores.
+
+[ ] A.12 FACA:       apertar KEY3 varias vezes, ate parar de descer.
+         VEJA:       para em " 40"; a direita mostra " 40".
+         POR DENTRO: o caso espelhado: 40 m e o sensor A. Chegadas 151 e 400.
+
+[ ] A.13 FACA:       SW1 para CIMA (ruido ligado). Depois andar com os
+                     botoes para 100 e para 160.
+         VEJA:       a direita sempre igual a esquerda.
+         POR DENTRO: cada amostra de cada sensor ganha um ruido de -3 a
+                     +4 mm, diferente nos dois sensores. O detector separa a
+                     queda da onda (400 mm) do ruido, e as chegadas marcadas
+                     sao as mesmas de sem ruido. Em 100 m (o meio), as duas
+                     chegadas sao iguais (275 e 275), diferenca 0.
+
+[ ] A.14 FACA:       voltar para 80 (esquerda " 80"), SW1 continua para CIMA.
+                     SW2 para CIMA.
+         VEJA:       direita "F A". LEDR4 aceso; LEDR2 e LEDR3 acesos.
+         POR DENTRO: a partir da amostra 100, antes da onda chegar, o sinal do
+                     sensor A cai a zero, como um cabo rompido. O detector do
+                     A ve essa queda como se fosse a onda e marca uma
+                     "chegada" na amostra 100 (por isso o LEDR2 acende). Sem o
+                     autoteste, a conta daria 100 + (100 - 317) x 0,241 = 48 m,
+                     uma posicao ERRADA. O autoteste acusa o sensor A: sinal
+                     no extremo (zero), fora da faixa, salto grande demais, e,
+                     com ruido, travado. Entao a placa mostra "F A" em vez da
+                     posicao: o monitoramento nao falha em silencio.
+
+[ ] A.15 FACA:       SW3 para CIMA tambem.
+         VEJA:       direita "FAb". LEDR4 e LEDR5 acesos; LEDR2 aceso;
+                     LEDR3 apagado.
+         POR DENTRO: agora o sensor B tambem estraga na amostra 100: o
+                     transmissor trava e repete o ultimo valor. A onda nunca
+                     aparece no B (LEDR3 apaga). Como o sinal com ruido nunca
+                     repete o mesmo valor por 32 amostras seguidas, o
+                     autoteste reconhece o B travado.
+
+[ ] A.16 FACA:       SW2 para BAIXO (so o B estragado).
+         VEJA:       direita "F b". LEDR5 aceso, LEDR4 apagado; LEDR2 aceso,
+                     LEDR3 apagado.
+         POR DENTRO: o sensor A voltou a ser bom e detecta a onda na amostra
+                     234; o B continua travado e acusado.
+
+[ ] A.17 FACA:       SW1 para BAIXO (sem ruido), SW3 continua para CIMA.
+         VEJA:       direita "  E". LEDR4 e LEDR5 apagados; LEDR2 aceso,
+                     LEDR3 apagado.
+         POR DENTRO: sem ruido, o sinal e ideal: um sensor bom tambem fica no
+                     mesmo valor por centenas de amostras antes da onda. Entao
+                     "travado" nao se distingue de "parado", e o autoteste nao
+                     confere travamento sem ruido. A placa mostra o que sabe:
+                     a onda nao chegou ao B ("E"). Na vida real sempre ha
+                     ruido de sensor, e o travamento e acusado (A.15, A.16).
+
+[ ] A.18 FACA:       SW3 para BAIXO.
+         VEJA:       " 80" e " 80"; LEDR2 e LEDR3 acesos.
+         POR DENTRO: os dois sensores bons de novo: chegadas 234 e 317, 80 m.
+
+[ ] A.19 FACA:       andar para 100 m; depois SW0 para CIMA e para BAIXO.
+         VEJA:       com SW0 para cima, direita "---"; ao baixar, volta para
+                     " 80" e " 80".
+         POR DENTRO: SW0 e o reinicio: zera tudo e, ao soltar, a placa volta
+                     para a posicao inicial e roda uma vez, como ao ligar.
+
+
+Sequencia curta para a banca (cerca de 1 minuto)
+------------------------------------------------
+  1. "A placa esta sozinha, sem computador. Ela simula o rompimento, gera os
+     sinais dos dois sensores no ritmo real e calcula onde foi." Mostre 80
+     e 80.
+  2. Mude a posicao nos botoes (por exemplo 125): a placa acompanha, metro
+     a metro.
+  3. Ligue o ruido (SW1): a posicao continua certa.
+  4. Rompa o cabo do sensor A (SW2): "sem o autoteste, a placa diria 48 m,
+     errado. Com o autoteste, ela avisa que o sensor A falhou." Mostre "F A".
+  5. Desligue SW2: a posicao volta.
+
+
+-------------------------------------------------------------------------------
+ PARTE B - leakmap (CENARIO B PELO CABO, COM O PYTHON)
+-------------------------------------------------------------------------------
+
+Gravar:
+
+[ ] B.1  Tools > Programmer. Selecione o .sof que estiver na lista > Delete.
+         Clique no 5CSXFC6D6 > Change File >
+         C:\Users\Elias\OneDrive\Documentos\leakmap\output_files\leakmap.sof >
+         marque Program/Configure > Start. Esperado: 100% (Successful).
+         FECHE o Programmer (ele ocupa o cabo).
+[ ] B.2  SW0 para BAIXO. LEDR0 pisca a cada 1,3 s mais ou menos. Os displays
+         ficam apagados ou com lixo: e normal, este projeto nao usa displays.
+
+Todos os comandos abaixo num terminal aberto na pasta do repositorio:
+
+   cd "C:\Users\Elias\OneDrive\Área de Trabalho\Documentos\LEAKMAP Edge"
+
+[ ] B.3  Um ensaio:
+
+         python 06_fpga/computador/executar_cenario_b.py --jtag --ensaios MX-001
+
+         Esperado:
+           placa pelo JTAG: DE-SoC [USB-1] | ...5CSXFC6D6...
+           MX-001  localizado  60.00 m ...
+           origem: fpga
+           tentados 1 | concluidos 1 | nao concluidos 0
+
+[ ] B.4  Os 45 ensaios, em lote:
+
+         python 06_fpga/computador/executar_cenario_b.py --jtag
+
+         Esperado (os mesmos numeros da rodada de 25/09):
+           tentados 45 | concluidos 45 | nao concluidos 0
+           iguais ao software: 43 de 45 | maior divergencia: 1 amostra(s), 0.000 m
+           causas: {'conversao para inteiros (B-02, B-03)': 2}
+           tempos contados pela placa (lote, 50000000 Hz): ...
+           contra a verdade: deteccoes 30, falsos alarmes 0,
+                             erro mediano 0.241 m, maximo 1.046 m
+         Os 2 ensaios com 1 amostra de diferenca sao da conversao para
+         inteiros, a mesma diferenca da simulacao: e esperado.
+         Se o leakmap.sof NAO tem o autoteste, cada rodada espera 2 s uma vez
+         pela resposta do autoteste e segue sem ele: e normal.
+
+[ ] B.5  Os 45 ensaios em tempo real (uma amostra por periodo de amostragem):
+
+         python 06_fpga/computador/executar_cenario_b.py --jtag --tempo-real
+
+         Esperado:
+           tentados 45 | concluidos 45 | nao concluidos 0
+           iguais ao software: 43 de 45
+           tempos contados pela placa (tempo_real, 50000000 Hz): execucao de
+           40131.8 a 200250.9 us, ..., amostras atrasadas: 0; declaracao 1.78
+           a 2.04 us depois da amostra do cruzamento
+         O que importa: amostras atrasadas 0 e declaracao perto de 2 us.
+
+[ ] B.6  (Opcional: so se o leakmap foi recompilado com o autoteste, passo 0.3)
+         Na saida do B.4 ou do B.5 aparece a linha:
+           autoteste da placa: 90 de 90 canais saudaveis
+         Se a linha nao aparece, o .sof gravado e o antigo, sem autoteste.
+
+[ ] B.7  Comparacao FPGA x notebook (alguns minutos; nao use o notebook
+         enquanto roda, para nao atrapalhar a medida do lado do notebook):
+
+         python 06_fpga/computador/comparar_latencia.py --jtag
+
+         Esperado, parecido com a rodada de 25/09:
+           FPGA: mediana cerca de 1,94 us, maximo cerca de 2,04 us,
+                 mesmo numero de ciclos em todas as repeticoes
+           notebook: mediana na casa de 15 us, maximo na casa de 30 a 50 us
+
+[ ] B.8  Levar os resultados para o site:
+
+         python web/gerar_dados_fpga.py
+
+         Esperado: "escrito: web/leakmap_dados_fpga.js ..., origens: fpga, ..."
+
+
+-------------------------------------------------------------------------------
+ PARTE C - TROCAR DE UM PROJETO PARA O OUTRO
+-------------------------------------------------------------------------------
+
+- Para a demonstracao: Programmer > trocar o arquivo para
+  leakmap_demo_de10.sof > Start. O Python pelo cabo deixa de funcionar
+  (normal).
+- Para o cenario B: Programmer > trocar o arquivo para leakmap.sof > Start >
+  fechar o Programmer. A demonstracao some (normal).
+- Nenhum dos dois estraga o outro, e nao precisa compilar de novo para trocar.
+
+
+-------------------------------------------------------------------------------
+ PARTE D - PROBLEMAS COMUNS
+-------------------------------------------------------------------------------
+
+Demonstracao (leakmap_demo)
+  Displays apagados e so o LEDR0 piscando
+      A placa ainda esta com o leakmap.sof (ele tambem pisca o LEDR0). No
+      Programmer, a coluna File da linha 5CSXFC6D6 tem de dizer
+      leakmap_demo_de10.sof. Refaca o A.4.
+  Tudo apagado, LEDR0 nao pisca
+      A gravacao nao entrou. Grave de novo (A.4) e confira os 100%.
+  Direita presa em "---"
+      SW0 esta para cima. Baixe a SW0.
+  Botao nao faz nada
+      Confira a SW0 para baixo. Aperte e solte com firmeza.
+  Numeros com segmentos estranhos (ex.: 8 pela metade)
+      Anote qual display e qual numero deveria aparecer, tire foto.
+      Pode ser pino trocado: me mande a foto.
+  SW2 ou SW3 nao muda nada, ou LEDR4/LEDR5 nao acendem
+      Anote e tire foto: esses 4 pinos sao os unicos que ainda nao foram
+      conferidos na propria placa.
+  A.14 mostra uma posicao em vez de "F A"
+      Anote a posicao mostrada e o estado das chaves SW1 a SW3.
+
+Cenario B pelo cabo (leakmap)
+  "nenhum cabo JTAG encontrado"
+      Placa ligada? Cabo no conector do USB-Blaster? Driver (passo 1.4)?
+  "a FPGA respondeu 0x... em vez da marca do LEAKMAP"
+      O leakmap.sof nao esta gravado (por exemplo, a demo esta gravada, ou a
+      placa foi desligada). Grave o leakmap.sof (B.1).
+  Trava ou diz que o cabo esta ocupado
+      Feche o Programmer do Quartus e rode de novo.
+  "a placa nao confirmou a configuracao"
+      Quase sempre SW0 para cima. Baixe a SW0. Para ver os bytes crus:
+      python 06_fpga/computador/diagnostico_jtag.py
+  "quartus_stp nao encontrado"
+      Definir a variavel QUARTUS_ROOTDIR com a pasta E:\altera\25.1std\quartus
+  Algum ensaio diferente do esperado no B.4
+      Nao apague nada: o relatorio em 06_fpga/resultados diz qual ensaio,
+      qual canal e quanto. Me mande a saida do terminal.
+
+
+-------------------------------------------------------------------------------
+ PARTE E - FOLHA DE REGISTRO (preencher e me mandar)
+-------------------------------------------------------------------------------
+
+Data: ____/____/______      Placa (codigo do chip): _________________________
+
+leakmap_demo
+  Compilou sem erro?                         [ ] sim  [ ] nao
+  A.5 a A.12 (botoes e limites)              [ ] ok   [ ] falhou em: _______
+  A.13 (com ruido)                           [ ] ok   [ ] falhou em: _______
+  A.14 "F A"                                 [ ] ok   [ ] mostrou: _________
+  A.15 "FAb"                                 [ ] ok   [ ] mostrou: _________
+  A.16 "F b"                                 [ ] ok   [ ] mostrou: _________
+  A.17 "  E"                                 [ ] ok   [ ] mostrou: _________
+  A.18 e A.19 (volta e reinicio)             [ ] ok   [ ] falhou em: _______
+  LEDs conforme o esperado                   [ ] sim  [ ] nao: ____________
+  Tempo de compilacao: _______ min
+
+leakmap
+  B.3 MX-001 localizado em 60.00 m           [ ] ok   [ ] saiu: ___________
+  B.4 lote: concluidos ___ de 45, iguais ao software ___ de 45
+  B.5 tempo real: amostras atrasadas ___, declaracao de ___ a ___ us
+  B.6 autoteste: ___ de 90 canais saudaveis  [ ] nao testado (sof antigo)
+  B.7 FPGA mediana ___ us, maximo ___ us; notebook mediana ___ us, maximo ___ us
+  B.8 site atualizado                        [ ] sim  [ ] nao
+
+Observacoes:
+_______________________________________________________________________________
+_______________________________________________________________________________
+
+Me mande tambem: fotos da placa nos passos A.5, A.14 e A.15, e a saida do
+terminal dos passos B.4, B.5 e B.7 (copiar e colar).

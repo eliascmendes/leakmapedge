@@ -327,7 +327,40 @@
     desenhar();
   }
 
+  /* ------------------------------------------------------------------ */
+  /* FPGA x notebook: o mesmo detector, medido na placa e no notebook    */
+  /* ------------------------------------------------------------------ */
+
+  function mostrarLatencia() {
+    var L = F.latencia, caixa = $("fpgaLatencia");
+    if (!L) { caixa.hidden = true; return; }
+    caixa.hidden = false;
+    $("fpgaLatenciaLead").textContent = "Os " + L.ensaios + " ensaios com evento, " + L.repeticoes +
+      " vezes cada, com uma amostra entregue a cada período de amostragem. Na placa, quem conta o tempo é o " +
+      "próprio circuito; no notebook, o mesmo detector em aritmética inteira, esperando a hora de cada amostra. " +
+      "A placa faz a mesma conta sempre no mesmo número de ciclos.";
+    var f = L.fpga, n = L.notebook, cmp = $("fpgaLatenciaCmp");
+    [
+      ["Declaração depois da amostra do cruzamento", fmt(f.mediana_us, 2) + " µs", fmt(n.mediana_us, 1) + " µs"],
+      ["Pior caso", fmt(f.max_us, 2) + " µs", fmt(n.max_us, 1) + " µs"],
+      ["A mesma conta, repetida", "mesmo número de ciclos em " + f.ensaios_sem_variacao + " de " + L.ensaios +
+        " ensaios", "varia, desvio de " + fmt(n.desvio_us, 1) + " µs"],
+      ["Amostras processadas depois da hora", String(f.amostras_atrasadas),
+        "até " + fmt(n.maior_atraso_de_entrega_us, 0) + " µs de atraso, em " + fmt(n.amostras, 0) + " amostras"]
+    ].forEach(function (l) {
+      el("div", { class: "rl", role: "rowheader", texto: l[0] }, cmp);
+      el("div", { class: "me", role: "cell", texto: l[1] }, cmp);
+      el("div", { role: "cell", texto: l[2] }, cmp);
+    });
+    var fonte = $("fpgaLatenciaFonte");
+    fonte.appendChild(document.createTextNode("Medição: "));
+    el("a", { class: "src num", "data-src": L.arquivo, href: "#", texto: L.arquivo }, fonte);
+    fonte.appendChild(document.createTextNode(". Relógio da placa: " + fmt(L.frequencia_hz / 1e6, 0) + " MHz."));
+    ligarFontes(fonte);
+  }
+
   $("fpgaEntrada").textContent = F.entrada;
+  mostrarLatencia();
   montarOrigens();
   resumo();
   montarGrade();

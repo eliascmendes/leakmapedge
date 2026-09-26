@@ -49,6 +49,9 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
 | Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga/computador`](06_fpga/computador) |
 | Cenário B, pelo cabo de gravação | O computador conversa com a FPGA pelo mesmo cabo USB que a grava, pelo JTAG virtual, sem adaptador nem fio nos pinos. Rodou na DE10-Standard: 45 de 45 ensaios, mesma chegada que o software nos 90 canais. Projeto do Quartus e [roteiro do laboratório](06_fpga/placas/de10_standard/ROTEIRO.md) | [`06_fpga/placas`](06_fpga/placas) |
+| Cenário B, tempo na placa | A própria placa conta os ciclos de cada execução e processa em tempo real, uma amostra por período de amostragem. Na DE10-Standard: declaração do evento de 1,78 a 2,04 µs depois da amostra do cruzamento, mesmo número de ciclos em todas as repetições e nenhuma amostra atrasada; o mesmo detector num notebook leva 14,5 µs de mediana e 45,6 µs no pior caso | [`06_fpga/computador/comparar_latencia.py`](06_fpga/computador/comparar_latencia.py) |
+| Autoteste dos canais na placa | A placa acompanha cada canal amostra a amostra e acusa canal congelado, saturado, fora da faixa do transmissor ou com salto impossível, com os limites do transmissor declarado. Em simulação do Verilog: os 90 canais da matriz saudáveis e cada canal estragado de propósito acusado com a falha certa; na placa, ainda não testado | [`06_fpga/rtl/leakmap_saude.v`](06_fpga/rtl/leakmap_saude.v) |
+| Demonstração autônoma na placa | A DE10-Standard sozinha, sem computador: escolhe-se nos botões onde a linha rompe, a placa gera os sinais dos dois sensores, detecta, marca as chegadas e mostra nos displays a posição calculada. Nas chaves, um sensor estragado de propósito aparece como falha acusada, não como posição errada. Gravada e rodando na DE10-Standard: ao ligar, 80 m escolhido e 80 m calculado | [`06_fpga/placas/de10_standard/demo`](06_fpga/placas/de10_standard/demo) |
 | Cenário B, placa simulada | Programa que fala o protocolo serial da FPGA, com o próprio Verilog da placa atrás da porta. Testa o computador de ponta a ponta, inclusive com ruído no enlace; no dia, só muda o endereço da porta | [`06_fpga/computador/placa_simulada.py`](06_fpga/computador/placa_simulada.py) |
 | Cenário B, Verilog da placa | Detector e protocolo em Verilog puro, sintetizável para Spartan-7 e Cyclone V. Em simulação, marca o mesmo índice de chegada da referência em ponto fixo nos 90 canais da matriz e devolve exato um atraso imposto de 40 amostras | [`06_fpga/rtl`](06_fpga/rtl) |
 
@@ -104,13 +107,13 @@ No painel, a seção "Experimente" deixa qualquer pessoa escolher onde a linha r
 
 ### Tela do cenário B no painel
 
-A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra, ensaio a ensaio, o resultado da placa ao lado do resultado do software: as amostras dos dois canais que a placa recebeu, a marca de chegada da placa e a do software, a diferença de tempo e a posição. Um rótulo fixo diz sempre quem processou o resultado mostrado. Hoje a tela mostra o Verilog da placa simulado ciclo a ciclo; quando a placa gravar os resultados com origem `fpga`, basta rodar `python web/gerar_dados_fpga.py` e a tela passa a abrir no resultado processado na FPGA, com o rótulo "Processado na FPGA · reprodução de sinais digitais".
+A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra, ensaio a ensaio, o resultado da placa ao lado do resultado do software: as amostras dos dois canais que a placa recebeu, a marca de chegada da placa e a do software, a diferença de tempo e a posição. Um rótulo fixo diz sempre quem processou o resultado mostrado. Com os resultados gravados pela DE10-Standard, a tela abre no resultado processado na FPGA, com o rótulo "Processado na FPGA · reprodução de sinais digitais", e mostra a latência da placa ao lado da do notebook; a simulação do Verilog ciclo a ciclo continua disponível, com o próprio rótulo.
 
 ## Roteiro
 
 **No hackathon**, a equipe aperfeiçoa a cadeia que já funciona:
 
-1. Rodar o cenário B, reprodução de sinais digitais em FPGA física: gravar o Verilog na placa e mostrar, na tela do cenário B, a placa marcando o mesmo índice de chegada que o software.
+1. Levar a demonstração autônoma à banca: a DE10-Standard localizando, sozinha, o rompimento escolhido nos botões.
 2. Ajustar o modelo de sensores aos parâmetros dos transmissores instalados.
 3. Estender o cálculo de posição à topologia real da linha, com três berços e manifold.
 4. Empacotar o ambiente da simulação hidráulica para que qualquer máquina refaça os ensaios do zero.
@@ -119,7 +122,7 @@ A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra
 
 - classificar manobras normais pela física (polaridade da onda e origem coincidindo com bomba ou válvula cadastrada), para que partida de bomba e fechamento de válvula não gerem alarme;
 - confirmar o alarme com sensores de vapor químico e inflamável, uma segunda física independente;
-- autoteste contínuo dos canais, para que o monitoramento nunca falhe em silêncio;
+- autoteste contínuo dos canais em campo, para que o monitoramento nunca falhe em silêncio, a partir do autoteste que a placa já faz em cada execução;
 - gêmeo hidráulico da linha saudável, para cobrir também o furo lento, que não gera onda;
 - piloto em um trecho instrumentado do cais, com calibração da velocidade de onda por transientes provocados em posições conhecidas.
 

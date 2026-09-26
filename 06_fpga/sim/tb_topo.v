@@ -30,7 +30,8 @@ module tb_topo;
     reg [7:0] obtido   [0:MAX_BYTES-1];
     integer n_entrada, n_esperado, n_obtido, i, b, fd, lidos, erros, silencio;
     reg [7:0] valor;
-    reg [8*200-1:0] arq_entrada, arq_esperado;
+    reg [8*200-1:0] arq_entrada, arq_esperado, arq_mascara;
+    reg [7:0] mascara [0:MAX_BYTES-1];
     reg enviando_tudo;
 
     // --- receptor do lado do computador -------------------------------------------
@@ -66,8 +67,10 @@ module tb_topo;
     endtask
 
     initial begin
-        if (!$value$plusargs("entrada=%s", arq_entrada))  arq_entrada  = "vetores/ensaio_MX-005.entrada.hex";
-        if (!$value$plusargs("esperado=%s", arq_esperado)) arq_esperado = "vetores/ensaio_MX-005.saida.hex";
+        // vetor gravado com o modelo informando 1 MHz, o relogio deste testbench
+        if (!$value$plusargs("entrada=%s", arq_entrada))  arq_entrada  = "vetores/topo_serial_MX-005.entrada.hex";
+        if (!$value$plusargs("esperado=%s", arq_esperado)) arq_esperado = "vetores/topo_serial_MX-005.saida.hex";
+        if (!$value$plusargs("mascara=%s", arq_mascara))  arq_mascara  = "vetores/topo_serial_MX-005.mascara.hex";
 
         n_entrada = 0;
         fd = $fopen(arq_entrada, "r");
@@ -85,6 +88,17 @@ module tb_topo;
             if (lidos == 1) begin esperado[n_esperado] = valor; n_esperado = n_esperado + 1; end
         end
         $fclose(fd);
+        // a parte de TEMPOS que o circuito mede (ciclos) nao e comparada
+        for (i = 0; i < MAX_BYTES; i = i + 1) mascara[i] = 8'h01;
+        fd = $fopen(arq_mascara, "r");
+        if (fd != 0) begin
+            i = 0;
+            while (!$feof(fd)) begin
+                lidos = $fscanf(fd, "%h\n", valor);
+                if (lidos == 1) begin mascara[i] = valor; i = i + 1; end
+            end
+            $fclose(fd);
+        end
 
         repeat (400) @(posedge clk);                    // reinicio de energizacao
         for (i = 0; i < n_entrada; i = i + 1)
@@ -100,7 +114,7 @@ module tb_topo;
 
         erros = 0;
         for (i = 0; i < n_esperado && i < n_obtido; i = i + 1)
-            if (obtido[i] !== esperado[i]) erros = erros + 1;
+            if (mascara[i] != 8'h00 && obtido[i] !== esperado[i]) erros = erros + 1;
         if (led_erro)
             $display("RESULTADO topo_com_serial FALHOU a fila de entrada transbordou");
         else if (n_obtido != n_esperado || erros != 0)

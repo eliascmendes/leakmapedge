@@ -11,7 +11,16 @@
 //   - AMOSTRAS: confere identificador, sequencia e posicao, grava na memoria;
 //   - EXECUTAR: reproduz a memoria com um indice comum aos dois canais,
 //     alimentando os dois detectores na mesma amostra, e monta o resultado;
-//   - PEDIR_RESULTADO reenvia o resultado guardado; CONFIRMAR o descarta.
+//   - PEDIR_RESULTADO reenvia o resultado guardado; CONFIRMAR o descarta;
+//   - EXECUTAR_TEMPO_REAL: a mesma execucao, mas entregando aos detectores uma
+//     amostra a cada `periodo` ciclos, marcados pelo proprio relogio, como um
+//     conversor entregaria no ritmo da amostragem. O resultado e identico;
+//   - PEDIR_TEMPOS devolve TEMPOS: os ciclos de relogio que a ultima execucao
+//     levou, contados pelo proprio circuito (execucao inteira, cada amostra,
+//     instante e latencia da declaracao em cada canal, amostras atrasadas);
+//   - PEDIR_SAUDE devolve SAUDE: o autoteste que cada canal fez, amostra a
+//     amostra, na ultima execucao (leakmap_saude.v), julgado com os limites
+//     que vieram no pedido: canal congelado, saturado, fora da faixa, salto.
 //
 // Interface de bytes: um byte entra quando rx_valido e rx_pronto estao altos
 // no mesmo ciclo; um byte sai quando tx_valido e tx_pronto estao altos.
@@ -19,6 +28,7 @@
 `default_nettype none
 
 module leakmap_nucleo #(
+    parameter integer FREQUENCIA_HZ = 100_000_000,   // so informado em TEMPOS
     parameter integer MAX_AMOSTRAS  = 4096,
     parameter integer BITS_ENDERECO = 12,
     parameter integer MAX_CARGA     = 160
@@ -37,7 +47,9 @@ module leakmap_nucleo #(
     // --- tipos e situacoes ------------------------------------------------------
     localparam [7:0] T_CONFIGURAR = 8'h01, T_AMOSTRAS = 8'h02, T_EXECUTAR = 8'h03,
                      T_CONFIRMAR  = 8'h04, T_PEDIR    = 8'h05,
-                     T_LIDA       = 8'h81, T_RECIBO   = 8'h82, T_RESULTADO = 8'h83;
+                     T_EXEC_TR    = 8'h07, T_PEDIR_TEMPOS = 8'h08, T_PEDIR_SAUDE = 8'h09,
+                     T_LIDA       = 8'h81, T_RECIBO   = 8'h82, T_RESULTADO = 8'h83,
+                     T_TEMPOS     = 8'h87, T_SAUDE    = 8'h88;
     localparam [7:0] B_OK = 8'd0, B_CRC = 8'd1, B_SEQUENCIA = 8'd2, B_OUTRO = 8'd3,
                      B_MEMORIA = 8'd4, B_MAL_FORMADO = 8'd5;
     localparam [7:0] R_CONCLUIDO = 8'd0, R_FALTANDO = 8'd1, R_SEM_CONFIG = 8'd2, R_ESTOURO = 8'd3;
@@ -151,11 +163,35 @@ module leakmap_nucleo #(
         .indice_cruzamento(cruz_b), .indice_chegada(cheg_b), .oportunidades(oport_b),
         .s_curta_cruz(sc_b), .s_longa_cruz(sl_b), .maior_salto(salto_b));
 
+    // --- autoteste dos canais: os limites sao os do PEDIR_SAUDE, lidos da carga -----------
+    wire [15:0] lim_congelado = {carga[9],  carga[8]};
+    wire [15:0] lim_minimo    = {carga[11], carga[10]};
+    wire [15:0] lim_maximo    = {carga[13], carga[12]};
+    wire [15:0] lim_salto     = {carga[15], carga[14]};
+    wire [15:0] sau_min_a, sau_max_a, sau_seq_a, sau_var_a, sau_ext_a;
+    wire [15:0] sau_min_b, sau_max_b, sau_seq_b, sau_var_b, sau_ext_b;
+    wire [3:0]  sau_band_a, sau_band_b;
+
+    leakmap_saude u_saude_a (
+        .clk(clk), .rst(rst), .preparar(preparar_det), .amostra(amostra_det), .codigo(lido_a),
+        .limite_congelado(lim_congelado), .codigo_minimo(lim_minimo), .codigo_maximo(lim_maximo),
+        .limite_salto(lim_salto),
+        .codigo_min(sau_min_a), .codigo_max(sau_max_a), .maior_sequencia(sau_seq_a),
+        .maior_variacao(sau_var_a), .no_extremo(sau_ext_a), .bandeiras(sau_band_a));
+
+    leakmap_saude u_saude_b (
+        .clk(clk), .rst(rst), .preparar(preparar_det), .amostra(amostra_det), .codigo(lido_b),
+        .limite_congelado(lim_congelado), .codigo_minimo(lim_minimo), .codigo_maximo(lim_maximo),
+        .limite_salto(lim_salto),
+        .codigo_min(sau_min_b), .codigo_max(sau_max_b), .maior_sequencia(sau_seq_b),
+        .maior_variacao(sau_var_b), .no_extremo(sau_ext_b), .bandeiras(sau_band_b));
+
     // --- resposta e resultado ------------------------------------------------------------
-    reg  [7:0]  resp [0:38];           // CONFIGURACAO_LIDA (39) ou BLOCO_RECEBIDO (11)
+    reg  [7:0]  resp [0:38];           // CONFIGURACAO_LIDA (39), BLOCO_RECEBIDO (11) ou SAUDE (39)
     reg  [7:0]  res  [0:70];           // RESULTADO (71), guardado para reenvio
+    reg  [7:0]  tem  [0:42];           // TEMPOS (43) da ultima execucao
     reg         pendente;
-    reg         envia_resultado;       // 1: transmite `res`; 0: transmite `resp`
+    reg  [1:0]  fonte_tx;              // 0: `resp`; 1: `res`; 2: `tem`
     reg  [7:0]  tx_tipo;
     reg  [15:0] tx_tamanho;
     reg  [15:0] tx_indice;
@@ -167,7 +203,26 @@ module leakmap_nucleo #(
     assign ocupado = !recebendo;
     assign resultado_pendente = pendente;
 
-    wire [7:0]  tx_carga = envia_resultado ? res[tx_indice - 16'd5] : resp[tx_indice - 16'd5];
+    wire [7:0]  tx_carga = (fonte_tx == 2'd1) ? res[tx_indice - 16'd5] :
+                           (fonte_tx == 2'd2) ? tem[tx_indice - 16'd5] : resp[tx_indice - 16'd5];
+
+    // --- tempos contados pelo circuito ---------------------------------------------------
+    // `ciclo` conta desde a entrada em S_EXEC. No modo de tempo real a amostra k
+    // e entregue no ciclo entrega(0) + k * periodo; se o circuito chega depois
+    // da hora de uma amostra, ela conta como atrasada.
+    reg         contando;
+    reg         modo_tr;
+    reg  [31:0] periodo;
+    reg  [31:0] ciclo;
+    reg  [31:0] proxima;               // hora de entrega da proxima amostra
+    reg  [31:0] entrega;               // hora em que a amostra atual foi entregue
+    reg  [15:0] amostra_min, amostra_max, atrasadas;
+    reg  [31:0] decl_a, decl_b;        // ciclo em que o canal declarou o evento
+    reg  [15:0] lat_a, lat_b;          // ciclos da entrega da amostra do cruzamento a declaracao
+    wire [31:0] duracao = ciclo - entrega;
+    wire [15:0] duracao16 = (duracao > 32'd65535) ? 16'hFFFF : duracao[15:0];
+    wire [31:0] periodo_rx = {carga[15], carga[14], carga[13], carga[12]};
+    localparam [31:0] FREQ32 = FREQUENCIA_HZ;
     assign tx_dado = (tx_indice == 16'd0) ? 8'hA5 :
                      (tx_indice == 16'd1) ? 8'h5A :
                      (tx_indice == 16'd2) ? tx_tipo :
@@ -191,7 +246,7 @@ module leakmap_nucleo #(
             resp[10] <= sit;
             tx_tipo         <= T_RECIBO;
             tx_tamanho      <= 16'd11;
-            envia_resultado <= 1'b0;
+            fonte_tx        <= 2'd0;
             tx_indice       <= 16'd0;
             crc_tx          <= 16'hFFFF;
             estado          <= S_TX;
@@ -202,7 +257,7 @@ module leakmap_nucleo #(
         begin
             tx_tipo         <= T_RESULTADO;
             tx_tamanho      <= 16'd71;
-            envia_resultado <= 1'b1;
+            fonte_tx        <= 2'd1;
             tx_indice       <= 16'd0;
             crc_tx          <= 16'hFFFF;
             estado          <= S_TX;
@@ -235,6 +290,60 @@ module leakmap_nucleo #(
         end
     endtask
 
+    // um canal do SAUDE a partir da posicao `base`; zerado sem execucao concluida
+    task canal_na_saude;
+        input integer base;
+        input         valido;
+        input [3:0]   band;
+        input [15:0]  cmin, cmax, cseq, cvar, cext;
+        begin
+            resp[base]      <= valido ? {4'd0, band} : 8'd0;
+            resp[base + 1]  <= valido ? cmin[7:0]  : 8'd0;
+            resp[base + 2]  <= valido ? cmin[15:8] : 8'd0;
+            resp[base + 3]  <= valido ? cmax[7:0]  : 8'd0;
+            resp[base + 4]  <= valido ? cmax[15:8] : 8'd0;
+            resp[base + 5]  <= valido ? cseq[7:0]  : 8'd0;
+            resp[base + 6]  <= valido ? cseq[15:8] : 8'd0;
+            resp[base + 7]  <= valido ? cvar[7:0]  : 8'd0;
+            resp[base + 8]  <= valido ? cvar[15:8] : 8'd0;
+            resp[base + 9]  <= valido ? cext[7:0]  : 8'd0;
+            resp[base + 10] <= valido ? cext[15:8] : 8'd0;
+        end
+    endtask
+
+    task enviar_tempos;
+        begin
+            tx_tipo    <= T_TEMPOS;
+            tx_tamanho <= 16'd43;
+            fonte_tx   <= 2'd2;
+            tx_indice  <= 16'd0;
+            crc_tx     <= 16'hFFFF;
+            estado     <= S_TX;
+        end
+    endtask
+
+    // comeca a contar uma execucao: `tr` = tempo real, `per` = periodo em ciclos
+    task comecar_execucao;
+        input        tr;
+        input [31:0] per;
+        begin
+            contando    <= 1'b1;
+            ciclo       <= 32'd0;
+            modo_tr     <= tr;
+            periodo     <= per;
+            proxima     <= 32'd0;
+            entrega     <= 32'd0;
+            amostra_min <= 16'hFFFF;
+            amostra_max <= 16'd0;
+            atrasadas   <= 16'd0;
+            decl_a      <= 32'hFFFFFFFF;
+            decl_b      <= 32'hFFFFFFFF;
+            lat_a       <= 16'hFFFF;
+            lat_b       <= 16'hFFFF;
+            estado      <= S_EXEC;
+        end
+    endtask
+
     integer j;
 
     always @(posedge clk) begin
@@ -249,10 +358,20 @@ module leakmap_nucleo #(
             sequencia_esperada <= 16'd0;
             amostras_gravadas  <= 16'd0;
             tx_indice          <= 16'd0;
-            envia_resultado    <= 1'b0;
+            fonte_tx           <= 2'd0;
+            contando           <= 1'b0;
             for (j = 0; j < 31; j = j + 1)
                 cfg[j] <= 8'd0;
+            // TEMPOS antes de qualquer execucao: situacao 0xFF, so a frequencia
+            for (j = 0; j < 43; j = j + 1)
+                tem[j] <= 8'd0;
+            tem[8] <= 8'hFF;
+            for (j = 0; j < 4; j = j + 1)
+                tem[10 + j] <= FREQ32[8*j +: 8];
+            tem[20] <= 8'd1;
         end else begin
+            if (contando)
+                ciclo <= ciclo + 32'd1;
             case (estado)
             // --- leitura do quadro ----------------------------------------------------
             S_SINC1: if (byte_chegou && rx_dado == 8'hA5) estado <= S_SINC2;
@@ -331,7 +450,7 @@ module leakmap_nucleo #(
                         pendente           <= 1'b0;
                         tx_tipo            <= T_LIDA;
                         tx_tamanho         <= 16'd39;
-                        envia_resultado    <= 1'b0;
+                        fonte_tx           <= 2'd0;
                         tx_indice          <= 16'd0;
                         crc_tx             <= 16'hFFFF;
                         estado             <= S_TX;
@@ -339,7 +458,35 @@ module leakmap_nucleo #(
                 T_AMOSTRAS: estado <= S_AMOS;
                 T_EXECUTAR:
                     if (tamanho != 16'd12) recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
-                    else                   estado <= S_EXEC;
+                    else                   comecar_execucao(1'b0, 32'd0);
+                T_EXEC_TR:
+                    if (tamanho != 16'd16 || periodo_rx == 32'd0)
+                        recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
+                    else
+                        comecar_execucao(1'b1, periodo_rx);
+                T_PEDIR_TEMPOS:
+                    if (tamanho != 16'd8) recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
+                    else                  enviar_tempos;
+                T_PEDIR_SAUDE:
+                    if (tamanho != 16'd16) begin
+                        recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
+                    end else begin
+                        // id e situacao da ultima execucao, os limites como vieram, e os canais
+                        for (j = 0; j < 9; j = j + 1)
+                            resp[j] <= tem[j];
+                        for (j = 0; j < 8; j = j + 1)
+                            resp[9 + j] <= carga[8 + j];
+                        canal_na_saude(17, tem[8] == R_CONCLUIDO, sau_band_a,
+                                       sau_min_a, sau_max_a, sau_seq_a, sau_var_a, sau_ext_a);
+                        canal_na_saude(28, tem[8] == R_CONCLUIDO, sau_band_b,
+                                       sau_min_b, sau_max_b, sau_seq_b, sau_var_b, sau_ext_b);
+                        tx_tipo    <= T_SAUDE;
+                        tx_tamanho <= 16'd39;
+                        fonte_tx   <= 2'd0;
+                        tx_indice  <= 16'd0;
+                        crc_tx     <= 16'hFFFF;
+                        estado     <= S_TX;
+                    end
                 T_CONFIRMAR:
                     if (tamanho != 16'd8) begin
                         recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
@@ -417,14 +564,30 @@ module leakmap_nucleo #(
                         estado <= S_LE;
                     end
                 end
-            S_LE: begin
-                mem_end_leitura <= indice_exec[BITS_ENDERECO-1:0];
-                estado          <= S_LE2;
-            end
+            S_LE:
+                // tempo real: a amostra k espera a sua hora; a primeira marca o comeco
+                if (!(modo_tr && indice_exec != 16'd0 && ciclo < proxima)) begin
+                    if (modo_tr && indice_exec != 16'd0 && ciclo > proxima)
+                        atrasadas <= atrasadas + 16'd1;
+                    proxima         <= ((indice_exec == 16'd0) ? ciclo : proxima) + periodo;
+                    entrega         <= ciclo;
+                    mem_end_leitura <= indice_exec[BITS_ENDERECO-1:0];
+                    estado          <= S_LE2;
+                end
             S_LE2:    estado <= S_AMOSTRA;                 // memoria sincrona: um ciclo
             S_AMOSTRA: estado <= S_ESPERA;                 // amostra_det alto: os dois canais juntos
             S_ESPERA:
                 if (!ocupado_a && !ocupado_b) begin
+                    if (duracao16 < amostra_min) amostra_min <= duracao16;
+                    if (duracao16 > amostra_max) amostra_max <= duracao16;
+                    if (det_a && decl_a == 32'hFFFFFFFF) begin
+                        decl_a <= ciclo;
+                        lat_a  <= duracao16;
+                    end
+                    if (det_b && decl_b == 32'hFFFFFFFF) begin
+                        decl_b <= ciclo;
+                        lat_b  <= duracao16;
+                    end
                     if (indice_exec + 16'd1 == cfg_n_amostras) begin
                         situacao <= (estouro_a || estouro_b) ? R_ESTOURO : R_CONCLUIDO;
                         estado   <= S_MONTA;
@@ -451,6 +614,32 @@ module leakmap_nucleo #(
                                    cruz_a, cheg_a, oport_a, sc_a, sl_a, salto_a);
                 canal_no_resultado(44, situacao == R_CONCLUIDO, det_b, trunc_b,
                                    cruz_b, cheg_b, oport_b, sc_b, sl_b, salto_b);
+                // TEMPOS desta execucao
+                contando <= 1'b0;
+                for (j = 0; j < 8; j = j + 1)
+                    tem[j] <= carga[j];
+                tem[8]  <= situacao;
+                tem[9]  <= {7'd0, modo_tr};
+                for (j = 0; j < 4; j = j + 1) begin
+                    tem[10 + j] <= FREQ32[8*j +: 8];
+                    tem[14 + j] <= periodo[8*j +: 8];
+                    tem[21 + j] <= ciclo[8*j +: 8];
+                    tem[31 + j] <= decl_a[8*j +: 8];
+                    tem[37 + j] <= decl_b[8*j +: 8];
+                end
+                tem[18] <= (situacao == R_CONCLUIDO) ? cfg_n_amostras[7:0]  : 8'd0;
+                tem[19] <= (situacao == R_CONCLUIDO) ? cfg_n_amostras[15:8] : 8'd0;
+                tem[20] <= 8'd1;                            // ciclos contados pelo circuito
+                tem[25] <= amostra_min[7:0];
+                tem[26] <= amostra_min[15:8];
+                tem[27] <= amostra_max[7:0];
+                tem[28] <= amostra_max[15:8];
+                tem[29] <= atrasadas[7:0];
+                tem[30] <= atrasadas[15:8];
+                tem[35] <= lat_a[7:0];
+                tem[36] <= lat_a[15:8];
+                tem[41] <= lat_b[7:0];
+                tem[42] <= lat_b[15:8];
                 pendente <= 1'b1;
                 enviar_resultado;
             end
