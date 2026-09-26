@@ -1,0 +1,10 @@
+{
+  "webhook": {
+    "ligado": false,
+    "url": "http://127.0.0.1:8765/leakmap",
+    "niveis": ["suspeita", "provavel", "confirmado"],
+    "tempo_limite_s": 3,
+    "tentativas": 3,
+    "cabecalhos": {}
+  }
+}

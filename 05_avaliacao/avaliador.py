@@ -42,6 +42,9 @@ CLASSE_LOCALIZADO = 'localizado'
 CLASSE_SEM_LOCALIZACAO = 'detectado_sem_localizacao'
 CLASSE_SEM_DETECCAO = 'sem_deteccao'
 CLASSE_FALHA = 'falha_execucao'
+# evento reconhecido como de origem no sensor ou fora do trecho: sai como
+# suspeita, entao conta como declarado; a manobra reconhecida nao conta
+CLASSE_FORA_DO_TRECHO = 'fora_do_trecho'
 
 
 def conferir_independencia():
@@ -103,7 +106,7 @@ def avaliar(resultado, verdade):
 
         classe = reg.get('classe')
         tem_evento = bool(verd['tem_evento'])
-        declarou = classe in (CLASSE_LOCALIZADO, CLASSE_SEM_LOCALIZACAO)
+        declarou = classe in (CLASSE_LOCALIZADO, CLASSE_SEM_LOCALIZACAO, CLASSE_FORA_DO_TRECHO)
 
         item = {
             'id': identificador,

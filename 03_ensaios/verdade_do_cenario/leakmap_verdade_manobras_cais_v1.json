@@ -1,0 +1,59 @@
+{
+ "premissas": {
+  "observacao": "premissas de simulacao no lugar dos dados que ainda faltam da linha real; comprimentos, espessura e vazao a confirmar com a planta e o isometrico",
+  "produto": "diesel",
+  "massa_especifica_kg_m3": 840.0,
+  "tubo": "8\" aco_carbono sch40",
+  "diametro_interno_m": 0.20273999999999998,
+  "velocidade_de_onda_korteweg_m_s": 1227.1127232118436,
+  "posicoes_m": {
+   "bomba": -300.0,
+   "sensor_A": 0.0,
+   "berco_106": 450.0,
+   "sensor_B_berco_108": 700.0,
+   "navio": 720.0,
+   "berco_104": 200.0
+  },
+  "pressao_da_bomba_bar": 7.0,
+  "carga_da_bomba_m": 84.94733265375467,
+  "carga_no_navio_m": 29.94733265375467,
+  "unidade_de_carga": "metro de coluna de diesel (1 bar = 12.14 m)",
+  "evento": "abertura de vazamento (add_burst do TSNet) em 0.100 s, desenvolvimento em 0.0010 s",
+  "tamanhos_de_vazamento_coeficiente_emissor": {
+   "grande": 0.0012,
+   "pequeno": 0.00025
+  },
+  "retiradas_m3_s": {
+   "berco_106_em_450_m": 0.015,
+   "navio_108_em_710_m": 0.04
+  },
+  "manobra": "a retirada do ponto cai 50% em rampa de 0.3 s a partir de 0.10 s"
+ },
+ "descricao": "VERDADE das manobras na linha do cais. Uso exclusivo do avaliador.",
+ "ensaios": [
+  {
+   "id": "MN-01",
+   "tem_evento": false,
+   "manobra": "fechamento_navio",
+   "posicao_da_manobra_m": 710.0,
+   "dentro_do_trecho_entre_sensores": false,
+   "onda_esperada": "alta",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_no_sensor_A_m": 24.55779278985615,
+   "maior_variacao_no_sensor_B_m": 41.75657463268675,
+   "carga_minima_m": 19.939388040212673
+  },
+  {
+   "id": "MN-02",
+   "tem_evento": false,
+   "manobra": "fechamento_106",
+   "posicao_da_manobra_m": 450.0,
+   "dentro_do_trecho_entre_sensores": true,
+   "onda_esperada": "alta",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_no_sensor_A_m": 18.260888342504842,
+   "maior_variacao_no_sensor_B_m": 16.025200912381003,
+   "carga_minima_m": 19.939388040212673
+  }
+ ]
+}

@@ -1,0 +1,99 @@
+{
+  "descricao": "Dimensionamento do cenario B (B-05): memoria da placa contra transmissao com buffer.",
+  "exemplos_do_fluxograma": {
+    "2 s, 10 kHz, 2 canais, 16 bits": {
+      "bits": 640000,
+      "KiB": 78.125
+    },
+    "10 s, 50 kHz, 2 canais, 16 bits": {
+      "bits": 16000000,
+      "MiB": 1.9073486328125
+    },
+    "serial 115200 bits/s": {
+      "bytes_por_segundo": 11520.0,
+      "amostras_por_segundo_por_canal": 2880.0
+    }
+  },
+  "ensaios_da_matriz": {
+    "maior_ensaio_amostras_por_canal": 500,
+    "frequencia_de_amostragem_hz": 2491.866554073124,
+    "memoria_de_amostras_bits": 16000,
+    "memoria_do_algoritmo_bits": 5384,
+    "memoria_total_bits": 21384,
+    "larguras_usadas": "medidas por 04_detector/detector_ponto_fixo.py"
+  },
+  "placas_candidatas": [
+    {
+      "placa": "Spartan-7 XC7S6",
+      "memoria_em_bloco_kbit": 180,
+      "necessario_bits": 21384,
+      "ocupacao": 0.116015625,
+      "via": 1
+    },
+    {
+      "placa": "Spartan-7 XC7S15",
+      "memoria_em_bloco_kbit": 360,
+      "necessario_bits": 21384,
+      "ocupacao": 0.0580078125,
+      "via": 1
+    },
+    {
+      "placa": "Spartan-7 XC7S25",
+      "memoria_em_bloco_kbit": 1620,
+      "necessario_bits": 21384,
+      "ocupacao": 0.012890625,
+      "via": 1
+    },
+    {
+      "placa": "Spartan-7 XC7S50",
+      "memoria_em_bloco_kbit": 2700,
+      "necessario_bits": 21384,
+      "ocupacao": 0.007734375,
+      "via": 1
+    },
+    {
+      "placa": "Cyclone V E 5CEBA2",
+      "memoria_em_bloco_kbit": 1760,
+      "necessario_bits": 21384,
+      "ocupacao": 0.011865234375,
+      "via": 1
+    },
+    {
+      "placa": "Cyclone V E 5CEBA4",
+      "memoria_em_bloco_kbit": 3080,
+      "necessario_bits": 21384,
+      "ocupacao": 0.006780133928571429,
+      "via": 1
+    },
+    {
+      "placa": "Cyclone V SE 5CSEMA5 (DE1-SoC)",
+      "memoria_em_bloco_kbit": 3970,
+      "necessario_bits": 21384,
+      "ocupacao": 0.005260154282115869,
+      "via": 1
+    },
+    {
+      "placa": "Gowin GW1NR-9 (Tang Nano 9K)",
+      "memoria_em_bloco_kbit": 468,
+      "necessario_bits": 21384,
+      "ocupacao": 0.04462139423076923,
+      "via": 1
+    }
+  ],
+  "observacao_sobre_as_placas": "capacidade de memoria em bloco da ficha tecnica do fabricante; conferir no modelo exato da placa usada",
+  "via_2_se_fosse_necessaria": {
+    "taxa_de_amostras_bytes_s": 9967.466216292496,
+    "eficiencia_do_bloco": 0.8590604026845637,
+    "taxa_com_cabecalho_e_crc_bytes_s": 11602.753642402984,
+    "capacidade_da_serial_a_115200_bytes_s": 11520.0,
+    "fecha": false
+  },
+  "via_1_carga_antes_da_execucao": {
+    "bytes_do_maior_ensaio": 2336,
+    "tempo_de_carga_a_115200_s": 0.20277777777777778
+  },
+  "decisao": {
+    "via": 1,
+    "conta": "500 amostras x 2 canais x 16 bits = 16000 bits de amostras, mais 5384 bits de memoria do algoritmo: 21384 bits (20.9 kbit), contra 180 kbit na menor candidata. O ensaio cabe inteiro na memoria de todas as placas candidatas, entao a temporizacao fica independente do enlace. A via 2 a 115 200 bits/s precisaria de 11603 bytes/s com cabecalho e CRC, contra 11520 disponiveis: nao fecharia."
+  }
+}

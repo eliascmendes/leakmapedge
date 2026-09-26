@@ -1,0 +1,58 @@
+======================================================================
+RELATÓRIO DE ANÁLISE DE JSONS
+======================================================================
+
+Data da análise: 26/09/2026 13:50:41
+
+Arquivos analisados : 23
+Arquivos únicos     : 20
+Arquivos duplicados : 3
+
+======================================================================
+DUPLICADOS ENCONTRADOS
+======================================================================
+
+GRUPO 1
+----------------------------------------------------------------------
+ARQUIVO MANTIDO (MAIS RECENTE):
+  leakmap_cenario_b_avaliacao_fpga_tempo_real_v1.json
+  Modificado: 25/09/2026 17:33:34
+
+ARQUIVOS DUPLICADOS DESCARTADOS:
+  leakmap_cenario_b_avaliacao_fpga_v1.json
+  Modificado: 25/09/2026 17:32:36
+
+======================================================================
+
+GRUPO 2
+----------------------------------------------------------------------
+ARQUIVO MANTIDO (MAIS RECENTE):
+  leakmap_cenario_b_comparacao_fpga_tempo_real_v1.json
+  Modificado: 25/09/2026 17:33:34
+
+ARQUIVOS DUPLICADOS DESCARTADOS:
+  leakmap_cenario_b_comparacao_fpga_v1.json
+  Modificado: 25/09/2026 17:32:36
+
+======================================================================
+
+GRUPO 3
+----------------------------------------------------------------------
+ARQUIVO MANTIDO (MAIS RECENTE):
+  leakmap_cenario_b_tentativas_fpga_tempo_real_v1.json
+  Modificado: 25/09/2026 17:33:25
+
+ARQUIVOS DUPLICADOS DESCARTADOS:
+  leakmap_cenario_b_tentativas_fpga_v1.json
+  Modificado: 25/09/2026 17:32:33
+
+======================================================================
+
+RESUMO
+======================================================================
+Total analisado : 23
+Total único     : 20
+Total duplicado : 3
+
+Arquivos únicos salvos em:
+C:\Users\Elias\OneDrive\Área de Trabalho\Documentos\LEAKMAP Edge\06_fpga\resultados\unicos

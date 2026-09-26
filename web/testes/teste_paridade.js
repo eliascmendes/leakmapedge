@@ -141,6 +141,14 @@ test("A-11 a A-15 sobre os 45 ensaios do pacote da matriz", () => {
   });
 });
 
+test("classificacao por polaridade e origem igual a do Python", () => {
+  assert.ok(gabarito.classificacao && gabarito.classificacao.length >= 9);
+  for (const caso of gabarito.classificacao) {
+    const r = LEAKMAP.detector.processarEnsaio(caso.ensaio, caso.escala, undefined, caso.classificar);
+    comparar(r, caso.registro, `classificacao.${caso.nome}`);
+  }
+});
+
 test("gerador do navegador: mesma estatistica do ruido gaussiano", () => {
   const z = LEAKMAP.modeloSensor.fonteAleatoria(42).normais("ruido_A", 200000);
   const media = z.reduce((s, v) => s + v, 0) / z.length;

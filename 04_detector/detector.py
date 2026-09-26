@@ -43,6 +43,12 @@ CLASSE_LOCALIZADO = 'localizado'
 CLASSE_SEM_LOCALIZACAO = 'detectado_sem_localizacao'
 CLASSE_SEM_DETECCAO = 'sem_deteccao'
 CLASSE_FALHA = 'falha_execucao'
+# classificacao fisica do evento (secao 5.4 do projeto): so a queda de pressao
+# nos dois canais e candidata a vazamento
+CLASSE_MANOBRA = 'manobra'
+CLASSE_FORA_DO_TRECHO = 'fora_do_trecho'
+POLARIDADE_QUEDA = 'queda'
+POLARIDADE_ALTA = 'alta'
 
 
 def calibracao_padrao():
@@ -218,7 +224,14 @@ def marcar_chegada(y, e_longa, indice_de_cruzamento, tempo_s, ts, cal):
 
     incerteza = float(np.sqrt(u_quantizacao ** 2 + u_ruido ** 2
                               + u_retrocesso ** 2))
+
+    # Polaridade da frente: sinal do passa-altas somado da chegada ao
+    # cruzamento. Rompimento derruba a pressao; partida de bomba e fechamento
+    # de valvula a jusante levantam.
+    variacao = float(np.sum(y[i:indice_de_cruzamento + 1]))
     return {
+        'polaridade': POLARIDADE_QUEDA if variacao < 0.0 else POLARIDADE_ALTA,
+        'variacao_na_frente_m': variacao,
         'indice_de_chegada': int(i),
         'tempo_de_chegada_s': float(tempo_s[i]),
         'amostras_retrocedidas': int(indice_de_cruzamento - i),
@@ -285,11 +298,65 @@ def decidir_evidencia(det_a, det_b, sat_a, sat_b, delta_t, l_m, c_m_s, ts, cal):
 
 # --- A-15: registro de resultado -------------------------------------------
 
-def processar_ensaio(ensaio, escala, cal=None):
+def classificar_evento(registro, det_a, det_b, delta_t, l_m, c_m_s, ts):
+    """Classificacao fisica de um evento visto nos dois canais.
+
+    Devolve (classe, motivo, lado), com classe None quando o evento segue como
+    candidato a vazamento dentro do trecho.
+
+      polaridade  so a queda de pressao nos dois canais e vazamento; alta nos
+                  dois e manobra de fora do trecho (fechamento de valvula a
+                  jusante, partida de bomba); polaridades opostas sao uma
+                  manobra entre os sensores (valvula que fecha no meio: sobe de
+                  um lado e cai do outro);
+      origem      diferenca temporal no limite fisico L/c, a menos de uma
+                  amostra, e evento que nasceu no sensor ou fora do trecho;
+                  o lado e o do sensor que viu primeiro.
+    """
+    pa, pb = det_a.get('polaridade'), det_b.get('polaridade')
+    if pa == POLARIDADE_ALTA and pb == POLARIDADE_ALTA:
+        return CLASSE_MANOBRA, 'onda de alta nos dois canais: manobra, nao vazamento', None
+    if pa != pb:
+        return CLASSE_MANOBRA, ('polaridades opostas (A %s, B %s): manobra entre os sensores'
+                                % (pa, pb)), None
+    limite = P.limite_fisico_de_delta_t(l_m, c_m_s)
+    if limite - abs(delta_t) <= ts:
+        lado = 'A' if delta_t < 0 else 'B'
+        return CLASSE_FORA_DO_TRECHO, ('diferenca temporal no limite fisico: origem no sensor %s ou '
+                                       'fora do trecho, do lado dele' % lado), lado
+    return None, None, None
+
+
+def classificar_sem_localizacao(marca_a, marca_b, delta_t, l_m, c_m_s, ts, u_delta_t):
+    """A mesma fisica quando nao ha localizacao.
+
+      - onda de alta, mesmo vista num canal so, nunca e vazamento: um
+        rompimento sempre derruba a pressao;
+      - queda nos dois canais com a diferenca temporal POUCO alem do limite
+        fisico, dentro do ruido de tempo (ate 2 amostras ou 3 vezes a
+        incerteza de delta_t), e origem fora do trecho, do lado do sensor que
+        viu primeiro. Muito alem do limite nenhuma onda chega: fica
+        inconclusivo (dois eventos, ou velocidade de onda errada).
+    """
+    marcas = [m for m in (marca_a, marca_b) if m is not None]
+    if marcas and all(m['polaridade'] == POLARIDADE_ALTA for m in marcas):
+        return CLASSE_MANOBRA, 'onda de alta: manobra, nao vazamento', None
+    tolerancia = max(2.0 * ts, 3.0 * (u_delta_t or 0.0))
+    if (marca_a is not None and marca_b is not None and delta_t is not None
+            and marca_a['polaridade'] == POLARIDADE_QUEDA == marca_b['polaridade']
+            and 0.0 < abs(delta_t) - P.limite_fisico_de_delta_t(l_m, c_m_s) <= tolerancia):
+        lado = 'A' if delta_t < 0 else 'B'
+        return CLASSE_FORA_DO_TRECHO, ('diferenca temporal alem do limite fisico: origem fora do '
+                                       'trecho, do lado do sensor %s' % lado), lado
+    return None, None, None
+
+
+def processar_ensaio(ensaio, escala, cal=None, classificar=True):
     """Roda A-11 a A-15 sobre um ensaio do pacote e devolve um unico registro.
 
     `ensaio` e um item de `pacote['ensaios']`. `escala` vem do cabecalho do
-    pacote. A funcao nunca levanta excecao por causa do sinal: qualquer falha
+    pacote. `classificar=False` desliga a classificacao por polaridade e
+    origem, para comparar com o detector de antes dela. A funcao nunca levanta excecao por causa do sinal: qualquer falha
     de execucao vira um registro de classe `falha_execucao`, para que nenhum
     ensaio desapareca da metrica (criterio de conclusao de A-15).
     """
@@ -359,6 +426,11 @@ def processar_ensaio(ensaio, escala, cal=None):
             registro['classe'] = (CLASSE_SEM_DETECCAO
                                   if not det_a['detectado'] and not det_b['detectado']
                                   else CLASSE_SEM_LOCALIZACAO)
+            if classificar and registro['classe'] == CLASSE_SEM_LOCALIZACAO:
+                classe, motivo_fisico, lado = classificar_sem_localizacao(
+                    marca_a, marca_b, delta_t, l_m, c_m_s, ts, u_delta_t)
+                if classe is not None:
+                    registro.update(classe=classe, motivo=motivo_fisico, lado_da_origem=lado)
             return registro
 
         loc = P.localizar(l_m, c_m_s, delta_t, pos_a,
@@ -366,6 +438,15 @@ def processar_ensaio(ensaio, escala, cal=None):
                           incerteza_de_c_m_s=u_c)
         registro['classe'] = CLASSE_LOCALIZADO
         registro.update(loc)
+        if classificar:
+            classe, motivo_fisico, lado = classificar_evento(registro, det_a, det_b, delta_t,
+                                                             l_m, c_m_s, ts)
+            if classe is not None:
+                registro['classe'] = classe
+                registro['motivo'] = motivo_fisico
+                registro['lado_da_origem'] = lado
+                # a posicao calculada fica como origem da onda, nao como vazamento
+                registro['posicao_da_origem_m'] = registro.pop('posicao_estimada_m')
         return registro
 
     except Exception as e:  # nenhum ensaio pode sair sem registro (A-15)
@@ -374,7 +455,7 @@ def processar_ensaio(ensaio, escala, cal=None):
         return registro
 
 
-def processar_pacote(pacote, cal=None):
+def processar_pacote(pacote, cal=None, classificar=True):
     """Um registro por ensaio do pacote, na mesma ordem."""
     escala = pacote.get('escala') or {}
-    return [processar_ensaio(e, escala, cal) for e in pacote['ensaios']]
+    return [processar_ensaio(e, escala, cal, classificar) for e in pacote['ensaios']]

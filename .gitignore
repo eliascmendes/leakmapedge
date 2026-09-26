@@ -23,3 +23,8 @@ __pycache__/
 06_fpga/sim/questa/transcript
 06_fpga/sim/questa/work/
 06_fpga/sim/questa/*.wlf
+
+# pacote da linha do cais: refeito por 04_detector/linha_cais.py a partir dos sinais gravados (20 MB)
+03_ensaios/pacotes/leakmap_pacote_linha_cais_v1.json
+# arquivos temporarios do EPANET
+02_bancada/codigo/temp.*

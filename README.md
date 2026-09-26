@@ -46,6 +46,9 @@ A cadeia completa roda em software, em simulação, e é a referência contra a 
 | A-14 | Cálculo da posição e propagação de erro | [`04_detector/posicao.py`](04_detector/posicao.py) |
 | A-17 | Avaliador independente, em processo separado, que nunca importa código do detector | [`05_avaliacao/avaliador.py`](05_avaliacao/avaliador.py) |
 | Porte para hardware | Detector reescrito em aritmética inteira, pronto para virar circuito | [`04_detector/detector_ponto_fixo.py`](04_detector/detector_ponto_fixo.py) |
+| Linha de produto do cais | Simulação no TSNet de uma linha de 8" com diesel e sensores a 700 m um do outro, com o mesmo detector e seis tipos de transmissor. Com transmissor rápido: 14 de 14 vazamentos localizados, erro mediano de 0,11 a 0,14 m. Com transmissor inteligente, o erro cresce com o tempo de atualização da saída (0,2 m com 1 ms; 1 a 1,6 m com 10 ms; 6 a 14 m com 50 ms). Premissas declaradas até chegar o dado da instalação real | [`02_bancada/codigo/linha_cais.py`](02_bancada/codigo/linha_cais.py) |
+| Manobra × vazamento | Classificação pela física: vazamento é queda de pressão nos dois sensores, dentro do trecho; onda de alta é manobra; diferença de tempo no limite físico é origem fora do trecho, com o lado. Nas manobras simuladas (fim de carregamento, fechamento num ramal dentro do trecho), 0 de 12 viraram alarme, contra 9 de 12 sem a classificação; nenhum vazamento deixou de ser localizado | [`04_detector/detector.py`](04_detector/detector.py) |
+| Escala de alerta e integração | Suspeita, provável e confirmado, com o estado do monitoramento; cada evento sai num JSON padronizado, por webhook configurável, para qualquer automação da empresa | [`07_servico`](07_servico) |
 | Simulador no painel | O detector adaptado para o navegador, conferido contra o Python | [`web`](web) |
 | Cenário B, lado do computador | Selo, conversão em inteiros, protocolo com a placa, modelo de referência da FPGA, comparação e relatório | [`06_fpga/computador`](06_fpga/computador) |
 | Cenário B, pelo cabo de gravação | O computador conversa com a FPGA pelo mesmo cabo USB que a grava, pelo JTAG virtual, sem adaptador nem fio nos pinos. Rodou na DE10-Standard: 45 de 45 ensaios, mesma chegada que o software nos 90 canais. Projeto do Quartus e [roteiro do laboratório](06_fpga/placas/de10_standard/ROTEIRO.md) | [`06_fpga/placas`](06_fpga/placas) |
@@ -82,6 +85,7 @@ Os números estão em [`05_avaliacao/leakmap_avaliacao_matriz_v1.json`](05_avali
 | [`05_avaliacao`](05_avaliacao) | Avaliador independente e métricas |
 | [`06_fpga`](06_fpga) | Cenário B: especificação, Verilog da placa, simulação e o lado do computador |
 | [`web`](web) | Simulador interativo do painel: adaptação do detector para o navegador e teste de paridade com o Python |
+| [`07_servico`](07_servico) | Escala de alerta, evento padronizado e saída por webhook para integração |
 | [`leakmap_painel.html`](leakmap_painel.html) | Painel de apresentação do projeto |
 
 Uma regra organiza os dados: o detector só lê `parametros`, `amostras` e `pacotes`. A posição real do vazamento fica em `03_ensaios/verdade_do_cenario` e só o avaliador a abre. Assim nenhum limiar é ajustado olhando a resposta.

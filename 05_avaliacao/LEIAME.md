@@ -79,3 +79,49 @@ solucionador gerou os sinais. Refazer a simulacao com outro `c` exige TSNet,
 que depende do wntr e nao compila no ambiente atual. O que o eixo mede e `c`
 assumido diferente de `c` real, que e o modo de erro que existe em campo. O
 que ele nao cobre e a mudanca de forma de onda que outro `c` produziria.
+
+## Linha de produto do cais (simulacao com premissas)
+
+`avaliar_linha_cais.py` avalia, do mesmo jeito independente, uma linha de
+produto do cais simulada no TSNet (`02_bancada/codigo/linha_cais.py` e
+`manobras_cais.py`): 8" em aco carbono com diesel, onda a ~1.227 m/s, sensores
+a 700 m um do outro, vazamentos grandes (~18% da vazao) e pequenos (~4%) em
+sete posicoes, um vazamento fora do trecho e duas manobras. Comprimentos,
+espessura e vazao sao premissas, gravadas junto com os sinais, ate chegar o
+dado da instalacao real.
+
+O mesmo detector, com seis configuracoes de transmissor (0 a 15 bar, 16 bits):
+
+| Transmissor | Vazamento grande: detectados, erro mediano / maximo | Pequeno | Falsos alarmes (5 sem evento) |
+|---|---|---|---|
+| ideal (hidraulica pura) | 7/7, 0,11 / 0,25 m | 7/7, 0,11 / 0,25 m | 0 |
+| rapido dedicado | 7/7, 0,11 / 0,25 m | 7/7, 0,14 / 0,32 m | 0 |
+| inteligente, saida a cada 1 ms | 7/7, 0,18 / 0,56 m | 7/7, 0,25 / 0,39 m | 0 |
+| inteligente, 10 ms | 7/7, 1,58 / 3,02 m | 7/7, 0,88 / 2,74 m | 0 |
+| inteligente, 50 ms | 7/7, 13,73 / 21,18 m | 7/7, 5,73 / 23,71 m | 0 |
+| inteligente, 100 ms | 7/7, 50,61 / 300,81 m | 7/7, 18,65 / 271,62 m | 0 |
+
+Leitura:
+
+- O que decide a precisao e o tempo de atualizacao da saida do transmissor,
+  nao o ruido: cada transmissor atualiza no proprio relogio, e o erro de
+  posicao chega a c x T / 2 (0,6 m com 1 ms, 6 m com 10 ms, 31 m com 50 ms).
+  Com 100 ms aparecem erros bem maiores que esse limite (ate 301 m): a saida
+  em degraus confunde a marcacao da chegada.
+- Com transmissor rapido, o erro fica no tamanho de uma amostra (0,25 m), o
+  mesmo da matriz.
+
+Classificacao por polaridade e origem, com e sem ela (o detector de antes):
+
+| | Sem classificacao | Com classificacao |
+|---|---|---|
+| Manobras que viram alarme de vazamento (2 manobras x 6 transmissores) | 9 de 12 (6 com posicao) | 0 de 12 |
+| Vazamento fora do trecho apontado como "fora do trecho, lado A" | 0 de 12 | 7 de 12 |
+| Vazamentos dentro do trecho detectados e localizados | 84 de 84 | 84 de 84, os mesmos erros |
+
+Os 5 vazamentos fora do trecho que nao saem como "fora" sao todos de
+transmissor inteligente: 4 saem localizados perto do sensor A (a 0,4 m com
+1 ms; 6 e 10 m com 50 ms; 31 m com 100 ms), porque o erro de tempo empurra a
+posicao para dentro do trecho, e 1 sai sem localizacao (100 ms). Com
+transmissor rapido, os 4 casos (ideal e rapido, grande e pequeno) saem como
+"fora do trecho, lado A".

@@ -1,0 +1,645 @@
+{
+  "descricao": "Latencia de declaracao do evento, da hora da amostra do cruzamento ate o evento declarado, com o mesmo detector em aritmetica inteira no notebook e na FPGA.",
+  "ensaios": [
+    "MX-001",
+    "MX-002",
+    "MX-003",
+    "MX-004",
+    "MX-005",
+    "MX-006",
+    "MX-007",
+    "MX-008",
+    "MX-009",
+    "MX-010",
+    "MX-011",
+    "MX-012",
+    "MX-013",
+    "MX-014",
+    "MX-015",
+    "MX-016",
+    "MX-017",
+    "MX-018",
+    "MX-019",
+    "MX-020",
+    "MX-021",
+    "MX-022",
+    "MX-023",
+    "MX-024",
+    "MX-025",
+    "MX-026",
+    "MX-027",
+    "MX-028",
+    "MX-029",
+    "MX-030"
+  ],
+  "repeticoes": 10,
+  "notebook": {
+    "onde": "notebook, Windows-11-10.0.26200-SP0, Python 3.14.7",
+    "latencia_de_declaracao_us": {
+      "n": 600,
+      "min": 6.775284418836236,
+      "mediana": 19.209692254662514,
+      "p99": 35.11444083414972,
+      "max": 41.814433643594384,
+      "desvio_padrao": 5.486254159336281
+    },
+    "processamento_por_amostra_us": {
+      "n": 60180,
+      "min": 1.1999800335615873,
+      "mediana": 3.2999960239976645,
+      "p99": 15.900004655122757,
+      "max": 1904.099975945428,
+      "desvio_padrao": 8.30886587054179
+    },
+    "atraso_da_entrega_us": {
+      "n": 60180,
+      "min": 0.0,
+      "mediana": 0.1256412360817194,
+      "p99": 0.2929882612079382,
+      "max": 2990.987355588004,
+      "desvio_padrao": 40.2729557556825
+    },
+    "ensaio_inteiro_em_lote_us": {
+      "n": 300,
+      "min": 216.19998733513057,
+      "mediana": 632.5500144157559,
+      "p99": 1303.899975027889,
+      "max": 1437.8000050783157,
+      "desvio_padrao": 260.1087260979007
+    }
+  },
+  "fpga": {
+    "onde": "DE-SoC [USB-1] | @2: 5CSEBA6(.|ES)/5CSEMA6/.. (0x02D020DD)",
+    "frequencia_hz": 50000000,
+    "latencia_de_declaracao_ciclos": {
+      "n": 600,
+      "min": 89,
+      "mediana": 97.0,
+      "p99": 102,
+      "max": 102,
+      "desvio_padrao": 4.547160286010014
+    },
+    "latencia_de_declaracao_us": {
+      "n": 600,
+      "min": 1.7799999999999998,
+      "mediana": 1.9400000000000002,
+      "p99": 2.04,
+      "max": 2.04,
+      "desvio_padrao": 0.09094320572020036
+    },
+    "processamento_por_amostra_max_ciclos": 102,
+    "ensaio_inteiro_em_lote_us": {
+      "n": 300,
+      "min": 99.0,
+      "mediana": 218.72,
+      "p99": 328.62,
+      "max": 328.62,
+      "desvio_padrao": 78.28646752366167
+    },
+    "amostras_atrasadas": 0,
+    "ensaios_com_o_mesmo_numero_de_ciclos_em_todas_as_repeticoes": 30
+  },
+  "por_ensaio": {
+    "MX-001": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 16.414414858445525,
+        "mediana": 21.064435713924468,
+        "p99": 39.2849906347692,
+        "max": 39.2849906347692,
+        "desvio_padrao": 4.935357932930155
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-002": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 17.484999261796474,
+        "mediana": 20.714447600767016,
+        "p99": 41.814433643594384,
+        "max": 41.814433643594384,
+        "desvio_padrao": 5.60555842948631
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-003": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 14.649733202531934,
+        "mediana": 18.2320800377056,
+        "p99": 29.84973252750933,
+        "max": 29.84973252750933,
+        "desvio_padrao": 4.01935129351745
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-004": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 13.814453268423676,
+        "mediana": 26.814421289600432,
+        "p99": 39.114413084462285,
+        "max": 39.114413084462285,
+        "desvio_padrao": 7.031222119942808
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-005": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 22.814434487372637,
+        "mediana": 29.96443072333932,
+        "p99": 35.11444083414972,
+        "max": 35.11444083414972,
+        "desvio_padrao": 4.076382519088641
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-006": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 17.21442095004022,
+        "mediana": 20.814448362216353,
+        "p99": 23.914413759484887,
+        "max": 23.914413759484887,
+        "desvio_padrao": 2.121057392431667
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-007": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 18.514430848881602,
+        "mediana": 20.182080334052444,
+        "p99": 31.61444328725338,
+        "max": 31.61444328725338,
+        "desvio_padrao": 3.4462000251444587
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-008": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 14.149700291454792,
+        "mediana": 18.082078895531595,
+        "p99": 28.84972491301596,
+        "max": 28.84972491301596,
+        "desvio_padrao": 4.368547641647668
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-009": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.314412742853165,
+        "mediana": 19.149723812006414,
+        "p99": 28.714450309053063,
+        "max": 28.714450309053063,
+        "desvio_padrao": 4.815246884170772
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-010": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 11.814438039436936,
+        "mediana": 19.849714590236545,
+        "p99": 27.484988095238805,
+        "max": 27.484988095238805,
+        "desvio_padrao": 4.9195860239432365
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          97
+        ],
+        "B": [
+          97
+        ]
+      }
+    },
+    "MX-011": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 13.903249055147171,
+        "mediana": 16.773832612670958,
+        "p99": 30.973838875070214,
+        "max": 30.973838875070214,
+        "desvio_padrao": 5.02510306413963
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-012": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.50326749868691,
+        "mediana": 16.32384373806417,
+        "p99": 25.073823053389788,
+        "max": 25.073823053389788,
+        "desvio_padrao": 3.3441609128100795
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-013": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.903270544484258,
+        "mediana": 21.17088297381997,
+        "p99": 26.103254640474916,
+        "max": 26.103254640474916,
+        "desvio_padrao": 3.2421115566367633
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-014": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 11.403259122744203,
+        "mediana": 15.920901205390692,
+        "p99": 23.50326394662261,
+        "max": 23.50326394662261,
+        "desvio_padrao": 3.3749537645110617
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-015": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 14.903256669640541,
+        "mediana": 19.503262592479587,
+        "p99": 26.703259209170938,
+        "max": 26.703259209170938,
+        "desvio_padrao": 4.307247242353667
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          92
+        ]
+      }
+    },
+    "MX-016": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 15.903235180303454,
+        "mediana": 19.253260688856244,
+        "p99": 24.303270038217306,
+        "max": 24.303270038217306,
+        "desvio_padrao": 2.412662245714355
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          92
+        ]
+      }
+    },
+    "MX-017": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.003263691440225,
+        "mediana": 15.938538126647472,
+        "p99": 37.538527976721525,
+        "max": 37.538527976721525,
+        "desvio_padrao": 5.099111367153295
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-018": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.203265214338899,
+        "mediana": 18.338541849516332,
+        "p99": 29.538525268435478,
+        "max": 29.538525268435478,
+        "desvio_padrao": 4.759379113769097
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-019": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 11.603260645642877,
+        "mediana": 17.523838323540986,
+        "p99": 24.473818484693766,
+        "max": 24.473818484693766,
+        "desvio_padrao": 4.318742478943018
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-020": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 10.903284419327974,
+        "mediana": 16.888545360416174,
+        "p99": 31.673815101385117,
+        "max": 31.673815101385117,
+        "desvio_padrao": 4.78306448426979
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          92
+        ],
+        "B": [
+          90
+        ]
+      }
+    },
+    "MX-021": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 14.680845197290182,
+        "mediana": 20.01335087697953,
+        "p99": 29.88084452226758,
+        "max": 29.88084452226758,
+        "desvio_padrao": 4.042678249241699
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-022": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 12.080854503437877,
+        "mediana": 25.56334948167205,
+        "p99": 34.745840821415186,
+        "max": 34.745840821415186,
+        "desvio_padrao": 5.534943063015289
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-023": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 13.680837582796812,
+        "mediana": 19.310551579110324,
+        "p99": 27.48085535131395,
+        "max": 27.48085535131395,
+        "desvio_padrao": 4.253443617617283
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-024": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 14.380872016772628,
+        "mediana": 17.8957125172019,
+        "p99": 24.110544472932816,
+        "max": 24.110544472932816,
+        "desvio_padrao": 2.553060826756907
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-025": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 7.575261406600475,
+        "mediana": 14.830846339464188,
+        "p99": 23.27526453882456,
+        "max": 23.27526453882456,
+        "desvio_padrao": 5.382064930436275
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-026": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 6.775284418836236,
+        "mediana": 12.228061677888036,
+        "p99": 26.48084773682058,
+        "max": 26.48084773682058,
+        "desvio_padrao": 6.289693079166223
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-027": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 11.480849934741855,
+        "mediana": 19.516126485541463,
+        "p99": 34.01614958420396,
+        "max": 34.01614958420396,
+        "desvio_padrao": 5.601715392083818
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          89
+        ]
+      }
+    },
+    "MX-028": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 11.28084841184318,
+        "mediana": 18.880862626247108,
+        "p99": 25.616143830120564,
+        "max": 25.616143830120564,
+        "desvio_padrao": 3.365419222130352
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          89
+        ]
+      }
+    },
+    "MX-029": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 16.175268683582544,
+        "mediana": 20.351435523480177,
+        "p99": 38.27529144473374,
+        "max": 38.27529144473374,
+        "desvio_padrao": 5.659034229086694
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    },
+    "MX-030": {
+      "notebook_latencia_us": {
+        "n": 20,
+        "min": 16.075267922133207,
+        "mediana": 19.751430954784155,
+        "p99": 29.051443561911583,
+        "max": 29.051443561911583,
+        "desvio_padrao": 4.116657635001509
+      },
+      "fpga_latencia_ciclos": {
+        "A": [
+          102
+        ],
+        "B": [
+          102
+        ]
+      }
+    }
+  },
+  "observacao": "reproducao de sinais digitais: as amostras sao as da matriz de ensaios, entregues no ritmo da amostragem. No notebook a espera e ativa, o melhor caso para a CPU; o detector em Python e mais lento que um em C, entao o que se compara e a variacao."
+}

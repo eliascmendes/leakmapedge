@@ -16,11 +16,15 @@ faixas de parametro em vez de fixar um valor unico apresentado como real.
 import numpy as np
 
 # Ordem em que os efeitos sao aplicados. E a ordem fisica da cadeia:
-# o transmissor primeiro responde a pressao (banda), o sinal leva um tempo
+# o transmissor primeiro responde a pressao (banda), um transmissor
+# inteligente ainda filtra (amortecimento) e so atualiza a saida analogica de
+# tempos em tempos (atualizacao), o sinal leva um tempo
 # para chegar ao registrador (atrasos), a base de tempo tem imprecisao
 # (sincronizacao), e so entao vem os efeitos de eletronica e de conversao.
 ORDEM_DOS_EFEITOS = (
     'banda',
+    'amortecimento',
+    'atualizacao',
     'atraso_comum',
     'diferenca_de_atraso',
     'erro_de_sincronizacao',
@@ -39,6 +43,15 @@ def config_neutra():
     return {
         # Resposta do transmissor: passa-baixas de primeira ordem em cascata.
         'banda': {'ligado': False, 'corte_hz': 400.0, 'ordem': 1},
+        # Filtro de amortecimento (damping) de transmissor inteligente:
+        # passa-baixas de primeira ordem com a constante de tempo configurada.
+        'amortecimento': {'ligado': False, 'constante_de_tempo_s': 0.0},
+        # Atualizacao da saida analogica de transmissor inteligente: a saida
+        # so muda a cada `periodo_s` e segura o valor entre as atualizacoes.
+        # Cada transmissor tem o proprio relogio, entao a fase de A e de B e
+        # independente; sem fase declarada, ela e sorteada pela semente.
+        'atualizacao': {'ligado': False, 'periodo_s': 0.0, 'fase_A_s': None,
+                        'fase_B_s': None, 'semente': 0},
         # Atraso igual nos dois canais (cabo, conversao, tempo de resposta).
         # Nao altera delta_t, altera o tempo de deteccao absoluto.
         'atraso_comum': {'ligado': False, 'atraso_s': 0.0},
@@ -99,6 +112,33 @@ def filtrar_passa_baixas(x, corte_hz, ts, ordem=1):
             saida[n] = acc
         y = saida
     return y
+
+
+def amortecer(x, constante_de_tempo_s, ts):
+    """Amortecimento de primeira ordem; constante de tempo zero e identidade."""
+    x = np.asarray(x, dtype=float)
+    if float(constante_de_tempo_s) <= 0.0:
+        return x
+    return filtrar_passa_baixas(x, 1.0 / (2.0 * np.pi * float(constante_de_tempo_s)), ts, 1)
+
+
+def atualizar(x, periodo_s, fase_s, ts):
+    """Saida que so muda nos instantes fase + m * periodo e segura o valor.
+
+    Em cada atualizacao a saida passa a valer a ultima amostra da entrada
+    ate aquele instante. Antes da primeira atualizacao, segura x[0], o regime
+    permanente. Periodo menor ou igual ao passo de amostragem e identidade.
+    """
+    x = np.asarray(x, dtype=float)
+    periodo_s = float(periodo_s)
+    if periodo_s <= ts:
+        return x
+    t = np.arange(len(x), dtype=float) * ts
+    m = np.floor((t - float(fase_s)) / periodo_s + 1e-9)
+    instante = float(fase_s) + m * periodo_s
+    indice = np.floor(instante / ts + 1e-9).astype(int)
+    indice[m < 0] = 0
+    return x[np.clip(indice, 0, len(x) - 1)]
 
 
 def atrasar(x, atraso_s, ts):
@@ -170,6 +210,18 @@ def aplicar(canal_a, canal_b, ts, cfg):
         if nome == 'banda':
             a = filtrar_passa_baixas(a, par['corte_hz'], ts, par.get('ordem', 1))
             b = filtrar_passa_baixas(b, par['corte_hz'], ts, par.get('ordem', 1))
+        elif nome == 'amortecimento':
+            a = amortecer(a, par['constante_de_tempo_s'], ts)
+            b = amortecer(b, par['constante_de_tempo_s'], ts)
+        elif nome == 'atualizacao':
+            periodo = float(par['periodo_s'])
+            rng = np.random.default_rng(int(par.get('semente', 0)))
+            sorteio = rng.uniform(0.0, periodo, size=2)
+            fase_a = sorteio[0] if par.get('fase_A_s') is None else float(par['fase_A_s'])
+            fase_b = sorteio[1] if par.get('fase_B_s') is None else float(par['fase_B_s'])
+            a = atualizar(a, periodo, fase_a, ts)
+            b = atualizar(b, periodo, fase_b, ts)
+            par = dict(par, fase_A_s=float(fase_a), fase_B_s=float(fase_b))
         elif nome == 'atraso_comum':
             a = atrasar(a, par['atraso_s'], ts)
             b = atrasar(b, par['atraso_s'], ts)

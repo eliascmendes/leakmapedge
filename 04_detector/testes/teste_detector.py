@@ -235,6 +235,49 @@ class A13Evidencia(unittest.TestCase):
         self.assertTrue(r['motivo'])
 
 
+class ClassificacaoFisica(unittest.TestCase):
+    """Polaridade e origem (secao 5.4 do projeto): so queda nos dois canais,
+    dentro do trecho, e vazamento."""
+
+    def test_queda_nos_dois_canais_dentro_do_trecho_e_vazamento(self):
+        r = D.processar_ensaio(ensaio_sintetico('S-30', degrau(800, 300), degrau(800, 340)), ESCALA_LARGA)
+        self.assertEqual(r['classe'], D.CLASSE_LOCALIZADO)
+        self.assertEqual((r['canal_A']['polaridade'], r['canal_B']['polaridade']), ('queda', 'queda'))
+
+    def test_alta_nos_dois_canais_e_manobra(self):
+        a, b = degrau(800, 300, amplitude=+5.0), degrau(800, 340, amplitude=+5.0)
+        r = D.processar_ensaio(ensaio_sintetico('S-31', a, b), ESCALA_LARGA)
+        self.assertEqual(r['classe'], D.CLASSE_MANOBRA)
+        self.assertIsNone(r.get('posicao_estimada_m'))
+        self.assertIsNotNone(r.get('posicao_da_origem_m'))
+
+    def test_polaridades_opostas_sao_manobra_entre_os_sensores(self):
+        a, b = degrau(800, 300, amplitude=+5.0), degrau(800, 340, amplitude=-5.0)
+        r = D.processar_ensaio(ensaio_sintetico('S-32', a, b), ESCALA_LARGA)
+        self.assertEqual(r['classe'], D.CLASSE_MANOBRA)
+        self.assertIn('opostas', r['motivo'])
+
+    def test_alta_num_canal_so_e_manobra(self):
+        r = D.processar_ensaio(ensaio_sintetico('S-33', degrau(800, 300, amplitude=+5.0),
+                                                np.full(800, 52.0)), ESCALA_LARGA)
+        self.assertEqual(r['classe'], D.CLASSE_MANOBRA)
+
+    def test_queda_no_limite_fisico_e_fora_do_trecho_do_lado_certo(self):
+        limite = int(round(P.limite_fisico_de_delta_t(L_M, C_M_S) / TS))
+        n = limite + 900
+        a, b = degrau(n, 300), degrau(n, 300 + limite)         # A viu primeiro, L/c antes
+        r = D.processar_ensaio(ensaio_sintetico('S-34', a, b), ESCALA_LARGA)
+        self.assertEqual(r['classe'], D.CLASSE_FORA_DO_TRECHO)
+        self.assertEqual(r['lado_da_origem'], 'A')
+        r = D.processar_ensaio(ensaio_sintetico('S-35', b, a), ESCALA_LARGA)
+        self.assertEqual(r['lado_da_origem'], 'B')
+
+    def test_sem_classificacao_volta_ao_detector_de_antes(self):
+        a, b = degrau(800, 300, amplitude=+5.0), degrau(800, 340, amplitude=+5.0)
+        r = D.processar_ensaio(ensaio_sintetico('S-36', a, b), ESCALA_LARGA, classificar=False)
+        self.assertEqual(r['classe'], D.CLASSE_LOCALIZADO)
+
+
 class A14Posicao(unittest.TestCase):
 
     def test_formula_no_meio_do_trecho(self):

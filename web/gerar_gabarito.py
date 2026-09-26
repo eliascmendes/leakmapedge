@@ -119,7 +119,56 @@ def um_efeito_por_vez(ts):
     caso('saturacao', 'saturacao', minimo_m=30.0, maximo_m=55.0)
     caso('quantizacao', 'quantizacao', bits=12, fundo_de_escala_min_m=0.0,
          fundo_de_escala_max_m=100.0)
+    caso('amortecimento', 'amortecimento', constante_de_tempo_s=0.002)
+    # fases declaradas: o sorteio do NumPy nao e reproduzido no navegador
+    caso('atualizacao', 'atualizacao', periodo_s=10 * ts, fase_A_s=3.3 * ts, fase_B_s=7.1 * ts)
     casos.append(('neutra', MS.config_neutra()))
+    return casos
+
+
+def casos_de_classificacao():
+    """Sinais sinteticos para a classificacao por polaridade e origem.
+
+    Os mesmos formatos de 04_detector/testes/teste_detector.py: patamar e uma
+    rampa curta de subida ou de descida, com o atraso entre canais escolhido
+    para cair dentro do trecho, no limite fisico, um pouco alem e muito alem.
+    """
+    ts, l_m, c_m_s = 4.0130559895570352e-4, 120.0, 1200.899544131626
+    limite = int(round(l_m / c_m_s / ts))
+
+    def degrau(n, inicio, amplitude):
+        x = np.full(n, 58.0)
+        rampa = np.linspace(0.0, amplitude, 4)[1:]
+        x[inicio:inicio + 3] = 58.0 + rampa
+        x[inicio + 3:] = 58.0 + amplitude
+        return x
+
+    def ensaio(nome, a, b):
+        n = len(a)
+        return {'id': nome, 'n_pontos': n, 'indice': list(range(n)), 'tempo_s': [i * ts for i in range(n)],
+                'canal_A_carga_m': [float(v) for v in a], 'canal_B_carga_m': [float(v) for v in b],
+                'parametros_do_detector': {'posicao_sensor_A_m': 40.0, 'posicao_sensor_B_m': 160.0,
+                                           'distancia_entre_sensores_L_m': l_m, 'velocidade_de_onda_m_s': c_m_s,
+                                           'incerteza_de_velocidade_de_onda_m_s': 0.0}}
+
+    n = limite + 900
+    sinais = [
+        ('vazamento_dentro', degrau(n, 300, -5.0), degrau(n, 340, -5.0), True),
+        ('alta_nos_dois', degrau(n, 300, 5.0), degrau(n, 340, 5.0), True),
+        ('polaridades_opostas', degrau(n, 300, 5.0), degrau(n, 340, -5.0), True),
+        ('alta_so_em_A', degrau(n, 300, 5.0), np.full(n, 52.0), True),
+        ('limite_lado_A', degrau(n, 300, -5.0), degrau(n, 300 + limite, -5.0), True),
+        ('limite_lado_B', degrau(n, 300 + limite, -5.0), degrau(n, 300, -5.0), True),
+        ('pouco_alem_do_limite', degrau(n, 300, -5.0), degrau(n, 300 + limite + 2, -5.0), True),
+        ('muito_alem_do_limite', degrau(n, 300, -5.0), degrau(n, 300 + limite + 60, -5.0), True),
+        ('alta_sem_classificacao', degrau(n, 300, 5.0), degrau(n, 340, 5.0), False),
+    ]
+    escala = {'minimo_m': 0.0, 'maximo_m': 100.0, 'resolucao_declarada_m': 1e-3}
+    casos = []
+    for nome, a, b, classificar in sinais:
+        e = ensaio(nome, a, b)
+        casos.append({'nome': nome, 'classificar': classificar, 'escala': escala, 'ensaio': e,
+                      'registro': D.processar_ensaio(e, escala, None, classificar)})
     return casos
 
 
@@ -250,6 +299,7 @@ def main():
         'modelo_sensor': modelo,
         'cadeia': cadeia,
         'detector': detector,
+        'classificacao': casos_de_classificacao(),
     }
 
     os.makedirs(os.path.dirname(SAIDA), exist_ok=True)

@@ -64,12 +64,19 @@ PASSOS = [
      os.path.join('06_fpga', 'computador', 'dimensionamento.py')),
     ('cenario B    execucao contra a referencia Python da placa',
      os.path.join('06_fpga', 'computador', 'executar_cenario_b.py')),
+    # os sinais da linha do cais vem do TSNet (02_bancada/codigo/linha_cais.py e
+    # manobras_cais.py, no ambiente de 02_bancada/ambiente) e ficam gravados
+    ('linha do cais  detector com seis transmissores, com e sem classificacao',
+     os.path.join('04_detector', 'linha_cais.py')),
+    ('linha do cais  avaliacao independente',
+     os.path.join('05_avaliacao', 'avaliar_linha_cais.py')),
 ]
 
 TESTES = [
     ('testes do detector', os.path.join('04_detector', 'testes')),
     ('testes do avaliador', os.path.join('05_avaliacao', 'testes')),
     ('testes do cenario B e da placa simulada', os.path.join('06_fpga', 'computador', 'testes')),
+    ('testes do servico: escala de alerta, evento e webhook', os.path.join('07_servico', 'testes')),
 ]
 
 

@@ -99,12 +99,14 @@
   /* A-09  modelo_sensor.py                                              */
   /* ------------------------------------------------------------------ */
 
-  var ORDEM_DOS_EFEITOS = ["banda", "atraso_comum", "diferenca_de_atraso",
+  var ORDEM_DOS_EFEITOS = ["banda", "amortecimento", "atualizacao", "atraso_comum", "diferenca_de_atraso",
     "erro_de_sincronizacao", "offset", "ruido", "saturacao", "quantizacao"];
 
   function configNeutra() {
     return {
       banda: { ligado: false, corte_hz: 400.0, ordem: 1 },
+      amortecimento: { ligado: false, constante_de_tempo_s: 0.0 },
+      atualizacao: { ligado: false, periodo_s: 0.0, fase_A_s: null, fase_B_s: null, semente: 0 },
       atraso_comum: { ligado: false, atraso_s: 0.0 },
       diferenca_de_atraso: { ligado: false, atraso_s: 0.0 },
       erro_de_sincronizacao: { ligado: false, jitter_s: 0.0, semente: 0 },
@@ -137,6 +139,23 @@
         saida[n] = acc;
       }
       y = saida;
+    }
+    return y;
+  }
+
+  function amortecer(x, constanteDeTempoS, ts) {
+    if (constanteDeTempoS <= 0.0) { return copiar(x); }
+    return filtrarPassaBaixas(x, 1.0 / (2.0 * Math.PI * constanteDeTempoS), ts, 1);
+  }
+
+  /* Saida que so muda nos instantes fase + m * periodo e segura o valor. */
+  function atualizar(x, periodoS, faseS, ts) {
+    if (periodoS <= ts) { return copiar(x); }
+    var y = new Array(x.length);
+    for (var n = 0; n < x.length; n++) {
+      var m = Math.floor((n * ts - faseS) / periodoS + 1e-9);
+      var indice = m < 0 ? 0 : Math.floor((faseS + m * periodoS) / ts + 1e-9);
+      y[n] = x[Math.min(Math.max(indice, 0), x.length - 1)];
     }
     return y;
   }
@@ -180,6 +199,18 @@
       if (nome === "banda") {
         a = filtrarPassaBaixas(a, par.corte_hz, ts, par.ordem || 1);
         b = filtrarPassaBaixas(b, par.corte_hz, ts, par.ordem || 1);
+      } else if (nome === "amortecimento") {
+        a = amortecer(a, par.constante_de_tempo_s, ts);
+        b = amortecer(b, par.constante_de_tempo_s, ts);
+      } else if (nome === "atualizacao") {
+        /* fase sem valor declarado: sorteada pela fonte, se ela souber sortear
+         * uniforme; o Python sorteia com o NumPy, que o navegador nao reproduz */
+        var sorteio = fonte && fonte.uniformes ? fonte.uniformes("fase", 2) : [0.0, 0.0];
+        var faseA = par.fase_A_s === null || par.fase_A_s === undefined ? sorteio[0] * par.periodo_s : par.fase_A_s;
+        var faseB = par.fase_B_s === null || par.fase_B_s === undefined ? sorteio[1] * par.periodo_s : par.fase_B_s;
+        a = atualizar(a, par.periodo_s, faseA, ts);
+        b = atualizar(b, par.periodo_s, faseB, ts);
+        par = mesclar(mesclar({}, par), { fase_A_s: faseA, fase_B_s: faseB });
       } else if (nome === "atraso_comum") {
         a = atrasar(a, par.atraso_s, ts);
         b = atrasar(b, par.atraso_s, ts);
@@ -392,6 +423,10 @@
   var CLASSE_SEM_LOCALIZACAO = "detectado_sem_localizacao";
   var CLASSE_SEM_DETECCAO = "sem_deteccao";
   var CLASSE_FALHA = "falha_execucao";
+  var CLASSE_MANOBRA = "manobra";
+  var CLASSE_FORA_DO_TRECHO = "fora_do_trecho";
+  var POLARIDADE_QUEDA = "queda";
+  var POLARIDADE_ALTA = "alta";
 
   function calibracaoPadrao() {
     return {
@@ -493,7 +528,12 @@
     var uR = inclinacao > 0.0 ? sigmaRef / inclinacao : ts;
     var uRet = truncado ? (nc + ng) * ts : ts;
     var incerteza = Math.sqrt(uQ * uQ + uR * uR + uRet * uRet);
+    /* polaridade da frente: soma do passa-altas da chegada ao cruzamento */
+    var variacao = 0.0;
+    for (var q = i; q <= iCruz; q++) { variacao += y[q]; }
     return {
+      polaridade: variacao < 0.0 ? POLARIDADE_QUEDA : POLARIDADE_ALTA,
+      variacao_na_frente_m: variacao,
       indice_de_chegada: i,
       tempo_de_chegada_s: tempo[i],
       amostras_retrocedidas: iCruz - i,
@@ -542,9 +582,46 @@
     return [true, "evidencia suficiente"];
   }
 
+  /* Classificacao fisica (secao 5.4 do projeto), igual a de detector.py. */
+  function classificarEvento(detA, detB, deltaT, l, c, ts) {
+    var pa = detA.polaridade, pb = detB.polaridade;
+    if (pa === POLARIDADE_ALTA && pb === POLARIDADE_ALTA) {
+      return [CLASSE_MANOBRA, "onda de alta nos dois canais: manobra, nao vazamento", null];
+    }
+    if (pa !== pb) {
+      return [CLASSE_MANOBRA, "polaridades opostas (A " + pa + ", B " + pb + "): manobra entre os sensores", null];
+    }
+    var limite = limiteFisicoDeDeltaT(l, c);
+    if (limite - Math.abs(deltaT) <= ts) {
+      var lado = deltaT < 0 ? "A" : "B";
+      return [CLASSE_FORA_DO_TRECHO, "diferenca temporal no limite fisico: origem no sensor " + lado +
+        " ou fora do trecho, do lado dele", lado];
+    }
+    return [null, null, null];
+  }
+
+  function classificarSemLocalizacao(marcaA, marcaB, deltaT, l, c, ts, uDeltaT) {
+    var marcas = [marcaA, marcaB].filter(function (m) { return m !== null; });
+    if (marcas.length && marcas.every(function (m) { return m.polaridade === POLARIDADE_ALTA; })) {
+      return [CLASSE_MANOBRA, "onda de alta: manobra, nao vazamento", null];
+    }
+    var tolerancia = Math.max(2.0 * ts, 3.0 * (uDeltaT || 0.0));
+    if (marcaA && marcaB && deltaT !== null && marcaA.polaridade === POLARIDADE_QUEDA &&
+        marcaB.polaridade === POLARIDADE_QUEDA) {
+      var excesso = Math.abs(deltaT) - limiteFisicoDeDeltaT(l, c);
+      if (excesso > 0.0 && excesso <= tolerancia) {
+        var lado = deltaT < 0 ? "A" : "B";
+        return [CLASSE_FORA_DO_TRECHO, "diferenca temporal alem do limite fisico: origem fora do trecho, " +
+          "do lado do sensor " + lado, lado];
+      }
+    }
+    return [null, null, null];
+  }
+
   /* Recebe apenas o ensaio (sinais e parametros conhecidos pelo detector) e
    * a escala do instrumento. Nunca recebe a posicao real do vazamento. */
-  function processarEnsaio(ensaio, escala, cal) {
+  function processarEnsaio(ensaio, escala, cal, classificar) {
+    if (classificar === undefined) { classificar = true; }
     cal = mesclar({}, cal || calibracaoPadrao());
     var registro = { id: ensaio.id, calibracao: cal };
     try {
@@ -603,10 +680,28 @@
       if (!decisao[0]) {
         registro.classe = (!detA.detectado && !detB.detectado) ? CLASSE_SEM_DETECCAO
           : CLASSE_SEM_LOCALIZACAO;
+        if (classificar && registro.classe === CLASSE_SEM_LOCALIZACAO) {
+          var cs = classificarSemLocalizacao(marcaA, marcaB, deltaT, l, c, ts, uDeltaT);
+          if (cs[0] !== null) {
+            registro.classe = cs[0];
+            registro.motivo = cs[1];
+            registro.lado_da_origem = cs[2];
+          }
+        }
         return registro;
       }
       registro.classe = CLASSE_LOCALIZADO;
       mesclar(registro, localizar(l, c, deltaT, posA, uDeltaT, uC));
+      if (classificar) {
+        var ce = classificarEvento(detA, detB, deltaT, l, c, ts);
+        if (ce[0] !== null) {
+          registro.classe = ce[0];
+          registro.motivo = ce[1];
+          registro.lado_da_origem = ce[2];
+          registro.posicao_da_origem_m = registro.posicao_estimada_m;
+          delete registro.posicao_estimada_m;
+        }
+      }
       return registro;
     } catch (e) {
       registro.classe = CLASSE_FALHA;
@@ -623,6 +718,8 @@
       degrauDeQuantizacao: degrauDeQuantizacao,
       resolucaoDeclaradaM: resolucaoDeclaradaM,
       filtrarPassaBaixas: filtrarPassaBaixas,
+      amortecer: amortecer,
+      atualizar: atualizar,
       atrasar: atrasar,
       aplicarJitter: aplicarJitter,
       saturar: saturar,
@@ -656,6 +753,10 @@
       CLASSE_SEM_LOCALIZACAO: CLASSE_SEM_LOCALIZACAO,
       CLASSE_SEM_DETECCAO: CLASSE_SEM_DETECCAO,
       CLASSE_FALHA: CLASSE_FALHA,
+      CLASSE_MANOBRA: CLASSE_MANOBRA,
+      CLASSE_FORA_DO_TRECHO: CLASSE_FORA_DO_TRECHO,
+      classificarEvento: classificarEvento,
+      classificarSemLocalizacao: classificarSemLocalizacao,
       calibracaoPadrao: calibracaoPadrao,
       pisoDeAmplitude: pisoDeAmplitude,
       pisoDeEnergia: pisoDeEnergia,

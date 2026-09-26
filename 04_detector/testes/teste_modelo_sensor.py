@@ -165,6 +165,59 @@ class UmEfeitoPorVez(unittest.TestCase):
         self.assertFalse(np.array_equal(sa, rampa))
 
 
+class TransmissorInteligente(unittest.TestCase):
+    """Amortecimento e atualizacao da saida, os dois efeitos de transmissor inteligente."""
+
+    def setUp(self):
+        self.a, self.b, self.ts = sinal_de_ensaio()
+        self.cfg = MS.config_neutra()
+
+    def aplicar(self):
+        return MS.aplicar(self.a, self.b, self.ts, self.cfg)
+
+    def test_amortecimento_zero_e_identidade(self):
+        self.cfg['amortecimento'].update(ligado=True, constante_de_tempo_s=0.0)
+        sa, sb, _ = self.aplicar()
+        np.testing.assert_array_equal(sa, self.a)
+        np.testing.assert_array_equal(sb, self.b)
+
+    def test_amortecimento_suaviza_sem_mover_o_regime(self):
+        self.cfg['amortecimento'].update(ligado=True, constante_de_tempo_s=0.005)
+        sa, _, reg = self.aplicar()
+        self.assertAlmostEqual(sa[0], self.a[0], places=12)
+        self.assertLess(np.abs(np.diff(sa)).max(), np.abs(np.diff(self.a)).max())
+        self.assertEqual([r['efeito'] for r in reg], ['amortecimento'])
+
+    def test_atualizacao_so_muda_nos_instantes_de_atualizacao(self):
+        periodo = 10 * self.ts
+        self.cfg['atualizacao'].update(ligado=True, periodo_s=periodo, fase_A_s=3 * self.ts,
+                                       fase_B_s=7 * self.ts)
+        sa, sb, reg = self.aplicar()
+        # A muda so nos indices 3, 13, 23...; B so nos 7, 17, 27...
+        mudou_a = set(np.nonzero(np.diff(sa))[0] + 1)
+        mudou_b = set(np.nonzero(np.diff(sb))[0] + 1)
+        self.assertTrue(mudou_a and all(i % 10 == 3 for i in mudou_a))
+        self.assertTrue(mudou_b and all(i % 10 == 7 for i in mudou_b))
+        # e, nos instantes de atualizacao, vale exatamente a entrada
+        self.assertEqual(sa[13], self.a[13])
+        self.assertEqual(sa[:3].tolist(), [self.a[0]] * 3)
+        self.assertEqual(reg[0]['parametros']['fase_A_s'], 3 * self.ts)
+
+    def test_fase_sorteada_e_reprodutivel_e_independente_por_canal(self):
+        self.cfg['atualizacao'].update(ligado=True, periodo_s=0.01, semente=4)
+        _, _, reg1 = self.aplicar()
+        _, _, reg2 = self.aplicar()
+        f1, f2 = reg1[0]['parametros'], reg2[0]['parametros']
+        self.assertEqual((f1['fase_A_s'], f1['fase_B_s']), (f2['fase_A_s'], f2['fase_B_s']))
+        self.assertNotEqual(f1['fase_A_s'], f1['fase_B_s'])
+        self.assertTrue(0.0 <= f1['fase_A_s'] < 0.01 and 0.0 <= f1['fase_B_s'] < 0.01)
+
+    def test_periodo_menor_que_a_amostragem_e_identidade(self):
+        self.cfg['atualizacao'].update(ligado=True, periodo_s=self.ts / 2)
+        sa, _, _ = self.aplicar()
+        np.testing.assert_array_equal(sa, self.a)
+
+
 class Registro(unittest.TestCase):
 
     def test_registro_segue_a_ordem_da_cadeia(self):

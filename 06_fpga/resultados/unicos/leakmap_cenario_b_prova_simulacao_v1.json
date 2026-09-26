@@ -1,0 +1,2280 @@
+{
+  "descricao": "Prova do cenario B no simulador: a resposta gravada do proprio Verilog da placa, decodificada e conferida contra a referencia em ponto fixo e contra os criterios de B-06 a B-09. E o mesmo Verilog que vai para a FPGA, rodando ciclo a ciclo no Icarus Verilog. Nao e resultado de FPGA fisica; a placa confirma o que esta prova ja mostra.",
+  "origem": "simulacao_do_verilog",
+  "verilog": [
+    "06_fpga/rtl/leakmap_detector.v",
+    "06_fpga/rtl/leakmap_multiplicador.v",
+    "06_fpga/rtl/leakmap_nucleo.v",
+    "06_fpga/rtl/leakmap_saude.v",
+    "06_fpga/rtl/leakmap_topo.v",
+    "06_fpga/rtl/leakmap_uart.v"
+  ],
+  "casos_simulados": 67,
+  "casos_identicos_ao_modelo_byte_a_byte": 67,
+  "criterios": {
+    "B-06": {
+      "criterio": "bloco corrompido rejeitado; so segue com o bloco certo",
+      "bloco_corrompido": {
+        "ensaio": "MX-001",
+        "quadros_corrompidos_no_enlace": 1,
+        "recibos_de_crc_invalido": 1,
+        "bloco_reenviado_e_aceito": true,
+        "blocos_aceitos": 9,
+        "blocos_do_ensaio": 9,
+        "falhas_de_crc_contadas_pela_placa": 1,
+        "resultado_igual_ao_do_ensaio_sem_corrupcao": true
+      },
+      "bloco_fora_de_sequencia": {
+        "ensaio": "MX-003",
+        "recibos_fora_de_sequencia": 1,
+        "descontinuidades_contadas_pela_placa": 1,
+        "execucao": "recusada, amostras faltando"
+      },
+      "passou": true
+    },
+    "B-07": {
+      "criterio": "configuracao lida de volta igual a enviada, e o mesmo ensaio rodado de novo com resultado identico",
+      "configuracoes_conferidas": 45,
+      "configuracoes_divergentes": [],
+      "mesmo_ensaio_duas_vezes": {
+        "ensaio": "MX-005",
+        "resultados_identicos_byte_a_byte": true,
+        "bytes_do_resultado": 71
+      },
+      "mesmo_ensaio_com_outro_no_meio": {
+        "sequencia": [
+          "MX-021",
+          "MX-001",
+          "MX-021"
+        ],
+        "resultados_identicos_aos_de_cada_ensaio_sozinho": true
+      },
+      "passou": true
+    },
+    "B-08": {
+      "criterio": "reproducao por indice comum: atraso conhecido entre canais devolvido exato",
+      "atraso_imposto_amostras": 40,
+      "diferenca_de_chegada_amostras": 40,
+      "diferenca_de_cruzamento_amostras": 40,
+      "amostras_reproduzidas": 101,
+      "amostras_enviadas": 101,
+      "todas_as_amostras_reproduzidas_nos_45_ensaios": true,
+      "passou": true
+    },
+    "B-09": {
+      "criterio": "indice da FPGA igual ao da referencia em ponto fixo",
+      "referencia": "04_detector/detector_ponto_fixo.py, rodado sobre o sinal original do ensaio",
+      "ensaios": 45,
+      "canais_comparados": 90,
+      "canais_iguais": 90,
+      "campos_comparados": [
+        "detectado",
+        "indice_de_cruzamento",
+        "indice_de_chegada",
+        "retrocesso_truncado",
+        "n_oportunidades_de_decisao"
+      ],
+      "sinais_sinteticos_de_retrocesso": [
+        {
+          "caso": "sintetico_frente_fraca_0",
+          "descricao": "frente fraca com ruido, semente 0: retrocesso longo",
+          "canal_A": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 158,
+              "indice_de_chegada": 155,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 158,
+              "indice_de_chegada": 155,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 3
+          },
+          "canal_B": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 168,
+              "indice_de_chegada": 166,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 168,
+              "indice_de_chegada": 166,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 2
+          },
+          "igual": true
+        },
+        {
+          "caso": "sintetico_frente_fraca_3",
+          "descricao": "frente fraca com ruido, semente 3: retrocesso longo",
+          "canal_A": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 158,
+              "indice_de_chegada": 156,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 158,
+              "indice_de_chegada": 156,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 2
+          },
+          "canal_B": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 169,
+              "indice_de_chegada": 166,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 169,
+              "indice_de_chegada": 166,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 3
+          },
+          "igual": true
+        },
+        {
+          "caso": "sintetico_frente_fraca_7",
+          "descricao": "frente fraca com ruido, semente 7: retrocesso longo",
+          "canal_A": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 159,
+              "indice_de_chegada": 159,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 159,
+              "indice_de_chegada": 159,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 0
+          },
+          "canal_B": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 170,
+              "indice_de_chegada": 169,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 170,
+              "indice_de_chegada": 169,
+              "retrocesso_truncado": false,
+              "n_oportunidades_de_decisao": 272
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 1
+          },
+          "igual": true
+        },
+        {
+          "caso": "sintetico_retrocesso_truncado",
+          "descricao": "rampa limpa de passo 2,9: retrocesso truncado",
+          "canal_A": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 133,
+              "indice_de_chegada": 124,
+              "retrocesso_truncado": true,
+              "n_oportunidades_de_decisao": 361
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 133,
+              "indice_de_chegada": 124,
+              "retrocesso_truncado": true,
+              "n_oportunidades_de_decisao": 361
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 9
+          },
+          "canal_B": {
+            "verilog": {
+              "detectado": true,
+              "indice_de_cruzamento": 138,
+              "indice_de_chegada": 129,
+              "retrocesso_truncado": true,
+              "n_oportunidades_de_decisao": 361
+            },
+            "ponto_fixo": {
+              "detectado": true,
+              "indice_de_cruzamento": 138,
+              "indice_de_chegada": 129,
+              "retrocesso_truncado": true,
+              "n_oportunidades_de_decisao": 361
+            },
+            "divergencias": [],
+            "amostras_retrocedidas": 9
+          },
+          "igual": true
+        }
+      ],
+      "passou": true
+    },
+    "Tempos": {
+      "criterio": "os ciclos contados pelo circuito conferem com o simulador, e o tempo real segue o relogio da placa sem mudar o resultado",
+      "lote_MX-013": {
+        "ciclos_execucao_contados_pelo_circuito": 10970,
+        "ciclos_contados_pelo_simulador": 10973,
+        "ciclos_por_amostra_min": 13,
+        "ciclos_por_amostra_max": 92,
+        "latencia_de_declaracao_ciclos": {
+          "A": 92,
+          "B": 90
+        }
+      },
+      "tempo_real": [
+        {
+          "caso": "tempo_real_MX-001",
+          "periodo_ciclos": 400,
+          "amostras": 267,
+          "ciclos_execucao": 106498,
+          "ciclos_por_amostra_min": 13,
+          "ciclos_por_amostra_max": 97,
+          "latencia_de_declaracao_ciclos": {
+            "A": 97,
+            "B": 97
+          },
+          "primeira_amostra_no_ciclo": 43,
+          "amostras_atrasadas": 0
+        },
+        {
+          "caso": "tempo_real_MX-039",
+          "periodo_ciclos": 300,
+          "amostras": 500,
+          "ciclos_execucao": 149809,
+          "ciclos_por_amostra_min": 13,
+          "ciclos_por_amostra_max": 67,
+          "latencia_de_declaracao_ciclos": {},
+          "primeira_amostra_no_ciclo": null,
+          "amostras_atrasadas": 0
+        }
+      ],
+      "amostras_atrasadas_com_periodo_de_8_ciclos": 100,
+      "falhas": [],
+      "passou": true
+    },
+    "Autoteste": {
+      "criterio": "o circuito acompanha cada canal amostra a amostra e acusa canal congelado, saturado, fora da faixa do transmissor ou com salto impossivel, sem acusar canal saudavel",
+      "canais_da_matriz": 90,
+      "canais_saudaveis": 90,
+      "canais_com_estatisticas_iguais_as_das_amostras": 90,
+      "canais_doentes_de_proposito": {
+        "saude_canal_congelado": [
+          [
+            [],
+            [
+              "congelado"
+            ]
+          ],
+          [
+            [],
+            []
+          ]
+        ],
+        "saude_cabo_rompido": [
+          [
+            [
+              "congelado",
+              "saturado",
+              "fora_da_faixa"
+            ],
+            []
+          ]
+        ],
+        "saude_pico_isolado": [
+          [
+            [],
+            [
+              "salto"
+            ]
+          ]
+        ]
+      },
+      "falhas": [],
+      "passou": true
+    }
+  },
+  "todos_os_criterios_passaram": true,
+  "processamento_na_placa": {
+    "o_que_conta": "ciclos de relogio entre o ultimo byte do EXECUTAR e o primeiro byte do RESULTADO: reproducao das amostras e deteccao nos dois canais",
+    "ciclos_mediano": 16103,
+    "ciclos_maximo": 32338,
+    "ensaio_mais_longo": "MX-039",
+    "amostras_do_ensaio_mais_longo": 500,
+    "microssegundos_maximo_a_100_mhz": 323.4,
+    "observacao": "ciclos contados no simulador; em segundos dependem do relogio da placa, que so fica fixo com o fechamento de tempo no Vivado ou no Quartus"
+  },
+  "cadeia_do_computador_sobre_a_resposta_do_verilog": {
+    "arquivos": [
+      "leakmap_cenario_b_avaliacao_simulacao_v1.json",
+      "leakmap_cenario_b_comparacao_simulacao_v1.json",
+      "leakmap_cenario_b_relatorio_simulacao_v1.json",
+      "leakmap_cenario_b_resultado_simulacao_v1.json",
+      "leakmap_cenario_b_tentativas_simulacao_v1.json"
+    ],
+    "ensaios_concluidos": 45,
+    "divergencia_com_o_software": {
+      "n_ensaios": 45,
+      "identicos": 43,
+      "divergentes": 2,
+      "maior_divergencia_amostras": 1,
+      "maior_divergencia_de_posicao_m": 5.684341886080801e-13,
+      "contagem_por_causa": {
+        "conversao para inteiros (B-02, B-03)": 2
+      },
+      "toda_divergencia_tem_causa": true
+    },
+    "avaliacao_contra_a_verdade": {
+      "arquivo": "leakmap_cenario_b_avaliacao_simulacao_v1.json",
+      "contagens": {
+        "deteccao": 30,
+        "nao_deteccao": 0,
+        "falso_alarme": 0,
+        "silencio_correto": 15,
+        "inconclusivo": 0,
+        "falha_de_execucao": 0,
+        "localizado": 30
+      },
+      "erro_de_localizacao_geral": {
+        "n": 30,
+        "medio_m": 0.2883534136549033,
+        "mediano_m": 0.24096385542154763,
+        "maximo_m": 1.045783132530687,
+        "p95_m": 0.8000000000005798
+      },
+      "falso_alarme": {
+        "ensaios_sem_evento": 15,
+        "falsos_alarmes": 0,
+        "taxa_por_ensaio": 0.0,
+        "oportunidades_de_decisao": 13860,
+        "taxa_por_oportunidade": 0.0,
+        "limite_superior_95_por_oportunidade": 0.00021645021645021645,
+        "observacao": "nenhum falso alarme observado; o limite superior de 95% de confianca vem da regra de tres, 3/N"
+      }
+    }
+  },
+  "ensaios": [
+    {
+      "id": "MX-001",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 14224,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-002",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 14224,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-003",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 9652,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-004",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 9652,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-005",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 4953,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-006",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 4953,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-007",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 9651,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-008",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 9651,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 134,
+          "indice_de_chegada": 134,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-009",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 14214,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-010",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 14214,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 217,
+          "indice_de_chegada": 217,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 51,
+          "indice_de_chegada": 51,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-011",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16355,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-012",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16355,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-013",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10973,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-014",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10973,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-015",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 5501,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-016",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 5501,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-017",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10939,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-018",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10939,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 136,
+          "indice_de_chegada": 136,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-019",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16434,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-020",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16434,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 219,
+          "indice_de_chegada": 219,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 53,
+          "indice_de_chegada": 53,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-021",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16143,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 224,
+          "indice_de_chegada": 223,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 224,
+          "indice_de_chegada": 223,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-022",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16143,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 224,
+          "indice_de_chegada": 223,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 224,
+          "indice_de_chegada": 223,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-023",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10770,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 141,
+          "indice_de_chegada": 140,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 141,
+          "indice_de_chegada": 140,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-024",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10770,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 141,
+          "indice_de_chegada": 140,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 141,
+          "indice_de_chegada": 140,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-025",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 5421,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-026",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 101,
+      "amostras_do_ensaio": 101,
+      "ciclos_de_processamento": 5421,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 56,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 63
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-027",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10705,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 140,
+          "indice_de_chegada": 139,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 140,
+          "indice_de_chegada": 139,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-028",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 184,
+      "amostras_do_ensaio": 184,
+      "ciclos_de_processamento": 10705,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 140,
+          "indice_de_chegada": 139,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 140,
+          "indice_de_chegada": 139,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 57,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 146
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-029",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16103,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 223,
+          "indice_de_chegada": 222,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 223,
+          "indice_de_chegada": 222,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-030",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 267,
+      "amostras_do_ensaio": 267,
+      "ciclos_de_processamento": 16103,
+      "canal_A": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 223,
+          "indice_de_chegada": 222,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 223,
+          "indice_de_chegada": 222,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "ponto_fixo": {
+          "detectado": true,
+          "indice_de_cruzamento": 58,
+          "indice_de_chegada": 57,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 229
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-031",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 26765,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-032",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 26765,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-033",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 26765,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-034",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 26765,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-035",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 26765,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-036",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32280,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-037",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32312,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-038",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32320,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-039",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32338,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-040",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32307,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-041",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 31963,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-042",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 31995,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-043",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 31942,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-044",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 32012,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    },
+    {
+      "id": "MX-045",
+      "situacao_da_placa": 0,
+      "amostras_reproduzidas": 500,
+      "amostras_do_ensaio": 500,
+      "ciclos_de_processamento": 31978,
+      "canal_A": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "canal_B": {
+        "verilog": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "ponto_fixo": {
+          "detectado": false,
+          "indice_de_cruzamento": null,
+          "indice_de_chegada": null,
+          "retrocesso_truncado": false,
+          "n_oportunidades_de_decisao": 462
+        },
+        "divergencias": []
+      },
+      "igual": true
+    }
+  ]
+}
