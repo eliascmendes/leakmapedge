@@ -130,3 +130,29 @@ transmissor inteligente: 4 saem localizados perto do sensor A (a 0,4 m com
 posicao para dentro do trecho, e 1 sai sem localizacao (100 ms). Com
 transmissor rapido, os 4 casos (ideal e rapido, grande e pequeno) saem como
 "fora do trecho, lado A".
+
+## Refino da posicao por correlacao cruzada
+
+`04_detector/refino.py` compara a frente de onda dos dois canais em volta das
+marcas de chegada, pela correlacao normalizada, e interpola o pico por uma
+parabola: a diferenca de tempo sai em fracao de amostra. Fica ao lado da
+posicao publicada, sem substitui-la; o avaliador mede os dois. Erro de
+localizacao, mediano / maximo, so marcas e com o refino:
+
+| Caso | So marcas | Com o refino |
+|---|---|---|
+| Linha do cais, ideal | 0,11 / 0,25 m | 0,09 / 0,19 m |
+| Linha do cais, transmissor rapido, grande | 0,11 / 0,25 m | 0,12 / 0,26 m |
+| Linha do cais, transmissor rapido, pequeno | 0,14 / 0,32 m | 0,10 / 0,26 m |
+| Linha do cais, inteligente 1 ms, grande | 0,18 / 0,56 m | 0,08 / 0,35 m |
+| Linha do cais, inteligente 1 ms, pequeno | 0,25 / 0,39 m | 0,07 / 0,30 m |
+| Linha do cais, inteligente 10 ms ou mais | 0,9 a 51 m | igual ou ate 4% pior |
+| Matriz de 200 m, ruido baixo e sem ruido | 0,00 m | 0,00 a 0,06 m |
+
+Leitura: o refino ajuda quando a frente e limpa e a marca erra por fracao de
+amostra, como com o transmissor de 1 ms; com transmissor lento o erro vem da
+saida em degraus, e a correlacao nao tem o que corrigir. Na matriz as marcas
+ja acertam exatamente, pela forma como os eventos foram simulados. A 2,5 mil
+amostras por segundo a frente dura poucas amostras: o ganho grande de
+resolucao viria de amostrar mais rapido (a 10 mil por segundo, uma amostra
+vale 6 cm), nao do refino.

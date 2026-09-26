@@ -99,7 +99,7 @@ pip install numpy pyserial
 python rodar_software.py
 ```
 
-O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa e termina com os 120 testes automatizados em Python, inclusive os de ponta a ponta pela serial contra a placa simulada. Com o Icarus Verilog instalado, simula também o Verilog da placa e confere os critérios do cenário B. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
+O comando gera os ensaios com o modelo de sensor, roda o detector, compara o porte em ponto fixo, executa o avaliador em processo separado, roda o cenário B contra o modelo de referência da placa, roda o detector e a avaliação da linha do cais e termina com os 164 testes automatizados em Python, inclusive os de ponta a ponta pela serial contra a placa simulada e os do serviço de alerta. Com o Icarus Verilog instalado, simula também o Verilog da placa e confere os critérios do cenário B. Com o Node instalado, roda também o teste de paridade do simulador do painel contra o Python; o GitHub Actions executa a trilha inteira a cada envio.
 
 A simulação hidráulica das etapas A-01 a A-08 usa TSNet e wntr; o ambiente está descrito em [`02_bancada/ambiente`](02_bancada/ambiente). Os sinais que ela produziu já estão versionados em `03_ensaios/amostras`, então a trilha acima roda sem ela.
 
@@ -117,14 +117,14 @@ A seção "Cenário B · reprodução de sinais digitais em FPGA física" mostra
 
 **No hackathon**, a equipe aperfeiçoa a cadeia que já funciona:
 
-1. Levar a demonstração autônoma à banca: a DE10-Standard localizando, sozinha, o rompimento escolhido nos botões.
-2. Ajustar o modelo de sensores aos parâmetros dos transmissores instalados.
-3. Estender o cálculo de posição à topologia real da linha, com três berços e manifold.
+1. Amostrar mais rápido: a 10 mil amostras por segundo, uma amostra vale 6 cm. O refino por correlação cruzada entre os dois canais já é calculado ao lado da posição e ajuda pouco a 2,5 mil por segundo, porque a frente dura poucas amostras.
+2. Ajustar o modelo de sensores à folha de dados do transmissor instalado: o tempo de atualização da saída decide se ele localiza por metro ou por berço.
+3. Estender a simulação à rede do cais, com três berços, manifold e os comprimentos reais da planta.
 4. Empacotar o ambiente da simulação hidráulica para que qualquer máquina refaça os ensaios do zero.
 
 **Na visão do produto**, descrita na proposta:
 
-- classificar manobras normais pela física (polaridade da onda e origem coincidindo com bomba ou válvula cadastrada), para que partida de bomba e fechamento de válvula não gerem alarme;
+- classificar manobras também pela origem, coincidindo com bomba ou válvula cadastrada, além da polaridade da onda, que já está implementada;
 - confirmar o alarme com sensores de vapor químico e inflamável, uma segunda física independente;
 - autoteste contínuo dos canais em campo, para que o monitoramento nunca falhe em silêncio, a partir do autoteste que a placa já faz em cada execução;
 - gêmeo hidráulico da linha saudável, para cobrir também o furo lento, que não gera onda;

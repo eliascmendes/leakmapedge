@@ -59,6 +59,13 @@
    "maximo_m": 300.80786793115556,
    "p95_m": 160.00702493853186
   },
+  "erro_de_localizacao_refinada_geral": {
+   "n": 81,
+   "medio_m": 21.967223662107344,
+   "mediano_m": 0.29411584585625405,
+   "maximo_m": 300.7318451668717,
+   "p95_m": 159.99298089489957
+  },
   "tempo_de_deteccao_geral": {
    "n": 96,
    "medio_s": 0.1710285559791066,
@@ -85,6 +92,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.08292733480890238,
+     "mediano_m": 0.08925992215085898,
+     "maximo_m": 0.19228105901029835,
+     "p95_m": 0.17229793205558788
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1456327160357402,
@@ -105,6 +119,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12249547722052942,
@@ -131,6 +146,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.08300432640023862,
+     "mediano_m": 0.08772779044534218,
+     "maximo_m": 0.19338785690342775,
+     "p95_m": 0.17257391916696743
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1456327160357402,
@@ -151,6 +173,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12249547722052942,
@@ -177,6 +200,13 @@
      "maximo_m": 300.80786793115556,
      "p95_m": 284.41341763259567
     },
+    "erro_de_localizacao_refinada": {
+     "n": 5,
+     "medio_m": 129.7611323063838,
+     "mediano_m": 51.13107985961091,
+     "maximo_m": 300.7318451668717,
+     "p95_m": 287.6390179741741
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.3338232277852021,
@@ -197,6 +227,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.13612583077998527,
@@ -222,6 +253,13 @@
      "mediano_m": 18.651211801896807,
      "maximo_m": 271.61924833157707,
      "p95_m": 234.29048120828932
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 4,
+     "medio_m": 80.02524706325457,
+     "mediano_m": 18.713896812532425,
+     "maximo_m": 271.62332288925904,
+     "p95_m": 234.30405170772787
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -249,6 +287,13 @@
      "maximo_m": 180.61116965226557,
      "p95_m": 180.61116965226557
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 180.67624454421104,
+     "mediano_m": 180.67624454421104,
+     "maximo_m": 180.67624454421104,
+     "p95_m": 180.67624454421104
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.19425527978354704,
@@ -275,6 +320,13 @@
      "maximo_m": 3.020723568668757,
      "p95_m": 3.020723568668757
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 1.7754646851105471,
+     "mediano_m": 1.6413602925058512,
+     "maximo_m": 3.0844513447331394,
+     "p95_m": 3.046179443411475
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.15084432180847335,
@@ -295,6 +347,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12449994097927292,
@@ -321,6 +374,13 @@
      "maximo_m": 2.739726027397296,
      "p95_m": 2.581664910432067
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 1.2980197534086082,
+     "mediano_m": 0.9108429332496542,
+     "maximo_m": 2.8133355604650205,
+     "p95_m": 2.647274224452098
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.15147429613264987,
@@ -341,6 +401,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.13051333225550346,
@@ -366,6 +427,13 @@
      "mediano_m": 0.17562346329469847,
      "maximo_m": 0.5619950825430351,
      "p95_m": 0.4671584123638977
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.11972529820381997,
+     "mediano_m": 0.08312276481251502,
+     "maximo_m": 0.3476254857507115,
+     "p95_m": 0.3051807627947823
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -393,6 +461,13 @@
      "maximo_m": 150.3688092729189,
      "p95_m": 150.3688092729189
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12449994097927292,
@@ -419,6 +494,13 @@
      "maximo_m": 0.3863716192482798,
      "p95_m": 0.365296803652933
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.13334404432043406,
+     "mediano_m": 0.07329396981469927,
+     "maximo_m": 0.2994444902900568,
+     "p95_m": 0.297845896959916
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1476371797944837,
@@ -439,6 +521,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12409904822752424,
@@ -464,6 +547,13 @@
      "mediano_m": 13.73375482964525,
      "maximo_m": 21.180189673340408,
      "p95_m": 19.157007376185494
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 11.562123884073097,
+     "mediano_m": 13.93797025909862,
+     "maximo_m": 21.384161498854212,
+     "p95_m": 19.288551422733338
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -491,6 +581,13 @@
      "maximo_m": 160.2037232174219,
      "p95_m": 160.2037232174219
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 159.99298089489957,
+     "mediano_m": 159.99298089489957,
+     "maximo_m": 159.99298089489957,
+     "p95_m": 159.99298089489957
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.1689990364233788,
@@ -516,6 +613,13 @@
      "mediano_m": 5.725324903407085,
      "maximo_m": 23.70916754478401,
      "p95_m": 23.287671232876754
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 5,
+     "medio_m": 11.267043688085328,
+     "mediano_m": 5.929243137516039,
+     "maximo_m": 23.771369255462588,
+     "p95_m": 23.297681918700526
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -543,6 +647,13 @@
      "maximo_m": 156.26975763962065,
      "p95_m": 156.26975763962065
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 156.33414589488223,
+     "mediano_m": 156.33414589488223,
+     "maximo_m": 156.33414589488223,
+     "p95_m": 156.33414589488223
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.14775172058069763,
@@ -563,6 +674,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -578,6 +690,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -593,6 +706,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -608,6 +722,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -623,6 +738,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -638,6 +754,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -653,6 +770,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -668,6 +786,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -683,6 +802,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -698,6 +818,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -713,6 +834,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -728,6 +850,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -749,6 +872,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.12479912964437696,
+     "mediano_m": 0.1188119202235498,
+     "maximo_m": 0.25554288785463086,
+     "p95_m": 0.2349610199507651
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1468926646840933,
@@ -769,6 +899,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12369815547577553,
@@ -795,6 +926,13 @@
      "maximo_m": 0.31612223393045724,
      "p95_m": 0.2950474183350934
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.12057398279260058,
+     "mediano_m": 0.10284797989163508,
+     "maximo_m": 0.25543221695193097,
+     "p95_m": 0.2359229429932895
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.14706447586341415,
@@ -815,6 +953,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12409904822752424,
@@ -835,6 +974,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -850,6 +990,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -865,6 +1006,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -880,6 +1022,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -895,6 +1038,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -910,6 +1054,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    }
   ],
@@ -926,6 +1071,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.09034440440376557,
     "desfecho": "deteccao"
    },
    {
@@ -940,6 +1086,7 @@
     "tempo_de_deteccao_s": 0.04191603411904038,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.15138783561263836,
     "desfecho": "deteccao"
    },
    {
@@ -954,6 +1101,7 @@
     "tempo_de_deteccao_s": 0.04271781962253779,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08312276481251502,
     "desfecho": "deteccao"
    },
    {
@@ -968,6 +1116,7 @@
     "tempo_de_deteccao_s": 0.047127639891773515,
     "incerteza_declarada_m": 0.43753423674281666,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.9898674374265397,
     "desfecho": "deteccao"
    },
    {
@@ -982,6 +1131,7 @@
     "tempo_de_deteccao_s": 0.07959995278341833,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 21.384161498854212,
     "desfecho": "deteccao"
    },
    {
@@ -996,6 +1146,7 @@
     "tempo_de_deteccao_s": 0.058753529692485845,
     "incerteza_declarada_m": 0.3967683735383541,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 11.723307677777314,
     "desfecho": "deteccao"
    },
    {
@@ -1010,6 +1161,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.016750452091287116,
     "desfecho": "deteccao"
    },
    {
@@ -1024,6 +1176,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08593731251184522,
     "desfecho": "deteccao"
    },
    {
@@ -1038,6 +1191,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.43753483046689046,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.015038651190792507,
     "desfecho": "deteccao"
    },
    {
@@ -1052,6 +1206,7 @@
     "tempo_de_deteccao_s": 0.12890976124850864,
     "incerteza_declarada_m": 0.43753417890221236,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.6747366783225175,
     "desfecho": "deteccao"
    },
    {
@@ -1066,6 +1221,7 @@
     "tempo_de_deteccao_s": 0.13933297279397489,
     "incerteza_declarada_m": 0.43753407925477017,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 6.248542398584476,
     "desfecho": "deteccao"
    },
    {
@@ -1080,6 +1236,7 @@
     "tempo_de_deteccao_s": 0.17701689145835284,
     "incerteza_declarada_m": 0.48637627957538515,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -1094,6 +1251,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19228105901029835,
     "desfecho": "deteccao"
    },
    {
@@ -1108,6 +1266,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.25554288785463086,
     "desfecho": "deteccao"
    },
    {
@@ -1122,6 +1281,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.3476254857507115,
     "desfecho": "deteccao"
    },
    {
@@ -1136,6 +1296,7 @@
     "tempo_de_deteccao_s": 0.21029098985349506,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 3.0844513447331394,
     "desfecho": "deteccao"
    },
    {
@@ -1150,6 +1311,7 @@
     "tempo_de_deteccao_s": 0.24717312301437563,
     "incerteza_declarada_m": 0.3619156437372671,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.14980207292541,
     "desfecho": "deteccao"
    },
    {
@@ -1164,6 +1326,7 @@
     "tempo_de_deteccao_s": 0.2928748967137277,
     "incerteza_declarada_m": 0.4375343221412575,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 51.13107985961091,
     "desfecho": "deteccao"
    },
    {
@@ -1178,6 +1341,7 @@
     "tempo_de_deteccao_s": 0.2852579344305023,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.12567063582793025,
     "desfecho": "deteccao"
    },
    {
@@ -1192,6 +1356,7 @@
     "tempo_de_deteccao_s": 0.2864606126857484,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.18693666150841182,
     "desfecho": "deteccao"
    },
    {
@@ -1206,6 +1371,7 @@
     "tempo_de_deteccao_s": 0.2868615054374971,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.20614307589761438,
     "desfecho": "deteccao"
    },
    {
@@ -1220,6 +1386,7 @@
     "tempo_de_deteccao_s": 0.28886596919624064,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.189333195053166,
     "desfecho": "deteccao"
    },
    {
@@ -1234,6 +1401,7 @@
     "tempo_de_deteccao_s": 0.28886596919624064,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.722363356569417,
     "desfecho": "deteccao"
    },
    {
@@ -1248,6 +1416,7 @@
     "tempo_de_deteccao_s": 0.2952802532242198,
     "incerteza_declarada_m": 0.4375342068705087,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 49.951719624275256,
     "desfecho": "deteccao"
    },
    {
@@ -1262,6 +1431,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.05155614658417562,
     "desfecho": "deteccao"
    },
    {
@@ -1276,6 +1446,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.1188119202235498,
     "desfecho": "deteccao"
    },
    {
@@ -1290,6 +1461,7 @@
     "tempo_de_deteccao_s": 0.20588116958425937,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.15733535303706958,
     "desfecho": "deteccao"
    },
    {
@@ -1304,6 +1476,7 @@
     "tempo_de_deteccao_s": 0.20708384783950548,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.9568783403275916,
     "desfecho": "deteccao"
    },
    {
@@ -1318,6 +1491,7 @@
     "tempo_de_deteccao_s": 0.23073652019267885,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.398794578451316,
     "desfecho": "deteccao"
    },
    {
@@ -1332,6 +1506,7 @@
     "tempo_de_deteccao_s": 0.44000253660550115,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 235.26770920338384,
     "desfecho": "deteccao"
    },
    {
@@ -1346,6 +1521,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.014628723594000803,
     "desfecho": "deteccao"
    },
    {
@@ -1360,6 +1536,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.05047877552169666,
     "desfecho": "deteccao"
    },
    {
@@ -1374,6 +1551,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.43753740101283356,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.009118166234543423,
     "desfecho": "deteccao"
    },
    {
@@ -1388,6 +1566,7 @@
     "tempo_de_deteccao_s": 0.12931065400025735,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.6413602925058512,
     "desfecho": "deteccao"
    },
    {
@@ -1402,6 +1581,7 @@
     "tempo_de_deteccao_s": 0.14173832930446711,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.093233024028223,
     "desfecho": "deteccao"
    },
    {
@@ -1416,6 +1596,7 @@
     "tempo_de_deteccao_s": 0.518176623196498,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 300.7318451668717,
     "desfecho": "deteccao"
    },
    {
@@ -1430,6 +1611,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08925992215085898,
     "desfecho": "deteccao"
    },
    {
@@ -1444,6 +1626,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.43755037941997244,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.02449851427786598,
     "desfecho": "deteccao"
    },
    {
@@ -1458,6 +1641,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.019693590503493397,
     "desfecho": "deteccao"
    },
    {
@@ -1472,6 +1656,7 @@
     "tempo_de_deteccao_s": 0.04432139062953261,
     "incerteza_declarada_m": 0.3619169388878807,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.891625507405024,
     "desfecho": "deteccao"
    },
    {
@@ -1486,6 +1671,7 @@
     "tempo_de_deteccao_s": 0.06596959922396248,
     "incerteza_declarada_m": 0.43753420809248156,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 13.93797025909862,
     "desfecho": "deteccao"
    },
    {
@@ -1500,6 +1686,7 @@
     "tempo_de_deteccao_s": 0.5546578636056299,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1515,6 +1702,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -1529,6 +1717,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -1543,6 +1732,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -1557,6 +1747,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -1571,6 +1762,7 @@
     "tempo_de_deteccao_s": 0.1689990364233788,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 159.99298089489957,
     "desfecho": "deteccao"
    },
    {
@@ -1585,6 +1777,7 @@
     "tempo_de_deteccao_s": 0.13612583077998527,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1600,6 +1793,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08883686768581356,
     "desfecho": "deteccao"
    },
    {
@@ -1614,6 +1808,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.3621514296728115,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.1537786106891872,
     "desfecho": "deteccao"
    },
    {
@@ -1628,6 +1823,7 @@
     "tempo_de_deteccao_s": 0.043118712374286494,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.29411584585625405,
     "desfecho": "deteccao"
    },
    {
@@ -1642,6 +1838,7 @@
     "tempo_de_deteccao_s": 0.04953299640226572,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.5673836768677347,
     "desfecho": "deteccao"
    },
    {
@@ -1656,6 +1853,7 @@
     "tempo_de_deteccao_s": 0.0435196051260352,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1671,6 +1869,7 @@
     "tempo_de_deteccao_s": 0.08561334405964888,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.59961194601317,
     "desfecho": "deteccao"
    },
    {
@@ -1685,6 +1884,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.01778384067819161,
     "desfecho": "deteccao"
    },
    {
@@ -1699,6 +1899,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07332299417353738,
     "desfecho": "deteccao"
    },
    {
@@ -1713,6 +1914,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.00100686144085671,
     "desfecho": "deteccao"
    },
    {
@@ -1727,6 +1929,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.9108429332496542,
     "desfecho": "deteccao"
    },
    {
@@ -1741,6 +1944,7 @@
     "tempo_de_deteccao_s": 0.16699457266463533,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 23.771369255462588,
     "desfecho": "deteccao"
    },
    {
@@ -1755,6 +1959,7 @@
     "tempo_de_deteccao_s": 0.13291868876599566,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1770,6 +1975,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19338785690342775,
     "desfecho": "deteccao"
    },
    {
@@ -1784,6 +1990,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.25543221695193097,
     "desfecho": "deteccao"
    },
    {
@@ -1798,6 +2005,7 @@
     "tempo_de_deteccao_s": 0.20548027683251066,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.2994444902900568,
     "desfecho": "deteccao"
    },
    {
@@ -1812,6 +2020,7 @@
     "tempo_de_deteccao_s": 0.2138990246192334,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.8510694290621359,
     "desfecho": "deteccao"
    },
    {
@@ -1826,6 +2035,7 @@
     "tempo_de_deteccao_s": 0.2138990246192334,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.929243137516039,
     "desfecho": "deteccao"
    },
    {
@@ -1840,6 +2050,7 @@
     "tempo_de_deteccao_s": 0.22632669992344315,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 11.049871738694378,
     "desfecho": "deteccao"
    },
    {
@@ -1854,6 +2065,7 @@
     "tempo_de_deteccao_s": 0.2852579344305023,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.12400806444856016,
     "desfecho": "deteccao"
    },
    {
@@ -1868,6 +2080,7 @@
     "tempo_de_deteccao_s": 0.2868615054374971,
     "incerteza_declarada_m": 0.43761516837989395,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19040130375645958,
     "desfecho": "deteccao"
    },
    {
@@ -1882,6 +2095,7 @@
     "tempo_de_deteccao_s": 0.2872623981892458,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.17986004721291238,
     "desfecho": "deteccao"
    },
    {
@@ -1896,6 +2110,7 @@
     "tempo_de_deteccao_s": 0.2872623981892458,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.259797773755281,
     "desfecho": "deteccao"
    },
    {
@@ -1910,6 +2125,7 @@
     "tempo_de_deteccao_s": 0.30009096624520426,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1925,6 +2141,7 @@
     "tempo_de_deteccao_s": 0.29888828798995815,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -1940,6 +2157,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.052840116966820005,
     "desfecho": "deteccao"
    },
    {
@@ -1954,6 +2172,7 @@
     "tempo_de_deteccao_s": 0.20548027683251066,
     "incerteza_declarada_m": 0.43769254033868454,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.10284797989163508,
     "desfecho": "deteccao"
    },
    {
@@ -1968,6 +2187,7 @@
     "tempo_de_deteccao_s": 0.20588116958425937,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.03925124256784329,
     "desfecho": "deteccao"
    },
    {
@@ -1982,6 +2202,7 @@
     "tempo_de_deteccao_s": 0.2078856333430029,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.6083117293467808,
     "desfecho": "deteccao"
    },
    {
@@ -1996,6 +2217,7 @@
     "tempo_de_deteccao_s": 0.2343445549584172,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.8520998894250056,
     "desfecho": "deteccao"
    },
    {
@@ -2010,6 +2232,7 @@
     "tempo_de_deteccao_s": 0.38788647887816996,
     "incerteza_declarada_m": 0.44723143591106174,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 271.62332288925904,
     "desfecho": "deteccao"
    },
    {
@@ -2024,6 +2247,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.016445747673515143,
     "desfecho": "deteccao"
    },
    {
@@ -2038,6 +2262,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.4377156822313934,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.04918136372759818,
     "desfecho": "deteccao"
    },
    {
@@ -2052,6 +2277,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.44692836510910916,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.046435853060415866,
     "desfecho": "deteccao"
    },
    {
@@ -2066,6 +2292,7 @@
     "tempo_de_deteccao_s": 0.12650440473801644,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07539717111365007,
     "desfecho": "deteccao"
    },
    {
@@ -2080,6 +2307,7 @@
     "tempo_de_deteccao_s": 0.12810797574501123,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 3.379573586370725,
     "desfecho": "deteccao"
    },
    {
@@ -2094,6 +2322,7 @@
     "tempo_de_deteccao_s": 0.15536868286392294,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 22.82818167905168,
     "desfecho": "deteccao"
    },
    {
@@ -2108,6 +2337,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08772779044534218,
     "desfecho": "deteccao"
    },
    {
@@ -2122,6 +2352,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.019053410357855682,
     "desfecho": "deteccao"
    },
    {
@@ -2136,6 +2367,7 @@
     "tempo_de_deteccao_s": 0.04271781962253779,
     "incerteza_declarada_m": 4.163980857776214,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07329396981469927,
     "desfecho": "deteccao"
    },
    {
@@ -2150,6 +2382,7 @@
     "tempo_de_deteccao_s": 0.05073567465751183,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.8133355604650205,
     "desfecho": "deteccao"
    },
    {
@@ -2164,6 +2397,7 @@
     "tempo_de_deteccao_s": 0.04873121089876831,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 21.402932571652286,
     "desfecho": "deteccao"
    },
    {
@@ -2178,6 +2412,7 @@
     "tempo_de_deteccao_s": 0.545036437563661,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -2193,6 +2428,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -2207,6 +2443,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.4376145933283233,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -2221,6 +2458,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -2235,6 +2473,7 @@
     "tempo_de_deteccao_s": 0.13051333225550346,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -2249,6 +2488,7 @@
     "tempo_de_deteccao_s": 0.14775172058069763,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 156.33414589488223,
     "desfecho": "deteccao"
    },
    {
@@ -2263,6 +2503,7 @@
     "tempo_de_deteccao_s": 0.19425527978354704,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 180.67624454421104,
     "desfecho": "deteccao"
    },
    {
@@ -2277,6 +2518,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2291,6 +2533,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2305,6 +2548,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2319,6 +2563,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2333,6 +2578,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2347,6 +2593,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2361,6 +2608,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2375,6 +2623,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2389,6 +2638,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2403,6 +2653,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2417,6 +2668,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2431,6 +2683,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2445,6 +2698,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2459,6 +2713,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2473,6 +2728,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2487,6 +2743,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2501,6 +2758,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2515,6 +2773,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2529,6 +2788,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2543,6 +2803,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2557,6 +2818,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2571,6 +2833,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2585,6 +2848,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2599,6 +2863,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2613,6 +2878,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2627,6 +2893,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2641,6 +2908,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2655,6 +2923,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2669,6 +2938,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2683,6 +2953,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2697,6 +2968,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 1.075955602038195,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2711,6 +2983,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2725,6 +2998,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2739,6 +3013,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2753,6 +3028,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4506225647243372,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2767,6 +3043,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4420126641752036,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2781,6 +3058,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 1.075955602038195,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2795,6 +3073,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2809,6 +3088,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2823,6 +3103,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2837,6 +3118,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.534334108482568,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -2851,6 +3133,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4391359548945909,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    }
   ],
@@ -3129,6 +3412,13 @@
    "maximo_m": 300.80786793115556,
    "p95_m": 159.22023182297158
   },
+  "erro_de_localizacao_refinada_geral": {
+   "n": 85,
+   "medio_m": 27.992295489772882,
+   "mediano_m": 0.3476254857507115,
+   "maximo_m": 300.7318451668717,
+   "p95_m": 159.2612138948961
+  },
   "tempo_de_deteccao_geral": {
    "n": 96,
    "medio_s": 0.1710285559791066,
@@ -3155,6 +3445,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.08292733480890238,
+     "mediano_m": 0.08925992215085898,
+     "maximo_m": 0.19228105901029835,
+     "p95_m": 0.17229793205558788
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1456327160357402,
@@ -3175,6 +3472,13 @@
      "localizado": 1
     },
     "erro_de_localizacao": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
+    "erro_de_localizacao_refinada": {
      "n": 1,
      "medio_m": 150.0,
      "mediano_m": 150.0,
@@ -3207,6 +3511,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.08300432640023862,
+     "mediano_m": 0.08772779044534218,
+     "maximo_m": 0.19338785690342775,
+     "p95_m": 0.17257391916696743
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1456327160357402,
@@ -3227,6 +3538,13 @@
      "localizado": 1
     },
     "erro_de_localizacao": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
+    "erro_de_localizacao_refinada": {
      "n": 1,
      "medio_m": 150.0,
      "mediano_m": 150.0,
@@ -3259,6 +3577,13 @@
      "maximo_m": 300.80786793115556,
      "p95_m": 284.41341763259567
     },
+    "erro_de_localizacao_refinada": {
+     "n": 5,
+     "medio_m": 129.7611323063838,
+     "mediano_m": 51.13107985961091,
+     "maximo_m": 300.7318451668717,
+     "p95_m": 287.6390179741741
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.3338232277852021,
@@ -3279,6 +3604,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.13612583077998527,
@@ -3304,6 +3630,13 @@
      "mediano_m": 18.651211801896807,
      "maximo_m": 271.61924833157707,
      "p95_m": 234.29048120828932
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 4,
+     "medio_m": 80.02524706325457,
+     "mediano_m": 18.713896812532425,
+     "maximo_m": 271.62332288925904,
+     "p95_m": 234.30405170772787
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -3331,6 +3664,13 @@
      "maximo_m": 180.61116965226557,
      "p95_m": 180.61116965226557
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 180.67624454421104,
+     "mediano_m": 180.67624454421104,
+     "maximo_m": 180.67624454421104,
+     "p95_m": 180.67624454421104
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.19425527978354704,
@@ -3357,6 +3697,13 @@
      "maximo_m": 3.020723568668757,
      "p95_m": 3.020723568668757
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 1.7754646851105471,
+     "mediano_m": 1.6413602925058512,
+     "maximo_m": 3.0844513447331394,
+     "p95_m": 3.046179443411475
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.15084432180847335,
@@ -3377,6 +3724,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12449994097927292,
@@ -3403,6 +3751,13 @@
      "maximo_m": 2.739726027397296,
      "p95_m": 2.581664910432067
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 1.2980197534086082,
+     "mediano_m": 0.9108429332496542,
+     "maximo_m": 2.8133355604650205,
+     "p95_m": 2.647274224452098
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.15147429613264987,
@@ -3423,6 +3778,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.13051333225550346,
@@ -3448,6 +3804,13 @@
      "mediano_m": 0.17562346329469847,
      "maximo_m": 0.5619950825430351,
      "p95_m": 0.4671584123638977
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.11972529820381997,
+     "mediano_m": 0.08312276481251502,
+     "maximo_m": 0.3476254857507115,
+     "p95_m": 0.3051807627947823
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -3475,6 +3838,13 @@
      "maximo_m": 150.3688092729189,
      "p95_m": 150.3688092729189
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12449994097927292,
@@ -3501,6 +3871,13 @@
      "maximo_m": 0.3863716192482798,
      "p95_m": 0.365296803652933
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.13334404432043406,
+     "mediano_m": 0.07329396981469927,
+     "maximo_m": 0.2994444902900568,
+     "p95_m": 0.297845896959916
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1476371797944837,
@@ -3521,6 +3898,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12409904822752424,
@@ -3546,6 +3924,13 @@
      "mediano_m": 13.73375482964525,
      "maximo_m": 21.180189673340408,
      "p95_m": 19.157007376185494
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 11.562123884073097,
+     "mediano_m": 13.93797025909862,
+     "maximo_m": 21.384161498854212,
+     "p95_m": 19.288551422733338
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -3573,6 +3958,13 @@
      "maximo_m": 160.2037232174219,
      "p95_m": 160.2037232174219
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 159.99298089489957,
+     "mediano_m": 159.99298089489957,
+     "maximo_m": 159.99298089489957,
+     "p95_m": 159.99298089489957
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.1689990364233788,
@@ -3598,6 +3990,13 @@
      "mediano_m": 5.725324903407085,
      "maximo_m": 23.70916754478401,
      "p95_m": 23.287671232876754
+    },
+    "erro_de_localizacao_refinada": {
+     "n": 5,
+     "medio_m": 11.267043688085328,
+     "mediano_m": 5.929243137516039,
+     "maximo_m": 23.771369255462588,
+     "p95_m": 23.297681918700526
     },
     "tempo_de_deteccao": {
      "n": 7,
@@ -3625,6 +4024,13 @@
      "maximo_m": 156.26975763962065,
      "p95_m": 156.26975763962065
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 156.33414589488223,
+     "mediano_m": 156.33414589488223,
+     "maximo_m": 156.33414589488223,
+     "p95_m": 156.33414589488223
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.14775172058069763,
@@ -3645,6 +4051,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3660,6 +4067,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3675,6 +4083,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3690,6 +4099,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3705,6 +4115,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3720,6 +4131,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3735,6 +4147,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3750,6 +4163,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3765,6 +4179,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3780,6 +4195,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3795,6 +4211,7 @@
      "localizado": 1
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3810,6 +4227,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3831,6 +4249,13 @@
      "maximo_m": 0.24587284861257785,
      "p95_m": 0.23533544081489594
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.12479912964437696,
+     "mediano_m": 0.1188119202235498,
+     "maximo_m": 0.25554288785463086,
+     "p95_m": 0.2349610199507651
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.1468926646840933,
@@ -3851,6 +4276,13 @@
      "localizado": 1
     },
     "erro_de_localizacao": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
+    "erro_de_localizacao_refinada": {
      "n": 1,
      "medio_m": 150.0,
      "mediano_m": 150.0,
@@ -3883,6 +4315,13 @@
      "maximo_m": 0.31612223393045724,
      "p95_m": 0.2950474183350934
     },
+    "erro_de_localizacao_refinada": {
+     "n": 7,
+     "medio_m": 0.12057398279260058,
+     "mediano_m": 0.10284797989163508,
+     "maximo_m": 0.25543221695193097,
+     "p95_m": 0.2359229429932895
+    },
     "tempo_de_deteccao": {
      "n": 7,
      "medio_s": 0.14706447586341415,
@@ -3909,6 +4348,13 @@
      "maximo_m": 150.0,
      "p95_m": 150.0
     },
+    "erro_de_localizacao_refinada": {
+     "n": 1,
+     "medio_m": 150.0,
+     "mediano_m": 150.0,
+     "maximo_m": 150.0,
+     "p95_m": 150.0
+    },
     "tempo_de_deteccao": {
      "n": 1,
      "medio_s": 0.12409904822752424,
@@ -3929,6 +4375,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3944,6 +4391,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3959,6 +4407,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3974,6 +4423,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -3989,6 +4439,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    },
    {
@@ -4004,6 +4455,7 @@
      "localizado": 0
     },
     "erro_de_localizacao": null,
+    "erro_de_localizacao_refinada": null,
     "tempo_de_deteccao": null
    }
   ],
@@ -4020,6 +4472,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.09034440440376557,
     "desfecho": "deteccao"
    },
    {
@@ -4034,6 +4487,7 @@
     "tempo_de_deteccao_s": 0.04191603411904038,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.15138783561263836,
     "desfecho": "deteccao"
    },
    {
@@ -4048,6 +4502,7 @@
     "tempo_de_deteccao_s": 0.04271781962253779,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08312276481251502,
     "desfecho": "deteccao"
    },
    {
@@ -4062,6 +4517,7 @@
     "tempo_de_deteccao_s": 0.047127639891773515,
     "incerteza_declarada_m": 0.43753423674281666,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.9898674374265397,
     "desfecho": "deteccao"
    },
    {
@@ -4076,6 +4532,7 @@
     "tempo_de_deteccao_s": 0.07959995278341833,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 21.384161498854212,
     "desfecho": "deteccao"
    },
    {
@@ -4090,6 +4547,7 @@
     "tempo_de_deteccao_s": 0.058753529692485845,
     "incerteza_declarada_m": 0.3967683735383541,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 11.723307677777314,
     "desfecho": "deteccao"
    },
    {
@@ -4104,6 +4562,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.016750452091287116,
     "desfecho": "deteccao"
    },
    {
@@ -4118,6 +4577,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08593731251184522,
     "desfecho": "deteccao"
    },
    {
@@ -4132,6 +4592,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.43753483046689046,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.015038651190792507,
     "desfecho": "deteccao"
    },
    {
@@ -4146,6 +4607,7 @@
     "tempo_de_deteccao_s": 0.12890976124850864,
     "incerteza_declarada_m": 0.43753417890221236,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.6747366783225175,
     "desfecho": "deteccao"
    },
    {
@@ -4160,6 +4622,7 @@
     "tempo_de_deteccao_s": 0.13933297279397489,
     "incerteza_declarada_m": 0.43753407925477017,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 6.248542398584476,
     "desfecho": "deteccao"
    },
    {
@@ -4174,6 +4637,7 @@
     "tempo_de_deteccao_s": 0.17701689145835284,
     "incerteza_declarada_m": 0.48637627957538515,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao"
    },
    {
@@ -4188,6 +4652,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19228105901029835,
     "desfecho": "deteccao"
    },
    {
@@ -4202,6 +4667,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.25554288785463086,
     "desfecho": "deteccao"
    },
    {
@@ -4216,6 +4682,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.3476254857507115,
     "desfecho": "deteccao"
    },
    {
@@ -4230,6 +4697,7 @@
     "tempo_de_deteccao_s": 0.21029098985349506,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 3.0844513447331394,
     "desfecho": "deteccao"
    },
    {
@@ -4244,6 +4712,7 @@
     "tempo_de_deteccao_s": 0.24717312301437563,
     "incerteza_declarada_m": 0.3619156437372671,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.14980207292541,
     "desfecho": "deteccao"
    },
    {
@@ -4258,6 +4727,7 @@
     "tempo_de_deteccao_s": 0.2928748967137277,
     "incerteza_declarada_m": 0.4375343221412575,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 51.13107985961091,
     "desfecho": "deteccao"
    },
    {
@@ -4272,6 +4742,7 @@
     "tempo_de_deteccao_s": 0.2852579344305023,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.12567063582793025,
     "desfecho": "deteccao"
    },
    {
@@ -4286,6 +4757,7 @@
     "tempo_de_deteccao_s": 0.2864606126857484,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.18693666150841182,
     "desfecho": "deteccao"
    },
    {
@@ -4300,6 +4772,7 @@
     "tempo_de_deteccao_s": 0.2868615054374971,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.20614307589761438,
     "desfecho": "deteccao"
    },
    {
@@ -4314,6 +4787,7 @@
     "tempo_de_deteccao_s": 0.28886596919624064,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.189333195053166,
     "desfecho": "deteccao"
    },
    {
@@ -4328,6 +4802,7 @@
     "tempo_de_deteccao_s": 0.28886596919624064,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.722363356569417,
     "desfecho": "deteccao"
    },
    {
@@ -4342,6 +4817,7 @@
     "tempo_de_deteccao_s": 0.2952802532242198,
     "incerteza_declarada_m": 0.4375342068705087,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 49.951719624275256,
     "desfecho": "deteccao"
    },
    {
@@ -4356,6 +4832,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.05155614658417562,
     "desfecho": "deteccao"
    },
    {
@@ -4370,6 +4847,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.1188119202235498,
     "desfecho": "deteccao"
    },
    {
@@ -4384,6 +4862,7 @@
     "tempo_de_deteccao_s": 0.20588116958425937,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.15733535303706958,
     "desfecho": "deteccao"
    },
    {
@@ -4398,6 +4877,7 @@
     "tempo_de_deteccao_s": 0.20708384783950548,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.9568783403275916,
     "desfecho": "deteccao"
    },
    {
@@ -4412,6 +4892,7 @@
     "tempo_de_deteccao_s": 0.23073652019267885,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.398794578451316,
     "desfecho": "deteccao"
    },
    {
@@ -4426,6 +4907,7 @@
     "tempo_de_deteccao_s": 0.44000253660550115,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 235.26770920338384,
     "desfecho": "deteccao"
    },
    {
@@ -4440,6 +4922,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.014628723594000803,
     "desfecho": "deteccao"
    },
    {
@@ -4454,6 +4937,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.05047877552169666,
     "desfecho": "deteccao"
    },
    {
@@ -4468,6 +4952,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.43753740101283356,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.009118166234543423,
     "desfecho": "deteccao"
    },
    {
@@ -4482,6 +4967,7 @@
     "tempo_de_deteccao_s": 0.12931065400025735,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.6413602925058512,
     "desfecho": "deteccao"
    },
    {
@@ -4496,6 +4982,7 @@
     "tempo_de_deteccao_s": 0.14173832930446711,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.093233024028223,
     "desfecho": "deteccao"
    },
    {
@@ -4510,6 +4997,7 @@
     "tempo_de_deteccao_s": 0.518176623196498,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 300.7318451668717,
     "desfecho": "deteccao"
    },
    {
@@ -4524,6 +5012,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08925992215085898,
     "desfecho": "deteccao"
    },
    {
@@ -4538,6 +5027,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.43755037941997244,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.02449851427786598,
     "desfecho": "deteccao"
    },
    {
@@ -4552,6 +5042,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.019693590503493397,
     "desfecho": "deteccao"
    },
    {
@@ -4566,6 +5057,7 @@
     "tempo_de_deteccao_s": 0.04432139062953261,
     "incerteza_declarada_m": 0.3619169388878807,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.891625507405024,
     "desfecho": "deteccao"
    },
    {
@@ -4580,6 +5072,7 @@
     "tempo_de_deteccao_s": 0.06596959922396248,
     "incerteza_declarada_m": 0.43753420809248156,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 13.93797025909862,
     "desfecho": "deteccao"
    },
    {
@@ -4594,6 +5087,7 @@
     "tempo_de_deteccao_s": 0.5546578636056299,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -4609,6 +5103,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -4623,6 +5118,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -4637,6 +5133,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -4651,6 +5148,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -4666,6 +5164,7 @@
     "tempo_de_deteccao_s": 0.1689990364233788,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 159.99298089489957,
     "desfecho": "deteccao"
    },
    {
@@ -4680,6 +5179,7 @@
     "tempo_de_deteccao_s": 0.13612583077998527,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -4695,6 +5195,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08883686768581356,
     "desfecho": "deteccao"
    },
    {
@@ -4709,6 +5210,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.3621514296728115,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.1537786106891872,
     "desfecho": "deteccao"
    },
    {
@@ -4723,6 +5225,7 @@
     "tempo_de_deteccao_s": 0.043118712374286494,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.29411584585625405,
     "desfecho": "deteccao"
    },
    {
@@ -4737,6 +5240,7 @@
     "tempo_de_deteccao_s": 0.04953299640226572,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.5673836768677347,
     "desfecho": "deteccao"
    },
    {
@@ -4751,6 +5255,7 @@
     "tempo_de_deteccao_s": 0.0435196051260352,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -4766,6 +5271,7 @@
     "tempo_de_deteccao_s": 0.08561334405964888,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 14.59961194601317,
     "desfecho": "deteccao"
    },
    {
@@ -4780,6 +5286,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.01778384067819161,
     "desfecho": "deteccao"
    },
    {
@@ -4794,6 +5301,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07332299417353738,
     "desfecho": "deteccao"
    },
    {
@@ -4808,6 +5316,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.00100686144085671,
     "desfecho": "deteccao"
    },
    {
@@ -4822,6 +5331,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.9108429332496542,
     "desfecho": "deteccao"
    },
    {
@@ -4836,6 +5346,7 @@
     "tempo_de_deteccao_s": 0.16699457266463533,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 23.771369255462588,
     "desfecho": "deteccao"
    },
    {
@@ -4850,6 +5361,7 @@
     "tempo_de_deteccao_s": 0.13291868876599566,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -4865,6 +5377,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19338785690342775,
     "desfecho": "deteccao"
    },
    {
@@ -4879,6 +5392,7 @@
     "tempo_de_deteccao_s": 0.20507938408076196,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.25543221695193097,
     "desfecho": "deteccao"
    },
    {
@@ -4893,6 +5407,7 @@
     "tempo_de_deteccao_s": 0.20548027683251066,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.2994444902900568,
     "desfecho": "deteccao"
    },
    {
@@ -4907,6 +5422,7 @@
     "tempo_de_deteccao_s": 0.2138990246192334,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.8510694290621359,
     "desfecho": "deteccao"
    },
    {
@@ -4921,6 +5437,7 @@
     "tempo_de_deteccao_s": 0.2138990246192334,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 5.929243137516039,
     "desfecho": "deteccao"
    },
    {
@@ -4935,6 +5452,7 @@
     "tempo_de_deteccao_s": 0.22632669992344315,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 11.049871738694378,
     "desfecho": "deteccao"
    },
    {
@@ -4949,6 +5467,7 @@
     "tempo_de_deteccao_s": 0.2852579344305023,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.12400806444856016,
     "desfecho": "deteccao"
    },
    {
@@ -4963,6 +5482,7 @@
     "tempo_de_deteccao_s": 0.2868615054374971,
     "incerteza_declarada_m": 0.43761516837989395,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.19040130375645958,
     "desfecho": "deteccao"
    },
    {
@@ -4977,6 +5497,7 @@
     "tempo_de_deteccao_s": 0.2872623981892458,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.17986004721291238,
     "desfecho": "deteccao"
    },
    {
@@ -4991,6 +5512,7 @@
     "tempo_de_deteccao_s": 0.2872623981892458,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.259797773755281,
     "desfecho": "deteccao"
    },
    {
@@ -5005,6 +5527,7 @@
     "tempo_de_deteccao_s": 0.30009096624520426,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -5020,6 +5543,7 @@
     "tempo_de_deteccao_s": 0.29888828798995815,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -5035,6 +5559,7 @@
     "tempo_de_deteccao_s": 0.20387670582551584,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.052840116966820005,
     "desfecho": "deteccao"
    },
    {
@@ -5049,6 +5574,7 @@
     "tempo_de_deteccao_s": 0.20548027683251066,
     "incerteza_declarada_m": 0.43769254033868454,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.10284797989163508,
     "desfecho": "deteccao"
    },
    {
@@ -5063,6 +5589,7 @@
     "tempo_de_deteccao_s": 0.20588116958425937,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.03925124256784329,
     "desfecho": "deteccao"
    },
    {
@@ -5077,6 +5604,7 @@
     "tempo_de_deteccao_s": 0.2078856333430029,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 0.6083117293467808,
     "desfecho": "deteccao"
    },
    {
@@ -5091,6 +5619,7 @@
     "tempo_de_deteccao_s": 0.2343445549584172,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 1.8520998894250056,
     "desfecho": "deteccao"
    },
    {
@@ -5105,6 +5634,7 @@
     "tempo_de_deteccao_s": 0.38788647887816996,
     "incerteza_declarada_m": 0.44723143591106174,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 271.62332288925904,
     "desfecho": "deteccao"
    },
    {
@@ -5119,6 +5649,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.016445747673515143,
     "desfecho": "deteccao"
    },
    {
@@ -5133,6 +5664,7 @@
     "tempo_de_deteccao_s": 0.12369815547577553,
     "incerteza_declarada_m": 0.4377156822313934,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.04918136372759818,
     "desfecho": "deteccao"
    },
    {
@@ -5147,6 +5679,7 @@
     "tempo_de_deteccao_s": 0.12449994097927292,
     "incerteza_declarada_m": 0.44692836510910916,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.046435853060415866,
     "desfecho": "deteccao"
    },
    {
@@ -5161,6 +5694,7 @@
     "tempo_de_deteccao_s": 0.12650440473801644,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07539717111365007,
     "desfecho": "deteccao"
    },
    {
@@ -5175,6 +5709,7 @@
     "tempo_de_deteccao_s": 0.12810797574501123,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 3.379573586370725,
     "desfecho": "deteccao"
    },
    {
@@ -5189,6 +5724,7 @@
     "tempo_de_deteccao_s": 0.15536868286392294,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 22.82818167905168,
     "desfecho": "deteccao"
    },
    {
@@ -5203,6 +5739,7 @@
     "tempo_de_deteccao_s": 0.04071335586379429,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.08772779044534218,
     "desfecho": "deteccao"
    },
    {
@@ -5217,6 +5754,7 @@
     "tempo_de_deteccao_s": 0.042316926870789084,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.019053410357855682,
     "desfecho": "deteccao"
    },
    {
@@ -5231,6 +5769,7 @@
     "tempo_de_deteccao_s": 0.04271781962253779,
     "incerteza_declarada_m": 4.163980857776214,
     "erro_dentro_da_incerteza_declarada": true,
+    "erro_de_localizacao_refinada_m": 0.07329396981469927,
     "desfecho": "deteccao"
    },
    {
@@ -5245,6 +5784,7 @@
     "tempo_de_deteccao_s": 0.05073567465751183,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 2.8133355604650205,
     "desfecho": "deteccao"
    },
    {
@@ -5259,6 +5799,7 @@
     "tempo_de_deteccao_s": 0.04873121089876831,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 21.402932571652286,
     "desfecho": "deteccao"
    },
    {
@@ -5273,6 +5814,7 @@
     "tempo_de_deteccao_s": 0.545036437563661,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -5288,6 +5830,7 @@
     "tempo_de_deteccao_s": 0.12249547722052942,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -5302,6 +5845,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": 0.4376145933283233,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 150.0,
     "desfecho": "deteccao"
    },
    {
@@ -5316,6 +5860,7 @@
     "tempo_de_deteccao_s": 0.12409904822752424,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -5331,6 +5876,7 @@
     "tempo_de_deteccao_s": 0.13051333225550346,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "deteccao",
     "inconclusivo": true
    },
@@ -5346,6 +5892,7 @@
     "tempo_de_deteccao_s": 0.14775172058069763,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 156.33414589488223,
     "desfecho": "deteccao"
    },
    {
@@ -5360,6 +5907,7 @@
     "tempo_de_deteccao_s": 0.19425527978354704,
     "incerteza_declarada_m": 0.5018858505878229,
     "erro_dentro_da_incerteza_declarada": false,
+    "erro_de_localizacao_refinada_m": 180.67624454421104,
     "desfecho": "deteccao"
    },
    {
@@ -5374,6 +5922,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5388,6 +5937,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5402,6 +5952,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5416,6 +5967,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5430,6 +5982,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5444,6 +5997,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5458,6 +6012,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5472,6 +6027,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5486,6 +6042,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5500,6 +6057,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5514,6 +6072,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5528,6 +6087,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5542,6 +6102,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5556,6 +6117,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5570,6 +6132,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5584,6 +6147,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5598,6 +6162,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5612,6 +6177,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5626,6 +6192,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5640,6 +6207,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5654,6 +6222,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5668,6 +6237,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5682,6 +6252,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5696,6 +6267,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5710,6 +6282,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5724,6 +6297,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5738,6 +6312,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5752,6 +6327,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5766,6 +6342,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5780,6 +6357,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5794,6 +6372,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 1.075955602038195,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    },
    {
@@ -5808,6 +6387,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme",
     "inconclusivo": true
    },
@@ -5823,6 +6403,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5837,6 +6418,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme",
     "inconclusivo": true
    },
@@ -5852,6 +6434,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4506225647243372,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    },
    {
@@ -5866,6 +6449,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4420126641752036,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    },
    {
@@ -5880,6 +6464,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 1.075955602038195,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    },
    {
@@ -5894,6 +6479,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5908,6 +6494,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "silencio_correto"
    },
    {
@@ -5922,6 +6509,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": null,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme",
     "inconclusivo": true
    },
@@ -5937,6 +6525,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.534334108482568,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    },
    {
@@ -5951,6 +6540,7 @@
     "tempo_de_deteccao_s": null,
     "incerteza_declarada_m": 0.4391359548945909,
     "erro_dentro_da_incerteza_declarada": null,
+    "erro_de_localizacao_refinada_m": null,
     "desfecho": "falso_alarme"
    }
   ],

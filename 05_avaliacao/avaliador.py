@@ -34,7 +34,7 @@ VERDADE = os.path.join(RAIZ, '03_ensaios', 'verdade_do_cenario',
                        'leakmap_verdade_matriz_v1.json')
 SAIDA = os.path.join(RAIZ, '05_avaliacao', 'leakmap_avaliacao_matriz_v1.json')
 
-MODULOS_DO_DETECTOR = ('detector', 'modelo_sensor', 'amostragem', 'posicao',
+MODULOS_DO_DETECTOR = ('detector', 'modelo_sensor', 'amostragem', 'posicao', 'refino',
                        'matriz', 'gerar_ensaios', 'rodar_detector',
                        'detector_ponto_fixo')
 
@@ -120,6 +120,7 @@ def avaliar(resultado, verdade):
             'tempo_de_deteccao_s': None,
             'incerteza_declarada_m': reg.get('incerteza_de_posicao_m'),
             'erro_dentro_da_incerteza_declarada': None,
+            'erro_de_localizacao_refinada_m': None,
         }
 
         if classe == CLASSE_FALHA:
@@ -144,6 +145,10 @@ def avaliar(resultado, verdade):
             u = reg.get('incerteza_de_posicao_m')
             if u is not None:
                 item['erro_dentro_da_incerteza_declarada'] = bool(erro <= u)
+            refino = reg.get('refino_por_correlacao') or {}
+            if refino.get('aplicado'):
+                item['erro_de_localizacao_refinada_m'] = abs(float(refino['posicao_estimada_m'])
+                                                             - float(verd['posicao_real_m']))
 
         if (declarou and tem_evento
                 and reg.get('tempo_de_declaracao_s') is not None
@@ -204,6 +209,11 @@ def avaliar(resultado, verdade):
         'erro_de_localizacao_geral': _resumo(
             [d['erro_de_localizacao_m'] for d in detalhes
              if d['erro_de_localizacao_m'] is not None]),
+        # refino por correlacao cruzada (04_detector/refino.py), medido ao lado
+        # da posicao publicada, sem substitui-la
+        'erro_de_localizacao_refinada_geral': _resumo(
+            [d['erro_de_localizacao_refinada_m'] for d in detalhes
+             if d['erro_de_localizacao_refinada_m'] is not None]),
         'tempo_de_deteccao_geral': _resumo_tempo(
             [d['tempo_de_deteccao_s'] for d in detalhes
              if d['tempo_de_deteccao_s'] is not None]),
@@ -236,11 +246,14 @@ def _consolidar(detalhes):
                  if g['erro_de_localizacao_m'] is not None]
         tempos = [g['tempo_de_deteccao_s'] for g in grupo
                   if g['tempo_de_deteccao_s'] is not None]
+        refinados = [g['erro_de_localizacao_refinada_m'] for g in grupo
+                     if g['erro_de_localizacao_refinada_m'] is not None]
         saida.append({
             'linha_da_matriz': nome,
             'n_ensaios': len(grupo),
             'contagens': _contagens(grupo),
             'erro_de_localizacao': _resumo(erros),
+            'erro_de_localizacao_refinada': _resumo(refinados),
             'tempo_de_deteccao': _resumo_tempo(tempos),
         })
     return saida

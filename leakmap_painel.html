@@ -1170,7 +1170,7 @@ footer p{max-width:80ch;margin-top:10px}
   <div class="base">
     <span class="st ok">Validado em simulação · 19/09/2026</span>
     <h3>Cenário A · a cadeia completa já roda em software</h3>
-    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 120 testes automatizados. É a referência contra a qual a placa é comparada, amostra a amostra, no cenário B.</p>
+    <p>A base que sustenta a FPGA. Do modelo hidráulico à avaliação contra a verdade do cenário, a cadeia inteira roda com um único comando e se confere sozinha com 164 testes automatizados em Python. É a referência contra a qual a placa é comparada, amostra a amostra, no cenário B.</p>
     <ul class="tick">
       <li>Geometria do trecho, evento de ruptura, solucionador hidráulico e extração das séries nos dois pontos de medição.<em>executado</em></li>
       <li>Modelo de sensores com banda, atraso de canal, jitter, ruído, offset, saturação e conversor A/D, cada efeito ajustável sozinho.<em>executado</em></li>
@@ -1278,33 +1278,33 @@ footer p{max-width:80ch;margin-top:10px}
 <section id="proximos">
   <div class="eyebrow">No hackathon</div>
   <h2>Do software validado ao cais</h2>
-  <p class="sub">A detecção e a localização já funcionam de ponta a ponta e já têm desempenho medido. A equipe chega ao evento para aperfeiçoar o que existe: rodar o detector na placa, casar o modelo com o instrumento instalado e levar a mesma cadeia à linha real do cais.</p>
+  <p class="sub">A detecção e a localização já funcionam de ponta a ponta: em software, no Verilog simulado ciclo a ciclo e na FPGA física, com os 45 ensaios processados na DE10-Standard, também em tempo real. No evento, a equipe leva a mesma cadeia para mais perto da instalação real: posição mais fina, o transmissor que já está na linha e a rede do cais.</p>
   <ol class="next">
     <li>
       <div>
-        <h3>Rodar o cenário B na placa FPGA</h3>
-        <p>O cenário B é a reprodução de sinais digitais em FPGA física: os mesmos ensaios do software, carregados na placa. O Verilog já marca a mesma chegada que o software nos 90 canais da matriz, simulado ciclo a ciclo, e o computador já conversa com a placa pela serial. No evento, a equipe grava o Verilog na placa escolhida e a tela do cenário B passa a mostrar o resultado processado na FPGA, lado a lado com o software.</p>
-        <em>hardware · diferencial</em>
+        <h3>Amostrar mais rápido</h3>
+        <p>A posição sai da marca de chegada em cada canal, com resolução de uma amostra: 0,24 m a 2,5 mil amostras por segundo. O refino por correlação cruzada entre as frentes dos dois canais já é calculado ao lado e ajuda pouco, porque a frente dura poucas amostras. O ganho grande vem de amostrar a 10 mil por segundo, o que o projeto prevê: uma amostra passa a valer 6 cm.</p>
+        <em>precisão</em>
       </div>
     </li>
     <li>
       <div>
         <h3>Ajustar ao transmissor já instalado</h3>
-        <p>O modelo de sensores já trata banda, atraso, ruído e resolução do conversor como parâmetros independentes. Com os dados dos dois transmissores da Granel, os valores reais entram direto nesse modelo e passam a valer em todos os ensaios, sem mexer no detector.</p>
+        <p>O transmissor inteligente já está no modelo de sensores, com a saída atualizada a cada 1 a 100 ms: na linha do cais simulada, o erro vai de 0,2 m a dezenas de metros conforme esse tempo. Com a folha de dados do instrumento instalado, o valor real entra no modelo e diz se ele localiza por metro ou por berço, sem mexer no detector.</p>
         <em>calibração</em>
       </div>
     </li>
     <li>
       <div>
-        <h3>Estender à linha com três berços e manifold</h3>
-        <p>O cálculo de posição é uma etapa isolada, separada da detecção e da marcação de chegada. Levar o LEAKMAP à topologia real do cais é substituir essa etapa pelo modelo da rede, mantendo o restante da cadeia exatamente como está.</p>
+        <h3>Estender à rede com três berços e manifold</h3>
+        <p>A linha de produto do cais já está simulada, com sensores a 700 m um do outro, vazamentos, manobras e o ramal de um berço intermediário. O passo seguinte é a rede com ramificações, com um sensor em cada ponta e em cada junção, e os comprimentos reais da planta no lugar das premissas.</p>
         <em>escala</em>
       </div>
     </li>
     <li>
       <div>
         <h3>Entregar a bancada pronta para qualquer máquina</h3>
-        <p>A trilha de detecção e avaliação já roda com um comando, só com NumPy, e se confere sozinha com 120 testes. A equipe empacota também o ambiente do solucionador hidráulico, para que qualquer avaliador refaça os ensaios do zero na própria máquina.</p>
+        <p>A trilha de detecção e avaliação roda com um comando e se confere sozinha: 164 testes em Python, 71 casos do Verilog e 11 de paridade do painel. O solucionador hidráulico já tem o ambiente documentado e conferido contra as simulações gravadas; a equipe empacota esse ambiente para qualquer avaliador refazer os ensaios do zero.</p>
         <em>reprodutibilidade</em>
       </div>
     </li>

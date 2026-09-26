@@ -37,6 +37,7 @@ import numpy as np
 import amostragem as AM
 import detector as D
 import modelo_sensor as MS
+import refino as RF
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 RAIZ = os.path.dirname(AQUI)
@@ -145,7 +146,7 @@ def main():
     os.makedirs(os.path.dirname(RESULTADO), exist_ok=True)
     # com a classificacao por polaridade e origem, e sem ela (o detector de antes)
     for classificar, caminho in ((True, RESULTADO), (False, RESULTADO_SEM_CLASSIFICACAO)):
-        registros = D.processar_pacote(pacote, classificar=classificar)
+        registros = RF.refinar_pacote(pacote, D.processar_pacote(pacote, classificar=classificar))
         with open(caminho, 'w', encoding='utf-8') as f:
             json.dump({'descricao': ('Registros do detector (A-15) sobre a linha do cais, %s a classificacao '
                                      'por polaridade e origem.' % ('com' if classificar else 'sem')),

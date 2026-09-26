@@ -11,6 +11,7 @@ import json
 import os
 
 import detector as D
+import refino as RF
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENTRADA_PACOTE = os.path.join(RAIZ, '03_ensaios', 'pacotes',
@@ -23,7 +24,7 @@ def main(entrada=ENTRADA_PACOTE, saida=SAIDA):
     with open(entrada, encoding='utf-8') as f:
         pacote = json.load(f)
 
-    registros = D.processar_pacote(pacote)
+    registros = RF.refinar_pacote(pacote, D.processar_pacote(pacote))
     if len(registros) != len(pacote['ensaios']):
         raise SystemExit('contagem de registros (%d) diferente da contagem de '
                          'ensaios (%d)' % (len(registros),

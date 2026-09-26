@@ -104,7 +104,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06661963199168834,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007232804745805547,
+        "correlacao_no_pico": 0.9999999974023717,
+        "posicao_estimada_m": 59.99825715548239,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-002",
@@ -191,7 +204,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.9443016560672419,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06661963199168834,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007232804745805547,
+        "correlacao_no_pico": 0.9999999974023717,
+        "posicao_estimada_m": 59.198222298592036,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-003",
@@ -278,7 +304,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03331126510249443,
+        "ajuste_em_relacao_as_marcas_amostras": 0.0072273827679443445,
+        "correlacao_no_pico": 0.999999997464469,
+        "posicao_estimada_m": 79.99825846198334,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-004",
@@ -365,7 +404,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.6416429050892212,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03331126510249443,
+        "ajuste_em_relacao_as_marcas_amostras": 0.0072273827679443445,
+        "correlacao_no_pico": 0.999999997464469,
+        "posicao_estimada_m": 79.59822363122302,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-005",
@@ -452,7 +504,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -2.898247081321695e-06,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007222044967385482,
+        "correlacao_no_pico": 0.9999999975252275,
+        "posicao_estimada_m": 99.99825974820064,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-006",
@@ -539,7 +604,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.5017027184013808,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -2.898247081321695e-06,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007222044967385482,
+        "correlacao_no_pico": 0.9999999975252275,
+        "posicao_estimada_m": 99.99822494316464,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-007",
@@ -626,7 +704,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.0333054688403986,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007216128887267957,
+        "correlacao_no_pico": 0.9999999975921865,
+        "posicao_estimada_m": 119.99826117376239,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-008",
@@ -713,7 +804,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.6416429050892212,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.0333054688403986,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007216128887267957,
+        "correlacao_no_pico": 0.9999999975921865,
+        "posicao_estimada_m": 120.39822639723764,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-009",
@@ -800,7 +904,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06661383592006112,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007210232287093216,
+        "correlacao_no_pico": 0.9999999976585849,
+        "posicao_estimada_m": 139.99826259463018,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-010",
@@ -887,7 +1004,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.9443016560672419,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06661383592006112,
+        "ajuste_em_relacao_as_marcas_amostras": 0.007210232287093216,
+        "correlacao_no_pico": 0.9999999976585849,
+        "posicao_estimada_m": 140.79822784652276,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-011",
@@ -974,7 +1104,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06671671920418075,
+        "ajuste_em_relacao_as_marcas_amostras": 0.24916118238379198,
+        "correlacao_no_pico": 0.9989691727450584,
+        "posicao_estimada_m": 59.939961160870816,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-012",
@@ -1061,7 +1204,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.9443016560672417,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06671671920418075,
+        "ajuste_em_relacao_as_marcas_amostras": 0.24916118238379198,
+        "correlacao_no_pico": 0.9989691727450584,
+        "posicao_estimada_m": 59.13876038408823,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-013",
@@ -1148,7 +1304,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03340508089917632,
+        "ajuste_em_relacao_as_marcas_amostras": 0.241003828763279,
+        "correlacao_no_pico": 0.9990420793033596,
+        "posicao_estimada_m": 79.94192678824953,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-014",
@@ -1235,7 +1404,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.6416429050892212,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03340508089917632,
+        "ajuste_em_relacao_as_marcas_amostras": 0.241003828763279,
+        "correlacao_no_pico": 0.9990420793033596,
+        "posicao_estimada_m": 79.54076532401453,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-015",
@@ -1322,7 +1504,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.00010348603316392761,
+        "ajuste_em_relacao_as_marcas_amostras": 0.25787338485488975,
+        "correlacao_no_pico": 0.9989093565250411,
+        "posicao_estimada_m": 99.93786183497473,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-016",
@@ -1409,7 +1604,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.5017027184013808,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.00010348603316392761,
+        "ajuste_em_relacao_as_marcas_amostras": 0.25787338485488975,
+        "correlacao_no_pico": 0.9989093565250411,
+        "posicao_estimada_m": 99.93661907167422,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-017",
@@ -1496,7 +1704,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.03320781492605204,
+        "ajuste_em_relacao_as_marcas_amostras": 0.25055665192178517,
+        "correlacao_no_pico": 0.9989566983526338,
+        "posicao_estimada_m": 119.93962490315165,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-018",
@@ -1583,7 +1804,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.6416429050892212,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.03320781492605204,
+        "ajuste_em_relacao_as_marcas_amostras": 0.25055665192178517,
+        "correlacao_no_pico": 0.9989566983526338,
+        "posicao_estimada_m": 120.33841740121468,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-019",
@@ -1670,7 +1904,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.49186541019743213,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06651641391756659,
+        "ajuste_em_relacao_as_marcas_amostras": 0.2499728619340564,
+        "correlacao_no_pico": 0.998967985415322,
+        "posicao_estimada_m": 139.93976557543812,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-020",
@@ -1757,7 +2004,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.9443016560672417,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06651641391756659,
+        "ajuste_em_relacao_as_marcas_amostras": 0.2499728619340564,
+        "correlacao_no_pico": 0.998967985415322,
+        "posicao_estimada_m": 140.7385608869469,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-021",
@@ -1844,7 +2104,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.42885257981169805,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06701755325837833,
+        "ajuste_em_relacao_as_marcas_amostras": -0.0012004996350434816,
+        "correlacao_no_pico": 0.9999683383798516,
+        "posicao_estimada_m": 59.75932542159825,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-022",
@@ -1931,7 +2204,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.9160124187144086,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.06701755325837833,
+        "ajuste_em_relacao_as_marcas_amostras": -0.0012004996350434816,
+        "correlacao_no_pico": 0.9999683383798516,
+        "posicao_estimada_m": 58.954511930030215,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-023",
@@ -2018,7 +2304,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.35485005124656577,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03370513183719781,
+        "ajuste_em_relacao_as_marcas_amostras": -0.01130927426270566,
+        "correlacao_no_pico": 0.999948208443003,
+        "posicao_estimada_m": 79.76176127090639,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-024",
@@ -2105,7 +2404,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.543032518148426,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.03370513183719781,
+        "ajuste_em_relacao_as_marcas_amostras": -0.01130927426270566,
+        "correlacao_no_pico": 0.999948208443003,
+        "posicao_estimada_m": 79.35699649632453,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-025",
@@ -2192,7 +2504,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.3549045131688815,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.0004163995184463098,
+        "ajuste_em_relacao_as_marcas_amostras": 0.0376120331484999,
+        "correlacao_no_pico": 0.9999636228514766,
+        "posicao_estimada_m": 99.74997300406059,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-026",
@@ -2279,7 +2604,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.36203468110608045,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": -0.0004163995184463098,
+        "ajuste_em_relacao_as_marcas_amostras": 0.0376120331484999,
+        "correlacao_no_pico": 0.9999636228514766,
+        "posicao_estimada_m": 99.74497246414181,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-027",
@@ -2366,7 +2704,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.42883051084334894,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.03290086618725642,
+        "ajuste_em_relacao_as_marcas_amostras": 0.015431947941510019,
+        "correlacao_no_pico": 0.9999321557469953,
+        "posicao_estimada_m": 119.75531760290593,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-028",
@@ -2453,7 +2804,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.5894851934521234,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.03290086618725642,
+        "ajuste_em_relacao_as_marcas_amostras": 0.015431947941510019,
+        "correlacao_no_pico": 0.9999321557469953,
+        "posicao_estimada_m": 120.15042395496405,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-029",
@@ -2540,7 +2904,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.3548891082846718,
       "velocidade_de_onda_usada_m_s": 1200.899544131626,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06621132770232098,
+        "ajuste_em_relacao_as_marcas_amostras": 0.010206997813321374,
+        "correlacao_no_pico": 0.9999702014146914,
+        "posicao_estimada_m": 139.7565766270335,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-030",
@@ -2627,7 +3004,20 @@
       "posicao_limitada_a_faixa": false,
       "incerteza_de_posicao_m": 0.873697253581742,
       "velocidade_de_onda_usada_m_s": 1224.9175350142586,
-      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)"
+      "origem_da_velocidade_de_onda": "parametros_do_detector do pacote do ensaio (A-10)",
+      "refino_por_correlacao": {
+        "aplicado": true,
+        "delta_t_s": 0.06621132770232098,
+        "ajuste_em_relacao_as_marcas_amostras": 0.010206997813321374,
+        "correlacao_no_pico": 0.9999702014146914,
+        "posicao_estimada_m": 140.55170815957416,
+        "posicao_limitada_a_faixa": false,
+        "janela_amostras": {
+          "antes": 3,
+          "depois": 16,
+          "busca": 4
+        }
+      }
     },
     {
       "id": "MX-031",
