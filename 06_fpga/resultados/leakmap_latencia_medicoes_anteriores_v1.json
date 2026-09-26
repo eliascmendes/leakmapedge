@@ -1,0 +1,27 @@
+{
+  "descricao": "Resumo de medicoes anteriores de FPGA x notebook (comparar_latencia.py --jtag) cujo arquivo completo foi sobrescrito por uma medicao mais nova. So o resumo sobreviveu; ele e usado pelo painel para mostrar as medicoes lado a lado.",
+  "medicoes": [
+    {
+      "medicao": "1a medicao, DE10-Standard, 25/09/2026, antes das 17:17",
+      "origem_do_resumo": "bloco `latencia` de web/leakmap_dados_fpga.js no commit 9fc10d8, gerado de 06_fpga/resultados/leakmap_latencia_fpga_e_cpu_v1.json antes de ele ser sobrescrito pela medicao das 17:35 do mesmo dia",
+      "ensaios": 30,
+      "repeticoes": 10,
+      "frequencia_hz": 50000000,
+      "fpga": {
+        "mediana_us": 1.9400000000000002,
+        "min_us": 1.7799999999999998,
+        "max_us": 2.04,
+        "ensaios_sem_variacao": 30,
+        "amostras_atrasadas": 0
+      },
+      "notebook": {
+        "mediana_us": 14.476492651738226,
+        "p99_us": 30.885013984516263,
+        "max_us": 45.58084765449166,
+        "desvio_us": 4.916343840265179,
+        "maior_atraso_de_entrega_us": 859.8400745540857,
+        "amostras": 60180
+      }
+    }
+  ]
+}

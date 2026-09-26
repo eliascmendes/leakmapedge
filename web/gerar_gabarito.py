@@ -126,6 +126,64 @@ def um_efeito_por_vez(ts):
     return casos
 
 
+def casos_de_autoteste_e_escala(pacote):
+    """Autoteste dos canais e escala de alerta, calculados pelo codigo de referencia.
+
+    O autoteste vem do modelo da placa (06_fpga/computador: representacao.py,
+    preparo.limites_de_saude, placa_referencia.SaudeDoCanal e
+    protocolo.bandeiras_de_saude) e a escala de 07_servico/alerta.py. Ensaios
+    da matriz com transmissor de 16 bits, de 12 bits e sem ruido, sadios e
+    estragados de proposito a partir da amostra 60: cabo rompido no canal A
+    (carga 0) e transmissor travado no canal B (repete o ultimo valor).
+    """
+    sys.path.insert(0, os.path.join(RAIZ, '06_fpga', 'computador'))
+    sys.path.insert(0, os.path.join(RAIZ, '07_servico'))
+    import alerta as AL
+    import placa_referencia as PLACA
+    import preparo as PP
+    import protocolo as PR
+    import representacao as RP
+
+    por_id = {e['id']: e for e in pacote['ensaios']}
+    autoteste = []
+    for ident in ('MX-013', 'MX-021', 'MX-001'):
+        base = por_id[ident]
+        a0, b0 = list(base['canal_A_carga_m']), list(base['canal_B_carga_m'])
+        for falha in ('nenhuma', 'A_rompido', 'B_travado'):
+            a, b = list(a0), list(b0)
+            if falha == 'A_rompido':
+                a = a[:60] + [0.0] * (len(a) - 60)
+            elif falha == 'B_travado':
+                b = b[:60] + [b[60]] * (len(b) - 60)
+            espec = RP.especificacao(RP.degrau_do_ensaio(base))
+            limites = PP.limites_de_saude(base, espec)
+            saida = {'limites': limites}
+            for canal, sinal in (('canal_A', a), ('canal_B', b)):
+                saude = PLACA.SaudeDoCanal()
+                for c in RP.converter(sinal, espec)[0]:
+                    saude.amostra(c)
+                e = dict(saude.estatisticas)
+                bandeiras = PR.bandeiras_de_saude(e, limites)
+                e['falhas'] = [nome for bit, nome in PR.NOMES_DA_SAUDE if bandeiras & bit]
+                saida[canal] = e
+            efeitos = (base.get('efeitos_de_sensor_aplicados') or {})
+            autoteste.append({'nome': '%s/%s' % (ident, falha), 'canal_A': a, 'canal_B': b,
+                              'efeitos': efeitos.get('efeitos') or [],
+                              'resolucao_declarada_m': efeitos.get('resolucao_declarada_m'),
+                              'saude': saida})
+
+    reprovado = {'canal_A': {'falhas': ['saturado']}, 'canal_B': {'falhas': []}}
+    sadio = {'canal_A': {'falhas': []}, 'canal_B': {'falhas': []}}
+    escala = []
+    for classe in ('localizado', 'detectado_sem_localizacao', 'fora_do_trecho', 'manobra', 'sem_deteccao',
+                   'falha_execucao'):
+        for gas in (False, True):
+            for nome_saude, saude in (('sem_autoteste', None), ('sadio', sadio), ('reprovado', reprovado)):
+                escala.append({'classe': classe, 'gas': gas, 'saude': saude, 'nome_saude': nome_saude,
+                               'nivel': AL.nivel_do_evento({'classe': classe}, gas, saude)})
+    return autoteste, escala
+
+
 def casos_de_classificacao():
     """Sinais sinteticos para a classificacao por polaridade e origem.
 
@@ -301,6 +359,7 @@ def main():
         'detector': detector,
         'classificacao': casos_de_classificacao(),
     }
+    gabarito['autoteste'], gabarito['escala_de_alerta'] = casos_de_autoteste_e_escala(pacote)
 
     os.makedirs(os.path.dirname(SAIDA), exist_ok=True)
     with open(SAIDA, 'w', encoding='utf-8') as f:

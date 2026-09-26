@@ -235,6 +235,17 @@ input[type="range"]{width:100%;margin-top:14px;accent-color:var(--lime)}
 .mtable td.ok{color:var(--lime)}
 .mtable td.alerta{color:var(--amber)}
 .simnota{margin-top:16px;max-width:none}
+/* ---- linha do cais ---- */
+.seg4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.seg4 button{text-align:center;padding:10px 4px;font:500 13px/1.2 var(--mono);color:var(--ink)}
+.caisctl .seg + .glab{margin-top:22px}
+.caisres .diagram{margin-top:0;padding:14px 12px 8px}
+.caisres h3{margin-top:26px}
+#caisNivel,#caisClasse{font-family:var(--disp);font-size:clamp(18px,1.7vw,21px);letter-spacing:-.01em;line-height:1.25;padding-top:3px}
+.cmp5{grid-template-columns:minmax(0,1.1fr) minmax(0,.8fr) minmax(0,1fr) minmax(0,.7fr) minmax(0,.7fr)}
+@media (max-width:640px){
+  .cmp5{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 @media (max-width:860px){
   .sim{grid-template-columns:minmax(0,1fr)}
   .simctl{min-width:0}
@@ -365,6 +376,10 @@ footer p{max-width:80ch;margin-top:10px}
 .quebra button.sair:hover{color:var(--ink);border-color:var(--lime-dim);background:none}
 .quebra button[hidden]{display:none}
 .motivo.retida{border-left-color:var(--amber)}
+.saude{margin-top:8px;font:500 12.5px/1.45 var(--mono);color:var(--dim)}
+.saude.degradado{color:var(--amber)}
+.ajuste select{background:var(--panel);border:1px solid var(--rule);color:var(--ink);
+  font:500 12.5px/1 var(--mono);padding:6px 7px}
 .tile .val .vazio{color:var(--dim)}
 #sClasse{font-family:var(--disp);font-size:clamp(19px,1.8vw,22px);letter-spacing:-.01em;line-height:1.25;padding-top:3px}
 @media (max-width:400px){ #sClasse{font-size:16px;letter-spacing:-.02em} }
@@ -613,6 +628,7 @@ footer p{max-width:80ch;margin-top:10px}
         <div class="linha"><label><input type="checkbox" id="aj_skew_on"> Atraso entre canais</label><span><input type="number" id="aj_skew" step="0.1" min="0"> ms</span></div>
         <div class="linha"><label><input type="checkbox" id="aj_banda_on"> Banda do transmissor</label><span><input type="number" id="aj_banda" step="50" min="20" max="1200"> Hz</span></div>
         <div class="linha"><label><input type="checkbox" id="aj_faixa_on"> Faixa de medida</label><span><input type="number" id="aj_faixa_min" step="5"> a <input type="number" id="aj_faixa_max" step="5"> m</span></div>
+        <div class="linha"><label for="aj_falha">Sensor estragado</label><span><select id="aj_falha"><option value="nenhuma">nenhum</option><option value="A_rompido">cabo do A rompido</option><option value="B_travado">transmissor B travado</option></select></span></div>
       </details>
 
       <div class="acoes">
@@ -625,6 +641,8 @@ footer p{max-width:80ch;margin-top:10px}
         <button type="button" data-quebra="faixa"><b>Transmissor saturado</b><span>faixa de medida curta demais para a onda</span></button>
         <button type="button" data-quebra="skew"><b>Canais desencontrados</b><span>1,2 ms de atraso entre os dois transmissores</span></button>
         <button type="button" data-quebra="velocidade"><b>Velocidade da onda errada</b><span>c declarada 5% acima da real</span></button>
+        <button type="button" data-quebra="rompido"><b>Cabo rompido</b><span>o sensor A cai a zero antes da onda chegar</span></button>
+        <button type="button" data-quebra="travado"><b>Transmissor travado</b><span>o sensor B congela e repete o último valor</span></button>
         <button type="button" class="sair" id="simCasoSair2" hidden>Sair do teste e voltar ao transmissor bom</button>
       </div>
 
@@ -645,6 +663,7 @@ footer p{max-width:80ch;margin-top:10px}
         <div class="tile"><div class="lab">Resultado</div><div class="val" id="sClasse">—</div><div class="sub2" id="sClasseSub"></div></div>
       </div>
       <p class="motivo" id="sMotivo" aria-live="polite"></p>
+      <p class="saude" id="sSaude"></p>
       <div class="chartbox">
         <canvas id="simCv" aria-label="Pressão nos canais A e B como o transmissor entrega, com as marcas de chegada"></canvas>
         <div class="legend">
@@ -1219,6 +1238,43 @@ footer p{max-width:80ch;margin-top:10px}
   <p class="stnote" id="fpgaFontes"></p>
 </section>
 
+<section id="cais">
+  <div class="eyebrow">Linha do cais · simulação com premissas</div>
+  <h2>Do trecho de teste à linha de produto do cais</h2>
+  <p class="sub" id="caisLead"></p>
+  <div class="sim">
+    <div class="simctl caisctl">
+      <div class="glab"><b>1</b> Vazamento grande · cerca de 18% da vazão</div>
+      <div class="seg seg4" id="caisGrande" role="group" aria-label="Vazamento grande"></div>
+      <div class="glab"><b>2</b> Vazamento pequeno · cerca de 4% da vazão</div>
+      <div class="seg seg4" id="caisPequeno" role="group" aria-label="Vazamento pequeno"></div>
+      <div class="glab"><b>3</b> Manobra de operação</div>
+      <div class="seg seg3" id="caisManobras" role="group" aria-label="Manobra"></div>
+      <div class="glab"><b>4</b> Transmissor</div>
+      <div class="seg seg3" id="caisTx" role="group" aria-label="Transmissor"></div>
+    </div>
+    <div class="simres caisres">
+      <div class="diagram"><svg id="caisSvg" viewBox="0 0 1000 200" role="img" aria-label="Esquemático da linha do cais com o evento e o resultado do detector"></svg></div>
+      <div class="tiles">
+        <div class="tile acc"><div class="lab">Nível do alerta</div><div class="val" id="caisNivel">—</div></div>
+        <div class="tile"><div class="lab">Classificação</div><div class="val" id="caisClasse">—</div></div>
+        <div class="tile"><div class="lab">Posição estimada</div><div class="val num" id="caisEst">—</div></div>
+        <div class="tile"><div class="lab">Erro</div><div class="val num" id="caisErro">—</div></div>
+      </div>
+      <p class="motivo" id="caisMotivo" aria-live="polite"></p>
+      <h3>O que decide a precisão é o transmissor</h3>
+      <div class="cmp cmp5" id="caisResumo" role="table" aria-label="Erro de localização por tipo de transmissor">
+        <div class="h" role="columnheader">Transmissor</div>
+        <div class="h" role="columnheader">Vazamentos localizados</div>
+        <div class="h" role="columnheader">Erro mediano · grande · pequeno</div>
+        <div class="h" role="columnheader">Pior caso</div>
+        <div class="h" role="columnheader">Falsos alarmes</div>
+      </div>
+      <p class="stnote" id="caisFontes"></p>
+    </div>
+  </div>
+</section>
+
 <section id="proximos">
   <div class="eyebrow">No hackathon</div>
   <h2>Do software validado ao cais</h2>
@@ -1429,6 +1485,8 @@ const DADOS={"trecho_m":200.0,"diametro_m":0.3,"sensorA":40.0,"sensorB":160.0,"L
 <script src="web/simulador.js"></script>
 <script src="web/leakmap_dados_fpga.js"></script>
 <script src="web/modo_fpga.js"></script>
+<script src="web/leakmap_dados_cais.js"></script>
+<script src="web/cais.js"></script>
 <script>
 (function(){
   "use strict";

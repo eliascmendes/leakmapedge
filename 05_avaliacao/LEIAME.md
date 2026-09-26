@@ -92,14 +92,19 @@ dado da instalacao real.
 
 O mesmo detector, com seis configuracoes de transmissor (0 a 15 bar, 16 bits):
 
-| Transmissor | Vazamento grande: detectados, erro mediano / maximo | Pequeno | Falsos alarmes (5 sem evento) |
+| Transmissor | Vazamento grande: localizados, erro mediano / maximo | Pequeno | Falsos alarmes (5 sem evento) |
 |---|---|---|---|
 | ideal (hidraulica pura) | 7/7, 0,11 / 0,25 m | 7/7, 0,11 / 0,25 m | 0 |
 | rapido dedicado | 7/7, 0,11 / 0,25 m | 7/7, 0,14 / 0,32 m | 0 |
 | inteligente, saida a cada 1 ms | 7/7, 0,18 / 0,56 m | 7/7, 0,25 / 0,39 m | 0 |
 | inteligente, 10 ms | 7/7, 1,58 / 3,02 m | 7/7, 0,88 / 2,74 m | 0 |
-| inteligente, 50 ms | 7/7, 13,73 / 21,18 m | 7/7, 5,73 / 23,71 m | 0 |
-| inteligente, 100 ms | 7/7, 50,61 / 300,81 m | 7/7, 18,65 / 271,62 m | 0 |
+| inteligente, 50 ms | 7/7, 13,73 / 21,18 m | 5/7, 5,73 / 23,71 m | 0 |
+| inteligente, 100 ms | 6/7, 50,61 / 300,81 m | 4/7, 18,65 / 271,62 m | 0 |
+
+Todos os 84 vazamentos dentro do trecho foram detectados; os 6 que nao foram
+localizados (transmissor de 50 e 100 ms) sairam com a posicao retida, como
+suspeita, porque a saida em degraus deixou a diferenca de tempo fora do que o
+trecho permite.
 
 Leitura:
 
@@ -117,7 +122,7 @@ Classificacao por polaridade e origem, com e sem ela (o detector de antes):
 |---|---|---|
 | Manobras que viram alarme de vazamento (2 manobras x 6 transmissores) | 9 de 12 (6 com posicao) | 0 de 12 |
 | Vazamento fora do trecho apontado como "fora do trecho, lado A" | 0 de 12 | 7 de 12 |
-| Vazamentos dentro do trecho detectados e localizados | 84 de 84 | 84 de 84, os mesmos erros |
+| Vazamentos dentro do trecho: detectados · localizados | 84 · 78 de 84 | 84 · 78 de 84, os mesmos erros |
 
 Os 5 vazamentos fora do trecho que nao saem como "fora" sao todos de
 transmissor inteligente: 4 saem localizados perto do sensor A (a 0,4 m com

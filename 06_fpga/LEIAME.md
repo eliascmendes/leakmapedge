@@ -134,17 +134,23 @@ O mesmo detector em aritmética inteira, nos 30 ensaios com evento, 10 vezes
 cada, uma amostra por período de amostragem. No notebook, em Python, com espera
 ativa pela hora de cada amostra (o melhor caso para a CPU):
 
-| | FPGA (DE10-Standard, 50 MHz) | Notebook (Python) |
+Duas medições no mesmo dia (25/09/2026), na mesma placa e no mesmo notebook:
+
+| | FPGA (DE10-Standard, 50 MHz), nas duas | Notebook (Python), 1ª · 2ª medição |
 |---|---|---|
-| Declaração depois da amostra do cruzamento, mediana | 1,94 µs | 14,5 µs |
-| Pior caso | 2,04 µs | 45,6 µs |
-| Repetições do mesmo ensaio | mesmo número de ciclos em 30 de 30 ensaios | desvio de 4,9 µs |
-| Amostras processadas depois da hora | 0 | uma com 860 µs de atraso, em 60 180 |
+| Declaração depois da amostra do cruzamento, mediana | 1,94 µs | 14,5 · 19,2 µs |
+| Pior caso | 2,04 µs | 45,6 · 41,8 µs |
+| Repetições do mesmo ensaio | mesmo número de ciclos em 30 de 30 ensaios | desvio de 4,9 · 5,5 µs |
+| Maior atraso de uma amostra, em 60 180 | 0 | 860 · 2 991 µs |
 
 Um detector em C no notebook seria mais rápido que em Python; o que a tabela
 mostra de próprio da FPGA é a variação: a placa faz a mesma conta sempre no
-mesmo número de ciclos, e nunca perde a hora de uma amostra. Resultado em
-[`resultados/leakmap_latencia_fpga_e_cpu_v1.json`](resultados/leakmap_latencia_fpga_e_cpu_v1.json).
+mesmo número de ciclos, e deu os mesmos números nas duas medições; o notebook
+mudou de uma para a outra, e na segunda atrasou uma amostra em quase 3 ms,
+cerca de 7 períodos de amostragem. Última medição em
+[`resultados/leakmap_latencia_fpga_e_cpu_v1.json`](resultados/leakmap_latencia_fpga_e_cpu_v1.json);
+o resumo da anterior, cujo arquivo foi sobrescrito, em
+[`resultados/leakmap_latencia_medicoes_anteriores_v1.json`](resultados/leakmap_latencia_medicoes_anteriores_v1.json).
 
 ```bash
 python 06_fpga/computador/comparar_latencia.py --jtag

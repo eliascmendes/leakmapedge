@@ -20,7 +20,10 @@ Escala (secao 5.4 do projeto):
 
 Monitoramento: `degradado` quando o autoteste acusa algum canal, com o
 motivo; o evento sai assim mesmo, marcado, para o operador saber quando
-confiar.
+confiar. Uma posicao calculada com um canal reprovado no autoteste nao e
+publicada: o nivel cai de `provavel` para `suspeita`. Um cabo rompido faz o
+sinal cair e parece uma chegada de onda; sem essa regra, a posicao sairia
+errada com cara de certa.
 """
 import datetime
 import uuid
@@ -37,7 +40,12 @@ CLASSE_MANOBRA = 'manobra'
 CLASSE_FORA_DO_TRECHO = 'fora_do_trecho'
 
 
-def nivel_do_evento(registro, gas_na_regiao=False):
+def canais_reprovados(saude):
+    """Canais ('A', 'B') que o autoteste acusou."""
+    return [canal[-1] for canal in ('canal_A', 'canal_B') if (saude or {}).get(canal, {}).get('falhas')]
+
+
+def nivel_do_evento(registro, gas_na_regiao=False, saude=None):
     """Nivel da escala para um registro do detector; None quando nao ha evento."""
     classe = registro.get('classe')
     if classe in (CLASSE_SEM_DETECCAO, CLASSE_FALHA, None):
@@ -47,6 +55,8 @@ def nivel_do_evento(registro, gas_na_regiao=False):
     if classe in (CLASSE_SEM_LOCALIZACAO, CLASSE_FORA_DO_TRECHO):
         return 'suspeita'
     if classe == CLASSE_LOCALIZADO:
+        if canais_reprovados(saude):
+            return 'suspeita'
         return 'confirmado' if gas_na_regiao else 'provavel'
     return 'suspeita'
 
@@ -75,13 +85,18 @@ def montar_evento(registro, linha, sensores, origem_do_processamento, saude=None
     `origem_do_processamento`: 'fpga', 'simulacao_do_verilog', 'notebook' ou 'software'.
     Devolve None quando o registro nao tem evento (nada a informar).
     """
-    nivel = nivel_do_evento(registro, bool(gas_na_regiao))
+    nivel = nivel_do_evento(registro, bool(gas_na_regiao), saude)
     if nivel is None:
         return None
     agora = agora or datetime.datetime.now(datetime.timezone.utc)
     classe = registro.get('classe')
     tipo = {CLASSE_MANOBRA: 'manobra', CLASSE_FORA_DO_TRECHO: 'fora_do_trecho',
             CLASSE_SEM_LOCALIZACAO: 'evento_sem_localizacao'}.get(classe, 'vazamento')
+    reprovados = canais_reprovados(saude)
+    publica_posicao = classe == CLASSE_LOCALIZADO and not reprovados
+    motivo = registro.get('motivo')
+    if classe == CLASSE_LOCALIZADO and reprovados:
+        motivo = ('posicao retida: o autoteste reprovou o canal %s' % ' e o '.join(reprovados))
     return {
         'tipo': 'leakmap.evento',
         'versao': VERSAO,
@@ -91,10 +106,10 @@ def montar_evento(registro, linha, sensores, origem_do_processamento, saude=None
         'sensores': sensores,
         'nivel': nivel,
         'classificacao': tipo,
-        'posicao_m': registro.get('posicao_estimada_m') if classe == CLASSE_LOCALIZADO else None,
-        'incerteza_m': registro.get('incerteza_de_posicao_m') if classe == CLASSE_LOCALIZADO else None,
+        'posicao_m': registro.get('posicao_estimada_m') if publica_posicao else None,
+        'incerteza_m': registro.get('incerteza_de_posicao_m') if publica_posicao else None,
         'lado': registro.get('lado_da_origem'),
-        'motivo': registro.get('motivo'),
+        'motivo': motivo,
         'canais': {'A': _canal(registro, 'canal_A'), 'B': _canal(registro, 'canal_B')},
         'confirmacao_por_gas': gas_na_regiao,
         'saude': estado_do_monitoramento(saude),

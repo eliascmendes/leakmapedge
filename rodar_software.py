@@ -70,6 +70,8 @@ PASSOS = [
      os.path.join('04_detector', 'linha_cais.py')),
     ('linha do cais  avaliacao independente',
      os.path.join('05_avaliacao', 'avaliar_linha_cais.py')),
+    ('front-end    dados da tela da linha do cais',
+     os.path.join('web', 'gerar_dados_cais.py')),
 ]
 
 TESTES = [

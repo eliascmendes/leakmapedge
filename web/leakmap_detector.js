@@ -710,6 +710,96 @@
     }
   }
 
+  /* ------------------------------------------------------------------ */
+  /* Autoteste dos canais: 06_fpga/computador/placa_referencia.SaudeDoCanal,  */
+  /* preparo.limites_de_saude e protocolo.bandeiras_de_saude, sobre os      */
+  /* codigos inteiros da representacao (representacao.py).                  */
+  /* ------------------------------------------------------------------ */
+
+  var SEQUENCIA_DE_CONGELAMENTO = 32, FRACAO_DA_FAIXA_NO_SALTO = 0.5, CODIGO_MAXIMO = 65535;
+  var DEGRAU_PADRAO_M = 1e-3;
+
+  function codigosDaRepresentacao(x, degrau) {
+    return x.map(function (v) { return Math.min(Math.max(rint(v / degrau), 0), CODIGO_MAXIMO); });
+  }
+
+  function estatisticasDoCanal(codigos) {
+    var e = { codigo_min: 0, codigo_max: 0, maior_sequencia: 0, maior_variacao: 0, amostras_no_extremo: 0 };
+    var sequencia = 0, anterior = null;
+    codigos.forEach(function (c, n) {
+      if (n === 0) {
+        e.codigo_min = e.codigo_max = c;
+        sequencia = e.maior_sequencia = 1;
+      } else {
+        e.codigo_min = Math.min(e.codigo_min, c);
+        e.codigo_max = Math.max(e.codigo_max, c);
+        sequencia = c === anterior ? sequencia + 1 : 1;
+        e.maior_sequencia = Math.max(e.maior_sequencia, sequencia);
+        e.maior_variacao = Math.max(e.maior_variacao, Math.abs(c - anterior));
+      }
+      if (c === 0 || c === CODIGO_MAXIMO) { e.amostras_no_extremo += 1; }
+      anterior = c;
+    });
+    return e;
+  }
+
+  /* `efeitos`: o registro de aplicarModelo (lista de {efeito, parametros}). */
+  function limitesDeSaude(efeitos, degrau) {
+    var porNome = {};
+    (efeitos || []).forEach(function (r) { porNome[r.efeito] = r.parametros || {}; });
+    var lim = { limite_congelado: 0, codigo_minimo: 0, codigo_maximo: CODIGO_MAXIMO, limite_salto: 0 };
+    var faixa = porNome.saturacao;
+    if (faixa) {
+      var codigo = function (m) { return Math.min(Math.max(rint(m / degrau), 0), CODIGO_MAXIMO); };
+      var baixo = codigo(faixa.minimo_m), alto = codigo(faixa.maximo_m);
+      lim.codigo_minimo = Math.min(baixo + 1, CODIGO_MAXIMO);
+      lim.codigo_maximo = Math.max(alto - 1, 0);
+      lim.limite_salto = Math.min(0xFFFF, rint(FRACAO_DA_FAIXA_NO_SALTO * (alto - baixo)));
+    }
+    if (porNome.ruido) { lim.limite_congelado = SEQUENCIA_DE_CONGELAMENTO; }
+    return lim;
+  }
+
+  function falhasDoCanal(e, lim) {
+    var f = [];
+    if (lim.limite_congelado && e.maior_sequencia >= lim.limite_congelado) { f.push("congelado"); }
+    if (e.amostras_no_extremo) { f.push("saturado"); }
+    if (e.codigo_min < lim.codigo_minimo || e.codigo_max > lim.codigo_maximo) { f.push("fora_da_faixa"); }
+    if (lim.limite_salto && e.maior_variacao > lim.limite_salto) { f.push("salto"); }
+    return f;
+  }
+
+  /* O autoteste dos dois canais de um ensaio, como a placa faz. */
+  function avaliarSaude(canalA, canalB, efeitos, resolucaoDeclarada) {
+    var degrau = resolucaoDeclarada || DEGRAU_PADRAO_M;
+    var lim = limitesDeSaude(efeitos, degrau), saida = { limites: lim };
+    [["canal_A", canalA], ["canal_B", canalB]].forEach(function (c) {
+      var e = estatisticasDoCanal(codigosDaRepresentacao(c[1], degrau));
+      e.falhas = falhasDoCanal(e, lim);
+      saida[c[0]] = e;
+    });
+    return saida;
+  }
+
+  /* Escala de alerta: 07_servico/alerta.nivel_do_evento. */
+  function canaisReprovados(saude) {
+    return ["canal_A", "canal_B"].filter(function (c) {
+      return saude && saude[c] && saude[c].falhas && saude[c].falhas.length;
+    }).map(function (c) { return c.slice(-1); });
+  }
+
+  function nivelDoEvento(registro, gasNaRegiao, saude) {
+    var classe = registro.classe;
+    if (classe === CLASSE_SEM_DETECCAO || classe === CLASSE_FALHA || !classe) { return null; }
+    if (classe === CLASSE_MANOBRA) { return "registro"; }
+    if (classe === CLASSE_SEM_LOCALIZACAO || classe === CLASSE_FORA_DO_TRECHO) { return "suspeita"; }
+    if (classe === CLASSE_LOCALIZADO) {
+      if (canaisReprovados(saude).length) { return "suspeita"; }
+      return gasNaRegiao ? "confirmado" : "provavel";
+    }
+    return "suspeita";
+  }
+
   return {
     origem: "Adaptacao de 04_detector (Python). A referencia e o Python.",
     modeloSensor: {
@@ -768,6 +858,18 @@
       canalSaturado: canalSaturado,
       decidirEvidencia: decidirEvidencia,
       processarEnsaio: processarEnsaio
+    },
+    autoteste: {
+      SEQUENCIA_DE_CONGELAMENTO: SEQUENCIA_DE_CONGELAMENTO,
+      codigos: codigosDaRepresentacao,
+      estatisticas: estatisticasDoCanal,
+      limites: limitesDeSaude,
+      falhas: falhasDoCanal,
+      avaliar: avaliarSaude
+    },
+    alerta: {
+      canaisReprovados: canaisReprovados,
+      nivelDoEvento: nivelDoEvento
     }
   };
 });

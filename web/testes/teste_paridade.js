@@ -149,6 +149,21 @@ test("classificacao por polaridade e origem igual a do Python", () => {
   }
 });
 
+test("autoteste dos canais igual ao do modelo da placa", () => {
+  assert.ok(gabarito.autoteste && gabarito.autoteste.length >= 9);
+  for (const caso of gabarito.autoteste) {
+    const r = LEAKMAP.autoteste.avaliar(caso.canal_A, caso.canal_B, caso.efeitos, caso.resolucao_declarada_m);
+    comparar(r, caso.saude, `autoteste.${caso.nome}`);
+  }
+});
+
+test("escala de alerta igual a do servico", () => {
+  for (const c of gabarito.escala_de_alerta) {
+    assert.strictEqual(LEAKMAP.alerta.nivelDoEvento({ classe: c.classe }, c.gas, c.saude), c.nivel,
+      `${c.classe}/gas=${c.gas}/${c.nome_saude}`);
+  }
+});
+
 test("gerador do navegador: mesma estatistica do ruido gaussiano", () => {
   const z = LEAKMAP.modeloSensor.fonteAleatoria(42).normais("ruido_A", 200000);
   const media = z.reduce((s, v) => s + v, 0) / z.length;

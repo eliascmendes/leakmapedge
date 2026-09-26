@@ -41,6 +41,21 @@ class Escala(unittest.TestCase):
         self.assertEqual(AL.nivel_do_evento(registro('manobra'), gas_na_regiao=True), 'registro')
         self.assertEqual(AL.nivel_do_evento(registro('fora_do_trecho'), gas_na_regiao=True), 'suspeita')
 
+    def test_canal_reprovado_rebaixa_o_localizado_para_suspeita(self):
+        saude = {'canal_A': {'falhas': ['saturado', 'fora_da_faixa']}, 'canal_B': {'falhas': []}}
+        self.assertEqual(AL.nivel_do_evento(registro('localizado'), saude=saude), 'suspeita')
+        self.assertEqual(AL.nivel_do_evento(registro('localizado'), gas_na_regiao=True, saude=saude), 'suspeita')
+        ok = {'canal_A': {'falhas': []}, 'canal_B': {'falhas': []}}
+        self.assertEqual(AL.nivel_do_evento(registro('localizado'), saude=ok), 'provavel')
+
+    def test_posicao_com_canal_reprovado_nao_sai_no_evento(self):
+        saude = {'canal_A': {'falhas': ['congelado']}, 'canal_B': {'falhas': []}}
+        r = registro('localizado', posicao_estimada_m=48.0, incerteza_de_posicao_m=0.3)
+        e = AL.montar_evento(r, 'L-01', SENSORES, 'notebook', saude=saude)
+        self.assertEqual((e['nivel'], e['posicao_m'], e['incerteza_m']), ('suspeita', None, None))
+        self.assertIn('canal A', e['motivo'])
+        self.assertEqual(e['saude']['monitoramento'], 'degradado')
+
     def test_monitoramento_degradado_diz_o_motivo(self):
         saude = {'canal_A': {'falhas': []}, 'canal_B': {'falhas': ['congelado']}}
         estado = AL.estado_do_monitoramento(saude)

@@ -335,18 +335,36 @@
     var L = F.latencia, caixa = $("fpgaLatencia");
     if (!L) { caixa.hidden = true; return; }
     caixa.hidden = false;
+    /* todas as medicoes, da mais antiga para a atual */
+    var medicoes = (L.medicoes_anteriores || []).concat([{ fpga: L.fpga, notebook: L.notebook }]);
+    var varias = medicoes.length > 1;
+    function porMedicao(campo, lado, casas) {
+      return medicoes.map(function (m) { return fmt(m[lado][campo], casas); }).join(" · ") + " µs";
+    }
+    function fpgaIgual(campo) {
+      return medicoes.every(function (m) { return m.fpga[campo] === medicoes[0].fpga[campo]; });
+    }
+    function fpga(campo) {
+      if (varias && fpgaIgual(campo)) {
+        return fmt(L.fpga[campo], 2) + " µs nas " + medicoes.length + " medições";
+      }
+      return porMedicao(campo, "fpga", 2);
+    }
     $("fpgaLatenciaLead").textContent = "Os " + L.ensaios + " ensaios com evento, " + L.repeticoes +
       " vezes cada, com uma amostra entregue a cada período de amostragem. Na placa, quem conta o tempo é o " +
       "próprio circuito; no notebook, o mesmo detector em aritmética inteira, esperando a hora de cada amostra. " +
-      "A placa faz a mesma conta sempre no mesmo número de ciclos.";
-    var f = L.fpga, n = L.notebook, cmp = $("fpgaLatenciaCmp");
+      "A placa faz a mesma conta sempre no mesmo número de ciclos." +
+      (varias ? " Em " + medicoes.length + " medições no mesmo dia, a placa repetiu os números; o notebook, não " +
+        "(valores separados por ·, da primeira medição para a última)." : "");
+    var f = L.fpga, cmp = $("fpgaLatenciaCmp");
     [
-      ["Declaração depois da amostra do cruzamento", fmt(f.mediana_us, 2) + " µs", fmt(n.mediana_us, 1) + " µs"],
-      ["Pior caso", fmt(f.max_us, 2) + " µs", fmt(n.max_us, 1) + " µs"],
+      ["Declaração depois da amostra do cruzamento", fpga("mediana_us"), porMedicao("mediana_us", "notebook", 1)],
+      ["Pior caso", fpga("max_us"), porMedicao("max_us", "notebook", 1)],
       ["A mesma conta, repetida", "mesmo número de ciclos em " + f.ensaios_sem_variacao + " de " + L.ensaios +
-        " ensaios", "varia, desvio de " + fmt(n.desvio_us, 1) + " µs"],
+        " ensaios", "varia, desvio de " + porMedicao("desvio_us", "notebook", 1)],
       ["Amostras processadas depois da hora", String(f.amostras_atrasadas),
-        "até " + fmt(n.maior_atraso_de_entrega_us, 0) + " µs de atraso, em " + fmt(n.amostras, 0) + " amostras"]
+        "até " + porMedicao("maior_atraso_de_entrega_us", "notebook", 0) + " de atraso, em " +
+        fmt(L.notebook.amostras, 0) + " amostras por medição"]
     ].forEach(function (l) {
       el("div", { class: "rl", role: "rowheader", texto: l[0] }, cmp);
       el("div", { class: "me", role: "cell", texto: l[1] }, cmp);
@@ -355,6 +373,11 @@
     var fonte = $("fpgaLatenciaFonte");
     fonte.appendChild(document.createTextNode("Medição: "));
     el("a", { class: "src num", "data-src": L.arquivo, href: "#", texto: L.arquivo }, fonte);
+    if (L.arquivo_das_anteriores) {
+      fonte.appendChild(document.createTextNode(" (a última) e "));
+      el("a", { class: "src num", "data-src": L.arquivo_das_anteriores, href: "#", texto: L.arquivo_das_anteriores }, fonte);
+      fonte.appendChild(document.createTextNode(" (as anteriores)"));
+    }
     fonte.appendChild(document.createTextNode(". Relógio da placa: " + fmt(L.frequencia_hz / 1e6, 0) + " MHz."));
     ligarFontes(fonte);
   }

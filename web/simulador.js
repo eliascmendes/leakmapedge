@@ -101,6 +101,26 @@
       aplicar: function () {
         estado.tx = "bom"; estado.ajuste = ajustePadrao("bom"); estado.cPct = 5; estado.evento = "EV-01";
       }
+    },
+    rompido: {
+      titulo: "Cabo rompido",
+      texto: "O cabo do sensor A rompe pouco antes da onda chegar, e a leitura cai ao fundo da escala. Nos cinco " +
+        "pontos, o autoteste acusa o canal A, o painel passa a monitoramento degradado e o alerta sai como suspeita, " +
+        "dizendo qual sensor verificar. Nenhuma posição errada é publicada, e a falha não fica em silêncio.",
+      aplicar: function () {
+        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom"); estado.ajuste.falha = "A_rompido";
+        estado.evento = "EV-02";
+      }
+    },
+    travado: {
+      titulo: "Transmissor travado",
+      texto: "O transmissor B congela pouco antes da onda chegar e repete o último valor. Um sinal vivo nunca fica " +
+        "igual por 32 amostras seguidas: nos cinco pontos, o autoteste acusa o canal B travado e o alerta sai como " +
+        "suspeita. Em 140 m o detector ainda calcularia uma posição com o canal travado; ela é retida.",
+      aplicar: function () {
+        estado.tx = "bom"; estado.ajuste = ajustePadrao("bom"); estado.ajuste.falha = "B_travado";
+        estado.evento = "EV-02";
+      }
     }
   };
 
@@ -112,7 +132,8 @@
       skew: { on: cfg.diferenca_de_atraso.ligado,
         val: cfg.diferenca_de_atraso.ligado ? cfg.diferenca_de_atraso.atraso_s * 1000 : 0.1 },
       banda: { on: cfg.banda.ligado, val: cfg.banda.ligado ? cfg.banda.corte_hz : 800 },
-      faixa: { on: cfg.saturacao.ligado, min: L.matriz.ESCALA_MIN_M, max: L.matriz.ESCALA_MAX_M }
+      faixa: { on: cfg.saturacao.ligado, min: L.matriz.ESCALA_MIN_M, max: L.matriz.ESCALA_MAX_M },
+      falha: "nenhuma"
     };
   }
 
@@ -170,17 +191,41 @@
   /* simulacao e avaliacao, separadas                                     */
   /* ------------------------------------------------------------------ */
 
+  /* Sensor estragado de proposito, na saida do transmissor, a partir da
+   * amostra AMOSTRA_DA_FALHA do solucionador, pouco antes da onda chegar (a
+   * janela gravada de cada evento comeca 200 amostras antes da primeira
+   * chegada): cabo do sensor A rompido (a leitura vai ao fundo da escala) ou
+   * transmissor B travado (repete o ultimo valor). */
+  var AMOSTRA_DA_FALHA = 170;
+
+  function estragar(r, falha, cfg) {
+    var k = Math.min(AMOSTRA_DA_FALHA, r.a.length - 1);
+    if (falha === "A_rompido") {
+      var fundo = cfg.saturacao.ligado ? cfg.saturacao.minimo_m : 0.0;
+      r.a = r.a.map(function (v, i) { return i >= k ? fundo : v; });
+    } else if (falha === "B_travado") {
+      r.b = r.b.map(function (v, i) { return i > k ? r.b[k] : v; });
+    }
+    return r;
+  }
+
   /* Recebe sinais limpos do solucionador e devolve o que o detector viu e
    * respondeu. Nao recebe a posicao real. */
-  function simular(tempo, canalA, canalB, cfg, fonte, cPct, id) {
-    var r = L.modeloSensor.aplicar(canalA, canalB, TS, cfg, fonte);
+  function simular(tempo, canalA, canalB, cfg, fonte, cPct, id, falha) {
+    var r = estragar(L.modeloSensor.aplicar(canalA, canalB, TS, cfg, fonte), falha || "nenhuma", cfg);
     var ensaio = L.amostragem.montarEnsaio(id, tempo, r.a, r.b, parametrosDoDetector(cPct), {}, ESCOLHA);
+    var resolucao = L.modeloSensor.resolucaoDeclaradaM(cfg);
     var escala = {
       minimo_m: cfg.saturacao.minimo_m,
       maximo_m: cfg.saturacao.maximo_m,
-      resolucao_declarada_m: L.modeloSensor.resolucaoDeclaradaM(cfg)
+      resolucao_declarada_m: resolucao
     };
-    return { ensaio: ensaio, registro: L.detector.processarEnsaio(ensaio, escala) };
+    return {
+      ensaio: ensaio,
+      registro: L.detector.processarEnsaio(ensaio, escala),
+      /* o autoteste que a placa faz em cada canal, sobre o que o detector recebeu */
+      saude: L.autoteste.avaliar(ensaio.canal_A_carga_m, ensaio.canal_B_carga_m, r.registro, resolucao)
+    };
   }
 
   function simularEvento(eventoId, tx, ajuste, cPct, realizacao) {
@@ -188,7 +233,7 @@
     var cfg = montarConfig(eventoId, tx, ajuste);
     var indice = ORDEM_EVENTOS.indexOf(eventoId);
     var fonte = montarFonte(eventoId + "/" + TRANSMISSORES[tx].nivel, realizacao, 31 * (indice + 1));
-    return simular(s.tempo_s, s.canal_A_carga_m, s.canal_B_carga_m, cfg, fonte, cPct, eventoId);
+    return simular(s.tempo_s, s.canal_A_carga_m, s.canal_B_carga_m, cfg, fonte, cPct, eventoId, ajuste.falha);
   }
 
   function simularSemEvento(tx, ajuste, cPct, repeticao, realizacao) {
@@ -198,13 +243,16 @@
     var cfg = montarConfig(ORDEM_EVENTOS[0], tx, ajuste);
     if (cfg.ruido.ligado) { cfg.ruido.semente = semente + 1000; }
     var fonte = montarFonte(null, realizacao, semente);
-    return simular(base.t, base.a, base.b, cfg, fonte, cPct, "sem-vazamento-" + (repeticao + 1));
+    return simular(base.t, base.a, base.b, cfg, fonte, cPct, "sem-vazamento-" + (repeticao + 1), ajuste.falha);
   }
 
   /* Papel do avaliador: so aqui entra a posicao real. */
-  function avaliar(registro, posReal) {
-    var localizado = registro.classe === L.detector.CLASSE_LOCALIZADO;
-    var declarou = localizado || registro.classe === L.detector.CLASSE_SEM_LOCALIZACAO;
+  function avaliar(registro, posReal, saude) {
+    var calculou = registro.classe === L.detector.CLASSE_LOCALIZADO;
+    /* posicao calculada com canal reprovado no autoteste nao e publicada */
+    var localizado = calculou && !L.alerta.canaisReprovados(saude).length;
+    var declarou = calculou || registro.classe === L.detector.CLASSE_SEM_LOCALIZACAO ||
+      registro.classe === L.detector.CLASSE_FORA_DO_TRECHO;
     if (posReal === null) {
       return { temEvento: false, falsoAlarme: declarou, erro: null };
     }
@@ -220,10 +268,36 @@
   /* textos da decisao                                                    */
   /* ------------------------------------------------------------------ */
 
-  function explicar(reg) {
+  var NOMES_DAS_FALHAS = { congelado: "travado", saturado: "no fundo da escala",
+    fora_da_faixa: "fora da faixa do transmissor", salto: "com salto impossível" };
+
+  function descreverFalhas(falhas) {
+    return falhas.map(function (f) { return NOMES_DAS_FALHAS[f] || f; }).join(", ");
+  }
+
+  function explicar(reg, saude) {
     var m = reg.motivo || "";
+    var reprovados = L.alerta.canaisReprovados(saude);
+    if (reg.classe === L.detector.CLASSE_LOCALIZADO && reprovados.length) {
+      return "Posição retida: o autoteste reprovou o canal " + reprovados.join(" e o ") + " (" +
+        descreverFalhas(saude["canal_" + reprovados[0]].falhas) + "). Sem o autoteste, a posição sairia em " +
+        fmt(reg.posicao_estimada_m, 1) + " m, calculada com um canal defeituoso. O alerta cai para suspeita " +
+        "e o painel declara monitoramento degradado.";
+    }
     if (reg.classe === L.detector.CLASSE_LOCALIZADO) {
       return "Evidência suficiente nos dois canais: a posição é publicada junto com o alarme.";
+    }
+    if (reprovados.length && reg.classe !== L.detector.CLASSE_SEM_DETECCAO) {
+      return "Rompimento detectado, posição retida: o autoteste reprovou o canal " + reprovados.join(" e o ") +
+        " (" + descreverFalhas(saude["canal_" + reprovados[0]].falhas) + "), e sem ele não há como medir a " +
+        "diferença de tempo. O alerta sai como suspeita, dizendo qual sensor verificar, em vez de silêncio.";
+    }
+    if (reg.classe === L.detector.CLASSE_MANOBRA) {
+      return "Onda de alta de pressão: é manobra de operação, não vazamento. Fica no histórico, sem alarme.";
+    }
+    if (reg.classe === L.detector.CLASSE_FORA_DO_TRECHO) {
+      return "A onda veio de fora do trecho entre os sensores, do lado do sensor " + reg.lado_da_origem +
+        ": o LEAKMAP registra e avisa, mas não aponta uma posição que não pode medir.";
     }
     if (/fundo de escala/.test(m)) {
       return "Rompimento detectado, posição retida: " +
@@ -243,8 +317,16 @@
     return m;
   }
 
-  function nomeDaClasse(reg) {
+  var NOMES_DOS_NIVEIS = { registro: "Registro", suspeita: "Suspeita", provavel: "Provável",
+    confirmado: "Confirmado" };
+
+  function nomeDaClasse(reg, saude) {
+    if (reg.classe === L.detector.CLASSE_LOCALIZADO && L.alerta.canaisReprovados(saude).length) {
+      return "Posição retida";
+    }
     if (reg.classe === L.detector.CLASSE_LOCALIZADO) { return "Localizado"; }
+    if (reg.classe === L.detector.CLASSE_MANOBRA) { return "Manobra"; }
+    if (reg.classe === L.detector.CLASSE_FORA_DO_TRECHO) { return "Fora do trecho"; }
     if (reg.classe === L.detector.CLASSE_SEM_LOCALIZACAO) { return "Posição retida"; }
     if (reg.classe === L.detector.CLASSE_SEM_DETECCAO) { return "Sem alarme"; }
     return "Falha";
@@ -406,29 +488,38 @@
   function rodarUm() {
     var sim = simularEvento(estado.evento, estado.tx, estado.ajuste, estado.cPct, estado.realizacao);
     var real = posicaoReal[estado.evento];
-    var av = avaliar(sim.registro, real);
+    var av = avaliar(sim.registro, real, sim.saude);
     ultimo = sim;
     var reg = sim.registro;
 
     desenharTrecho($("simSvg"), reg, real, function (id) { estado.evento = id; sincronizar(); });
     desenharGrafico($("simCv"), sim, estado.ajuste.faixa);
 
-    var loc = reg.classe === L.detector.CLASSE_LOCALIZADO;
+    var saude = sim.saude;
+    var reprovados = L.alerta.canaisReprovados(saude);
+    var nivel = L.alerta.nivelDoEvento(reg, false, saude);
+    var loc = reg.classe === L.detector.CLASSE_LOCALIZADO && !reprovados.length;
     var vazio = '<span class="vazio">—</span>';
     $("sEst").innerHTML = loc ? fmt(reg.posicao_estimada_m, 2) + "<small>m</small>" : vazio;
     $("sErro").innerHTML = loc ? fmt(av.erro, 2) + "<small>m</small>" : vazio;
     $("sDt").innerHTML = (reg.delta_t_s !== undefined) ? fmt(reg.delta_t_s * 1000, 2) + "<small>ms</small>" : "—";
-    $("sClasse").textContent = nomeDaClasse(reg);
+    $("sClasse").textContent = nomeDaClasse(reg, saude);
     $("sClasse").className = "val " + (loc ? "ok" : "alerta");
     $("sReal").textContent = "real " + fmt(real, 0) + " m";
     $("sIncerteza").textContent = loc ? "± " + fmt(reg.incerteza_de_posicao_m, 2) + " m declarados" : "";
-    $("sMotivo").textContent = explicar(reg);
+    $("sMotivo").textContent = explicar(reg, saude);
     $("sMotivo").className = "motivo" + (loc ? "" : " retida");
-    $("sClasseSub").textContent = loc ? "posição publicada com o alarme" :
-      (reg.classe === L.detector.CLASSE_SEM_LOCALIZACAO ? "rompimento detectado" : "nenhuma onda de rompimento");
+    $("sClasseSub").textContent = nivel ? "alerta: " + NOMES_DOS_NIVEIS[nivel].toLowerCase() : "sem alerta";
+    var partesSaude = ["A", "B"].map(function (c) {
+      var f = saude["canal_" + c].falhas;
+      return "canal " + c + (f.length ? " " + descreverFalhas(f) : " ok");
+    });
+    $("sSaude").textContent = "Autoteste: " + partesSaude.join(" · ") + " — monitoramento " +
+      (reprovados.length ? "degradado" : "normal");
+    $("sSaude").className = "saude" + (reprovados.length ? " degradado" : "");
     $("bEst").textContent = loc ? fmt(reg.posicao_estimada_m, 2) + " m" : "—";
     $("bErro").textContent = loc ? fmt(av.erro, 2) + " m" : "—";
-    $("bClasse").textContent = nomeDaClasse(reg);
+    $("bClasse").textContent = nomeDaClasse(reg, saude);
     $("bClasse").className = loc ? "ok" : "alerta";
 
     var partes = [];
@@ -482,6 +573,7 @@
     $("aj_faixa_min").value = String(a.faixa.min);
     $("aj_faixa_max").value = String(a.faixa.max);
     $("aj_faixa_min").disabled = $("aj_faixa_max").disabled = !a.faixa.on;
+    $("aj_falha").value = a.falha;
     rodarUm();
   }
 
@@ -496,6 +588,7 @@
     var mn = numero($("aj_faixa_min").value, a.faixa.min), mx = numero($("aj_faixa_max").value, a.faixa.max);
     if (mx <= mn) { mx = mn + 1; }
     a.faixa = { on: $("aj_faixa_on").checked, min: mn, max: mx };
+    a.falha = $("aj_falha").value;
   }
 
   function montarControles() {
@@ -516,7 +609,7 @@
     $("simC").addEventListener("input", function () {
       estado.cPct = numero(this.value, 0); estado.caso = null; sincronizar();
     });
-    Array.prototype.forEach.call(document.querySelectorAll("#simAjuste input"), function (inp) {
+    Array.prototype.forEach.call(document.querySelectorAll("#simAjuste input, #simAjuste select"), function (inp) {
       inp.addEventListener("change", function () { lerAjuste(); estado.caso = null; sincronizar(); });
     });
     $("simNovo").addEventListener("click", function () { estado.realizacao += 1; sincronizar(); });
@@ -592,19 +685,19 @@
       var aj = ajustePadrao(tx);
       posicoes.forEach(function (id) {
         var sim = simularEvento(id, tx, aj, cPct, 0);
-        var av = avaliar(sim.registro, posicaoReal[id]);
+        var av = avaliar(sim.registro, posicaoReal[id], sim.saude);
         comEvento++;
         if (av.localizado) { localizados++; erros.push(av.erro); pontos.push([posicaoReal[id], sim.registro.posicao_estimada_m, tx]); }
         linhas.push([TRANSMISSORES[tx].nome, fmt(posicaoReal[id], 0) + " m",
           av.localizado ? fmt(sim.registro.posicao_estimada_m, 2) + " m" : "—",
-          av.localizado ? fmt(av.erro, 2) + " m" : "—", nomeDaClasse(sim.registro), av.localizado]);
+          av.localizado ? fmt(av.erro, 2) + " m" : "—", nomeDaClasse(sim.registro, sim.saude), av.localizado]);
       });
       if (semEvento) {
         var f = 0;
         for (var r = 0; r < SEMENTES_SEM_EVENTO.length; r++) {
           var s = simularSemEvento(tx, aj, cPct, r, 0);
           semN++;
-          if (avaliar(s.registro, null).falsoAlarme) { f++; falsos++; }
+          if (avaliar(s.registro, null, s.saude).falsoAlarme) { f++; falsos++; }
         }
         linhas.push([TRANSMISSORES[tx].nome, "sem vazamento (" + SEMENTES_SEM_EVENTO.length + "×)", "—", "—",
           f ? f + " falso(s) alarme(s)" : "nenhum alarme", f === 0]);

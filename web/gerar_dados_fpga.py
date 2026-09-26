@@ -40,6 +40,7 @@ AVALIACAO_A = os.path.join(RAIZ, '05_avaliacao', 'leakmap_avaliacao_matriz_v1.js
 RESULTADOS_B = os.path.join(RAIZ, '06_fpga', 'resultados')
 PROVA = os.path.join(RESULTADOS_B, 'leakmap_cenario_b_prova_simulacao_v1.json')
 LATENCIA = os.path.join(RESULTADOS_B, 'leakmap_latencia_fpga_e_cpu_v1.json')
+LATENCIA_ANTERIORES = os.path.join(RESULTADOS_B, 'leakmap_latencia_medicoes_anteriores_v1.json')
 SAIDA = os.path.join(RAIZ, 'web', 'leakmap_dados_fpga.js')
 
 NOME_DO_CENARIO = 'reprodução de sinais digitais em FPGA física'
@@ -115,8 +116,12 @@ def latencia_fpga_e_notebook():
     f, c = m.get('fpga'), m['notebook']
     if not f:
         return None
+    anteriores = ler(LATENCIA_ANTERIORES)['medicoes'] if os.path.exists(LATENCIA_ANTERIORES) else []
     return {
         'arquivo': rel(LATENCIA),
+        'medicoes_anteriores': [{'medicao': a['medicao'], 'fpga': a['fpga'], 'notebook': a['notebook']}
+                                for a in anteriores],
+        'arquivo_das_anteriores': rel(LATENCIA_ANTERIORES) if anteriores else None,
         'ensaios': len(m['ensaios']),
         'repeticoes': m['repeticoes'],
         'frequencia_hz': f['frequencia_hz'],
@@ -220,7 +225,8 @@ def main():
         'latencia': latencia_fpga_e_notebook(),
     }
     if dados['latencia']:
-        dados['fontes'] = sorted(set(dados['fontes']) | {rel(LATENCIA)})
+        dados['fontes'] = sorted(set(dados['fontes']) | {rel(LATENCIA)}
+                                 | ({rel(LATENCIA_ANTERIORES)} if dados['latencia']['medicoes_anteriores'] else set()))
     corpo = json.dumps(dados, ensure_ascii=False, separators=(',', ':'))
     with open(SAIDA, 'w', encoding='utf-8') as f:
         f.write('/* Gerado por web/gerar_dados_fpga.py a partir de 03_ensaios, 04_detector e '
