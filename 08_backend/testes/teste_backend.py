@@ -156,6 +156,38 @@ class BancadaAoVivo(unittest.TestCase):
         b.equipamento('B-01', 'parar', True)
         self.assertEqual(rodar(b, 30)[0]['evento']['nivel'], 'registro')
 
+    def test_equipamentos_nas_tres_linhas(self):
+        esperado = {'trecho_200': {'XV-100', 'XV-190'}, 'cais': {'B-01', 'XV-104', 'XV-106', 'XV-108'},
+                    'rede': {'B-01', 'XV-104', 'XV-106', 'XV-108'}}
+        for linha, eqs in esperado.items():
+            self.assertEqual({e['id'] for e in LINHAS[linha].equipamentos}, eqs, linha)
+            self.assertTrue(all((e, a) in LINHAS[linha].manobras for e in eqs
+                                for a in (('abrir', 'fechar') if e.startswith('XV') else ('parar', 'partir'))))
+
+    def test_manobras_no_trecho_200(self):
+        b = nova('trecho_200')
+        b.equipamento('XV-100', 'fechar', True)
+        self.assertEqual(rodar(b, 35)[0]['evento']['nivel'], 'registro')
+        b.equipamento('XV-100', 'abrir', True)
+        self.assertEqual(rodar(b, 35)[0]['evento']['nivel'], 'registro')
+        b.equipamento('XV-100', 'fechar', False)
+        rodar(b, 35)
+        b.equipamento('XV-100', 'abrir', False)          # a mesma onda de um vazamento em 100 m
+        e = rodar(b, 35)[0]['evento']
+        self.assertEqual((e['nivel'], e['cadastro']['decisao']), ('provavel', 'conferir'))
+        self.assertLess(abs(e['posicao_m'] - 100.0), 3.0)
+
+    def test_manobras_na_rede(self):
+        b = nova('rede')
+        b.equipamento('XV-106', 'fechar', True)
+        self.assertEqual(rodar(b, 35)[0]['evento']['nivel'], 'registro')
+        b.equipamento('XV-106', 'abrir', True)
+        e = rodar(b, 35)[0]['evento']
+        self.assertEqual((e['nivel'], e['cadastro']['equipamento']), ('registro', 'XV-106'))
+        b.equipamento('B-01', 'parar', True)
+        e = rodar(b, 35)[0]['evento']
+        self.assertEqual((e['nivel'], e['cadastro']['equipamento']), ('registro', 'B-01'))
+
     def test_evento_em_fluxo_igual_ao_detector_em_lote(self):
         b = nova()
         b.vazamento('principal', 320.0, 'grande')
@@ -168,6 +200,98 @@ class BancadaAoVivo(unittest.TestCase):
                                         'incerteza_de_velocidade_de_onda_m_s': 0.0}}, b.escala())
         self.assertEqual(registro['classe'], 'localizado')
         self.assertAlmostEqual(registro['posicao_estimada_m'], e['posicao_m'], delta=b.linha.c * BA.TS / 2 + 1e-6)
+
+
+class Webhook(unittest.TestCase):
+
+    def setUp(self):
+        import tempfile
+        import threading
+        import receptor_teste as RT
+        self.RT = RT
+        RT.Receptor.recebidos.clear()
+        self.servidor = RT.servidor(0)
+        threading.Thread(target=self.servidor.serve_forever, daemon=True).start()
+        self.url = 'http://127.0.0.1:%d/leakmap' % self.servidor.server_address[1]
+        self.pendentes = os.path.join(tempfile.mkdtemp(), 'pendentes.jsonl')
+
+    def tearDown(self):
+        self.servidor.shutdown()
+        self.servidor.server_close()
+
+    def esperar(self, condicao, limite=5.0):
+        import time
+        fim = time.monotonic() + limite
+        while time.monotonic() < fim and not condicao():
+            time.sleep(0.05)
+        return condicao()
+
+    def test_evento_da_bancada_sai_pelo_webhook_sem_a_verdade(self):
+        import repasse as RE
+        r = RE.Repasse(dict(P.IN.PADRAO, ligado=True, url=self.url), self.pendentes)
+        b = nova()
+        b.vazamento('principal', 320.0, 'grande')
+        m = rodar(b, 20)[0]
+        r.por(m['evento'])
+        self.assertTrue(self.esperar(lambda: len(self.RT.Receptor.recebidos) == 1))
+        recebido = self.RT.Receptor.recebidos[0]
+        self.assertEqual((recebido['id'], recebido['nivel'], recebido['modo']), (m['evento']['id'], 'provavel', 'simulacao'))
+        self.assertNotIn('verdade', recebido)
+        self.assertTrue(self.esperar(lambda: r.situacao()['contagem']['enviado'] == 1))
+
+    def test_filtro_por_nivel(self):
+        import repasse as RE
+        r = RE.Repasse(dict(P.IN.PADRAO, ligado=True, url=self.url, niveis=['confirmado']), self.pendentes)
+        r.por({'id': 'x', 'nivel': 'provavel'})
+        self.assertTrue(self.esperar(lambda: r.situacao()['contagem']['filtrado'] == 1))
+        self.assertEqual(self.RT.Receptor.recebidos, [])
+
+    def test_destino_fora_do_ar_vai_para_a_fila_local(self):
+        import repasse as RE
+        cfg = dict(P.IN.PADRAO, ligado=True, url='http://127.0.0.1:9/leakmap', tentativas=1, tempo_limite_s=0.5)
+        r = RE.Repasse(cfg, self.pendentes)
+        r.por({'id': 'y', 'nivel': 'provavel'})
+        self.assertTrue(self.esperar(lambda: r.situacao()['contagem']['pendente'] == 1))
+        self.assertEqual(r.situacao()['na_fila_local_para_reenvio'], 1)
+
+    def test_desligado_sem_configuracao(self):
+        import repasse as RE
+        r = RE.Repasse(dict(P.IN.PADRAO), self.pendentes)
+        r.por({'id': 'z', 'nivel': 'provavel'})
+        self.assertEqual((r.ligado, r.situacao()['contagem']['enviado']), (False, 0))
+
+
+class ApiComWebhook(unittest.TestCase):
+    """De ponta a ponta: comando pela API, detector na bancada, evento no receptor do webhook."""
+
+    def test_vazamento_chega_ao_receptor(self):
+        import threading
+        import time
+        from fastapi.testclient import TestClient
+        import app as APP
+        import receptor_teste as RT
+        RT.Receptor.recebidos.clear()
+        servidor = RT.servidor(0)
+        threading.Thread(target=servidor.serve_forever, daemon=True).start()
+        os.environ['LEAKMAP_WEBHOOK_URL'] = 'http://127.0.0.1:%d/leakmap' % servidor.server_address[1]
+        try:
+            with TestClient(APP.app) as c:
+                self.assertTrue(c.get('/api/servico').json()['webhook_ligado'])
+                time.sleep(2.0)                     # a bancada ignora deteccoes no 1,5 s depois de iniciar
+                c.post('/api/bancada/vazamento', json={'trecho': 'principal', 's_m': 320.0},
+                       headers={'X-LEAKMAP-Chave': 'chave-de-teste'})
+                fim = time.monotonic() + 10.0
+                while time.monotonic() < fim and not RT.Receptor.recebidos:
+                    time.sleep(0.1)
+                self.assertEqual(len(RT.Receptor.recebidos), 1)
+                e = RT.Receptor.recebidos[0]
+                self.assertEqual((e['nivel'], e['modo'], e['trecho']), ('provavel', 'simulacao', 'principal'))
+                self.assertNotIn('verdade', e)
+                self.assertEqual(c.get('/api/integracao').json()['contagem']['enviado'], 1)
+        finally:
+            del os.environ['LEAKMAP_WEBHOOK_URL']
+            servidor.shutdown()
+            servidor.server_close()
 
 
 class Api(unittest.TestCase):
@@ -217,6 +341,12 @@ class Api(unittest.TestCase):
             for _ in range(5):
                 tipos.add(ws.receive_json()['tipo'])
             self.assertIn('amostras', tipos)
+
+    def test_integracao_desligada_por_padrao(self):
+        i = self.c.get('/api/integracao').json()
+        self.assertFalse(i['ligado'])
+        r = self.c.post('/api/integracao/teste', headers=self.chave).json()
+        self.assertEqual(r['resultado'], 'desligado')
 
     def test_perfil_operador_nao_recebe_a_verdade(self):
         msg = {'tipo': 'evento', 'evento': {}, 'verdade': {'s_m': 1.0}}

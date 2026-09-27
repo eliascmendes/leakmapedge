@@ -270,9 +270,12 @@ class Bancada:
             return
         r['proximo'] = self.t + r['intervalo_s']
         passos = [('vazamento', 'grande'), ('reparar',)]
-        if 'XV-106' in self.equipamentos:
-            passos += [('manobra', 'XV-106', True), ('manobra', 'XV-106', True), ('vazamento', 'pequeno'),
-                       ('reparar',), ('manobra', 'XV-106', False), ('manobra', 'XV-106', False)]
+        # a valvula do roteiro: a do berco 106 quando existe, senao a primeira valvula da linha
+        valvulas = [e['id'] for e in self.linha.equipamentos if e['tipo'] == 'valvula']
+        valvula = 'XV-106' if 'XV-106' in valvulas else (valvulas[0] if valvulas else None)
+        if valvula:
+            passos += [('manobra', valvula, True), ('manobra', valvula, True), ('vazamento', 'pequeno'),
+                       ('reparar',), ('manobra', valvula, False), ('manobra', valvula, False)]
         else:
             passos += [('vazamento', 'pequeno'), ('reparar',)]
         passo = passos[r['passo'] % len(passos)]
@@ -409,10 +412,14 @@ class Bancada:
             self.descartadas_como_ruido += 1
             return []
         saude = self._saude(sinais)
-        if self.linha.cadastro and self.linha.tipo != 'rede':
+        if self.linha.cadastro:
             sensores_cad = {s: {'posicao_m': v['s_m']} for s, v in self.linha.sensores.items()}
+            geometria = P.CD.GeometriaDaRede(self.linha.topo) if self.linha.topo is not None else None
             conf = P.CD.conferir(registro, self.linha.cadastro, self.operacoes, registro['tempo_de_declaracao_s'],
-                                 sensores_cad)
+                                 sensores_cad, geometria)
+            if conf.get('operacao') is not None:
+                conf['operacao']['usada'] = True     # a mesma operacao nao explica um segundo evento
+                conf['operacao'] = {k: v for k, v in conf['operacao'].items() if k != 'usada'}
             registro = P.CD.aplicar(registro, conf)
         return [self._montar_evento(registro, saude, t_c, t, sinais)]
 
@@ -467,7 +474,7 @@ class Bancada:
         ev['explicacao'] = EX.texto(registro, reprovados, saude, confirmado=ev['nivel'] == 'confirmado')
         verdade = self._verdade(ev, t_c)
         marcas = {s: v.get('instante_de_chegada_s') for s, v in ev['canais'].items()}
-        sinal = {'periodo_s': TS, 't0_s': float(t[0]),
+        sinal = {'periodo_s': TS, 't0_s': round(float(t[0]), 4),
                  'pressao_bar': {s: [round(float(v), 4) for v in self.linha.bar(x)] for s, x in sinais.items()},
                  'marcas_de_chegada_s': marcas}
         self.historico.gravar(ev, verdade, sinal)

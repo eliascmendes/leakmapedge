@@ -1,36 +1,296 @@
 ===============================================================================
  LEAKMAP Edge · Backend da bancada virtual
- Guia para a equipe de front-end se preparar
+ Guia para a equipe de front-end
 
- Equipe TACHYON ·
+ Equipe TACHYON · contrato versão 1
 ===============================================================================
 
-Este documento descreve o backend ANTES de ele existir, para que a equipe de
-front-end comece a construir o dashboard do operador e a bancada visual da
-demonstração em paralelo.
+O backend da bancada virtual está pronto, publicado e conferido. Este guia
+mostra o que ele entrega e o que isso torna possível construir.
 
-Os nomes de rotas, campos e mensagens abaixo são a proposta v0. Até a versão 1
-eles ainda podem mudar; toda mudança será avisada. Quando o backend estiver no
-ar, a referência final passa a ser a documentação interativa em /docs, gerada
-pelo próprio código.
+  PARTE A (logo abaixo, leitura rápida)
+    A1  O que o backend entrega
+    A2  O que dá para fazer no dashboard do operador
+    A3  O que dá para fazer no simulador da bancada (demonstração)
+    A4  Cuidados que valem para os dois
+    A5  Por onde começar
+
+  PARTE B (referência técnica, para quem for integrar)
+    B1 como funciona · B2 perfis · B3 onde roda · B4 segurança ·
+    B5 convenções · B6 linhas · B7 rotas REST · B8 exemplos de resposta ·
+    B9 mensagens do WebSocket · B10 de onde vêm os sinais · B11 pendências ·
+    B12 perguntas · B13 mudanças desde a proposta
+
+O dashboard do operador e o simulador da bancada são construídos pela equipe
+de front-end. As ideias da parte A são possibilidades abertas pelo backend,
+não pedidos: cada uma aponta o que usar (rota ou mensagem) para quem quiser
+fazê-la.
+
+A referência viva, gerada pelo código, é a documentação interativa em
+https://leakmap-bancada.onrender.com/docs. Se este guia e o /docs
+discordarem, vale o /docs. Campos novos podem aparecer sem mudar a versão do
+contrato; um campo existente só muda de sentido numa versão nova, com aviso.
+
+
+###############################################################################
+ PARTE A · O QUE O BACKEND ENTREGA E O QUE DÁ PARA FAZER COM ISSO
+###############################################################################
 
 
 -------------------------------------------------------------------------------
-1. A IDEIA EM UMA FRASE
+A1. O QUE O BACKEND ENTREGA
 -------------------------------------------------------------------------------
 
-A equipe não tem bancada física. Então o backend É a bancada: ele faz o papel
-da tubulação, dos sensores de pressão e do detector. O front-end desenha a
-bancada (a linha, os botões, os gráficos) e conversa com o backend como se
-existisse uma tubulação de verdade do outro lado.
+Uma bancada virtual no ar. A equipe não tem bancada física: o backend faz o
+papel da tubulação, dos sensores de pressão e do detector do LEAKMAP, e fica
+disponível na nuvem para os dois front-ends.
 
-    front (bancada visual)                 backend (bancada virtual)
-    ----------------------                 -------------------------------------
-    usuário clica "romper em 320 m" --REST--> injeta o vazamento na linha
+  Endereço .......... https://leakmap-bancada.onrender.com
+  Tempo real ........ WebSocket, com o sinal correndo o tempo todo
+  Comandos .......... REST, protegidos por chave
+
+O que já funciona, medido no serviço publicado:
+
+  Três linhas para mostrar
+    - trecho de teste de 200 m (o mesmo que roda na placa FPGA);
+    - linha de produto do cais, com a bomba e as válvulas dos berços;
+    - rede com manifold e três ramais, um por berço.
+    A geometria (sensores, equipamentos, berços, desenho esquemático) vem
+    pronta da API.
+
+  Pressão ao vivo
+    A pressão de cada sensor, em bar, de 10 a 100 pontos por segundo, sem
+    parar, com a linha em operação normal e o ruído do instrumento.
+
+  O detector de verdade
+    O mesmo detector do projeto (testado e avaliado de forma independente)
+    roda sobre esse sinal. Cada evento sai em até 1,5 s depois da ação, com:
+    - nível do alerta: registro, suspeita, provável ou confirmado;
+    - onde: trecho e metro (na rede, também o ramal), com a incerteza;
+    - explicação em português, pronta para a tela;
+    - por que: se é vazamento, manobra, origem fora do trecho ou sensor
+      com defeito.
+    Precisão medida: 0,05 a 0,3 m na linha do cais e na rede com
+    transmissor rápido, ramal certo em todos os vazamentos da rede, nenhum
+    falso alarme em 10 minutos de linha parada.
+
+  O que a demonstração pode provocar
+    - romper a linha em qualquer ponto, com vazamento grande ou pequeno;
+    - abrir e fechar válvulas, parar e partir a bomba, com ou sem registro
+      de operação (o registro é o que separa manobra de vazamento);
+    - trocar o transmissor (rápido, ou inteligente de 1 a 100 ms);
+    - estragar um sensor (cabo rompido, sinal travado);
+    - fazer o sensor de gás (simulado) acusar vapor;
+    - reparar tudo, ou ligar um roteiro automático que produz cenários
+      sozinho.
+
+  Verdade da simulação, à parte
+    Para a demonstração, cada evento traz também onde o vazamento realmente
+    estava e o erro da estimativa. O dashboard do operador não recebe isso.
+
+  Autoteste dos sensores
+    Estado de cada sensor (ok ou reprovado, com o motivo) e do monitoramento
+    (normal ou degradado). Com sensor reprovado, a posição é retida em vez de
+    apontar um lugar errado.
+
+  Histórico
+    Consulta dos eventos com filtros (nível, linha, data) e, para cada
+    evento, o sinal em alta resolução (2.500 amostras por segundo) com as
+    marcas de chegada da onda em cada sensor.
+
+  Integração com a empresa
+    - webhook: cada evento sai também por HTTP POST para a automação da
+      empresa (n8n, Node-RED, sistema de controle); pronto, falta o destino;
+    - banco PostgreSQL para o histórico sobreviver a reinícios; pronto, falta
+      ligar no Render;
+    - rota para o sistema de controle informar operações de válvulas e
+      bombas.
+
+  Ferramentas para quem integra
+    - /docs: documentação interativa, dá para chamar cada rota dali;
+    - /teste: página de teste que usa todas as ações e mensagens;
+    - sessões gravadas do WebSocket (08_backend/exemplos/), para montar as
+      telas sem o backend no ar;
+    - conferência automática do serviço: 72 verificações com resultado
+      esperado.
+
+
+-------------------------------------------------------------------------------
+A2. O QUE DÁ PARA FAZER NO DASHBOARD DO OPERADOR
+-------------------------------------------------------------------------------
+
+O dashboard do operador (Granel Química) conecta no perfil "operador": recebe
+tudo o que o sistema real mandaria, sem a verdade da simulação.
+
+  Ideia                                        Usa
+  -------------------------------------------  --------------------------------
+  Nível do alerta em destaque, com cor por     mensagem "evento": nivel
+  nível (registro, suspeita, provável,
+  confirmado)
+  Mapa da linha com o ponto do vazamento e a   GET /api/linhas (desenho,
+  faixa de incerteza; na rede, o ramal         sensores, berços) + evento:
+  destacado                                    trecho, posicao_m, incerteza_m
+  Explicação do alerta em linguagem simples    evento: explicacao
+  Gráfico de pressão ao vivo, um traço por     mensagem "amostras"
+  sensor
+  Painel de saúde dos sensores: ok ou          mensagem "saude"; evento: saude
+  reprovado, com o motivo; aviso de
+  "monitoramento degradado"
+  Histórico de eventos com filtro por nível,   GET /api/eventos?nivel=...&linha=
+  linha e data                                 ...&desde=...
+  Detalhe de um evento: a onda chegando a      GET /api/eventos/{id}/sinal
+  cada sensor, com as marcas de chegada
+  Manobras reconhecidas mostradas como         evento: nivel "registro",
+  registro (sem alarme), com o equipamento e   cadastro.equipamento e texto
+  a operação que as explicam
+  Anotação "conferir" quando o alerta          evento: cadastro.decisao
+  coincide com uma válvula sem operação        "conferir", cadastro.texto
+  registrada
+  Alerta que sobe para confirmado quando o     evento com o mesmo id e
+  gás acusa, atualizando o mesmo alerta        "revisao": 2
+  Indicador de conexão e de "serviço           mensagem "pulso" a cada 15 s;
+  acordando"                                   GET /api/servico
+  Lista de válvulas e bombas com o estado      GET /api/cadastro
+  atual e as operações registradas
+  Dashboard que se movimenta sozinho durante   POST /api/bancada/roteiro
+  a apresentação                               (ligado pelo simulador)
+
+A faixa SIMULAÇÃO: enquanto a fonte for a bancada virtual, todo dado vem com
+"modo": "simulacao". É a informação mais importante de mostrar: o operador
+nunca pode confundir simulação com um evento real (ver A4).
+
+
+-------------------------------------------------------------------------------
+A3. O QUE DÁ PARA FAZER NO SIMULADOR DA BANCADA (DEMONSTRAÇÃO)
+-------------------------------------------------------------------------------
+
+O simulador conecta no perfil "demonstracao" (recebe também a verdade) e usa
+os comandos, com a chave.
+
+  Ideia                                        Usa
+  -------------------------------------------  --------------------------------
+  Desenho da linha com sensores, válvulas,     GET /api/linhas: trechos,
+  bomba e berços clicáveis                     sensores, equipamentos,
+                                               referencias, desenho_esquematico
+  Clicar num ponto da linha para rompê-la ali, POST /api/bancada/vazamento
+  escolhendo grande ou pequeno
+  Real x estimado no mapa, com o erro em       evento + verdade (s_m, erro_m)
+  metros
+  Botões de válvula e bomba, com uma chave     POST /api/bancada/equipamento
+  "registrar a operação" para mostrar          (registrar_operacao)
+  manobra x vazamento
+  Seletor de transmissor, mostrando a          POST /api/bancada/transmissor
+  precisão caindo com o transmissor lento
+  Estragar e consertar um sensor               POST /api/bancada/sensor
+  Botão do sensor de gás                       POST /api/bancada/gas
+  Trocar entre as três linhas                  POST /api/bancada/linha
+  Reparar                                      POST /api/bancada/reparar
+  Modo apresentação automática                 POST /api/bancada/roteiro
+  A onda chegando primeiro ao sensor mais      GET /api/eventos/{id}/sinal
+  perto, em câmera lenta (o momento mais
+  bonito da demo)
+
+Uma sequência que conta a história do LEAKMAP em poucos minutos, com o que o
+backend já faz:
+
+  1. Linha do cais em regime: o gráfico corre estável, monitoramento normal.
+  2. Romper em 320 m: em cerca de 1 s, alerta provável em 320 m, erro de
+     centímetros; a onda chega antes ao sensor A (sinal em alta resolução).
+  3. Ligar o gás: o mesmo alerta sobe para confirmado.
+  4. Reparar. Abrir a XV-106 SEM registro: alarma em 450 m, a mesma onda de
+     um vazamento, com a anotação "conferir". Repetir COM registro: vira
+     registro, sem alarme. É o cadastro separando manobra de vazamento.
+  5. Romper antes do sensor A: "fora do trecho, lado A", sem inventar
+     posição.
+  6. Estragar o sensor A e romper: o autoteste acusa e a posição é retida.
+  7. Trocar para transmissor inteligente de 100 ms: a precisão cai, ou a
+     posição some; é física do instrumento, não defeito do detector.
+  8. Trocar para a rede e romper num ramal: o alerta diz o ramal certo.
+
+O que cada ação provoca (para escrever os textos da tela):
+
+  Ação                                 Resultado
+  -----------------------------------  ----------------------------------------
+  Romper dentro do trecho monitorado   provável, com trecho e posição
+  Romper antes do sensor A (ou depois  suspeita, "fora do trecho", com o lado
+  do sensor da ponta)
+  Manobra com registro de operação     registro (não alarma)
+  Abrir válvula sem registro           linha do cais (XV-106) e trecho de
+                                       200 m (XV-100): provável na posição da
+                                       válvula, com "conferir"; rede (válvulas
+                                       dos navios, fora da rede monitorada):
+                                       suspeita, com "conferir"
+  Fechar válvula, partir a bomba       registro (onda de alta: nunca é
+                                       vazamento)
+  Estragar um sensor                   saúde reprovada; posição retida
+  Gás com alerta provável aberto       o mesmo alerta, confirmado
+  Transmissor inteligente lento        erro de metros a dezenas de metros; com
+                                       100 ms, às vezes suspeita sem posição
+
+
+-------------------------------------------------------------------------------
+A4. CUIDADOS QUE VALEM PARA OS DOIS
+-------------------------------------------------------------------------------
+
+  - Simulação é simulação: com "modo": "simulacao", mostrar uma faixa fixa e
+    bem visível escrita SIMULAÇÃO, sobretudo no dashboard do operador.
+  - "explicacao" é o texto para a tela; "motivo" é técnico, sem acento, para
+    depuração.
+  - O mesmo evento pode chegar de novo (gás): mesmo "id", "revisao": 2.
+    Atualizar o alerta existente em vez de criar outro.
+  - Reconexão: o WebSocket cai quando o serviço reinicia ou a rede falha.
+    Reconectar sozinho (1 s, 2 s, 4 s... até 30 s); a primeira mensagem
+    depois de reconectar traz o estado inteiro.
+  - O serviço gratuito dorme depois de uns 15 minutos sem acesso e leva
+    cerca de 1 minuto para acordar: abrir as telas um pouco antes da
+    apresentação.
+  - A chave dos comandos não vai no código público; ela é pedida numa tela
+    ou vem de uma variável do build.
+  - Posições e comprimentos são premissas até chegarem os dados da planta:
+    ler tudo da API, sem fixar números no código.
+  - Uma bancada só para todos: quem estiver conectado vê as ações dos
+    outros.
+
+
+-------------------------------------------------------------------------------
+A5. POR ONDE COMEÇAR
+-------------------------------------------------------------------------------
+
+  1. Abrir https://leakmap-bancada.onrender.com/teste, colocar a chave (a
+     equipe do backend passa por um canal privado) e romper a linha: é o
+     comportamento que as telas vão reproduzir.
+  2. Abrir https://leakmap-bancada.onrender.com/docs e chamar as rotas dali.
+  3. Montar as telas com as sessões gravadas em 08_backend/exemplos/, uma
+     mensagem do WebSocket por linha, com o instante em que chegou
+     ("recebido_em_s"):
+       sessao_vazamento_cais.jsonl          vazamento na linha do cais
+       sessao_manobra_sem_registro.jsonl    abrir a XV-106 sem registro (alarma)
+       sessao_vazamento_rede.jsonl          vazamento num ramal da rede
+  4. Ligar no WebSocket de verdade (B9) e nas rotas (B7).
+  5. Mandar para a equipe do backend os endereços em que as telas vão rodar,
+     para restringir o acesso (CORS), e as respostas da seção B12.
+
+
+###############################################################################
+ PARTE B · REFERÊNCIA TÉCNICA
+###############################################################################
+
+
+-------------------------------------------------------------------------------
+B1. COMO FUNCIONA
+-------------------------------------------------------------------------------
+
+O backend é a bancada: faz o papel da tubulação, dos sensores de pressão e do
+detector. A tela conversa com ele como se existisse uma tubulação de verdade
+do outro lado.
+
+    tela (simulador ou dashboard)          backend (bancada virtual)
+    -----------------------------          -------------------------------------
+    usuário clica "romper em 320 m" --REST--> abre o vazamento na linha
                                              gera a pressão dos sensores,
                                              amostra a amostra, com o
                                              transmissor escolhido
-                                             o detector de verdade roda
+                                             o detector do projeto roda
                                              sobre esse sinal
     gráfico de pressão ao vivo  <--WebSocket-- amostras, o tempo todo
     alerta no mapa              <--WebSocket-- evento: nível, posição, explicação
@@ -41,29 +301,26 @@ transmissor, e o vazamento aparece no meio dele, como seria no cais.
 
 
 -------------------------------------------------------------------------------
-2. OS DOIS CLIENTES
+B2. PERFIS DE CONEXÃO
 -------------------------------------------------------------------------------
 
-O mesmo backend atende dois front-ends. Eles se diferenciam pelo PERFIL da
-conexão no WebSocket:
-
-  perfil "demonstracao"   a bancada visual: recebe tudo, inclusive a verdade
-                          da simulação (onde o vazamento realmente está), e
-                          usa os comandos da bancada.
+  perfil "demonstracao"   o simulador da bancada: recebe tudo, inclusive a
+                          verdade da simulação (onde o vazamento realmente
+                          está), e usa os comandos.
 
   perfil "operador"       o dashboard da Granel Química: recebe amostras,
-                          eventos, saúde e estado, SEM a verdade da simulação.
-                          É o mesmo formato que ele vai receber quando a fonte
-                          for a placa FPGA ou os sensores reais.
+                          eventos, saúde e estado, SEM a verdade da
+                          simulação. É o mesmo formato que ele vai receber
+                          quando a fonte for a placa FPGA ou os sensores reais.
 
-REGRA DE SEGURANÇA: tudo o que vem da simulação sai marcado com
-"modo": "simulacao". O dashboard do operador nunca pode confundir simulação com
-evento real. Recomendação: sempre que "modo" for "simulacao", mostrar uma
-faixa fixa e bem visível escrita SIMULAÇÃO.
+Sem o parâmetro, o perfil é "operador" (no WebSocket e no histórico). O
+simulador pede perfil=demonstracao explicitamente.
+
+Tudo o que vem da simulação sai marcado com "modo": "simulacao".
 
 
 -------------------------------------------------------------------------------
-3. ONDE O BACKEND RODA
+B3. ONDE O BACKEND RODA
 -------------------------------------------------------------------------------
 
   Endereço na nuvem ...... https://leakmap-bancada.onrender.com
@@ -73,170 +330,255 @@ faixa fixa e bem visível escrita SIMULAÇÃO.
   WebSocket .............. wss://leakmap-bancada.onrender.com/ws?perfil=demonstracao
                            wss://leakmap-bancada.onrender.com/ws?perfil=operador
 
-  Endereço local ......... http://localhost:8000 (mesmas rotas; WebSocket em
-                           ws://localhost:8000/ws?...), rodando o backend na
-                           própria máquina (08_backend/LEIAME.md)
+  Endereço local ......... http://127.0.0.1:8000 (mesmas rotas; WebSocket em
+                           ws://127.0.0.1:8000/ws?...), rodando o backend na
+                           própria máquina (08_backend/LEIAME.md). No Windows,
+                           prefira 127.0.0.1 a localhost: localhost tenta
+                           primeiro o IPv6 e cada conexão perde cerca de 2 s.
 
-A chave dos comandos (seção 4) é passada pela equipe do backend por um canal
-privado. Ela não vai neste documento nem no código do front.
+A chave dos comandos (B4) é passada pela equipe do backend por um canal
+privado. Ela não vai neste documento.
 
-Hospedagem no Render, plano gratuito. Três coisas que o front precisa saber:
+Hospedagem no Render, plano gratuito:
 
   a) O serviço "dorme" depois de uns 15 minutos sem acesso, e o primeiro acesso
-     leva cerca de 1 minuto para acordar. Na demonstração, abrir o dashboard
-     um pouco antes. Para acordar e saber se está no ar:
+     leva cerca de 1 minuto para acordar. Para acordar e saber se está no ar:
          GET https://leakmap-bancada.onrender.com/api/servico
-           ->  {"situacao": "ok", "versao_do_contrato": "1", ...}
 
-  b) O WebSocket pode cair (serviço reiniciando, rede do evento). O front deve
-     reconectar sozinho, esperando 1 s, 2 s, 4 s... até 30 s entre tentativas.
-     Ao reconectar, a primeira mensagem ("boas_vindas") traz o estado inteiro.
+  b) O WebSocket pode cair (serviço reiniciando, publicação nova, rede do
+     evento). Reconectando com espera crescente (1 s, 2 s, 4 s... até 30 s),
+     a primeira mensagem ("boas_vindas") traz o estado inteiro: não é preciso
+     guardar nada do lado da tela.
 
-  c) Existe uma instância só. O estado da bancada é um só para todo mundo
-     conectado: se duas pessoas mexem na bancada ao mesmo tempo, as duas veem
-     as ações uma da outra.
+  c) Existe uma bancada só. O estado dela é um só para todo mundo conectado:
+     se duas pessoas mexem ao mesmo tempo, as duas veem as ações uma da outra.
 
-CORS: liberado para os endereços do front que vocês informarem (variável
-LEAKMAP_ORIGENS no servidor). No desenvolvimento, liberado para todos.
+  d) O histórico de eventos fica num banco PostgreSQL quando a equipe do
+     backend liga um (08_backend/LEIAME.md); aí ele sobrevive a reinícios e
+     publicações. Sem o banco, fica na memória do serviço e se perde quando ele
+     reinicia. GET /api/servico diz qual está valendo ("historico":
+     "postgresql" ou "sqlite em memoria").
+
+CORS: hoje liberado para todos os endereços. Com os endereços das telas, ele
+passa a aceitar só esses (variável LEAKMAP_ORIGENS no servidor).
 
 
 -------------------------------------------------------------------------------
-4. SEGURANÇA DOS COMANDOS
+B4. SEGURANÇA DOS COMANDOS
 -------------------------------------------------------------------------------
 
 Consultas (GET) e o WebSocket são abertos, só leitura.
 
 Comandos (POST) exigem uma chave no cabeçalho:
 
-    X-LEAKMAP-Chave: <chave definida pela equipe no servidor>
+    X-LEAKMAP-Chave: <chave passada pela equipe do backend>
 
-Sem a chave certa, a resposta é 401. A chave NÃO deve ir no código público do
-front; em demonstração, a bancada visual pede a chave numa tela de entrada ou
-a lê de uma variável de ambiente do build.
+Sem a chave certa, a resposta é 401. Para não expor a chave no código público,
+o simulador pode pedi-la numa tela de entrada (como faz a página de teste) ou
+lê-la de uma variável de ambiente do build que não vai para o repositório.
 
 
 -------------------------------------------------------------------------------
-5. CONVENÇÕES
+B5. CONVENÇÕES
 -------------------------------------------------------------------------------
 
   Posição na linha ...... sempre o par (trecho, s_m):
                             "trecho": nome do trecho da tubulação
                             "s_m": metros ao longo desse trecho
-                          Na linha reta existe um trecho só ("principal"), com
-                          s_m contado a partir do sensor A (negativo antes dele).
-                          Na rede com ramais, cada ramal é um trecho, com s_m
-                          contado a partir do manifold.
+                          Na linha reta existe um trecho só ("principal"). Na
+                          linha do cais, s_m conta a partir do sensor A
+                          (negativo antes dele); no trecho de 200 m, a partir
+                          do início (sensores em 40 e 160 m). Na rede, o
+                          "tronco" conta a partir do sensor A e cada ramal a
+                          partir do manifold.
   Pressão ................ bar (manométrica).
-  Tempo .................. "instante_utc" em ISO 8601 (ex.:
-                          "2026-09-26T14:03:11.402Z") e "t_s", segundos desde o
-                          início da sessão da bancada (bom para eixo de gráfico).
-  Textos ................. em português do Brasil, com acentos, prontos para a
-                          tela (campo "explicacao"). Campos de código ("nivel",
-                          "classificacao", "acao") são sem acento e minúsculos.
-  Erros HTTP ............. 401 chave ausente ou errada; 404 não existe;
-                          409 ação incompatível com o estado (ex.: fechar uma
-                          válvula já fechada); 422 dados inválidos (ex.: posição
-                          fora da linha), sempre com {"erro": "<texto>"}.
+  Tempo .................. dois relógios:
+                            "instante_utc": ISO 8601 em UTC, terminado em Z
+                              (ex.: "2026-09-27T01:24:55.309986Z");
+                            "t_s": segundos desde o início da bancada. É o
+                              relógio das amostras, das chegadas da onda e do
+                              sinal do evento: serve de eixo dos gráficos.
+                          O t_s volta a zero quando o serviço reinicia.
+  Textos ................. "explicacao" vem em português, com acentos, pronto
+                          para a tela. "motivo" é o texto técnico do detector,
+                          sem acento. Campos de código ("nivel",
+                          "classificacao", "acao") são sem acento e
+                          minúsculos.
+  Números ................ posições com 3 casas (mm), pressões com 4 casas.
+  Erros HTTP ............. 401 chave ausente ou errada; 404 não existe (linha,
+                          evento, equipamento ou sensor); 409 ação incompatível
+                          com o estado (ex.: abrir uma válvula já aberta); 422
+                          pedido inválido (posição fora da linha, valor fora
+                          das opções, campo faltando). Sempre com
+                          {"erro": "<texto>"}, e às vezes com campos de ajuda:
+                            "opcoes": os valores aceitos;
+                            "pontos_mais_proximos": pontos com simulação
+                              completa do TSNet (ver B7.4);
+                            "detalhes": a lista de erros de validação.
+                          Exemplo real:
+                            {"erro": "pedido invalido: transmissor: use 'ideal',
+                             'rapido', 'inteligente_1ms', ...", "detalhes": [...]}
 
 
 -------------------------------------------------------------------------------
-6. AS LINHAS DISPONÍVEIS NA BANCADA
+B6. AS LINHAS DA BANCADA
 -------------------------------------------------------------------------------
 
-  "trecho_200"   trecho de teste de 200 m, sensores em 40 m e 160 m. É o
-                 trecho que também roda na placa FPGA.
+  "trecho_200"   trecho de teste de 200 m, com água, sensores em 40 m e 160 m.
+                 É o trecho que também roda na placa FPGA. Só o tamanho de
+                 vazamento "grande". Equipamentos: duas tomadas de ação
+                 rápida (fecham e abrem em 20 ms):
+                   XV-100 válvula em 100 m (entre os sensores), aberta
+                   XV-190 válvula em 190 m (depois do sensor B), aberta
+                 Regime: A 5,69 bar, B 5,10 bar.
 
   "cais"         linha de produto do cais, 8" com diesel:
                    bomba em -300 m · sensor A em 0 m · berço 104 em 200 m ·
                    berço 106 em 450 m · sensor B e berço 108 em 700 m ·
                    navio em 720 m
-                 Válvulas XV-104, XV-106, XV-108 e bomba B-01 (nomes de
-                 exemplo, não da planta).
+                 Vazamentos "grande" (~23% da vazão) e "pequeno" (~5%).
+                 Equipamentos (nomes de exemplo, não da planta):
+                   B-01 bomba em -300 m, ligada
+                   XV-104 válvula em 200 m, fechada
+                   XV-106 válvula em 450 m, aberta
+                   XV-108 válvula em 710 m, aberta
+                 Regime: A 6,75 bar, B 6,15 bar. É a linha ativa ao iniciar.
 
-  "rede"         rede com manifold e três ramais:
-                   trecho "tronco": sensor A em 0 m, manifold em 300 m,
-                   bomba em -300 m
+  "rede"         rede com manifold e três ramais, 8" com diesel:
+                   trecho "tronco": bomba em -300 m, sensor A em 0 m,
+                   manifold em 300 m
                    "ramal_104": 250 m do manifold ao sensor B104
                    "ramal_106": 400 m do manifold ao sensor B106
                    "ramal_108": 550 m do manifold ao sensor B108
                    (navios 20 m depois de cada sensor)
+                 Vazamentos "grande" e "pequeno". Equipamentos:
+                   B-01 bomba no tronco em -300 m, ligada
+                   XV-104 válvula do navio, ramal_104 em 270 m, aberta
+                   XV-106 válvula do navio, ramal_106 em 420 m, aberta
+                   XV-108 válvula do navio, ramal_108 em 570 m, aberta
+                 (as válvulas dos navios ficam 20 m depois do sensor do berço,
+                 fora da rede monitorada)
+                 Regime: A 6,60 bar, B104 6,16, B106 6,13, B108 6,11 bar.
 
 Comprimentos, espessura e vazão são PREMISSAS até chegarem os dados da planta.
-Quando chegarem, os números mudam no backend e o front não precisa mudar: ele
-lê tudo de GET /api/linhas.
+Quando chegarem, os números mudam no backend; a tela que lê tudo de
+GET /api/linhas não precisa mudar.
+
+Quanto o detector acerta (medido na bancada, transmissor rápido): erro de 0,05
+a 0,3 m na linha do cais e na rede, e o ramal certo em todos os vazamentos da
+rede. Com transmissor inteligente, o erro cresce com o tempo de atualização da
+saída: cerca de 1,5 m com 10 ms, dezenas de metros com 50 ou 100 ms; com
+100 ms, o sensor B costuma perder a onda e o alerta sai como suspeita, sem
+posição. É física do instrumento, não defeito do detector.
 
 
 -------------------------------------------------------------------------------
-7. ROTAS REST
+B7. ROTAS REST
 -------------------------------------------------------------------------------
 
-7.1 Consultas (abertas)
+B7.1 Consultas (abertas)
 
-  GET /api/servico               situação do serviço e versão do contrato
-  GET /api/linhas                todas as linhas, com trechos, sensores,
-                                 equipamentos e desenho esquemático
-  GET /api/linhas/{id}           uma linha
-  GET /api/transmissores         os tipos de transmissor da bancada
-  GET /api/estado                o estado atual da bancada
-  GET /api/saude                 autoteste de cada sensor
-  GET /api/eventos               histórico (filtros: ?desde=<instante_utc>
-                                 &nivel=provavel&linha=cais&limite=50)
-  GET /api/eventos/{id}          um evento
+  GET /api/servico               situação do serviço (serve também para
+                                 acordá-lo)
+  GET /api/linhas                todas as linhas: {"linha_ativa": "cais",
+                                 "linhas": [...]}
+  GET /api/linhas/{id}           uma linha (ver B8.1)
+  GET /api/transmissores         os seis tipos de transmissor, com descrição
+  GET /api/estado                o estado atual da bancada (ver B8.2);
+                                 ?perfil=operador tira a verdade
+  GET /api/saude                 autoteste de cada sensor (igual à mensagem
+                                 saude, B9.4)
+  GET /api/eventos               histórico, do mais novo para o mais antigo.
+                                 Filtros: ?desde=<instante_utc>&nivel=provavel
+                                 &linha=cais&limite=50 (de 1 a 500).
+                                 Cada item: {"evento": {...}, "verdade": {...}};
+                                 a verdade só vem com ?perfil=demonstracao
+  GET /api/eventos/{id}          um evento, no mesmo formato
   GET /api/eventos/{id}/sinal    o sinal em alta resolução em volta do evento,
-                                 para desenhar a onda chegando em cada sensor
-                                 (ver 9.3)
-  GET /api/cadastro              válvulas e bombas da linha ativa
+                                 para desenhar a onda chegando (ver B9.3)
+  GET /api/cadastro              válvulas e bombas da linha ativa, com o estado,
+                                 e as últimas 50 operações registradas (as já
+                                 usadas para explicar um evento vêm com
+                                 "usada": true)
 
-7.2 Comandos da bancada (exigem a chave)
+B7.2 Comandos da bancada (exigem a chave)
+
+Todo comando que dá certo responde {"ok": true, "resultado": {...} ou null,
+"estado": {...o estado novo...}} e também manda uma mensagem "estado" pelo
+WebSocket para todos os conectados.
 
   POST /api/bancada/linha
        {"linha": "cais"}
-       Troca a linha ativa. A bancada volta ao regime normal.
+       Troca a linha ativa e reinicia a bancada: fecha os vazamentos, conserta
+       os sensores, desliga o gás, volta os equipamentos ao estado inicial e
+       limpa as operações registradas (o histórico fica). Cada cliente
+       conectado recebe um novo "boas_vindas" com a linha nova, para redesenhar
+       o mapa.
 
   POST /api/bancada/transmissor
        {"transmissor": "inteligente_10ms"}
        Opções: ideal, rapido, inteligente_1ms, inteligente_10ms,
-       inteligente_50ms, inteligente_100ms.
+       inteligente_50ms, inteligente_100ms. Vale para todos os sensores.
 
   POST /api/bancada/vazamento
        {"trecho": "principal", "s_m": 320, "tamanho": "grande",
         "fonte": "gerador"}
-       tamanho: "grande" (~23% da vazão) ou "pequeno" (~5%).
-       fonte:   "gerador" (qualquer ponto, calculado na hora) ou
-                "tsnet" (só nos pontos simulados por completo; ver 7.4).
-       Resposta: {"id": "vz-1", "fonte_usada": "gerador", "s_m": 320}
+       tamanho: "grande" ou "pequeno" (ver tamanhos_de_vazamento da linha).
+       fonte:   "gerador" (qualquer ponto da faixa "vazamento" do trecho) ou
+                "tsnet" (só nos pontos com simulação completa; ver B7.4).
+       Resultado: {"id": "vz-1", "fonte_usada": "gerador",
+                   "trecho": "principal", "s_m": 320.0, "tamanho": "grande",
+                   "simulacao_de_origem": "LC-04"}
+       O vazamento fica aberto até reparar. Vários vazamentos podem ficar
+       abertos ao mesmo tempo.
 
   POST /api/bancada/equipamento
-       {"equipamento": "XV-106", "acao": "abrir",
-        "registrar_operacao": true}
+       {"equipamento": "XV-106", "acao": "abrir", "registrar_operacao": true}
        acao: "abrir", "fechar" (válvulas); "partir", "parar" (bomba).
-       registrar_operacao: se true, o backend registra a operação como o
-       sistema de controle faria, e a manobra NÃO vira alarme; se false, a
-       mesma manobra pode virar alarme de vazamento. É a chave que mostra
-       para que serve o registro de operação.
+       registrar_operacao (padrão true): o backend registra a operação como o
+       sistema de controle faria, e a manobra NÃO vira alarme. Com false, a
+       mesma manobra pode virar alarme: abrir a XV-106 da linha do cais sem
+       registro dá a mesma onda de um vazamento em 450 m, e o alerta sai
+       provável em 450 m, com a anotação "coincide com XV-106, conferir"; no
+       trecho de 200 m, o mesmo com a XV-100 em 100 m. Na rede, as válvulas dos
+       navios ficam fora da rede monitorada: sem registro, a abertura sai como
+       suspeita, "do lado B106, onde fica XV-106: conferir". Cada operação
+       registrada explica um evento só.
+       Resultado: {"id": "mn-3", "equipamento": "XV-106", "estado": "aberta",
+                   "operacao_registrada": true, "fonte_usada": "tsnet"}
+       Nas três linhas (equipamentos em B6). 404 para equipamento que não
+       existe na linha ativa; 409 se ele já está no estado pedido; 422 para
+       ação que não vale para o tipo (ex.: "partir" uma válvula).
 
   POST /api/bancada/sensor
        {"sensor": "A", "falha": "cabo_rompido"}
-       falha: "cabo_rompido", "travado" ou "nenhuma" (conserta).
+       falha: "cabo_rompido" (o sinal vai a zero), "travado" (o sinal para no
+       último valor) ou "nenhuma" (conserta). O autoteste acusa em até 1 s.
 
   POST /api/bancada/gas
        {"acusando": true}
-       Sensor de gás (simulado) acusando vapor na região do último evento.
-       Um alerta provável sobe para confirmado.
+       Sensor de gás (simulado). Se o último alerta ainda aberto é provável, ele
+       volta pelo WebSocket com o MESMO id, "nivel": "confirmado" e
+       "revisao": 2 (ver B9.3). Alertas novos enquanto o gás acusa já saem
+       confirmados.
 
   POST /api/bancada/reparar
        {}
-       Fecha os vazamentos, conserta os sensores, desliga o gás e volta ao
-       regime normal. Não apaga o histórico.
+       Fecha os vazamentos (o efeito some em 0,5 s), conserta os sensores e
+       desliga o gás. Os equipamentos ficam como estão. Não apaga o histórico.
+       Por 1,5 s depois de reparar, o detector não abre evento novo.
 
   POST /api/bancada/roteiro
        {"roteiro": "demonstracao", "intervalo_s": 60}
-       Roda sozinho uma sequência de cenários (vazamento, manobra com e sem
-       registro, sensor estragado...), um a cada intervalo. Bom para deixar
-       o dashboard do operador "vivo" sem ninguém mexendo.
+       Roda sozinho uma sequência de cenários, um a cada intervalo (mínimo
+       10 s): vazamento grande em ponto sorteado, reparar, fechar e abrir uma
+       válvula com registro, vazamento pequeno (no trecho de 200 m, grande),
+       reparar, fechar e abrir a mesma válvula SEM registro (na linha do cais e
+       no trecho de 200 m, alarma de propósito). A válvula é a XV-106 na linha
+       do cais e na rede e a XV-100 no trecho de 200 m.
        {"roteiro": null} para parar.
 
-7.3 Integração real (exige a chave)
+B7.3 Integração real (exige a chave, menos GET /api/integracao)
 
   POST /api/operacoes
        {"equipamento": "XV-106", "acao": "abertura",
@@ -244,21 +586,40 @@ lê tudo de GET /api/linhas.
         "origem": "sistema de controle"}
        É por aqui que, no piloto, o sistema de controle da planta (ou o
        operador, à mão) informa as operações de válvulas e bombas.
-       acao: "abertura", "fechamento", "partida", "parada".
+       acao: "abertura", "fechamento", "partida", "parada". Sem instante_utc,
+       vale o agora. Só registra: não mexe na bancada.
 
-7.4 Posições dos cenários completos do TSNet
+  GET /api/integracao
+       Situação do repasse dos eventos por webhook: se está ligado, o destino
+       (só o endereço do servidor), os níveis que saem e as contagens
+       (enviados, filtrados, pendentes, reenviados).
 
-  Cada linha em GET /api/linhas traz a lista "cenarios_tsnet": os pontos onde
-  existe simulação hidráulica completa. Com "fonte": "tsnet" fora desses
-  pontos, a resposta é 422 com os pontos mais próximos. Com "fonte":
-  "gerador", qualquer ponto da linha vale.
+  POST /api/integracao/teste
+       {}
+       Manda na hora um evento de teste pelo webhook, marcado "teste": true.
+       Resposta: {"ok": true, "resultado": "enviado", "integracao": {...}};
+       "desligado" quando o webhook não está configurado.
+
+  O webhook: quando a equipe do backend liga (LEAKMAP_WEBHOOK_URL), cada evento
+  que sai no WebSocket sai também por HTTP POST, em JSON, para a automação da
+  empresa: o mesmo objeto "evento" de B9.3, sem a verdade da simulação. A
+  revisão do gás (mesmo id, "revisao": 2) também sai. As telas não precisam
+  fazer nada com isso; fica registrado aqui para quem for montar o receptor.
+
+B7.4 Posições dos cenários completos do TSNet
+
+  Cada linha em GET /api/linhas traz "cenarios_tsnet": os pontos onde existe
+  simulação hidráulica completa. Com "fonte": "tsnet" fora desses pontos, a
+  resposta é 422 com "pontos_mais_proximos". Com "fonte": "gerador", qualquer
+  ponto da faixa "vazamento" do trecho vale; num ponto simulado, o gerador
+  devolve o próprio sinal do TSNet ("fonte_usada": "tsnet").
 
 
 -------------------------------------------------------------------------------
-8. EXEMPLOS DE RESPOSTA
+B8. EXEMPLOS DE RESPOSTA (tirados do servidor)
 -------------------------------------------------------------------------------
 
-8.1 GET /api/linhas/cais  (resumido)
+B8.1 GET /api/linhas/cais  (equipamentos e cenários resumidos)
 
 {
   "id": "cais",
@@ -266,80 +627,122 @@ lê tudo de GET /api/linhas.
   "tipo": "linha",
   "produto": "diesel",
   "tubo": "8\" aço carbono",
-  "velocidade_de_onda_m_s": 1227,
+  "velocidade_de_onda_m_s": 1226.63,
   "premissas": true,
+  "bar_por_metro_de_carga": 0.082404,
+  "faixa_do_transmissor_bar": [0.0, 15.0],
+  "tamanhos_de_vazamento": ["grande", "pequeno"],
   "trechos": [
-    {"id": "principal", "de_s_m": -300, "ate_s_m": 720,
-     "monitorado": {"de_s_m": 0, "ate_s_m": 700}}
+    {"id": "principal", "de_s_m": -300.0, "ate_s_m": 720.0,
+     "monitorado": {"de_s_m": 0.0, "ate_s_m": 700.0},
+     "vazamento": {"de_s_m": -290.0, "ate_s_m": 710.0}}
   ],
   "sensores": [
-    {"id": "A", "nome": "Sensor A · início do trecho", "trecho": "principal", "s_m": 0},
-    {"id": "B", "nome": "Sensor B · berço 108", "trecho": "principal", "s_m": 700}
+    {"id": "A", "nome": "Sensor A · início do trecho", "trecho": "principal", "s_m": 0.0},
+    {"id": "B", "nome": "Sensor B · berço 108", "trecho": "principal", "s_m": 700.0}
   ],
   "equipamentos": [
-    {"id": "B-01", "tipo": "bomba", "trecho": "principal", "s_m": -300, "estado": "ligada"},
-    {"id": "XV-106", "tipo": "valvula", "trecho": "principal", "s_m": 450, "estado": "aberta"}
+    {"id": "B-01", "tipo": "bomba", "trecho": "principal", "s_m": -300.0,
+     "estado_inicial": "ligada", "estado": "ligada"},
+    {"id": "XV-106", "tipo": "valvula", "trecho": "principal", "s_m": 450.0,
+     "estado_inicial": "aberta", "estado": "aberta"}
   ],
   "referencias": [
-    {"nome": "berço 104", "trecho": "principal", "s_m": 200},
-    {"nome": "berço 106", "trecho": "principal", "s_m": 450},
-    {"nome": "berço 108", "trecho": "principal", "s_m": 700}
+    {"nome": "bomba", "trecho": "principal", "s_m": -300.0},
+    {"nome": "berço 104", "trecho": "principal", "s_m": 200.0},
+    {"nome": "berço 106", "trecho": "principal", "s_m": 450.0},
+    {"nome": "berço 108", "trecho": "principal", "s_m": 700.0},
+    {"nome": "navio", "trecho": "principal", "s_m": 720.0}
   ],
-  "desenho_esquematico": {
-    "principal": [[-300, 0], [720, 0]]
-  },
+  "desenho_esquematico": {"principal": [[-300.0, 0.0], [720.0, 0.0]]},
   "cenarios_tsnet": [
-    {"trecho": "principal", "s_m": 50, "tamanhos": ["grande", "pequeno"]},
-    {"trecho": "principal", "s_m": 150, "tamanhos": ["grande", "pequeno"]}
+    {"trecho": "principal", "s_m": -150.0, "tamanhos": ["grande", "pequeno"]},
+    {"trecho": "principal", "s_m": 50.0, "tamanhos": ["grande", "pequeno"]}
   ]
 }
 
-"desenho_esquematico" traz, para cada trecho, uma linha poligonal em
-coordenadas x, y em metros, só para ajudar a desenhar; o front pode ignorar e
-desenhar do seu jeito. Na rede, os ramais saem do manifold em leque.
+Como ler os campos da linha:
+  - "monitorado": o pedaço entre os sensores, onde o detector dá posição.
+  - "vazamento": a faixa onde a bancada aceita romper (inclui fora do trecho
+    monitorado, para mostrar o "fora do trecho").
+  - "referencias": pontos para rotular no mapa (bomba, berços, navio,
+    manifold, tomadas).
+  - "desenho_esquematico": para cada trecho, uma poligonal em x, y (metros),
+    só para ajudar a desenhar. A posição s_m cai ao longo dela na proporção
+    do comprimento do trecho (de de_s_m a ate_s_m). Na rede, os ramais saem do
+    manifold em leque. A tela pode ignorar e desenhar do seu jeito.
 
-8.2 GET /api/estado
+B8.2 GET /api/estado
 
 {
   "modo": "simulacao",
   "linha": "cais",
   "transmissor": "rapido",
-  "t_s": 123.4,
-  "vazamentos_abertos": [
-    {"id": "vz-1", "trecho": "principal", "s_m": 320, "tamanho": "grande", "fonte": "gerador"}
-  ],
-  "equipamentos": {"B-01": "ligada", "XV-104": "aberta", "XV-106": "aberta", "XV-108": "aberta"},
+  "t_s": 726.7,
+  "instante_utc": "2026-09-27T02:16:53.668894Z",
+  "equipamentos": {"B-01": "ligada", "XV-104": "fechada", "XV-106": "aberta", "XV-108": "aberta"},
   "sensores": {"A": "normal", "B": "normal"},
   "gas": {"acusando": false},
   "monitoramento": "normal",
-  "nivel_atual": "provavel",
-  "roteiro": null
+  "nivel_atual": null,
+  "roteiro": null,
+  "vazamentos_abertos": []
 }
 
-"vazamentos_abertos" é a verdade da simulação: no perfil operador ele não vem.
+  - "sensores": "normal", "cabo_rompido" ou "travado" (a falha pedida na
+    bancada; o que o autoteste acusou vem em "monitoramento" e na saude).
+  - "monitoramento": "normal", "degradado" ou "sem_autoteste" (nos primeiros
+    0,5 s depois de iniciar ou trocar de linha).
+  - "nivel_atual": o nível do último alerta, até reparar; null sem alerta.
+  - "roteiro": null ou {"roteiro": "demonstracao", "intervalo_s": 60}.
+  - "vazamentos_abertos": a verdade da simulação; no perfil operador não vem.
+    Cada item: {"id", "trecho", "s_m", "tamanho", "fonte"}.
+
+B8.3 GET /api/servico
+
+{"situacao": "ok", "versao_do_contrato": "1", "modo": "simulacao",
+ "comandos_exigem_chave": true, "t_s": 177.7, "clientes_conectados": 0,
+ "passos_atrasados": 0, "deteccoes_descartadas_como_ruido": 0,
+ "webhook_ligado": false, "historico": "sqlite em memoria"}
+
+  - "passos_atrasados": vezes em que o serviço não conseguiu manter o ritmo
+    de 0,1 s (deve ficar em 0).
+  - "deteccoes_descartadas_como_ruido": ver B9.3, "Ruído descartado".
+  - "webhook_ligado": se os eventos saem também por webhook (B7.3).
+  - "historico": "postgresql" (sobrevive a reinícios), "sqlite" ou
+    "sqlite em memoria" (some ao reiniciar).
 
 
 -------------------------------------------------------------------------------
-9. MENSAGENS DO WEBSOCKET
+B9. MENSAGENS DO WEBSOCKET
 -------------------------------------------------------------------------------
+
+Conexão: /ws?perfil=demonstracao|operador&taxa=30
+  - perfil: padrão "operador".
+  - taxa: pontos por segundo por sensor nas amostras, de 10 a 100 (padrão 30).
+  - A tela não precisa mandar nada pelo WebSocket; os comandos vão por REST.
+  - Um cliente lento demais perde as mensagens mais antigas da fila (até 300
+    guardadas), nunca a conexão.
 
 Toda mensagem é um JSON com o campo "tipo".
 
-9.1 boas_vindas  (a primeira, ao conectar e ao reconectar)
+B9.1 boas_vindas  (a primeira, ao conectar, ao reconectar e ao trocar de linha)
 
 {
   "tipo": "boas_vindas",
-  "versao_do_contrato": "0",
+  "versao_do_contrato": "1",
   "perfil": "demonstracao",
   "estado": { ...igual a GET /api/estado... },
-  "linha": { ...igual a GET /api/linhas/{linha ativa}... }
+  "linha": { ...igual a GET /api/linhas/{linha ativa}... },
+  "saude": { ...igual à mensagem saude... }
 }
 
-9.2 amostras  (10 por segundo, o tempo todo)
+B9.2 amostras  (10 por segundo, o tempo todo)
 
 {
   "tipo": "amostras",
   "modo": "simulacao",
+  "linha": "cais",
   "t_s": 123.4,
   "periodo_s": 0.0333,
   "pressao_bar": {
@@ -348,86 +751,151 @@ Toda mensagem é um JSON com o campo "tipo".
   }
 }
 
-Cada mensagem traz os pontos do último décimo de segundo, a 30 pontos por
-segundo por sensor: bom para gráfico rolando. O primeiro ponto é do instante
-t_s, e os seguintes vêm a cada periodo_s. O detector, dentro do backend,
-trabalha com 2.500 amostras por segundo; o gráfico não precisa disso. A taxa
-pode ser pedida na conexão: /ws?perfil=operador&taxa=30 (de 10 a 100).
+Cada mensagem traz os pontos do último décimo de segundo, na taxa pedida: com
+30 por segundo, 3 pontos por sensor. O primeiro ponto é do instante t_s e os
+seguintes vêm a cada periodo_s. O detector, dentro do backend, trabalha com
+2.500 amostras por segundo; o gráfico não precisa disso. Na rede,
+"pressao_bar" traz os quatro sensores: "A", "B104", "B106", "B108".
 
-Na rede, "pressao_bar" traz os quatro sensores: "A", "B104", "B106", "B108".
+Com 30 pontos por segundo, a frente de onda de um vazamento aparece como um
+degrau no gráfico ao vivo. Para ver a onda chegando antes a um sensor e depois
+ao outro, existe o sinal do evento em alta resolução (B9.3).
 
-9.3 evento  (quando o detector declara alguma coisa)
+B9.3 evento  (quando o detector declara alguma coisa)
+
+Exemplo real, vazamento na linha do cais, perfil demonstracao:
 
 {
   "tipo": "evento",
   "evento": {
     "tipo": "leakmap.evento",
     "versao": "1",
-    "id": "9b7c2f0e-...",
-    "instante_utc": "2026-09-26T14:03:11.402Z",
-    "modo": "simulacao",
+    "id": "400b6755-6120-44d2-bb4b-280f449bcfe6",
+    "instante_utc": "2026-09-27T01:24:55.309986Z",
     "linha": "cais",
+    "sensores": {
+      "A": {"nome": "Sensor A · início do trecho", "trecho": "principal", "posicao_m": 0.0},
+      "B": {"nome": "Sensor B · berço 108", "trecho": "principal", "posicao_m": 700.0}
+    },
     "nivel": "provavel",
     "classificacao": "vazamento",
     "trecho": "principal",
-    "posicao_m": 320.1,
-    "incerteza_m": 0.3,
+    "posicao_m": 319.825,
+    "incerteza_m": 0.361,
+    "posicao_refinada_m": 319.828,
     "lado": null,
+    "motivo": "evidencia suficiente",
     "explicacao": "Queda de pressão nos dois sensores, com diferença de tempo possível dentro do trecho: vazamento, com a posição publicada junto com o alerta.",
     "canais": {
-      "A": {"detectou": true, "polaridade": "queda", "instante_de_chegada_s": 0.361},
-      "B": {"detectou": true, "polaridade": "queda", "instante_de_chegada_s": 0.410}
+      "A": {"detectou": true, "polaridade": "queda", "instante_de_chegada_s": 17.4816},
+      "B": {"detectou": true, "polaridade": "queda", "instante_de_chegada_s": 17.5308}
     },
     "confirmacao_por_gas": false,
     "saude": {"monitoramento": "normal", "motivos": []},
-    "cadastro": {"decisao": "sem_equipamento", "equipamento": null, "texto": null},
-    "origem_do_processamento": "software"
+    "cadastro": {"decisao": "sem_equipamento", "equipamento": null, "operacao": null,
+                 "distancia_m": null, "tolerancia_m": 15.0, "texto": null},
+    "transmissor": "rapido",
+    "modo": "simulacao",
+    "origem_do_processamento": "software",
+    "id_do_ensaio": "BV-00002"
   },
   "verdade": {
+    "tipo": "vazamento",
     "trecho": "principal",
-    "s_m": 320,
+    "s_m": 320.0,
     "tamanho": "grande",
     "fonte": "gerador",
-    "erro_m": 0.1
+    "simulacao_de_origem": "LC-04",
+    "erro_m": 0.175
   }
 }
 
+Na rede, o mesmo formato, com estas diferenças: "trecho" diz o ramal
+("ramal_106"), "canais" e "sensores" trazem os quatro sensores,
+"incerteza_m" vem null e não há "posicao_refinada_m".
+
 Os campos do evento:
 
-  nivel            "registro" (manobra reconhecida; histórico, não alarma)
-                   "suspeita" (registra e observa; sem posição)
-                   "provavel" (alerta, com a posição)
-                   "confirmado" (provável + gás acusando na região)
+  id               identificador único. Pode chegar de novo (ver "revisao").
+  nivel            "registro"   manobra reconhecida: histórico, não alarma
+                   "suspeita"   registra e observa; sem posição
+                   "provavel"   alerta, com a posição
+                   "confirmado" provável + gás acusando na região
   classificacao    "vazamento", "manobra", "fora_do_trecho",
                    "evento_sem_localizacao"
-  trecho, posicao_m, incerteza_m
-                   só com vazamento localizado; senão, null. Na rede, trecho
-                   diz o ramal.
-  lado             para "fora_do_trecho": de que sensor a onda veio.
-  explicacao       texto pronto para a tela.
+  trecho, posicao_m
+                   só com vazamento localizado e sensores saudáveis; senão,
+                   null. É o que vai no mapa.
+  incerteza_m      incerteza declarada da posição (linha reta); null na rede.
+  posicao_refinada_m
+                   refino da posição por correlação entre os sensores (linha
+                   reta), ao lado da posição publicada; null quando não se
+                   aplica. Opcional na tela.
+  lado             para "fora_do_trecho" e para manobras vindas de fora: de que
+                   sensor a onda veio ("A", "B" ou, na rede, "B104" etc.).
+  explicacao       texto pronto para a tela, em português.
+  motivo           texto técnico do detector, sem acento: para depuração.
+  canais           por sensor: se detectou, a polaridade da frente ("queda" ou
+                   "alta") e o instante da chegada, no relógio t_s (o mesmo das
+                   amostras e do sinal): serve para marcar a chegada no
+                   gráfico.
+  confirmacao_por_gas
+                   true quando o gás confirmou.
   saude            "normal" ou "degradado", com os motivos (ex.: "canal A:
-                   congelado"). Com sensor reprovado, a posição é retida e o
-                   nível cai para suspeita.
-  cadastro         conferência com válvulas e bombas: "manobra_registrada",
-                   "conferir" (coincide com um equipamento sem operação
-                   registrada) ou "sem_equipamento".
+                   congelado, saturado, fora_da_faixa"). Com sensor
+                   reprovado, a posição é retida e o nível cai para suspeita.
+  cadastro         conferência com válvulas e bombas da linha:
+                   "decisao": "manobra_registrada", "conferir" (coincide com
+                   um equipamento sem operação registrada) ou "sem_equipamento";
+                   "equipamento", "operacao" e "texto" dizem qual e por quê.
+  transmissor      o transmissor em uso quando o evento saiu.
+  revisao          só aparece quando o evento é reenviado (gás): 2, 3...
+  id_do_ensaio, origem_do_processamento
+                   rastreabilidade; não precisam ir para a tela.
 
-"verdade" só vem no perfil demonstracao: onde o vazamento (ou a manobra)
-realmente estava, de que fonte veio o sinal e o erro da posição estimada.
+"verdade" só vem no perfil demonstracao, e é null quando nada da bancada
+explica o evento. Formatos:
+  vazamento        {"tipo": "vazamento", "trecho", "s_m", "tamanho", "fonte",
+                    "simulacao_de_origem", "erro_m"}  (erro_m só com posição)
+  manobra          {"tipo": "manobra", "trecho", "s_m", "fonte",
+                    "simulacao_de_origem", "equipamento", "acao",
+                    "operacao_registrada"}
+  falha de sensor  {"tipo": "falha_de_sensor", "sensor": "A",
+                    "falha": "cabo_rompido"}
 
-O evento chega entre 0,5 e 1 segundo depois da ação na bancada: é o tempo de
-a onda cruzar a linha e de o detector conferir os dois sensores (mais o tempo
-da internet).
+Tempo de resposta: o evento chega entre 0,5 e 1,5 s depois de o serviço
+aceitar o comando (medido no Render). É o tempo de a onda cruzar a linha e de
+o detector esperar a chegada em todos os sensores. Some a isso o tempo da
+internet.
 
-O sinal do evento em alta resolução, para desenhar a onda chegando primeiro
-num sensor e depois no outro (o momento mais bonito da demo):
+Gás e revisão: quando o gás é ligado com um alerta provável aberto, o MESMO
+evento chega de novo, com o mesmo "id", "nivel": "confirmado",
+"confirmacao_por_gas": true e "revisao": 2. É o mesmo alerta, atualizado.
+
+Ruído descartado: rodando sem parar, o ruído do transmissor às vezes passa do
+limiar num sensor só (medido: cerca de uma vez a cada 2,5 minutos com o
+transmissor rápido). Quando só um sensor dispara, o backend confere se o nível
+mudou e ficou mudado; se não, descarta a detecção como ruído e só conta em
+/api/servico ("deteccoes_descartadas_como_ruido"). Eventos reais num sensor só
+(cabo rompido, parada de bomba) continuam saindo. Resultado medido: nenhuma
+detecção falsa em 10 minutos de linha parada, em todas as linhas.
+
+Sinal do evento em alta resolução, para desenhar a onda chegando primeiro num
+sensor e depois no outro:
 
   GET /api/eventos/{id}/sinal  ->
-  {"periodo_s": 0.0004, "t0_s": 123.0,
+  {"periodo_s": 0.0004,
+   "t0_s": 17.1824,
    "pressao_bar": {"A": [...], "B": [...]},
-   "marcas_de_chegada_s": {"A": 0.361, "B": 0.410}}
+   "marcas_de_chegada_s": {"A": 17.4816, "B": 17.5308}}
 
-9.4 saude  (quando o autoteste muda)
+  O sinal vai de 0,3 s antes da primeira chegada até o fim da espera do
+  detector: cerca de 1,1 s por sensor na linha do cais (2.800 amostras),
+  1,3 s na rede e 0,65 s no trecho de 200 m, a 2.500 amostras por segundo. O
+  ponto i está no instante t0_s + i * periodo_s. As marcas de chegada estão no
+  mesmo relógio t_s.
+
+B9.4 saude  (na conexão e quando o autoteste muda)
 
 {
   "tipo": "saude",
@@ -438,185 +906,110 @@ num sensor e depois no outro (o momento mais bonito da demo):
   "monitoramento": "degradado"
 }
 
-Falhas possíveis: "congelado", "saturado", "fora_da_faixa", "salto".
+Falhas possíveis: "congelado" (sinal travado), "saturado" (no limite da
+escala), "fora_da_faixa" (fora da faixa do transmissor), "salto" (salto
+impossível entre duas amostras). O autoteste roda a cada 0,5 s sobre o último
+0,5 s de sinal.
 
-9.5 estado  (quando qualquer coisa da bancada muda)
+B9.5 estado  (depois de cada comando)
 
 {"tipo": "estado", "estado": { ...igual a GET /api/estado... }}
 
-9.6 pulso  (a cada 15 s, para o front saber que a conexão está viva)
+No perfil operador, sem "vazamentos_abertos".
+
+B9.6 pulso  (a cada 15 s, para saber que a conexão está viva)
 
 {"tipo": "pulso", "t_s": 135.0}
 
 
 -------------------------------------------------------------------------------
-10. O QUE A BANCADA VISUAL PODE OFERECER
+B10. DE ONDE VÊM OS SINAIS
 -------------------------------------------------------------------------------
 
-  Ação na tela                         O que a demo mostra
-  -----------------------------------  ----------------------------------------
-  Romper a linha em qualquer ponto,    alerta provável com a posição; real x
-  grande ou pequeno                    estimado e o erro
-  Romper antes do sensor A             "fora do trecho, lado A": o sistema diz
-                                       o lado e não inventa posição
-  Abrir ou fechar válvula, parar ou    com o registro de operação, a manobra
-  partir a bomba                       não alarma; sem ele, alarma
-  Trocar o transmissor                 a precisão piorando com o transmissor
-                                       lento (de centímetros a dezenas de
-                                       metros)
-  Estragar um sensor                   o autoteste acusa, o monitoramento fica
-                                       degradado e a posição é retida
-  Sensor de gás acusa                  o alerta sobe para confirmado
-  Trocar a linha (200 m, cais, rede)   na rede, o alerta diz também o ramal
-  Reparar                              volta ao normal; o histórico fica
-  Roteiro automático                   o dashboard do operador se movimenta
-                                       sozinho durante a apresentação
+  "tsnet"     o sinal hidráulico completo simulado pelo TSNet, nos pontos já
+              simulados. A referência mais fiel.
+  "gerador"   para qualquer outro ponto: a simulação do TSNet mais próxima,
+              deslocada no tempo para a onda chegar a cada sensor quando a
+              distância pela tubulação manda, com a amplitude corrigida pelas
+              simulações vizinhas.
 
-Sugestões de tela para a bancada visual:
-  - o desenho da linha com os sensores, as válvulas e a bomba clicáveis;
-  - clicar num ponto da linha para romper ali;
-  - o gráfico de pressão rolando, um traço por sensor;
-  - no evento: um círculo na posição estimada e um marcador na real, o nível
-    em destaque e a explicação;
-  - o sinal do evento em alta resolução, mostrando a onda chegando antes ao
-    sensor mais perto.
+Conferência do gerador contra o TSNet: cada um dos 36 pontos simulados foi
+gerado a partir dos vizinhos, sem a própria simulação. A chegada da onda errou
+no máximo 0,4 ms (uma amostra), a amplitude ficou entre 0,97 e 1,04 da do
+TSNet e o detector deu a mesma classificação nos 36 casos, com erros de
+posição parecidos.
 
-Sugestões para o dashboard do operador:
-  - o nível do alerta em destaque, com a posição no mapa da linha;
-  - o estado do monitoramento (normal ou degradado, com o motivo);
-  - o histórico de eventos, com filtro por nível;
-  - a faixa SIMULAÇÃO sempre que "modo" for "simulacao".
-
-
--------------------------------------------------------------------------------
-11. DE ONDE VÊM OS SINAIS (para a equipe saber o que está mostrando)
--------------------------------------------------------------------------------
-
-  "gerador"   modelo físico da onda calculado na hora, para qualquer ponto
-              da linha: tempo de chegada pela distância na tubulação e
-              amplitude pela física do golpe de aríete, ajustados pelas
-              simulações hidráulicas do TSNet. Conferido contra o TSNet nos
-              pontos em comum.
-  "tsnet"     o sinal hidráulico completo simulado pelo TSNet, só nos pontos
-              já simulados. A referência mais fiel.
-
-O detector que roda no backend é o mesmo do projeto (o mesmo testado e
-avaliado de forma independente), não uma cópia. Ele só recebe o sinal dos
-sensores; a posição real fica no campo "verdade", à parte.
+As manobras vêm de simulações próprias de cada linha (válvulas e bomba), e o
+detector que roda no backend é o mesmo do projeto, não uma cópia. Ele só
+recebe o sinal dos sensores; a posição real fica no campo "verdade", à parte.
 
 Mais tarde, a mesma API vai servir outras fontes: a placa FPGA pelo cabo USB
-e, no piloto, os sensores reais. Para o front, nada muda, a não ser o campo
+e, no piloto, os sensores reais. Para as telas, nada muda, a não ser o campo
 "modo" deixar de ser "simulacao".
 
 
 -------------------------------------------------------------------------------
-12. O QUE O FRONT JÁ PODE FAZER HOJE
+B11. O QUE AINDA NÃO ESTÁ NO BACKEND
 -------------------------------------------------------------------------------
 
-  1. Montar as telas usando os exemplos deste documento como dados falsos.
-  2. Escrever a conexão com o WebSocket com reconexão automática (seção 3b)
-     e o tratamento de cada "tipo" de mensagem.
-  3. Ler a linha de GET /api/linhas em vez de fixar posições no código: os
-     comprimentos vão mudar quando chegarem os dados da planta.
-  4. Prever a tela de entrada da chave dos comandos na bancada visual.
-  5. Prever a faixa SIMULAÇÃO no dashboard do operador.
-  6. Mandar para a equipe do backend os endereços em que o front vai rodar
-     (para liberar o CORS).
+  - Outras fontes de sinal: a placa FPGA pelo cabo e, no piloto, os sensores
+    reais.
+  - CORS restrito aos endereços das telas (depende de B12).
 
+  Prontos no backend, mas dependem de configuração no Render:
+  - Histórico persistente: falta criar o banco PostgreSQL e ligar
+    (LEAKMAP_BANCO). Até lá, o histórico some a cada reinício.
+  - Webhook: falta o endereço de destino (LEAKMAP_WEBHOOK_URL).
 
--------------------------------------------------------------------------------
-13. ORDEM DE ENTREGA DO BACKEND
--------------------------------------------------------------------------------
-
-  1. Contrato: esquemas e exemplos de todas as mensagens (este documento
-     vira a versão 1).
-  2. Fonte de simulação: o gerador e os cenários do TSNet, tocados no ritmo
-     real.
-  3. Detector ao vivo: detector, autoteste, escala de alerta e cadastro sobre
-     o fluxo, com histórico dos eventos.
-  4. API: REST e WebSocket, com CORS e a chave nos comandos.
-  5. Prova sem o front: uma página de teste simples e um cliente de linha de
-     comando que exercitam cada rota e cada mensagem; testes automáticos;
-     arquivos para publicar no Render.
-
-Fora desta entrega: integrar os front-ends, publicar no Render (a conta e a
-publicação ficam com a equipe) e ligar a placa FPGA ou sensores reais.
+Para conferir o serviço depois de qualquer mudança, a equipe do backend roda
+08_backend/conferir_servico.py: 72 conferências com resultado esperado,
+incluindo manobras nas três linhas e o webhook.
 
 
 -------------------------------------------------------------------------------
-14. PERGUNTAS PARA A EQUIPE DE FRONT-END
+B12. PERGUNTAS PARA A EQUIPE DE FRONT-END
 -------------------------------------------------------------------------------
 
-  - Qual framework e em que endereços o front vai rodar (para o CORS)?
+  - Qual framework e em que endereços as telas vão rodar (para o CORS)?
   - 30 pontos por segundo por sensor basta para o gráfico?
+  - O dashboard do operador precisa de histórico que sobreviva a reinícios
+    do serviço? (o backend já sabe gravar em PostgreSQL; falta criar o banco
+    no Render e ligar)
+  - A empresa já tem um destino para o webhook (n8n, Node-RED, sistema de
+    controle)?
   - O dashboard do operador precisa de mais algum dado (ex.: vazão, pressão
     média do dia, tempo desde o último evento)?
-  - A bancada visual vai precisar de mais alguma ação além das da seção 10?
+  - O simulador vai precisar de mais alguma ação além das de A3?
 
 
 -------------------------------------------------------------------------------
-15. O QUE MUDOU NA IMPLEMENTAÇÃO (versão 1 do contrato)
+B13. MUDANÇAS EM RELAÇÃO À PROPOSTA (versão 0)
 -------------------------------------------------------------------------------
 
-O backend está pronto em 08_backend (como rodar: 08_backend/LEIAME.md) e
-publicado no Render, em https://leakmap-bancada.onrender.com. Tudo o que está
-nas seções 1 a 14 vale, com estas diferenças e acréscimos:
+Para quem começou pela versão 0 deste guia:
 
-  Ver funcionando sem o front
-    - https://leakmap-bancada.onrender.com/teste: página de teste com todas
-      as ações e mensagens (a chave vai no campo "Chave dos comandos").
-    - 08_backend/exemplos/*.jsonl: sessões gravadas do WebSocket, uma
-      mensagem por linha, com o instante em que chegou ("recebido_em_s"):
-      vazamento na linha do cais, abertura de válvula sem registro de
-      operação (o caso que alarma) e vazamento na rede. Servem de dado falso
-      para montar as telas e para simular o WebSocket.
-
-  Versão
-    - "versao_do_contrato" é "1" (em GET /api/servico e em boas_vindas).
-
-  Histórico
-    - GET /api/eventos e GET /api/eventos/{id} devolvem, por item,
-      {"evento": {...}, "verdade": {...}}. A verdade só vem com
-      ?perfil=demonstracao; sem o parâmetro (ou com perfil=operador) ela é
-      omitida.
-
-  Respostas dos comandos
-    - Todo POST que dá certo devolve {"ok": true, "resultado": {...},
-      "estado": {...}}. Em "resultado" vem o que foi criado (ex.: no
-      vazamento: id, fonte_usada, trecho, s_m, tamanho e a simulação do TSNet
-      usada como base).
-    - Os erros trazem, além de "erro", campos de ajuda quando existem:
-      "opcoes" (valores aceitos) ou "pontos_mais_proximos" (fonte "tsnet" num
-      ponto sem simulação completa).
-
-  Mensagens do WebSocket
-    - boas_vindas traz também "saude" (igual à mensagem saude).
-    - Ao trocar a linha, cada cliente recebe um novo boas_vindas, com a linha
-      nova: redesenhar o mapa a partir dele.
-    - evento traz também: "transmissor"; na linha reta,
-      "posicao_refinada_m" (refino por correlação, ao lado da posição); na
-      rede, "canais" com os quatro sensores.
-    - "instante_de_chegada_s" em cada canal está no relógio da bancada (o
-      mesmo "t_s" das amostras), para marcar a chegada no gráfico.
-    - Gás: quando o sensor de gás é ligado com um alerta provável recente, o
-      mesmo evento chega de novo, com o MESMO "id", "nivel": "confirmado" e
-      "revisao": 2. Atualizar o evento existente em vez de criar outro.
-    - verdade de uma falha de sensor: {"tipo": "falha_de_sensor",
-      "sensor": "A", "falha": "cabo_rompido"}. De uma manobra: "tipo":
-      "manobra", com "equipamento", "acao" e "operacao_registrada".
-    - estado traz também "instante_utc".
-
-  Linhas (GET /api/linhas)
-    - Cada trecho traz "vazamento": {de_s_m, ate_s_m}, a faixa onde se pode
-      romper, e cada linha traz "tamanhos_de_vazamento" e
-      "bar_por_metro_de_carga".
-    - O trecho de 200 m só tem o tamanho "grande".
-    - Manobras (equipamentos) só existem na linha do cais. Estado inicial:
-      B-01 ligada, XV-104 fechada, XV-106 e XV-108 abertas.
-    - "desenho_esquematico": a posição s_m cai ao longo da poligonal na
-      proporção do comprimento do trecho (de de_s_m a ate_s_m).
-
-  Tempos medidos
-    - O evento chega cerca de 1 a 1,5 s depois do comando: o comando entra
-      no passo seguinte, a onda cruza a linha e o detector espera a chegada
-      em todos os sensores.
+  - Versão do contrato "1"; backend publicado no Render.
+  - Perfil padrão "operador" no WebSocket e no histórico.
+  - Histórico: cada item é {"evento", "verdade"}; a verdade só com
+    ?perfil=demonstracao.
+  - Comandos respondem {"ok", "resultado", "estado"}.
+  - Erros com campos de ajuda: "opcoes", "pontos_mais_proximos", "detalhes".
+  - boas_vindas traz "saude" e é reenviado ao trocar de linha.
+  - Evento com "transmissor", "posicao_refinada_m", "id_do_ensaio" e, no gás,
+    "revisao" com o mesmo id.
+  - "instante_de_chegada_s" no relógio t_s (o mesmo das amostras).
+  - Verdade com formatos para manobra e falha de sensor.
+  - Linhas com "vazamento" por trecho, "tamanhos_de_vazamento",
+    "bar_por_metro_de_carga", "faixa_do_transmissor_bar" e "estado_inicial"
+    dos equipamentos.
+  - /api/servico com "passos_atrasados", "deteccoes_descartadas_como_ruido",
+    "webhook_ligado" e "historico".
+  - Tempo de resposta: 0,5 a 1,5 s depois do comando aceito (a proposta dizia
+    0,5 a 1 s).
+  - Detecções de ruído num sensor só são descartadas (B9.3, "Ruído
+    descartado").
+  - Manobras nas três linhas; trecho de 200 m só com vazamento "grande".
+  - Histórico em PostgreSQL quando configurado.
+  - Repasse dos eventos por webhook, com GET /api/integracao e
+    POST /api/integracao/teste.
+  - Cada operação registrada explica um evento só ("usada" em /api/cadastro).

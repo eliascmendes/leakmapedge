@@ -62,6 +62,15 @@ O risco que fica é o de um vazamento na própria válvula, no mesmo instante em
 que ela é operada: esse sai como manobra registrada. É o preço da regra, e por
 isso o evento continua no histórico, com o equipamento e a operação.
 
+Numa **rede com manifold**, cada equipamento diz também o trecho, a distância
+é medida pela tubulação (`GeometriaDaRede`) e "além do sensor" quer dizer mais
+longe do manifold que ele, no mesmo ramal. Sem posição nem limite físico
+passado, o lado é o do sensor que viu a onda primeiro (com folga de 2 ms).
+
+**Uma operação registrada explica um evento só**: quem aplica a conferência
+marca a operação como `usada`, e ela não serve para outro evento, mesmo dentro
+da janela de tempo.
+
 O **cadastro** (nome, tipo e posição de cada equipamento, na referência dos
 sensores) vem do isométrico da linha. O **registro de operação** vem do sistema
 de controle da planta (os eventos de abrir, fechar, partir e parar) ou de um

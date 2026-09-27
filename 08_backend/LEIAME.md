@@ -27,7 +27,10 @@ uvicorn --app-dir 08_backend app:app --port 8000
 |---|---|
 | `LEAKMAP_CHAVE` | chave exigida nos comandos, no cabeçalho `X-LEAKMAP-Chave`. Sem ela, os comandos ficam abertos: só para uso local |
 | `LEAKMAP_ORIGENS` | endereços do front liberados no CORS, separados por vírgula (padrão `*`) |
-| `LEAKMAP_BANCO` | arquivo SQLite do histórico (padrão: em memória) |
+| `LEAKMAP_BANCO` | histórico: endereço `postgresql://...` (sobrevive a reinícios) ou arquivo SQLite. Sem ela, vale `DATABASE_URL`; sem as duas, SQLite em memória |
+| `LEAKMAP_WEBHOOK_URL` | liga o repasse dos eventos por webhook para esta URL |
+| `LEAKMAP_WEBHOOK_NIVEIS` | níveis que saem pelo webhook, separados por vírgula (padrão `suspeita,provavel,confirmado`) |
+| `LEAKMAP_WEBHOOK_CABECALHOS` | cabeçalhos extras do webhook, em JSON (ex.: um token de autorização) |
 | `LEAKMAP_LINHA` | linha ativa ao iniciar: `trecho_200`, `cais` ou `rede` (padrão `cais`) |
 
 ## Publicar no Render
@@ -37,10 +40,43 @@ Render: *New > Blueprint*, escolher este repositório. O Render gera a chave dos
 comandos (`LEAKMAP_CHAVE`); ela fica na aba *Environment* do serviço.
 
 No plano gratuito o serviço dorme depois de uns 15 minutos sem acesso, e o
-primeiro acesso leva cerca de 1 minuto: `GET /api/servico` acorda. O
-histórico some a cada reinício. Medido no notebook, cada passo de 0,1 s da
+primeiro acesso leva cerca de 1 minuto: `GET /api/servico` acorda. Sem banco
+externo, o histórico some a cada reinício (ver abaixo). Medido no notebook, cada passo de 0,1 s da
 bancada gasta de 1,4 a 2,6 ms de processador (mediana): cabe folgado no décimo
 de processador do plano gratuito.
+
+### Histórico que sobrevive a reinícios (PostgreSQL)
+
+1. No Render: *New > Postgres* (o plano gratuito serve para a demonstração;
+   ele tem prazo de validade, conferir no painel do Render).
+2. Na página do banco, copiar a *Internal Database URL*.
+3. No serviço `leakmap-bancada`, aba *Environment*: criar `LEAKMAP_BANCO` com
+   esse endereço. O serviço reinicia e passa a gravar no banco; a tabela é
+   criada sozinha.
+
+`GET /api/servico` mostra `"historico": "postgresql"` quando deu certo. Se a
+conexão com o banco cair (banco gerenciado derruba conexão parada), o backend
+reconecta sozinho.
+
+### Repasse dos eventos por webhook
+
+Com `LEAKMAP_WEBHOOK_URL` definida, cada evento que sai no WebSocket sai também
+por HTTP POST, em JSON, para essa URL, pelo mesmo código de
+`07_servico/integracao.py`: filtro por nível, três tentativas e fila local
+para reenviar a cada minuto o que não saiu. É o ponto de entrada da automação
+da empresa (n8n, Node-RED, o sistema de controle). Vai só o evento, sem a
+verdade da simulação, com `"modo": "simulacao"`; quando o gás confirma um
+alerta, o mesmo evento sai de novo com o mesmo `id` e `"revisao": 2`. O envio
+roda à parte: um destino lento ou fora do ar nunca atrasa a bancada.
+
+- `GET /api/integracao`: se está ligado, o destino (só o endereço do
+  servidor), os níveis e as contagens (enviados, filtrados, pendentes,
+  reenviados).
+- `POST /api/integracao/teste` (com a chave): manda na hora um evento de teste,
+  marcado `"teste": true`.
+
+Para testar sem nada instalado, `python 07_servico/receptor_teste.py` faz o
+papel do destino.
 
 ## Como funciona
 
@@ -105,12 +141,26 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
 - Depois que a simulação acaba, o sinal segura o último valor: o vazamento
   fica aberto até reparar. No trecho de 200 m a simulação gravada é curta
   (0,1 s), e o nível que fica é o do meio do transitório.
-- Manobras só na linha do cais, com as quatro manobras simuladas. O sentido
-  contrário de uma manobra (reabrir a válvula do navio, partir a bomba) é a
-  mesma onda com o sinal trocado; a XV-104 usa as simulações da XV-106,
-  deslocadas para 200 m.
+- Manobras nas três linhas, pelas simulações de manobra de cada uma: na
+  linha do cais, a bomba e as válvulas XV-104, XV-106 e XV-108 (a XV-104 usa
+  as simulações da XV-106, deslocadas para 200 m); na rede, a bomba e as
+  válvulas dos navios no fim de cada ramal, XV-104, XV-106 e XV-108; no trecho
+  de 200 m, duas tomadas de ação rápida, XV-100 (entre os sensores) e XV-190
+  (depois do sensor B). O sentido contrário de uma manobra que não foi
+  simulada (reabrir a válvula do navio, partir a bomba) é a mesma onda com o
+  sinal trocado.
+- No trecho de 200 m, as tomadas fecham e abrem em 20 ms. Com 0,3 s, como nas
+  outras linhas, a onda num trecho curto entre dois reservatórios vira uma
+  rampa lenta que as reflexões desfazem, sem frente para o detector marcar.
+- Na rede, a abertura da válvula de um navio (fora da rede monitorada, 20 m
+  depois do sensor do berço) às vezes sai sem posição e sem lado, porque a
+  rampa de 0,3 s é marcada em pontos diferentes em cada sensor. O cadastro
+  toma o lado do sensor que viu a onda primeiro; com o registro de operação,
+  sai como manobra registrada; sem ele, como suspeita, com a anotação para
+  conferir.
+- Cada operação registrada explica um evento só: depois de usada, não serve
+  para outro, mesmo dentro da janela de 5 s.
 - Vários eventos ao mesmo tempo se somam (superposição linear).
-- Histórico só em SQLite.
 
 ## Arquivos
 
@@ -121,17 +171,20 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
 | `gerador.py` | Sinal de qualquer ponto a partir das simulações do TSNet |
 | `bancada.py` | Estado da bancada, modelo do transmissor, falhas e detector em fluxo |
 | `explicacao.py` | Texto do evento para a tela |
-| `historico.py` | Histórico dos eventos em SQLite |
+| `historico.py` | Histórico dos eventos, em PostgreSQL ou SQLite |
+| `repasse.py` | Repasse dos eventos por webhook |
 | `app.py` | API REST e WebSocket |
 | `pagina_teste.html` | Página de teste (`/teste`) |
 | `cliente.py` | Cliente de linha de comando; grava sessões |
 | `validar_gerador.py` | Conferência do gerador contra o TSNet |
-| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 63 conferências com resultado esperado |
+| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 72 conferências com resultado esperado |
 | `exemplos/` | Sessões gravadas do WebSocket, uma mensagem por linha: vazamento na linha do cais, abertura de válvula sem registro de operação, vazamento na rede |
-| `testes/` | Gerador, bancada ao vivo, fluxo contra lote, REST e WebSocket |
+| `testes/` | Gerador, bancada ao vivo, manobras nas três linhas, fluxo contra lote, REST, WebSocket, webhook de ponta a ponta e histórico em SQLite e PostgreSQL |
 
 Testes: `python -m unittest discover -s 08_backend/testes -p "teste_*.py"`
-(19 testes; rodam também no GitHub Actions, no job `backend-da-bancada`).
+(38 testes; os 6 do PostgreSQL rodam quando `LEAKMAP_BANCO_DE_TESTE` aponta
+para um banco descartável, como no GitHub Actions, job `backend-da-bancada`,
+que sobe um PostgreSQL para eles).
 
 ## Conferir o serviço no ar
 
@@ -139,11 +192,11 @@ Testes: `python -m unittest discover -s 08_backend/testes -p "teste_*.py"`
 python 08_backend/conferir_servico.py --endereco https://leakmap-bancada.onrender.com --chave <chave>
 ```
 
-Roda 63 conferências com resultado esperado conhecido: consultas, chave,
+Roda 72 conferências com resultado esperado conhecido: consultas, chave,
 erros de validação, WebSocket (taxa, pressão de regime contra o TSNet, perfil
 do operador), vazamentos na linha do cais, na rede e no trecho de 200 m,
-manobras com e sem registro de operação, autoteste, gás, transmissor lento,
-histórico e 20 s de regime sem falso alarme. No fim devolve a bancada ao
+manobras com e sem registro de operação nas três linhas, autoteste, gás,
+transmissor lento, histórico, webhook e 20 s de regime sem falso alarme. No fim devolve a bancada ao
 estado inicial. Como o serviço é compartilhado, não começa se houver alguém
 conectado ao WebSocket, a menos que se use `--forcar`. `--relatorio
 arquivo.json` grava o resultado.

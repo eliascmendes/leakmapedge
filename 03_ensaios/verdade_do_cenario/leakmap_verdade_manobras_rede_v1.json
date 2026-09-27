@@ -1,0 +1,208 @@
+{
+ "premissas": {
+  "observacao": "premissas de simulacao no lugar dos dados que ainda faltam da linha real; comprimentos, espessura e vazao a confirmar com a planta e o isometrico",
+  "produto": "diesel",
+  "massa_especifica_kg_m3": 840.0,
+  "tubo": "8\" aco_carbono sch40",
+  "diametro_interno_m": 0.20273999999999998,
+  "velocidade_de_onda_korteweg_m_s": 1227.1127232118436,
+  "posicoes_m": {
+   "bomba": -300.0,
+   "sensor_A": 0.0,
+   "berco_104": 200.0,
+   "berco_106": 450.0,
+   "sensor_B_berco_108": 700.0,
+   "navio": 720.0
+  },
+  "pressao_da_bomba_bar": 7.0,
+  "carga_da_bomba_m": 84.94733265375467,
+  "carga_no_navio_m": 74.46614193913335,
+  "atrito": "Darcy-Weisbach, rugosidade 0.046 mm, viscosidade 3.0 cSt, fator 0.0192 a 1.46 m/s",
+  "unidade_de_carga": "metro de coluna de diesel (1 bar = 12.14 m)",
+  "evento": "abertura de vazamento (add_burst do TSNet) em 0.100 s, desenvolvimento em 0.0010 s",
+  "tamanhos_de_vazamento_coeficiente_emissor": {
+   "grande": 0.0012,
+   "pequeno": 0.00025
+  },
+  "rede": "como rede_cais.py, com bomba no modelo: tanque a 5 m de coluna, curva parabolica com 80 m de ganho em 0.060 m3/s",
+  "manobras": {
+   "parada_bomba": "a bomba perde rotacao ate parar em 2.0 s",
+   "fechamento_104": "a retirada do navio muda -50% em 0.3 s",
+   "abertura_104": "a retirada do navio muda +100% em 0.3 s",
+   "fechamento_106": "a retirada do navio muda -50% em 0.3 s",
+   "abertura_106": "a retirada do navio muda +100% em 0.3 s",
+   "fechamento_108": "a retirada do navio muda -50% em 0.3 s",
+   "abertura_108": "a retirada do navio muda +100% em 0.3 s"
+  }
+ },
+ "topologia": {
+  "descricao": "arvore com um manifold: o tronco vai do sensor A (s = 0) ao manifold (s = 300 m); cada ramal vai do manifold (s = 0) ao sensor do berco",
+  "no_de_juncao": "manifold",
+  "trechos": {
+   "tronco": {
+    "comprimento_monitorado_m": 300.0,
+    "juncao_em_s_m": 300.0
+   },
+   "ramal_104": {
+    "comprimento_monitorado_m": 250.0,
+    "juncao_em_s_m": 0.0
+   },
+   "ramal_106": {
+    "comprimento_monitorado_m": 400.0,
+    "juncao_em_s_m": 0.0
+   },
+   "ramal_108": {
+    "comprimento_monitorado_m": 550.0,
+    "juncao_em_s_m": 0.0
+   }
+  },
+  "sensores": {
+   "A": {
+    "trecho": "tronco",
+    "s_m": 0.0
+   },
+   "B104": {
+    "trecho": "ramal_104",
+    "s_m": 250.0
+   },
+   "B106": {
+    "trecho": "ramal_106",
+    "s_m": 400.0
+   },
+   "B108": {
+    "trecho": "ramal_108",
+    "s_m": 550.0
+   }
+  },
+  "velocidade_de_onda_m_s": 1227.1127232118436
+ },
+ "descricao": "VERDADE das manobras na rede do cais. Uso exclusivo do avaliador e da bancada.",
+ "ensaios": [
+  {
+   "id": "MR-01",
+   "tem_evento": false,
+   "manobra": "parada_bomba",
+   "trecho": "tronco",
+   "s_m": -300.0,
+   "onda_esperada": "queda",
+   "equipamento": "B-01",
+   "acao": "parada",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": -45.434410878242836,
+    "B104": -22.114544680595003,
+    "B106": -17.457733349363856,
+    "B108": -12.004795331308337
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-02",
+   "tem_evento": false,
+   "manobra": "fechamento_104",
+   "trecho": "ramal_104",
+   "s_m": 270.0,
+   "onda_esperada": "alta",
+   "equipamento": "XV-104",
+   "acao": "fechamento",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": 15.407042529580195,
+    "B104": 31.421496864295236,
+    "B106": 20.78493232453806,
+    "B108": 20.661845851821795
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-03",
+   "tem_evento": false,
+   "manobra": "abertura_104",
+   "trecho": "ramal_104",
+   "s_m": 270.0,
+   "onda_esperada": "queda",
+   "equipamento": "XV-104",
+   "acao": "abertura",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": -17.663669894763807,
+    "B104": -35.26338247504712,
+    "B106": -23.25984970660884,
+    "B108": -22.54533382552161
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-04",
+   "tem_evento": false,
+   "manobra": "fechamento_106",
+   "trecho": "ramal_106",
+   "s_m": 420.0,
+   "onda_esperada": "alta",
+   "equipamento": "XV-106",
+   "acao": "fechamento",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": 15.892047718099192,
+    "B104": 20.823123594032353,
+    "B106": 31.564922276823637,
+    "B108": 20.553484478934394
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-05",
+   "tem_evento": false,
+   "manobra": "abertura_106",
+   "trecho": "ramal_106",
+   "s_m": 420.0,
+   "onda_esperada": "queda",
+   "equipamento": "XV-106",
+   "acao": "abertura",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": -17.882943924566916,
+    "B104": -22.00273218887218,
+    "B106": -35.316148617348986,
+    "B108": -21.772494380130155
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-06",
+   "tem_evento": false,
+   "manobra": "fechamento_108",
+   "trecho": "ramal_108",
+   "s_m": 570.0,
+   "onda_esperada": "alta",
+   "equipamento": "XV-108",
+   "acao": "fechamento",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": 15.623980293071554,
+    "B104": 20.736693956605308,
+    "B106": 20.59016479553793,
+    "B108": 31.697745267560094
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  },
+  {
+   "id": "MR-07",
+   "tem_evento": false,
+   "manobra": "abertura_108",
+   "trecho": "ramal_108",
+   "s_m": 570.0,
+   "onda_esperada": "queda",
+   "equipamento": "XV-108",
+   "acao": "abertura",
+   "instante_da_manobra_s": 0.1,
+   "maior_variacao_por_sensor_m": {
+    "A": -17.442095203397727,
+    "B104": -21.845368391595798,
+    "B106": -21.727810153662574,
+    "B108": -35.359530878270604
+   },
+   "deriva_antes_da_manobra_m": 0.00027991993196962994
+  }
+ ]
+}

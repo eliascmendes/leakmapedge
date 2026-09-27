@@ -8,8 +8,10 @@ Variaveis de ambiente:
     LEAKMAP_CHAVE     chave exigida nos comandos (cabecalho X-LEAKMAP-Chave). Sem ela,
                       os comandos ficam abertos: so para desenvolvimento local
     LEAKMAP_ORIGENS   enderecos do front liberados no CORS, separados por virgula (padrao: *)
-    LEAKMAP_BANCO     arquivo SQLite do historico (padrao: em memoria)
+    LEAKMAP_BANCO     historico: endereco postgresql://... (sobrevive a reinicios) ou arquivo SQLite;
+                      sem ela, vale DATABASE_URL; sem as duas, SQLite em memoria
     LEAKMAP_LINHA     linha ativa ao iniciar (padrao: cais)
+    LEAKMAP_WEBHOOK_URL e afins: repasse dos eventos por webhook (repasse.py)
 """
 import asyncio
 import contextlib
@@ -27,6 +29,7 @@ from pydantic import BaseModel, Field
 
 import bancada as BA
 import historico as HI
+import repasse as RE
 
 VERSAO_DO_CONTRATO = '1'
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -38,6 +41,7 @@ PULSO_S = 15.0
 
 class Estado:
     bancada: BA.Bancada = None
+    repasse: RE.Repasse = None
     clientes: set = set()
     atrasos = 0
 
@@ -82,6 +86,8 @@ def para_o_perfil(mensagem, perfil):
 
 
 def difundir(mensagem):
+    if mensagem.get('tipo') == 'evento' and E.repasse is not None:
+        E.repasse.por(mensagem['evento'])       # o webhook recebe so o evento, nunca a verdade
     for c in list(E.clientes):
         c.por(para_o_perfil(mensagem, c.perfil))
 
@@ -118,8 +124,10 @@ async def pulso():
 
 @contextlib.asynccontextmanager
 async def ciclo_de_vida(app):
+    E.repasse = RE.Repasse()
     E.bancada = BA.Bancada(linha=os.environ.get('LEAKMAP_LINHA', 'cais'),
-                           historico=HI.Historico(os.environ.get('LEAKMAP_BANCO') or ':memory:'))
+                           historico=HI.Historico(os.environ.get('LEAKMAP_BANCO') or os.environ.get('DATABASE_URL')
+                                                  or ':memory:'))
     tarefas = [asyncio.create_task(ciclo()), asyncio.create_task(pulso())]
     yield
     for t in tarefas:
@@ -181,7 +189,13 @@ async def pagina_de_teste():
 async def servico():
     return {'situacao': 'ok', 'versao_do_contrato': VERSAO_DO_CONTRATO, 'modo': 'simulacao',
             'comandos_exigem_chave': bool(CHAVE), 't_s': round(E.bancada.t, 3), 'clientes_conectados': len(E.clientes),
-            'passos_atrasados': E.atrasos, 'deteccoes_descartadas_como_ruido': E.bancada.descartadas_como_ruido}
+            'passos_atrasados': E.atrasos, 'deteccoes_descartadas_como_ruido': E.bancada.descartadas_como_ruido,
+            'webhook_ligado': E.repasse.ligado, 'historico': E.bancada.historico.tipo}
+
+
+@app.get('/api/integracao', tags=['integracao'], summary='Situacao do repasse dos eventos por webhook')
+async def integracao():
+    return E.repasse.situacao()
 
 
 @app.get('/api/linhas', tags=['consultas'], summary='As linhas da bancada, com trechos, sensores e equipamentos')
@@ -344,6 +358,18 @@ async def reparar():
 async def roteiro(p: PedidoRoteiro):
     E.bancada.definir_roteiro(p.roteiro, p.intervalo_s)
     return _depois()
+
+
+@app.post('/api/integracao/teste', tags=['integracao'], dependencies=COMANDO,
+          summary='Manda agora um evento de teste pelo webhook (marcado "teste": true)')
+async def integracao_teste():
+    b = E.bancada
+    evento = {'tipo': 'leakmap.evento', 'versao': '1', 'id': 'teste-%d' % int(time.time()), 'teste': True,
+              'instante_utc': b.utc(b.t), 'linha': b.linha.id, 'modo': 'simulacao', 'nivel': 'provavel',
+              'classificacao': 'vazamento', 'trecho': None, 'posicao_m': None,
+              'explicacao': 'Evento de teste do webhook do LEAKMAP: nao e um alerta.'}
+    resultado = await asyncio.to_thread(E.repasse.testar, evento)
+    return {'ok': resultado == 'enviado', 'resultado': resultado, 'integracao': E.repasse.situacao()}
 
 
 @app.post('/api/operacoes', tags=['integracao'], dependencies=COMANDO,

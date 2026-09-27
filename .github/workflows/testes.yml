@@ -29,6 +29,19 @@ jobs:
 
   backend-da-bancada:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: leakmap
+          POSTGRES_PASSWORD: leakmap
+          POSTGRES_DB: leakmap
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      LEAKMAP_BANCO_DE_TESTE: postgresql://leakmap:leakmap@127.0.0.1:5432/leakmap
     steps:
       - uses: actions/checkout@v4
 
@@ -39,7 +52,7 @@ jobs:
       - name: Dependencias do backend
         run: pip install -r 08_backend/requirements.txt
 
-      - name: Testes do backend (gerador, bancada ao vivo, REST e WebSocket)
+      - name: Testes do backend (gerador, bancada ao vivo, REST, WebSocket, webhook e historico em PostgreSQL)
         run: python -m unittest discover -s 08_backend/testes -p "teste_*.py"
 
   ambiente-do-tsnet:

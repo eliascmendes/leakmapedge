@@ -28,3 +28,7 @@ __pycache__/
 03_ensaios/pacotes/leakmap_pacote_linha_cais_v1.json
 # arquivos temporarios do EPANET
 02_bancada/codigo/temp.*
+
+# servico: configuracao local do webhook (pode ter token) e fila de reenvio
+07_servico/integracao.json
+07_servico/pendentes.jsonl

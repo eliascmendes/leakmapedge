@@ -11,6 +11,12 @@ Cada simulacao gravada do TSNet vira um MOLDE: a variacao de carga em cada
 sensor em funcao do tempo desde o evento. O gerador (gerador.py) monta o sinal
 de qualquer ponto a partir desses moldes.
 
+Manobras, nas tres linhas, pelas simulacoes de manobra de cada uma
+(manobras_cais.py, manobras_trecho_200.py, manobras_rede.py): cada simulacao
+diz o equipamento e a operacao. A operacao contraria que nao foi simulada
+(reabrir a valvula do navio, partir a bomba) usa a mesma onda com o sinal
+trocado. Sem o arquivo de manobras de uma linha, ela fica sem equipamentos.
+
 Posicao na linha: sempre (trecho, s_m). Na linha reta ha um trecho so,
 "principal", com s_m contado como nas simulacoes (a partir do sensor A na
 linha do cais, a partir do inicio no trecho de 200 m). Na rede, s_m conta do
@@ -26,6 +32,8 @@ import projeto as P
 G = 9.81
 FAIXA_BAR = 15.0                 # transmissor de 0 a 15 bar, como nos ensaios da linha do cais
 APOS_A_CHEGADA_S = 0.003         # a amplitude do molde e lida 3 ms depois da chegada
+ACAO_DA_BANCADA = {'abertura': 'abrir', 'fechamento': 'fechar', 'parada': 'parar', 'partida': 'partir'}
+CONTRARIA = {'abrir': 'fechar', 'fechar': 'abrir', 'parar': 'partir', 'partir': 'parar'}
 
 
 def _ler(pasta, nome):
@@ -55,6 +63,7 @@ class Linha:
         self.equipamentos = equipamentos or []
         self.cadastro, self.topo, self.tamanhos = cadastro, topo, list(tamanhos)
         self.moldes_de_vazamento, self.moldes_de_manobra = [], {}
+        self.manobras = {}                # (equipamento, acao da bancada) -> (molde, sinal)
         self.faixa_m = FAIXA_BAR * 1e5 / (self.rho * G)
 
     # --- geometria ---------------------------------------------------------
@@ -129,6 +138,43 @@ def _moldes_da_linha_reta(linha, amostras, verdade, instante_padrao):
     return moldes
 
 
+def _existe(pasta, nome):
+    return os.path.exists(os.path.join(pasta, nome))
+
+
+def _carregar_manobras(linha, amostras_nome, verdade_nome, usa_moldes_de=None):
+    """Moldes de manobra e a tabela (equipamento, acao) -> (molde, sinal); o cadastro sai dos equipamentos."""
+    if not (_existe(P.AMOSTRAS, amostras_nome) and _existe(P.VERDADE, verdade_nome)):
+        linha.equipamentos, linha.cadastro = [], None
+        return
+    amostras = _ler(P.AMOSTRAS, amostras_nome)
+    verdade = {e['id']: e for e in _ler(P.VERDADE, verdade_nome)['ensaios']}
+    diretas = {}
+    for e in amostras['ensaios']:
+        v = verdade[e['id']]
+        trecho = v.get('trecho', 'principal')
+        s_m = v.get('s_m', v.get('posicao_da_manobra_m'))
+        t = np.asarray(e['tempo_s']) - v['instante_da_manobra_s']
+        if 'canais_carga_m' in e:
+            deltas = {k: np.asarray(x) - x[0] for k, x in e['canais_carga_m'].items()}
+        else:
+            deltas = {s: np.asarray(e['canal_%s_carga_m' % s]) - e['canal_%s_carga_m' % s][0] for s in ('A', 'B')}
+        chegadas = {k: linha.tempo_de_percurso(trecho, s_m, k) for k in deltas}
+        linha.moldes_de_manobra[v['manobra']] = Molde(e['id'], trecho, s_m, None, t, deltas, chegadas)
+        acao = v.get('acao') or v['manobra'].split('_')[0]
+        diretas[(v['equipamento'], ACAO_DA_BANCADA[acao])] = v['manobra']
+    tabela = {chave: (nome, 1.0) for chave, nome in diretas.items()}
+    for (eq, acao), nome in diretas.items():
+        tabela.setdefault((eq, CONTRARIA[acao]), (nome, -1.0))
+    for eq, fonte in (usa_moldes_de or {}).items():
+        for (outro, acao), valor in list(tabela.items()):
+            if outro == fonte:
+                tabela.setdefault((eq, acao), valor)
+    linha.manobras = tabela
+    linha.cadastro = {'linha': linha.id, 'equipamentos': [
+        {'nome': e['id'], 'tipo': e['tipo'], 'trecho': e['trecho'], 'posicao_m': e['s_m']} for e in linha.equipamentos]}
+
+
 def trecho_200():
     k = P.constantes_do_trecho_200()
     par = _ler(os.path.join(P.RAIZ, '03_ensaios', 'parametros'), 'leakmap_parametros_v1.json')
@@ -143,10 +189,18 @@ def trecho_200():
                                  'vazamento_de_s_m': 5.0, 'vazamento_ate_s_m': k['L_TRECHO'] - 5.0}},
                   sensores, regime,
                   [{'nome': 'reservatório de montante', 'trecho': 'principal', 's_m': 0.0},
+                   {'nome': 'tomada 100', 'trecho': 'principal', 's_m': 100.0},
+                   {'nome': 'tomada 190', 'trecho': 'principal', 's_m': 190.0},
                    {'nome': 'reservatório de jusante', 'trecho': 'principal', 's_m': k['L_TRECHO']}],
-                  {'principal': [[0.0, 0.0], [k['L_TRECHO'], 0.0]]}, tamanhos=('grande',))
+                  {'principal': [[0.0, 0.0], [k['L_TRECHO'], 0.0]]}, tamanhos=('grande',),
+                  equipamentos=[{'id': 'XV-100', 'tipo': 'valvula', 'trecho': 'principal', 's_m': 100.0,
+                                 'estado_inicial': 'aberta'},
+                                {'id': 'XV-190', 'tipo': 'valvula', 'trecho': 'principal', 's_m': 190.0,
+                                 'estado_inicial': 'aberta'}])
     # instante do vazamento nas simulacoes do trecho de 200 m (02_bancada/codigo/simular.py, TS_BURST)
     linha.moldes_de_vazamento = _moldes_da_linha_reta(linha, amostras, verdade, 0.05)
+    _carregar_manobras(linha, 'leakmap_amostras_manobras_trecho_200_v1.json',
+                       'leakmap_verdade_manobras_trecho_200_v1.json')
     return linha
 
 
@@ -174,18 +228,11 @@ def cais():
                    {'nome': 'berço 108', 'trecho': 'principal', 's_m': pos['sensor_B_berco_108']},
                    {'nome': 'navio', 'trecho': 'principal', 's_m': pos['navio']}],
                   {'principal': [[pos['bomba'], 0.0], [pos['navio'], 0.0]]},
-                  equipamentos=equipamentos, cadastro=cadastro)
+                  equipamentos=equipamentos)
     linha.moldes_de_vazamento = _moldes_da_linha_reta(linha, amostras, verdade, 0.1)
-    # manobras: a variacao de carga em relacao ao regime da propria simulacao
-    manobras = _ler(P.AMOSTRAS, 'leakmap_amostras_manobras_cais_v1.json')
-    v_man = {e['id']: e for e in _ler(P.VERDADE, 'leakmap_verdade_manobras_cais_v1.json')['ensaios']}
-    for e in manobras['ensaios']:
-        v = v_man[e['id']]
-        t = np.asarray(e['tempo_s']) - v['instante_da_manobra_s']
-        deltas = {s: np.asarray(e['canal_%s_carga_m' % s]) - e['canal_%s_carga_m' % s][0] for s in ('A', 'B')}
-        chegadas = {s: linha.tempo_de_percurso('principal', v['posicao_da_manobra_m'], s) for s in ('A', 'B')}
-        linha.moldes_de_manobra[v['manobra']] = Molde(e['id'], 'principal', v['posicao_da_manobra_m'], None,
-                                                     t, deltas, chegadas)
+    # a XV-104 nao foi simulada: usa as manobras da XV-106, deslocadas para a posicao dela
+    _carregar_manobras(linha, 'leakmap_amostras_manobras_cais_v1.json', 'leakmap_verdade_manobras_cais_v1.json',
+                       usa_moldes_de={'XV-104': 'XV-106'})
     return linha
 
 
@@ -219,7 +266,11 @@ def rede():
     linha = Linha('rede', 'Rede do cais com manifold e três ramais', 'rede', premissas['produto'],
                   premissas['tubo'].replace('aco_carbono', 'aço carbono').replace(' sch40', ''),
                   premissas['massa_especifica_kg_m3'], topo['velocidade_de_onda_m_s'], trechos, sensores,
-                  {k: v[0] for k, v in regime_ensaio['canais_carga_m'].items()}, referencias, desenho, topo=topo)
+                  {k: v[0] for k, v in regime_ensaio['canais_carga_m'].items()}, referencias, desenho, topo=topo,
+                  equipamentos=[{'id': 'B-01', 'tipo': 'bomba', 'trecho': 'tronco', 's_m': bomba,
+                                 'estado_inicial': 'ligada'}] +
+                  [{'id': 'XV-%s' % k[-3:], 'tipo': 'valvula', 'trecho': k, 's_m': comp + P.RC.NAVIO_APOS_SENSOR_M,
+                    'estado_inicial': 'aberta'} for k, comp in ramais.items()])
     por_id = {e['id']: e for e in verdade['ensaios']}
     for e in amostras['ensaios']:
         v = por_id[e['id']]
@@ -230,6 +281,7 @@ def rede():
         chegadas = {k: linha.tempo_de_percurso(v['trecho_real'], v['s_real_m'], k) for k in deltas}
         linha.moldes_de_vazamento.append(Molde(e['id'], v['trecho_real'], v['s_real_m'],
                                                v['tamanho_do_vazamento'], t, deltas, chegadas))
+    _carregar_manobras(linha, 'leakmap_amostras_manobras_rede_v1.json', 'leakmap_verdade_manobras_rede_v1.json')
     return linha
 
 

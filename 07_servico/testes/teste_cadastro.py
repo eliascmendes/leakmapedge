@@ -107,6 +107,52 @@ class Cadastro(unittest.TestCase):
         # sem registro de operacao, nada rebaixa: so a anotacao
         self.assertEqual(CD.conferir(r, CADASTRO, [], T, SENSORES)['decisao'], CD.DECISAO_CONFERIR)
 
+    def test_rede_posicao_pela_tubulacao_e_lado_alem_do_sensor(self):
+        topo = {'trechos': {'tronco': {'juncao_em_s_m': 300.0}, 'ramal_106': {'juncao_em_s_m': 0.0},
+                            'ramal_104': {'juncao_em_s_m': 0.0}},
+                'sensores': {'A': {'trecho': 'tronco', 's_m': 0.0}, 'B106': {'trecho': 'ramal_106', 's_m': 400.0},
+                             'B104': {'trecho': 'ramal_104', 's_m': 250.0}}}
+        geo = CD.GeometriaDaRede(topo)
+        cad = {'equipamentos': [{'nome': 'B-01', 'tipo': 'bomba', 'trecho': 'tronco', 'posicao_m': -300.0},
+                                {'nome': 'XV-106', 'tipo': 'valvula', 'trecho': 'ramal_106', 'posicao_m': 420.0},
+                                {'nome': 'XV-104', 'tipo': 'valvula', 'trecho': 'ramal_104', 'posicao_m': 270.0}]}
+        canal = {'detectado': True, 'polaridade': 'queda'}
+        # localizado no ramal 106 perto da valvula: coincide pela tubulacao, nao no ramal 104 no mesmo s
+        r = {'classe': 'localizado', 'trecho_estimado': 'ramal_106', 's_estimado_m': 410.0,
+             'canais': {'A': canal, 'B106': canal}}
+        ops = [{'equipamento': 'XV-106', 'acao': 'abertura', 'instante_s': T - 0.5}]
+        c = CD.conferir(r, cad, ops, T, None, geo)
+        self.assertEqual((c['decisao'], c['equipamento']), (CD.DECISAO_MANOBRA, 'XV-106'))
+        self.assertIn('ramal_106', c['texto'])
+        aplicado = CD.aplicar(r, c)
+        self.assertEqual((aplicado['classe'], aplicado['trecho_da_origem']), ('manobra', 'ramal_106'))
+        # fora da rede, do lado do sensor B106: so a valvula alem dele
+        f = {'classe': 'fora_do_trecho', 'lado_da_origem': 'B106', 'canais': {'B106': canal, 'A': canal}}
+        self.assertEqual(CD.conferir(f, cad, ops, T, None, geo)['decisao'], CD.DECISAO_MANOBRA)
+        f['lado_da_origem'] = 'A'
+        c = CD.conferir(f, cad, [], T, None, geo)
+        self.assertEqual((c['decisao'], c['equipamento']), (CD.DECISAO_CONFERIR, 'B-01'))
+        # so um sensor viu a queda: o lado e o dele
+        u = {'classe': 'detectado_sem_localizacao', 'canais': {'B104': canal, 'A': {'detectado': False}}}
+        ops = [{'equipamento': 'XV-104', 'acao': 'abertura', 'instante_s': T - 0.5}]
+        self.assertEqual(CD.conferir(u, cad, ops, T, None, geo)['equipamento'], 'XV-104')
+
+    def test_sem_posicao_o_lado_e_o_do_sensor_que_viu_primeiro(self):
+        topo = {'trechos': {'tronco': {'juncao_em_s_m': 300.0}, 'ramal_106': {'juncao_em_s_m': 0.0}},
+                'sensores': {'A': {'trecho': 'tronco', 's_m': 0.0}, 'B106': {'trecho': 'ramal_106', 's_m': 400.0}}}
+        cad = {'equipamentos': [{'nome': 'XV-106', 'tipo': 'valvula', 'trecho': 'ramal_106', 'posicao_m': 420.0}]}
+        r = {'classe': 'detectado_sem_localizacao', 'motivo': 'chegadas incoerentes com qualquer ponto da rede',
+             'canais': {'A': {'detectado': True, 'polaridade': 'queda', 'tempo_de_chegada_s': 10.60},
+                        'B106': {'detectado': True, 'polaridade': 'queda', 'tempo_de_chegada_s': 10.27}}}
+        ops = [{'equipamento': 'XV-106', 'acao': 'abertura', 'instante_s': 10.2}]
+        c = CD.conferir(r, cad, ops, 10.3, None, CD.GeometriaDaRede(topo))
+        self.assertEqual((c['decisao'], c['equipamento']), (CD.DECISAO_MANOBRA, 'XV-106'))
+        self.assertEqual(CD.conferir(r, cad, [], 10.3, None, CD.GeometriaDaRede(topo))['decisao'], CD.DECISAO_CONFERIR)
+
+    def test_operacao_usada_nao_explica_outro_evento(self):
+        ops = [{'equipamento': 'XV-106', 'acao': 'abertura', 'instante_s': T - 1.0, 'usada': True}]
+        self.assertEqual(CD.conferir(localizado(452.0), CADASTRO, ops, T, SENSORES)['decisao'], CD.DECISAO_CONFERIR)
+
     def test_o_evento_leva_a_conferencia(self):
         c = CD.conferir(localizado(452.0), CADASTRO, [], T, SENSORES)
         e = AL.montar_evento(CD.aplicar(localizado(452.0), c), 'L-01', SENSORES, 'software')

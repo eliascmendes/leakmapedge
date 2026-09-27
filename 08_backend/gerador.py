@@ -19,26 +19,15 @@ conferencia contra o TSNet esta em validar_gerador.py.
 Depois que o molde acaba, o sinal segura o ultimo valor: o vazamento continua
 aberto ate a bancada reparar.
 
-As manobras (so na linha do cais) usam os moldes das quatro manobras
-simuladas. O sentido contrario de uma manobra (reabrir a valvula do navio,
-partir a bomba) e o molde com o sinal trocado, uma aproximacao linear.
+As manobras usam os moldes das manobras simuladas de cada linha (linhas.py).
+O sentido contrario de uma manobra que nao foi simulada (reabrir a valvula do
+navio, partir a bomba) e o molde com o sinal trocado, uma aproximacao linear.
 """
 import numpy as np
 
 RAMPA_DE_REPARO_S = 0.5         # ao reparar, o efeito do evento some nesse tempo
 TOLERANCIA_DO_PONTO_M = 0.5     # a menos disso de um ponto simulado, a fonte e o proprio TSNet
 
-# acao sobre o equipamento -> (molde, sinal, equipamento cujo molde e usado)
-MANOBRAS_DO_CAIS = {
-    ('B-01', 'parar'): ('parada_bomba', 1.0),
-    ('B-01', 'partir'): ('parada_bomba', -1.0),
-    ('XV-106', 'fechar'): ('fechamento_106', 1.0),
-    ('XV-106', 'abrir'): ('abertura_106', 1.0),
-    ('XV-104', 'fechar'): ('fechamento_106', 1.0),
-    ('XV-104', 'abrir'): ('abertura_106', 1.0),
-    ('XV-108', 'fechar'): ('fechamento_navio', 1.0),
-    ('XV-108', 'abrir'): ('fechamento_navio', -1.0),
-}
 
 
 def _lado(trecho, s_m):
@@ -69,13 +58,15 @@ def vazamento(linha, trecho, s_m, tamanho, t0):
 
 def manobra(linha, equipamento, acao, t0):
     chave = (equipamento, acao)
-    if chave not in MANOBRAS_DO_CAIS or not linha.moldes_de_manobra:
+    if chave not in linha.manobras:
         raise ValueError('manobra sem simulacao: %s %s' % (equipamento, acao))
-    nome, sinal = MANOBRAS_DO_CAIS[chave]
+    nome, sinal = linha.manobras[chave]
     molde = linha.moldes_de_manobra[nome]
-    s_m = next(e['s_m'] for e in linha.equipamentos if e['id'] == equipamento)
-    fonte = 'tsnet' if sinal > 0 and abs(molde.s_m - s_m) <= TOLERANCIA_DO_PONTO_M else 'gerador'
-    return {'tipo': 'manobra', 'equipamento': equipamento, 'acao': acao, 'trecho': 'principal', 's_m': float(s_m),
+    eq = next(e for e in linha.equipamentos if e['id'] == equipamento)
+    trecho, s_m = eq['trecho'], eq['s_m']
+    fonte = 'tsnet' if (sinal > 0 and molde.trecho == trecho and abs(molde.s_m - s_m) <= TOLERANCIA_DO_PONTO_M) \
+        else 'gerador'
+    return {'tipo': 'manobra', 'equipamento': equipamento, 'acao': acao, 'trecho': trecho, 's_m': float(s_m),
             't0': float(t0), 'molde': molde, 'escala': {k: 1.0 for k in molde.delta}, 'sinal': sinal,
             'fonte': fonte, 'fim': None}
 

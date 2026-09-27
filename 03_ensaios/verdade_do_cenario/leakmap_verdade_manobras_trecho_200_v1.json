@@ -1,0 +1,68 @@
+{
+ "premissas": {
+  "trecho": "build_model.py: 200 m, 300 mm, reservatorios de 60 e 50 m",
+  "tomadas_m3_s": {
+   "100 m": 0.01,
+   "190 m": 0.01
+  },
+  "rugosidade_m": 4.6e-05,
+  "velocidade_de_onda_solicitada_m_s": 1200.0,
+  "manobras": {
+   "abertura_100": "a retirada da tomada muda +100% em 0.0 s",
+   "fechamento_100": "a retirada da tomada muda -100% em 0.0 s",
+   "abertura_190": "a retirada da tomada muda +100% em 0.0 s",
+   "fechamento_190": "a retirada da tomada muda -100% em 0.0 s"
+  }
+ },
+ "descricao": "VERDADE das manobras no trecho de 200 m. Uso do avaliador e da bancada.",
+ "ensaios": [
+  {
+   "id": "M2-01",
+   "tem_evento": false,
+   "manobra": "abertura_100",
+   "posicao_da_manobra_m": 100.0,
+   "dentro_do_trecho_entre_sensores": true,
+   "onda_esperada": "queda",
+   "equipamento": "XV-100",
+   "acao": "abertura",
+   "instante_da_manobra_s": 0.05,
+   "deriva_antes_da_manobra_m": 6.371866187748765e-05
+  },
+  {
+   "id": "M2-02",
+   "tem_evento": false,
+   "manobra": "fechamento_100",
+   "posicao_da_manobra_m": 100.0,
+   "dentro_do_trecho_entre_sensores": true,
+   "onda_esperada": "alta",
+   "equipamento": "XV-100",
+   "acao": "fechamento",
+   "instante_da_manobra_s": 0.05,
+   "deriva_antes_da_manobra_m": 6.371866187748765e-05
+  },
+  {
+   "id": "M2-03",
+   "tem_evento": false,
+   "manobra": "abertura_190",
+   "posicao_da_manobra_m": 190.0,
+   "dentro_do_trecho_entre_sensores": false,
+   "onda_esperada": "queda",
+   "equipamento": "XV-190",
+   "acao": "abertura",
+   "instante_da_manobra_s": 0.05,
+   "deriva_antes_da_manobra_m": 6.371866187748765e-05
+  },
+  {
+   "id": "M2-04",
+   "tem_evento": false,
+   "manobra": "fechamento_190",
+   "posicao_da_manobra_m": 190.0,
+   "dentro_do_trecho_entre_sensores": false,
+   "onda_esperada": "alta",
+   "equipamento": "XV-190",
+   "acao": "fechamento",
+   "instante_da_manobra_s": 0.05,
+   "deriva_antes_da_manobra_m": 6.371866187748765e-05
+  }
+ ]
+}

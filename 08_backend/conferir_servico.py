@@ -32,7 +32,6 @@ import websockets
 
 # pressao de regime esperada em cada sensor, em bar (simulacoes do TSNet em 03_ensaios)
 REGIME_BAR = {'cais': {'A': 6.75, 'B': 6.15}, 'rede': {'A': 6.60, 'B104': 6.16, 'B106': 6.13, 'B108': 6.11}}
-ESTADO_INICIAL = {'B-01': 'ligada', 'XV-104': 'fechada', 'XV-106': 'aberta', 'XV-108': 'aberta'}
 ACAO_PARA = {('valvula', 'aberta'): 'abrir', ('valvula', 'fechada'): 'fechar',
              ('bomba', 'ligada'): 'partir', ('bomba', 'desligada'): 'parar'}
 
@@ -120,17 +119,15 @@ class Conferencia:
         if est['transmissor'] != transmissor:
             await self.comando('/api/bancada/transmissor', {'transmissor': transmissor})
         await self.comando('/api/bancada/reparar', {})
-        if linha == 'cais':
-            await self.equipamentos_iniciais()
+        await self.equipamentos_iniciais()
         await self.calma(2.0)
 
     async def equipamentos_iniciais(self):
-        est = (await self.api('GET', '/api/estado'))[1]
         cad = (await self.api('GET', '/api/cadastro'))[1]
-        tipos = {e['id']: e['tipo'] for e in cad['equipamentos']}
-        for eq, alvo in ESTADO_INICIAL.items():
-            if est['equipamentos'].get(eq) not in (None, alvo):
-                await self.comando('/api/bancada/equipamento', {'equipamento': eq, 'acao': ACAO_PARA[(tipos[eq], alvo)],
+        for e in cad['equipamentos']:
+            if e['estado'] != e['estado_inicial']:
+                await self.comando('/api/bancada/equipamento', {'equipamento': e['id'],
+                                                                'acao': ACAO_PARA[(e['tipo'], e['estado_inicial'])],
                                                                 'registrar_operacao': True})
                 await self.calma(2.5)
 
@@ -267,6 +264,54 @@ class Conferencia:
         await operar('B-01', 'partir', True)
         await self.preparar('cais', 'rapido')
 
+    async def operar(self, eq, acao, registrar):
+        self.limpar_fila()
+        await self.comando('/api/bancada/equipamento', {'equipamento': eq, 'acao': acao, 'registrar_operacao': registrar})
+        m = await self.evento()
+        await self.calma(1.5)
+        return (m or {}).get('evento') or {}
+
+    async def manobras_nas_outras_linhas(self):
+        g = 'manobras no trecho de 200 m'
+        await self.preparar('trecho_200', 'rapido')
+        e = await self.operar('XV-100', 'fechar', True)
+        self.conferir(g, 'fechar XV-100 com registro: registro', e.get('nivel') == 'registro', e.get('nivel'))
+        e = await self.operar('XV-100', 'abrir', True)
+        self.conferir(g, 'abrir XV-100 com registro: registro', e.get('nivel') == 'registro', e.get('nivel'))
+        await self.operar('XV-100', 'fechar', False)
+        e = await self.operar('XV-100', 'abrir', False)
+        self.conferir(g, 'abrir XV-100 sem registro: alarma em 100 m, "conferir"',
+                      e.get('nivel') == 'provavel' and abs((e.get('posicao_m') or 0) - 100.0) < 3.0
+                      and (e.get('cadastro') or {}).get('decisao') == 'conferir',
+                      '%s %s m' % (e.get('nivel'), e.get('posicao_m')))
+        g = 'manobras na rede'
+        await self.preparar('rede', 'rapido')
+        e = await self.operar('XV-106', 'fechar', True)
+        self.conferir(g, 'fechar XV-106 com registro: registro', e.get('nivel') == 'registro', e.get('nivel'))
+        e = await self.operar('XV-106', 'abrir', True)
+        self.conferir(g, 'abrir XV-106 com registro: registro, equipamento XV-106',
+                      e.get('nivel') == 'registro' and (e.get('cadastro') or {}).get('equipamento') == 'XV-106',
+                      '%s %s' % (e.get('nivel'), (e.get('cadastro') or {}).get('equipamento')))
+        e = await self.operar('B-01', 'parar', True)
+        self.conferir(g, 'parar a bomba com registro: registro, equipamento B-01',
+                      e.get('nivel') == 'registro' and (e.get('cadastro') or {}).get('equipamento') == 'B-01',
+                      '%s %s' % (e.get('nivel'), (e.get('cadastro') or {}).get('equipamento')))
+        await self.operar('B-01', 'partir', True)
+        await self.preparar('cais', 'rapido')
+
+    async def integracao_e_historico(self):
+        g = 'integracao'
+        st, s = await self.api('GET', '/api/servico')
+        self.conferir(g, 'servico informa o tipo do historico', s.get('historico') in
+                      ('postgresql', 'sqlite', 'sqlite em memoria'), s.get('historico'))
+        st, i = await self.api('GET', '/api/integracao')
+        self.conferir(g, 'GET /api/integracao responde', st == 200 and 'ligado' in i,
+                      'ligado' if i.get('ligado') else 'desligado')
+        st, t = await self.api('POST', '/api/integracao/teste', {})
+        esperado = ('enviado',) if i.get('ligado') else ('desligado',)
+        self.conferir(g, 'evento de teste do webhook', st == 200 and t.get('resultado') in esperado,
+                      str(t.get('resultado')))
+
     async def sensores_e_gas(self):
         g = 'autoteste e gas'
         await self.preparar('cais', 'rapido')
@@ -374,8 +419,9 @@ class Conferencia:
             try:
                 await self.comando('/api/bancada/roteiro', {'roteiro': None})
                 for grupo in (self.consultas, self.seguranca_e_validacao, self.websocket, self.linha_do_cais,
-                              self.manobras, self.sensores_e_gas, self.transmissor_lento, self.rede, self.trecho_200,
-                              self.historico, self.sem_falso_alarme):
+                              self.manobras, self.manobras_nas_outras_linhas, self.sensores_e_gas,
+                              self.transmissor_lento, self.rede, self.trecho_200, self.historico,
+                              self.integracao_e_historico, self.sem_falso_alarme):
                     print('\n%s' % grupo.__name__.replace('_', ' '), flush=True)
                     try:
                         await grupo()
