@@ -28,6 +28,26 @@ degrau acima de 6 desvios da media (ou de 3 degraus de quantizacao), a
 deteccao e descartada como ruido e contada em `descartadas_como_ruido`. O
 detector em si nao muda.
 
+Chegada pelo nivel. Uma frente lenta (a parada da bomba, que perde rotacao
+aos poucos) fica perto do limiar do detector em todos os sensores: a razao de
+energia fica entre 10 e 24, com limiar 12. Quando so um sensor declara, o
+cadastro toma o lado dele, supondo que o outro nao viu porque a onda ainda nao
+tinha chegado; mas o que nao declarou pode ser justamente o mais perto (medido
+na linha do cais: 4 paradas em 50 sairam do lado B, 0,57 s depois de a queda
+passar pelo sensor A). Por isso, quando so um sensor declarou, a bancada olha
+o nivel dos outros: se algum mostra o mesmo degrau (media de 10 ms contra a
+reta ajustada nos 300 ms de antes, acima de 6 desvios da media ou de 3
+degraus de quantizacao, e mantido ate a chegada declarada; sensores
+reprovados no autoteste ficam de fora) comecando antes da chegada declarada
+por pelo menos 80% do percurso entre os dois sensores (descontado o periodo
+de atualizacao do transmissor), e se o nivel dele ja mudou pelo menos metade
+do degrau do sensor que declarou (de 50 a 100 ms depois da chegada), a onda
+passou por ele e correu a linha toda: veio de alem dele. O resto de uma
+manobra anterior ainda decaindo muda o nivel em decimos de metro, nao nisso.
+Com menos percurso, a origem esta entre os dois sensores (um vazamento no
+trecho) e nada muda. O detector nao muda; muda so o lado que vai para o
+cadastro, anotado no motivo.
+
 Em paralelo, e sem mexer na deteccao de vazamento, o alerta de sobrepressao
 (07_servico/sobrepressao.py) acompanha o pico de pressao de cada sensor contra
 o limite da linha (premissa, ajustavel) e publica os episodios de golpe de
@@ -62,6 +82,10 @@ SILENCIO_APOS_MUDANCA_S = 1.5     # depois de reparar ou trocar linha/transmisso
 SAUDE_A_CADA_PASSOS = 5
 JANELA_DE_SAUDE_S = 0.5
 ANTECEDENCIA_DO_EVENTO_S = 0.02   # a acao pedida entra logo no proximo passo
+FOLGA_DA_CHEGADA_PELO_NIVEL_S = 0.005   # chegada pelo nivel tem de vir antes da declarada, com esta folga
+JANELA_DA_BASE_S = 0.3            # base da chegada pelo nivel: reta ajustada nestes segundos antes da procura
+FRACAO_DO_PERCURSO = 0.8          # a chegada pelo nivel tem de vir antes de pelo menos 80% do percurso entre os sensores
+FRACAO_DO_DEGRAU = 0.5            # e o nivel do outro sensor ja mudou pelo menos metade do degrau do que declarou
 
 TRANSMISSORES = {
     'ideal': 'Ideal: a hidráulica pura, sem transmissor',
@@ -238,6 +262,7 @@ class Bancada:
         de, para = acoes[acao]
         if self.equipamentos[equipamento] != de:
             raise ErroDaBancada(409, '%s ja esta %s' % (equipamento, self.equipamentos[equipamento]))
+        previsao = self._previsao_resumida(equipamento, acao)
         t0 = self.t + ANTECEDENCIA_DO_EVENTO_S
         ev = GE.manobra(self.linha, equipamento, acao, t0)
         ev['id'] = self._novo_id('mn')
@@ -248,7 +273,42 @@ class Bancada:
             self.operacoes.append({'equipamento': equipamento, 'acao': ACAO_REGISTRADA[acao], 'instante_s': t0,
                                    'origem': 'bancada (registro do sistema de controle simulado)'})
         return {'id': ev['id'], 'equipamento': equipamento, 'estado': para, 'operacao_registrada': bool(registrar_operacao),
-                'fonte_usada': ev['fonte']}
+                'fonte_usada': ev['fonte'], 'previsao_do_golpe': previsao}
+
+    # --- previsao do golpe antes da manobra (07_servico/previsao_de_golpe.py) ------------------
+    def prever_golpe(self, equipamento, acao, tempo_de_manobra_s=None, fracao_da_vazao_cortada=None, linha=None):
+        """Pico previsto de uma manobra, antes de fazer. Nao mexe na bancada."""
+        linha = self.linhas.get(linha or self.linha.id)
+        if linha is None:
+            raise ErroDaBancada(404, 'linha desconhecida')
+        eq = linha.equipamento_da_previsao(equipamento)
+        if eq is None:
+            raise ErroDaBancada(404, 'equipamento desconhecido na linha %s: %s' % (linha.id, equipamento))
+        verbo = {v: k for k, v in ACAO_REGISTRADA.items()}.get(acao, acao)
+        acoes = ACOES_DO_EQUIPAMENTO[eq['tipo']]
+        if verbo not in acoes:
+            raise ErroDaBancada(422, 'acao %s nao vale para %s' % (acao, eq['tipo']), {'opcoes': list(acoes)})
+        if linha.id == self.linha.id and self.equipamentos[equipamento] != acoes[verbo][0]:
+            raise ErroDaBancada(409, '%s ja esta %s' % (equipamento, self.equipamentos[equipamento]))
+        if tempo_de_manobra_s is not None and not 0.01 <= float(tempo_de_manobra_s) <= 120.0:
+            raise ErroDaBancada(422, 'o tempo de manobra tem de ficar entre 0,01 e 120 s')
+        if fracao_da_vazao_cortada is not None and not 0.05 <= float(fracao_da_vazao_cortada) <= 1.0:
+            raise ErroDaBancada(422, 'a fracao da vazao cortada tem de ficar entre 0,05 e 1')
+        hid = eq['hidraulica'] or {}
+        sensor = hid.get('sensor_de_referencia') or next(iter(linha.sensores))
+        return P.PG.prever(dict(linha.tubo_da_previsao or {}, id=linha.id), eq, verbo,
+                           float(linha.bar(linha.regime[sensor])), self.limites[linha.id], tempo_de_manobra_s,
+                           fracao_da_vazao_cortada, modo='simulacao', faixa_bar=LN.FAIXA_BAR)
+
+    def _previsao_resumida(self, equipamento, acao):
+        """A previsao da manobra que a bancada vai fazer, para o simulador comparar com o que o alerta medir."""
+        try:
+            p = self.prever_golpe(equipamento, acao)
+        except ErroDaBancada:
+            return None
+        return {k: p.get(k) for k in ('sobe_a_pressao', 'pico_previsto_bar', 'faixa_bar', 'fracao_do_limite', 'nivel',
+                                      'sensor_de_referencia', 'tempo_de_manobra_s', 'fracao_da_vazao_cortada',
+                                      'tempo_minimo_seguro_s', 'explicacao')}
 
     def registrar_operacao(self, equipamento, acao, instante_utc=None, origem='sistema de controle'):
         if acao not in ('abertura', 'fechamento', 'partida', 'parada'):
@@ -447,6 +507,10 @@ class Bancada:
         if not self._confirmar_degrau(registro, t, sinais):
             self.descartadas_como_ruido += 1
             return []
+        antes = self._chegada_anterior_pelo_nivel(registro)
+        if antes is not None:
+            registro['lado_da_origem'] = antes['sensor']
+            registro['chegada_pelo_nivel'] = antes
         saude = self._saude(sinais)
         if self.linha.cadastro:
             sensores_cad = {s: {'posicao_m': v['s_m']} for s, v in self.linha.sensores.items()}
@@ -457,6 +521,10 @@ class Bancada:
                 conf['operacao']['usada'] = True     # a mesma operacao nao explica um segundo evento
                 conf['operacao'] = {k: v for k, v in conf['operacao'].items() if k != 'usada'}
             registro = P.CD.aplicar(registro, conf)
+        if antes is not None:                           # depois do cadastro, que reescreve o motivo
+            registro['motivo'] = '%s; %s de nivel no sensor %s %.3f s antes: a onda veio do lado dele' % (
+                registro.get('motivo', ''), 'queda' if antes['sentido'] < 0 else 'alta', antes['sensor'],
+                antes['antes_da_declarada_s'])
         return [self._montar_evento(registro, saude, t_c, t, sinais)]
 
     def _canais_que_declararam(self, registro):
@@ -480,6 +548,68 @@ class Bancada:
             return True
         limiar = max(6.0 * float(np.std(antes)) / np.sqrt(len(depois)), 3.0 * self.escala()['resolucao_declarada_m'])
         return abs(float(np.mean(depois)) - float(np.mean(antes))) > limiar
+
+    def _chegada_anterior_pelo_nivel(self, registro):
+        """Com um canal so, um sensor que nao declarou mas mostra o mesmo degrau antes (ver o comeco do modulo)."""
+        canais = self._canais_que_declararam(registro)
+        if len(canais) != 1:
+            return None
+        declarado, det = next(iter(canais.items()))
+        tc, polaridade = det.get('tempo_de_chegada_s'), det.get('polaridade')
+        if tc is None or polaridade not in ('queda', 'alta'):
+            return None
+        sentido = -1.0 if polaridade == 'queda' else 1.0
+        inicio = tc - self.linha.espera_s() - 0.05          # a onda nao pode ter passado por outro sensor antes disso
+        na_base = (self.buf_t >= inicio - JANELA_DA_BASE_S) & (self.buf_t < inicio)
+        if np.count_nonzero(na_base) < 200:
+            return None
+
+        def base(x):
+            # reta, e nao media: o resto de uma manobra anterior ainda decaindo nao vira degrau
+            coef = np.polyfit(self.buf_t[na_base] - inicio, x[na_base], 1)
+            return coef, float(np.std(x[na_base] - np.polyval(coef, self.buf_t[na_base] - inicio)))
+
+        # o degrau do sensor que declarou, de 50 a 100 ms depois da chegada
+        coef, _ = base(self.buf[declarado])
+        logo_depois = (self.buf_t >= tc + 0.05) & (self.buf_t < tc + 0.10)
+        if not logo_depois.any():
+            return None
+        degrau = sentido * float(np.mean(self.buf[declarado][logo_depois] - np.polyval(coef, self.buf_t[logo_depois] - inicio)))
+        if degrau <= 0.0:
+            return None
+        n_media = int(0.010 * FS_HZ)
+        piso = 3.0 * self.escala()['resolucao_declarada_m']
+        reprovados = {s for s in self.buf if ((self.saude or {}).get('canal_' + s) or {}).get('falhas')}
+        sel = (self.buf_t >= inicio) & (self.buf_t <= tc)
+        ty = self.buf_t[sel]
+        if len(ty) < 2 * n_media:
+            return None
+        melhor = None
+        for s, x in self.buf.items():
+            if s == declarado or s in reprovados:
+                continue
+            coef, desvio_da_base = base(x)
+            limiar = max(6.0 * desvio_da_base / np.sqrt(n_media), piso)
+            media = np.convolve(x[sel], np.ones(n_media) / n_media, mode='valid')
+            t_media = ty[n_media - 1:] - (n_media - 1) * TS / 2.0 - inicio
+            desvio = sentido * (media - np.polyval(coef, t_media))
+            fora = desvio > limiar
+            # a onda que passou por s bem antes ja mudou o nivel dele pelo menos metade do degrau do declarado
+            if not fora[-1] or desvio[-1] < FRACAO_DO_DEGRAU * degrau:
+                continue
+            # o primeiro ponto a partir do qual o degrau fica mantido ate a chegada declarada
+            dentro = np.nonzero(~fora)[0]
+            i = int(dentro[-1]) + 1 if len(dentro) else 0
+            t_inicio = float(ty[i + n_media - 1])       # fim da primeira janela de media ja fora
+            # origem alem do sensor s so se a onda passou por ele e correu o caminho todo ate o declarado; com
+            # menos, a origem esta entre os dois (vazamento no trecho) e o lado nao se aplica
+            percurso = self.linha.tempo_de_percurso(self.linha.sensores[s]['trecho'], self.linha.sensores[s]['s_m'],
+                                                    declarado)
+            minimo = max(FRACAO_DO_PERCURSO * percurso - self.periodo_de_atualizacao(), FOLGA_DA_CHEGADA_PELO_NIVEL_S)
+            if tc - t_inicio > minimo and (melhor is None or t_inicio < melhor['inicio_s']):
+                melhor = {'sensor': s, 'inicio_s': round(t_inicio, 4), 'antes_da_declarada_s': round(tc - t_inicio, 4),
+                          'sentido': sentido}
+        return melhor
 
     def _montar_evento(self, registro, saude, t_c, t, sinais):
         sensores = {s: {'nome': v['nome'], 'trecho': v['trecho'], 'posicao_m': v['s_m']}

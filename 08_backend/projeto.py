@@ -41,6 +41,7 @@ import alerta as AL  # noqa: E402
 import cadastro as CD  # noqa: E402
 import integracao as IN  # noqa: E402
 import sobrepressao as SP  # noqa: E402
+import previsao_de_golpe as PG  # noqa: E402
 import placa_referencia as PLACA  # noqa: E402
 import preparo as PP  # noqa: E402
 import protocolo as PR  # noqa: E402
@@ -61,7 +62,12 @@ TX = _carregar('detector_linha_cais', os.path.join(PASTAS['detector'], 'linha_ca
 
 def constantes_do_trecho_200():
     """Constantes do trecho de 200 m, lidas de build_model.py sem importar o wntr que ele usa."""
-    with open(os.path.join(PASTAS['bancada'], 'build_model.py'), encoding='utf-8') as f:
+    return constantes_de('build_model.py')
+
+
+def constantes_de(arquivo):
+    """Constantes literais de um script de 02_bancada/codigo, lidas sem importar o wntr que ele usa."""
+    with open(os.path.join(PASTAS['bancada'], arquivo), encoding='utf-8') as f:
         arvore = ast.parse(f.read())
     saida = {}
     for no in arvore.body:

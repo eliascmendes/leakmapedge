@@ -17,6 +17,15 @@ diz o equipamento e a operacao. A operacao contraria que nao foi simulada
 (reabrir a valvula do navio, partir a bomba) usa a mesma onda com o sinal
 trocado. Sem o arquivo de manobras de uma linha, ela fica sem equipamentos.
 
+Previsao do golpe antes da manobra (07_servico/previsao_de_golpe.py): cada
+valvula tem os dados hidraulicos que a previsao usa, todos premissas lidas dos
+scripts das simulacoes de manobra (a vazao que passa por ela, se a onda sai
+para um lado ou para dois, a distancia ate o reservatorio mais proximo e o
+sensor mais perto) e o estudo de transitorios, quando existe
+(03_ensaios/verdade_do_cenario/leakmap_golpe_por_tempo_de_manobra_v1.json,
+de 02_bancada/codigo/golpe_por_tempo_de_manobra.py). A manobra padrao e a que
+a bancada executa: a das simulacoes de manobra.
+
 Posicao na linha: sempre (trecho, s_m). Na linha reta ha um trecho so,
 "principal", com s_m contado como nas simulacoes (a partir do sensor A na
 linha do cais, a partir do inicio no trecho de 200 m). Na rede, s_m conta do
@@ -71,6 +80,8 @@ class Linha:
         self.limite_de_pressao_bar = LIMITE_DE_PRESSAO_BAR.get(ident, 12.0)
         self.origem_do_limite = ORIGEM_DO_LIMITE
         self.manobras = {}                # (equipamento, acao da bancada) -> (molde, sinal)
+        self.hidraulica = {}              # equipamento -> dados da previsao do golpe (07_servico/previsao_de_golpe.py)
+        self.tubo_da_previsao = None      # {'velocidade_de_onda_m_s', 'area_m2', 'bar_por_metro'}
         self.faixa_m = FAIXA_BAR * 1e5 / (self.rho * G)
 
     # --- geometria ---------------------------------------------------------
@@ -107,6 +118,17 @@ class Linha:
             pontos.setdefault((m.trecho, m.s_m), []).append(m.tamanho)
         return [{'trecho': t, 's_m': s, 'tamanhos': sorted(v)} for (t, s), v in sorted(pontos.items())]
 
+    def _resumo_da_hidraulica(self, ident):
+        h = self.hidraulica.get(ident)
+        if not h:
+            return {}
+        return {'vazao_de_regime_m3_s': h['vazao_m3_s'], 'manobra_padrao': h['manobra_padrao'],
+                'estudo_de_transitorios': bool(h.get('estudo'))}
+
+    def equipamento_da_previsao(self, ident):
+        e = next((x for x in self.equipamentos if x['id'] == ident), None)
+        return None if e is None else {'id': ident, 'tipo': e['tipo'], 'hidraulica': self.hidraulica.get(ident)}
+
     def descricao(self, estados_dos_equipamentos=None, limite_bar=None):
         estados = estados_dos_equipamentos or {}
         return {
@@ -120,7 +142,8 @@ class Linha:
                          'vazamento': {'de_s_m': v['vazamento_de_s_m'], 'ate_s_m': v['vazamento_ate_s_m']}}
                         for k, v in self.trechos.items()],
             'sensores': [dict(id=k, **v) for k, v in self.sensores.items()],
-            'equipamentos': [dict(e, estado=estados.get(e['id'], e['estado_inicial'])) for e in self.equipamentos],
+            'equipamentos': [dict(e, estado=estados.get(e['id'], e['estado_inicial']),
+                                  **self._resumo_da_hidraulica(e['id'])) for e in self.equipamentos],
             'referencias': self.referencias,
             'desenho_esquematico': self.desenho,
             'cenarios_tsnet': self.cenarios_tsnet(),
@@ -184,6 +207,29 @@ def _carregar_manobras(linha, amostras_nome, verdade_nome, usa_moldes_de=None):
         {'nome': e['id'], 'tipo': e['tipo'], 'trecho': e['trecho'], 'posicao_m': e['s_m']} for e in linha.equipamentos]}
 
 
+def _estudos_de_golpe():
+    """Resultados das simulacoes de golpe por tempo de manobra, se existirem."""
+    nome = 'leakmap_golpe_por_tempo_de_manobra_v1.json'
+    return _ler(P.VERDADE, nome)['resultados'] if _existe(P.VERDADE, nome) else []
+
+
+def _hidraulica(linha, diametro_m, valvulas, estudos):
+    """Dados da previsao do golpe: `valvulas` = {id: (vazao, ligacoes, distancia de alivio, sensor, fracao, tempo,
+    caso do estudo, equipamento de onde o estudo vem)}."""
+    linha.tubo_da_previsao = {'velocidade_de_onda_m_s': linha.c, 'area_m2': np.pi * diametro_m ** 2 / 4.0,
+                              'bar_por_metro': linha.rho * G / 1e5}
+    for ident, (vazao, ligacoes, alivio, sensor, fracao, tempo, caso, fonte) in valvulas.items():
+        estudo = P.PG.estudo_da_tabela(estudos, caso) if caso else None
+        origem = None
+        if estudo:
+            origem = 'estudo de transitórios da %s (TSNet)' % fonte
+            if fonte != ident:
+                origem += ', emprestado: aqui a reflexão que alivia chega antes, e a previsão fica do lado de cima'
+        linha.hidraulica[ident] = {'vazao_m3_s': vazao, 'ligacoes': ligacoes, 'distancia_de_alivio_m': alivio,
+                                   'sensor_de_referencia': sensor, 'estudo': estudo, 'origem_do_estudo': origem,
+                                   'manobra_padrao': {'fracao_da_vazao_cortada': fracao, 'tempo_de_manobra_s': tempo}}
+
+
 def trecho_200():
     k = P.constantes_do_trecho_200()
     par = _ler(os.path.join(P.RAIZ, '03_ensaios', 'parametros'), 'leakmap_parametros_v1.json')
@@ -210,6 +256,12 @@ def trecho_200():
     linha.moldes_de_vazamento = _moldes_da_linha_reta(linha, amostras, verdade, 0.05)
     _carregar_manobras(linha, 'leakmap_amostras_manobras_trecho_200_v1.json',
                        'leakmap_verdade_manobras_trecho_200_v1.json')
+    # tomadas entre dois reservatorios (em 0 e 200 m): a onda sai para os dois lados; a de 190 m nao tem estudo
+    m = P.constantes_de('manobras_trecho_200.py')
+    _hidraulica(linha, k['DIAMETRO'], {
+        'XV-100': (m['TOMADAS'][100.0], 2, 100.0, 'A', 1.0, m['RAMPA_S'], 'trecho_200_xv100', 'XV-100'),
+        'XV-190': (m['TOMADAS'][190.0], 2, k['L_TRECHO'] - 190.0, 'B', 1.0, m['RAMPA_S'], None, None)},
+        _estudos_de_golpe())
     return linha
 
 
@@ -242,6 +294,16 @@ def cais():
     # a XV-104 nao foi simulada: usa as manobras da XV-106, deslocadas para a posicao dela
     _carregar_manobras(linha, 'leakmap_amostras_manobras_cais_v1.json', 'leakmap_verdade_manobras_cais_v1.json',
                        usa_moldes_de={'XV-104': 'XV-106'})
+    # o reservatorio mais proximo e o tanque de succao, 20 m antes da bomba; a XV-104 usa os dados da XV-106
+    m = P.constantes_de('manobras_cais.py')
+    tanque = pos['bomba'] - 20.0
+    _hidraulica(linha, amostras['premissas']['diametro_interno_m'], {
+        'XV-108': (m['RETIRADA_108_M3_S'], 1, m['POS_NAVIO_108'] - tanque, 'B', 0.5, m['RAMPA_S'],
+                   'cais_xv108', 'XV-108'),
+        'XV-106': (m['RETIRADA_106_M3_S'], 2, pos['berco_106'] - tanque, 'B', 0.5, m['RAMPA_S'],
+                   'cais_xv106', 'XV-106'),
+        'XV-104': (m['RETIRADA_106_M3_S'], 2, pos['berco_104'] - tanque, 'A', 0.5, m['RAMPA_S'],
+                   'cais_xv106', 'XV-106')}, _estudos_de_golpe())
     return linha
 
 
@@ -291,6 +353,13 @@ def rede():
         linha.moldes_de_vazamento.append(Molde(e['id'], v['trecho_real'], v['s_real_m'],
                                                v['tamanho_do_vazamento'], t, deltas, chegadas))
     _carregar_manobras(linha, 'leakmap_amostras_manobras_rede_v1.json', 'leakmap_verdade_manobras_rede_v1.json')
+    # valvulas dos navios no fim de cada ramal; so a do ramal_108 (o mais longo) tem estudo, as outras o emprestam
+    m, mc = P.constantes_de('rede_cais.py'), P.constantes_de('manobras_cais.py')
+    ate_o_manifold = tronco - (bomba - 20.0)
+    _hidraulica(linha, premissas['diametro_interno_m'], {
+        'XV-%s' % k[-3:]: (m['RETIRADA_POR_NAVIO_M3_S'], 1, comp + m['NAVIO_APOS_SENSOR_M'] + ate_o_manifold,
+                           'B%s' % k[-3:], 0.5, mc['RAMPA_S'], 'rede_xv108', 'XV-108')
+        for k, comp in ramais.items()}, _estudos_de_golpe())
     return linha
 
 

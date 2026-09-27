@@ -133,7 +133,59 @@ Os limites são premissas até chegar o dado da planta (`linhas.py`,
 - `GET /api/sobrepressao/eventos`: histórico das sobrepressões;
 - `POST /api/sobrepressao/limite` (com a chave): `{"limite_bar": 10.5, "linha": "cais"}`.
 
-O alerta avisa quando o pico acontece; ele não prevê o pico antes da manobra.
+O alerta avisa quando o pico acontece; para saber antes, a previsão abaixo.
+
+### Previsão do golpe antes da manobra (recurso novo)
+
+Também complementar. Antes de o operador fechar uma válvula,
+`07_servico/previsao_de_golpe.py` calcula o pico previsto, o nível e o tempo
+mínimo de manobra para o pico ficar abaixo de 80% do limite:
+
+1. **o tamanho do golpe**, pela fórmula de Joukowsky, com a válvula como
+   orifício (a vazão que resta cresce com a pressão) e a onda saindo para um
+   lado (fim da linha) ou para dois (meio da linha);
+2. **o alívio pelo tempo de manobra**, pelo estudo de transitórios de cada
+   válvula: `02_bancada/codigo/golpe_por_tempo_de_manobra.py` simula no TSNet
+   o fechamento com vários tempos e frações da vazão. Sem estudo, vale a
+   fórmula de Michaud, marcada como estimativa.
+
+Os dados de cada válvula (vazão, lados, distância até o reservatório, sensor
+de referência, manobra padrão) são premissas lidas dos scripts das
+simulações (`linhas.py`). Conferência contra o TSNet
+(`validar_previsao_de_golpe.py`):
+
+| Casos | Erro da subida prevista |
+|---|---|
+| 41 da tabela do estudo (a parte física e a interpolação) | de -6,1% a +10,7% |
+| 7 de conferência, fora da tabela (30% e 75% da vazão, tempos no meio e além da tabela) | de -16,1% a +2,1% |
+| Só a fórmula de Michaud, sem estudo (os 48) | de -40,8% a +48,7% |
+
+A faixa publicada usa margem de 20% e contém todos os casos. Nas manobras que
+a bancada executa, a previsão bate com o que o alerta mede: XV-108 no cais,
+10,56 bar previstos e 10,55 medidos; XV-100 no trecho de 200 m, 6,54 e 6,55.
+
+- `GET /api/sobrepressao/previsao?equipamento=XV-108&acao=fechar&tempo_de_manobra_s=2`
+  (aberta; não mexe na bancada), com a curva pico × tempo de manobra;
+- a resposta de `POST /api/bancada/equipamento` traz `previsao_do_golpe`, a
+  previsão da manobra que a bancada vai fazer.
+
+Partida de bomba sem previsão: depende da curva da bomba e do jeito de
+partir. A bancada executa sempre a manobra padrão; outros tempos e frações
+são "e se".
+
+**Chegada pelo nível.** Quando só um sensor declara, o cadastro toma o lado
+dele, supondo que o outro ainda não tinha visto a onda. Com a frente lenta da
+parada da bomba, o que não declarou pode ser o mais perto: na linha do cais, 4
+paradas em 50 saíam como "suspeita do lado B, conferir XV-108", com a queda
+tendo passado pelo sensor A 0,57 s antes. A bancada agora olha o nível dos
+outros sensores: se algum mostra o mesmo degrau começando antes da chegada
+declarada por pelo menos 80% do percurso entre os dois, e já mudou pelo menos
+metade do degrau do que declarou, a onda veio de além dele, e o lado é o dele
+(anotado no `motivo`). Resultado: nenhuma parada do lado errado em 100 (linha
+do cais e rede, a partir do regime e logo depois de outras manobras); em 206
+cenários de vazamento, manobra e falha de sensor, com o transmissor rápido e o
+de 100 ms, só a partida da bomba sem registro mudou, para o lado certo (A). O
+detector não muda.
 
 O backend não reescreve nenhuma dessas partes: importa (`projeto.py`). O
 detector só recebe o sinal dos sensores; a posição real vai à parte, no campo
@@ -201,13 +253,12 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
   conferir.
 - Cada operação registrada explica um evento só: depois de usada, não serve
   para outro, mesmo dentro da janela de 5 s.
-- A parada da bomba tem frente lenta (a bomba desacelera), perto do limiar do
-  detector no sensor A: às vezes a onda não é marcada (na rede, a razão de
-  energia fica entre 10 e 23, com limiar 12), e na linha do cais o sensor A
-  às vezes não declara e o evento sai como suspeita do lado B, com
-  "conferir". O detector não foi recalibrado para
-  isso; a conferência do serviço aceita a parada não marcada, mas nunca um
-  alarme.
+- A parada da bomba tem frente lenta (a bomba desacelera): a razão de energia
+  do detector fica entre 10 e 24 em todos os sensores, com limiar 12. Em 50
+  paradas a partir do regime, com o transmissor rápido, 1 na linha do cais e
+  4 na rede não foram marcadas por sensor nenhum: não sai evento (nunca um
+  alarme; a operação estava registrada). O detector não foi recalibrado para
+  isso, e a conferência do serviço aceita a parada não marcada.
 - Vários eventos ao mesmo tempo se somam (superposição linear).
 
 ## Arquivos
@@ -225,12 +276,13 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
 | `pagina_teste.html` | Página de teste (`/teste`) |
 | `cliente.py` | Cliente de linha de comando; grava sessões |
 | `validar_gerador.py` | Conferência do gerador contra o TSNet |
-| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 77 conferências com resultado esperado |
+| `validar_previsao_de_golpe.py` | Conferência da previsão do golpe contra o TSNet (grava `resultados/leakmap_validacao_da_previsao_de_golpe_v1.json`) |
+| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 79 conferências com resultado esperado |
 | `exemplos/` | Sessões gravadas do WebSocket, uma mensagem por linha: vazamento na linha do cais, abertura de válvula sem registro de operação, vazamento na rede |
 | `testes/` | Gerador, bancada ao vivo, manobras nas três linhas, sobrepressão, fluxo contra lote, REST, WebSocket, webhook de ponta a ponta e histórico em SQLite e PostgreSQL |
 
 Testes: `python -m unittest discover -s 08_backend/testes -p "teste_*.py"`
-(44 testes; os 6 do PostgreSQL rodam quando `LEAKMAP_BANCO_DE_TESTE` aponta
+(47 testes; os 6 do PostgreSQL rodam quando `LEAKMAP_BANCO_DE_TESTE` aponta
 para um banco descartável, como no GitHub Actions, job `backend-da-bancada`,
 que sobe um PostgreSQL para eles).
 
@@ -240,12 +292,13 @@ que sobe um PostgreSQL para eles).
 python 08_backend/conferir_servico.py --endereco https://leakmap-bancada.onrender.com --chave <chave>
 ```
 
-Roda 77 conferências com resultado esperado conhecido: consultas, chave,
+Roda 79 conferências com resultado esperado conhecido: consultas, chave,
 erros de validação, WebSocket (taxa, pressão de regime contra o TSNet, perfil
 do operador), vazamentos na linha do cais, na rede e no trecho de 200 m,
 manobras com e sem registro de operação nas três linhas, autoteste, gás,
 transmissor lento, histórico, webhook, sobrepressão (atenção no fechamento
-da XV-108, o mesmo episódio encerrando, e alarme com o limite em 10,5 bar) e
+da XV-108, o mesmo episódio encerrando, alarme com o limite em 10,5 bar, e a
+previsão antes da manobra com o pico medido dentro da faixa prevista) e
 20 s de regime sem falso alarme. No fim devolve a bancada ao estado inicial. Como o serviço é compartilhado, não começa se houver alguém
 conectado ao WebSocket, a menos que se use `--forcar`. `--relatorio
 arquivo.json` grava o resultado; `--grupos manobras,sobrepressao` roda só

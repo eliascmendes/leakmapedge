@@ -188,6 +188,45 @@ class BancadaAoVivo(unittest.TestCase):
         e = rodar(b, 35)[0]['evento']
         self.assertEqual((e['nivel'], e['cadastro']['equipamento']), ('registro', 'B-01'))
 
+    def test_parada_da_bomba_so_com_o_sensor_b_declarando_sai_do_lado_a(self):
+        # com este ruido, a frente lenta da parada nao passa do limiar no sensor A, so no B, 0,57 s depois;
+        # sem a chegada pelo nivel, saia "suspeita do lado B, conferir XV-108"
+        b = nova()
+        rodar(b, 20)
+        b.equipamento('B-01', 'parar', True)
+        e = rodar(b, 30)[0]['evento']
+        self.assertEqual((e['nivel'], e['lado'], e['cadastro']['equipamento']), ('registro', 'A', 'B-01'))
+        self.assertIn('queda de nivel no sensor A', e['motivo'])
+        self.assertFalse(e['canais']['A']['detectou'])
+
+    def test_previsao_do_golpe_bate_com_o_que_o_alerta_mede(self):
+        b = nova()
+        p = b.prever_golpe('XV-108', 'fechar')
+        self.assertEqual((p['nivel'], p['sensor_de_referencia'], p['metodo']), ('atencao', 'B', 'estudo'))
+        r = b.equipamento('XV-108', 'fechar', True)
+        self.assertAlmostEqual(r['previsao_do_golpe']['pico_previsto_bar'], p['pico_previsto_bar'])
+        msgs = []
+        for _ in range(40):
+            msgs += [m for m in b.passo()[2] if m['tipo'] == 'sobrepressao']
+        medido = msgs[0]['evento']['pico_bar']
+        self.assertTrue(p['faixa_bar'][0] <= medido <= p['faixa_bar'][1], (p['faixa_bar'], medido))
+        # a valvula do berco 106, no meio da linha, com menos vazao: golpe pequeno; abrir nunca sobe a pressao
+        self.assertIsNone(b.prever_golpe('XV-106', 'fechar')['nivel'])
+        self.assertFalse(b.prever_golpe('XV-104', 'abrir')['sobe_a_pressao'])
+
+    def test_previsao_do_golpe_erros_e_outras_linhas(self):
+        b = nova()
+        for args, codigo in ((('XV-104', 'fechar'), 409), (('XV-999', 'fechar'), 404), (('XV-108', 'partir'), 422)):
+            with self.assertRaises(BA.ErroDaBancada) as erro:
+                b.prever_golpe(*args)
+            self.assertEqual(erro.exception.codigo, codigo)
+        with self.assertRaises(BA.ErroDaBancada):
+            b.prever_golpe('XV-108', 'fechar', tempo_de_manobra_s=500)
+        p = b.prever_golpe('XV-100', 'fechar', linha='trecho_200')
+        self.assertEqual((p['linha'], p['nivel'], p['metodo']), ('trecho_200', 'atencao', 'estudo'))
+        self.assertEqual(b.prever_golpe('XV-190', 'fechar', linha='trecho_200')['metodo'], 'michaud')
+        self.assertIn('Sem previsão', b.prever_golpe('B-01', 'partir', linha='rede')['explicacao'])
+
     def test_sobrepressao_no_fechamento_da_valvula_do_navio(self):
         b = nova()
         b.equipamento('XV-108', 'fechar', True)
@@ -407,6 +446,13 @@ class Api(unittest.TestCase):
         self.c.post('/api/sobrepressao/limite', json={'limite_bar': 12.0}, headers=self.chave)
         self.assertIsInstance(self.c.get('/api/sobrepressao/eventos').json(), list)
         self.assertEqual(self.c.get('/api/linhas/cais').json()['limite_de_pressao_bar'], 12.0)
+        p = self.c.get('/api/sobrepressao/previsao', params={'equipamento': 'XV-108', 'tempo_de_manobra_s': 5}).json()
+        self.assertEqual((p['acao'], p['tempo_de_manobra_s']), ('fechamento', 5.0))
+        self.assertLess(p['pico_previsto_bar'], 10.0)
+        self.assertEqual(self.c.get('/api/sobrepressao/previsao', params={'equipamento': 'XV-108',
+                                                                          'acao': 'girar'}).status_code, 422)
+        eq = next(e for e in self.c.get('/api/linhas/cais').json()['equipamentos'] if e['id'] == 'XV-108')
+        self.assertEqual(eq['manobra_padrao'], {'fracao_da_vazao_cortada': 0.5, 'tempo_de_manobra_s': 0.3})
 
     def test_perfil_operador_nao_recebe_a_verdade(self):
         msg = {'tipo': 'evento', 'evento': {}, 'verdade': {'s_m': 1.0}}

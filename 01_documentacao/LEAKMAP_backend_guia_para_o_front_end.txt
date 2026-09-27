@@ -8,6 +8,63 @@
 O backend da bancada virtual está pronto, publicado e conferido. Este guia
 mostra o que ele entrega e o que isso torna possível construir.
 
+
+-------------------------------------------------------------------------------
+NOVIDADES E MUDANÇAS DESTA VERSÃO (27/09/2026)
+-------------------------------------------------------------------------------
+
+O centro do LEAKMAP continua o mesmo: detectar o vazamento e dizer onde ele
+está. As novidades 1 e 2 são recursos complementares, que entram agora ao
+lado disso. Nada do que já existia mudou de formato: só entraram campos,
+rotas e uma mensagem novos.
+
+  1. NOVO · Previsão do golpe antes da manobra (seção B15)
+     Antes de o operador fechar uma válvula, o backend responde: qual o pico
+     de pressão previsto, se ele cai em atenção ou alarme e em quanto tempo,
+     no mínimo, a manobra tem de ser feita para ficar seguro. Exemplo: fechar
+     a XV-108 como a bancada fecha dá 10,56 bar previstos (o alerta mede
+     10,55); fechando em pelo menos 3 s, o pico fica abaixo de 80% do limite.
+       - rota nova GET /api/sobrepressao/previsao (aberta, não mexe na
+         bancada), com a curva "pico × tempo de manobra" pronta para um
+         gráfico;
+       - o comando de manobra (POST /api/bancada/equipamento) devolve também
+         a previsão da manobra que vai fazer ("previsao_do_golpe"), para o
+         simulador mostrar previsto × medido;
+       - cada válvula em GET /api/linhas traz "vazao_de_regime_m3_s",
+         "manobra_padrao" e "estudo_de_transitorios".
+
+  2. NOVO · Alerta de sobrepressão (seção B14)
+     Avisa quando uma manobra leva a pressão para perto do limite da linha
+     (atenção a partir de 80%, alarme a partir de 95%), com a manobra que
+     provavelmente causou. Mensagem própria no WebSocket, "sobrepressao",
+     separada dos eventos de vazamento; histórico e rotas próprios.
+
+  3. CORREÇÃO · Parada da bomba sai do lado certo
+     A queda de pressão da bomba parando começa suave, e às vezes só o sensor
+     do outro lado disparava: o evento saía "suspeita do lado B, conferir
+     XV-108". Agora a bancada confere o nível dos outros sensores e o evento
+     sai "registro, lado A, B-01". Em 100 paradas simuladas, nenhuma saiu do
+     lado errado. Poucas vezes (2 a 8%) a parada não é marcada: não sai
+     evento, nunca alarme.
+
+  4. MUDANÇA · Manobras voltam ao regime
+     Depois de uma manobra, a pressão volta ao regime em alguns segundos
+     (antes, o fim do transitório simulado ficava parado na tela). Entre
+     duas manobras, esperar uns 5 s: com menos, a onda da segunda pode se
+     perder no transitório da primeira (A4).
+
+  5. MUDANÇA · Histórico em PostgreSQL ligado no Render
+     Eventos e sobrepressões sobrevivem a reinícios e publicações (conferido:
+     um evento gravado antes de uma publicação continuou no histórico depois
+     dela).
+
+  6. A conferência automática do serviço passou de 72 para 79 verificações,
+     com a sobrepressão e a previsão.
+
+Detalhes de cada campo novo em B13 (lista de mudanças) e nas seções B14 e
+B15.
+
+
   PARTE A (logo abaixo, leitura rápida)
     A1  O que o backend entrega
     A2  O que dá para fazer no dashboard do operador
@@ -20,13 +77,7 @@ mostra o que ele entrega e o que isso torna possível construir.
     B5 convenções · B6 linhas · B7 rotas REST · B8 exemplos de resposta ·
     B9 mensagens do WebSocket · B10 de onde vêm os sinais · B11 pendências ·
     B12 perguntas · B13 mudanças desde a proposta · B14 alerta de
-    sobrepressão (recurso novo)
-
-NOVO NESTA VERSÃO: alerta de sobrepressão. É um recurso complementar, que
-entra agora ao lado do principal (detecção e localização de vazamento, que não
-mudou): avisa quando uma manobra leva a pressão para perto do limite da linha.
-Chega por uma mensagem própria, "sobrepressao", separada dos eventos de
-vazamento. Resumo em A1, ideias em A2 e A3, referência completa em B14.
+    sobrepressão · B15 previsão do golpe antes da manobra
 
 O dashboard do operador e o simulador da bancada são construídos pela equipe
 de front-end. As ideias da parte A são possibilidades abertas pelo backend,
@@ -119,6 +170,14 @@ O que já funciona, medido no serviço publicado:
     histórico, outra escala. O limite de cada linha é premissa até chegar o
     dado da planta e pode ser mudado pela API.
 
+  Previsão do golpe antes da manobra (recurso novo, complementar)
+    O alerta acima avisa depois que o pico aconteceu. A previsão responde
+    antes: "se fechar a XV-108 em 0,3 s, o pico previsto é 10,56 bar, 88%
+    do limite: atenção; faça a manobra em pelo menos 3 s". Usa a física do
+    golpe de aríete (Joukowsky) e o estudo de transitórios de cada válvula
+    (simulado no TSNet). Conferida contra o TSNet em 48 casos: erro de -16% a
+    +11% no tamanho do golpe; a faixa publicada usa margem de 20%.
+
   Integração com a empresa
     - webhook: cada evento sai também por HTTP POST para a automação da
       empresa (n8n, Node-RED, sistema de controle); pronto, falta o destino;
@@ -132,7 +191,7 @@ O que já funciona, medido no serviço publicado:
     - /teste: página de teste que usa todas as ações e mensagens;
     - sessões gravadas do WebSocket (08_backend/exemplos/), para montar as
       telas sem o backend no ar;
-    - conferência automática do serviço: 77 verificações com resultado
+    - conferência automática do serviço: 79 verificações com resultado
       esperado.
 
 
@@ -182,6 +241,13 @@ tudo o que o sistema real mandaria, sem a verdade da simulação.
   do de vazamentos
   (novo) Linha de limite no gráfico de         linha: limite_de_pressao_bar
   pressão ao vivo (e as faixas de 80% e 95%)
+  (novo) Checagem antes de operar: o operador  GET /api/sobrepressao/previsao
+  escolhe a válvula e o tempo de manobra e vê  (equipamento, acao,
+  o pico previsto, o nível e o tempo mínimo    tempo_de_manobra_s)
+  seguro
+  (novo) Gráfico "pico × tempo de manobra"     previsao: curva
+  de uma válvula, com as faixas de atenção e
+  alarme
 
 Sobrepressão e vazamento são coisas diferentes para o operador: o vazamento
 pede isolar e ir ao ponto; a sobrepressão pede rever a manobra (fazer mais
@@ -224,6 +290,12 @@ os comandos, com a chave.
   bonito da demo)
   (novo) Controle do limite de pressão da      POST /api/sobrepressao/limite
   linha, para mostrar atenção virando alarme
+  (novo) Previsto × medido: ao clicar numa     resposta do comando:
+  válvula, mostrar o pico previsto; quando o   previsao_do_golpe; depois a
+  alerta chega, comparar com o medido          mensagem "sobrepressao"
+  (novo) "E se fechar mais devagar?": um       GET /api/sobrepressao/previsao
+  controle de tempo de manobra que redesenha   com tempo_de_manobra_s
+  o pico previsto
 
 Uma sequência que conta a história do LEAKMAP em poucos minutos, com o que o
 backend já faz:
@@ -250,6 +322,10 @@ E, se sobrar tempo, o recurso novo (depois da história principal):
      limite de 12 bar, causado pelo fechamento da XV-108. Abrir a XV-108,
      esperar uns 10 s, baixar o limite para 10,5 bar e fechar de novo: o
      mesmo golpe vira alarme. Voltar o limite para 12 bar no fim.
+ 10. Antes de fechar, perguntar a previsão: 10,56 bar previstos, atenção,
+     "faça em pelo menos 3 s". Fechar e ver o alerta medir 10,55 bar, dentro
+     da faixa prevista. Mostrar a curva: fechando a válvula inteira (100% da
+     vazão) em 0,3 s, o pico passaria de 18 bar; em 9 s, fica seguro.
 
 O que cada ação provoca (para escrever os textos da tela):
 
@@ -259,11 +335,9 @@ O que cada ação provoca (para escrever os textos da tela):
   Romper antes do sensor A (ou depois  suspeita, "fora do trecho", com o lado
   do sensor da ponta)
   Manobra com registro de operação     registro (não alarma)
-  Parar a bomba                        em geral registro; a frente é lenta e
-                                       às vezes não é marcada, ou (linha do
-                                       cais) sai como suspeita do lado B,
-                                       "conferir": limite conhecido do
-                                       detector, nunca vira alarme
+  Parar a bomba                        registro, lado A; a frente é lenta e,
+                                       poucas vezes (2 a 8%), não é marcada:
+                                       não sai evento, nunca alarme
   Abrir válvula sem registro           linha do cais (XV-106) e trecho de
                                        200 m (XV-100): provável na posição da
                                        válvula, com "conferir"; rede (válvulas
@@ -580,6 +654,8 @@ B7.1 Consultas (abertas)
                                  último episódio de sobrepressão (B14)
   GET /api/sobrepressao/eventos  (novo) histórico das sobrepressões, com os
                                  mesmos filtros de /api/eventos
+  GET /api/sobrepressao/previsao (novo) previsão do pico de uma manobra, antes
+                                 de fazer; não mexe na bancada (B15)
 
 B7.2 Comandos da bancada (exigem a chave)
 
@@ -625,7 +701,11 @@ WebSocket para todos os conectados.
        suspeita, "do lado B106, onde fica XV-106: conferir". Cada operação
        registrada explica um evento só.
        Resultado: {"id": "mn-3", "equipamento": "XV-106", "estado": "aberta",
-                   "operacao_registrada": true, "fonte_usada": "tsnet"}
+                   "operacao_registrada": true, "fonte_usada": "tsnet",
+                   "previsao_do_golpe": {...}}
+       "previsao_do_golpe" (novo) é a previsão da manobra que a bancada vai
+       fazer, feita antes dela (resumo da resposta de B15: pico previsto,
+       faixa, nível, tempo mínimo seguro, explicação).
        Entre duas manobras, esperar uns 5 s (ver A4): com menos, a onda da
        segunda pode se perder no transitório da primeira.
        Nas três linhas (equipamentos em B6). 404 para equipamento que não
@@ -739,7 +819,10 @@ B8.1 GET /api/linhas/cais  (equipamentos e cenários resumidos)
     {"id": "B-01", "tipo": "bomba", "trecho": "principal", "s_m": -300.0,
      "estado_inicial": "ligada", "estado": "ligada"},
     {"id": "XV-106", "tipo": "valvula", "trecho": "principal", "s_m": 450.0,
-     "estado_inicial": "aberta", "estado": "aberta"}
+     "estado_inicial": "aberta", "estado": "aberta",
+     "vazao_de_regime_m3_s": 0.015,
+     "manobra_padrao": {"fracao_da_vazao_cortada": 0.5, "tempo_de_manobra_s": 0.3},
+     "estudo_de_transitorios": true}
   ],
   "referencias": [
     {"nome": "bomba", "trecho": "principal", "s_m": -300.0},
@@ -1066,15 +1149,17 @@ B11. O QUE AINDA NÃO ESTÁ NO BACKEND
   - CORS restrito aos endereços das telas (depende de B12).
 
   - Limites de pressão reais das linhas (hoje premissas, B6 e B14).
-  - Previsão do pico ANTES da manobra (hoje o alerta de sobrepressão avisa
-    quando o pico acontece).
+  - Previsão do golpe na partida de bomba (depende da curva da bomba e do
+    jeito de partir, que não estão no cadastro) e estudo de transitórios da
+    linha real (hoje, das linhas simuladas; B15).
 
   Pronto no backend, mas depende de configuração no Render:
   - Webhook: falta o endereço de destino (LEAKMAP_WEBHOOK_URL).
 
 Para conferir o serviço depois de qualquer mudança, a equipe do backend roda
-08_backend/conferir_servico.py: 77 conferências com resultado esperado,
-incluindo manobras nas três linhas, a sobrepressão e o webhook.
+08_backend/conferir_servico.py: 79 conferências com resultado esperado,
+incluindo manobras nas três linhas, a sobrepressão, a previsão do golpe e o
+webhook.
 
 
 -------------------------------------------------------------------------------
@@ -1129,6 +1214,14 @@ Para quem começou pela versão 0 deste guia:
     existia mudou de formato.
   - Depois de uma manobra, a pressão volta ao regime em alguns segundos
     (antes, o fim do transitório simulado ficava parado na tela).
+  - Recurso novo: previsão do golpe antes da manobra (B15), com
+    GET /api/sobrepressao/previsao, "previsao_do_golpe" na resposta de
+    POST /api/bancada/equipamento e "vazao_de_regime_m3_s",
+    "manobra_padrao" e "estudo_de_transitorios" nas válvulas de
+    GET /api/linhas.
+  - Parada da bomba: quando só o sensor do lado errado disparava, a bancada
+    agora confere o nível dos outros sensores e o evento sai do lado certo
+    (o "motivo" ganha a anotação "queda de nivel no sensor A ... s antes").
 
 
 -------------------------------------------------------------------------------
@@ -1272,3 +1365,142 @@ Os limites (12 bar no cais e na rede, 8 bar no trecho de 200 m) são
 premissas até chegar a pressão máxima admissível real de cada linha. Com os
 limites de agora, as manobras da bancada chegam no máximo a atenção (tabela
 em A3); para mostrar o alarme, baixar o limite pela API.
+
+Para saber o pico ANTES da manobra, ver B15.
+
+
+-------------------------------------------------------------------------------
+B15. PREVISÃO DO GOLPE ANTES DA MANOBRA (recurso novo)
+-------------------------------------------------------------------------------
+
+O que é. O alerta de sobrepressão (B14) avisa depois que o pico aconteceu. A
+previsão responde antes de o operador mexer na válvula: qual o pico de
+pressão previsto, em que nível ele cai (atenção, alarme) e em quanto tempo,
+no mínimo, a manobra tem de ser feita para o pico ficar abaixo de 80% do
+limite. É consulta: não mexe na bancada. Como o alerta, é recurso
+complementar; a detecção de vazamento não muda.
+
+Como calcula, em linguagem simples:
+  1. O tamanho do golpe. Frear o produto de repente sobe a pressão na
+     proporção da velocidade que foi freada, da densidade do produto e da
+     velocidade da onda no tubo (fórmula de Joukowsky). Uma válvula no fim da
+     linha (a do navio) manda a onda para um lado só; uma no meio, para os
+     dois, e o golpe cai pela metade. Uma válvula que fecha só em parte ainda
+     deixa passar produto, mais com a pressão alta.
+  2. O alívio pelo tempo. Fechando devagar, a onda refletida volta antes de a
+     válvula terminar e alivia o pico. Quanto, depende da geometria da linha;
+     o backend usa o estudo de transitórios de cada válvula (simulado no
+     TSNet com vários tempos de manobra), como se faz na planta. Válvula sem
+     estudo usa uma fórmula aproximada (Michaud), e a previsão avisa
+     ("metodo": "michaud").
+
+Quanto acerta (conferido contra o TSNet em 48 casos): erro de -16% a +11%
+no tamanho do golpe; só com a fórmula aproximada, sem estudo, o erro iria de
+-41% a +49%. A faixa publicada ("faixa_bar") usa margem de 20% e contém todos
+os casos conferidos; o tempo mínimo seguro usa o lado de cima da faixa.
+
+Rota:
+  GET /api/sobrepressao/previsao?equipamento=XV-108&acao=fechar
+      &tempo_de_manobra_s=0.3&fracao_da_vazao_cortada=0.5&linha=cais
+    equipamento  obrigatório
+    acao         "fechar" (padrão), "abrir", "partir", "parar" (ou
+                 "fechamento", "abertura", "partida", "parada")
+    tempo_de_manobra_s, fracao_da_vazao_cortada
+                 opcionais; sem eles, vale a manobra que a bancada faz
+                 ("manobra_padrao" da válvula em GET /api/linhas). Tempo de
+                 0,01 a 120 s; fração de 0,05 a 1 (1 = fechar a válvula
+                 inteira).
+    linha        opcional; sem ela, a linha ativa. Dá para prever manobras
+                 de outra linha sem trocar a bancada.
+  Erros: 404 equipamento desconhecido; 409 a válvula já está no estado
+  pedido (na linha ativa); 422 ação ou valor fora das opções.
+
+Resposta (exemplo real, linha do cais, fechar a XV-108 como a bancada fecha):
+
+{
+  "tipo": "leakmap.previsao_de_golpe",
+  "versao": "1",
+  "linha": "cais",
+  "equipamento": "XV-108",
+  "acao": "fechamento",
+  "tempo_de_manobra_s": 0.3,
+  "fracao_da_vazao_cortada": 0.5,
+  "limite_bar": 12.0,
+  "sensor_de_referencia": "B",
+  "pressao_de_regime_bar": 6.153,
+  "modo": "simulacao",
+  "sobe_a_pressao": true,
+  "pico_previsto_bar": 10.558,
+  "subida_prevista_bar": 4.405,
+  "fracao_do_limite": 0.88,
+  "nivel": "atencao",
+  "faixa_bar": [9.677, 11.439],
+  "golpe_maximo_bar": 4.405,
+  "fator_do_tempo": 1.0,
+  "tempo_minimo_seguro_s": 3.0,
+  "metodo": "estudo",
+  "curva": [
+    {"tempo_de_manobra_s": 0.3, "pico_previsto_bar": 10.558, "nivel": "atencao"},
+    {"tempo_de_manobra_s": 0.6, "pico_previsto_bar": 10.342, "nivel": "atencao"},
+    {"tempo_de_manobra_s": 1.0, "pico_previsto_bar": 10.13, "nivel": "atencao"},
+    {"tempo_de_manobra_s": 1.5, "pico_previsto_bar": 10.035, "nivel": "atencao"},
+    {"tempo_de_manobra_s": 2.0, "pico_previsto_bar": 9.665, "nivel": "atencao"},
+    {"tempo_de_manobra_s": 3.0, "pico_previsto_bar": 9.009, "nivel": null},
+    {"tempo_de_manobra_s": 5.0, "pico_previsto_bar": 7.866, "nivel": null},
+    {"tempo_de_manobra_s": 8.0, "pico_previsto_bar": 7.224, "nivel": null}
+  ],
+  "explicacao": "Fechar a XV-108 cortando 50% da vazão em 0,3 s: pico previsto de 10,56 bar (sensor B), 88% do limite de 12,00 bar: atenção. Para ficar abaixo de 80% do limite, faça a manobra em pelo menos 3,0 s. Alívio pelo tempo de manobra: estudo de transitórios da XV-108 (TSNet). Previsão com premissas (vazão, diâmetro, limite), com margem de 20% na subida."
+}
+
+Os campos:
+  sobe_a_pressao     false para abrir uma válvula ou parar a bomba: a
+                     pressão cai, não há risco de sobrepressão (o pico
+                     previsto é a própria pressão de regime).
+  pico_previsto_bar  pressão prevista no sensor de referência (o mais perto
+                     da válvula), onde o alerta de B14 vai medir.
+  faixa_bar          o pico com a margem de 20% na subida: onde o valor real
+                     deve cair.
+  nivel              null, "atencao" ou "alarme", pela mesma escala do alerta.
+  tempo_minimo_seguro_s
+                     menor tempo de manobra com o lado de cima da faixa
+                     abaixo de 80% do limite; 0 quando qualquer tempo serve;
+                     null quando a pressão de regime já está perto do limite.
+  metodo             "estudo" (estudo de transitórios da válvula) ou
+                     "michaud" (fórmula aproximada, sem estudo).
+  curva              o pico previsto para vários tempos de manobra (mais o
+                     pedido): pronta para o gráfico "pico × tempo".
+  golpe_maximo_bar, fator_do_tempo
+                     o golpe de uma manobra instantânea e quanto dele sobra
+                     no tempo pedido (pico = regime + golpe × fator).
+  explicacao         texto pronto para a tela.
+
+Partida de bomba: sem previsão ("pico_previsto_bar": null e a explicação diz
+por quê: depende da curva da bomba e do jeito de partir, que não estão no
+cadastro).
+
+Previsões das manobras da bancada (manobra padrão, limites-premissa):
+
+  Linha       Válvula  Manobra                 Pico previsto  Nível    Tempo mínimo
+  ----------  -------  ----------------------  -------------  -------  ------------
+  cais        XV-108   fecha 50% em 0,3 s      10,56 bar      atenção  3,0 s
+  cais        XV-108   fecha 100% em 0,3 s     18,92 bar      alarme   8,7 s
+  cais        XV-106   fecha 50% em 0,3 s       7,25 bar      -        qualquer
+  rede        XV-104   fecha 50% em 0,3 s       8,74 bar      -        qualquer
+  rede        XV-106   fecha 50% em 0,3 s       8,71 bar      -        qualquer
+  rede        XV-108   fecha 50% em 0,3 s       8,68 bar      -        qualquer
+  trecho_200  XV-100   fecha 100% em 0,02 s     6,54 bar      atenção  0,3 s
+  trecho_200  XV-190   fecha 100% em 0,02 s     5,81 bar      -        qualquer
+                                                (michaud)
+
+Onde o alerta já mediu a mesma manobra, bate: XV-108 no cais, previsto
+10,56 bar, medido 10,55; XV-100 no trecho de 200 m, previsto 6,54, medido
+6,55.
+
+Limites que valem dizer na apresentação:
+  - Tudo é premissa até chegarem os dados da planta: vazão de cada válvula,
+    diâmetro, limite de pressão e o estudo de transitórios da linha real.
+  - A bancada executa sempre a sua manobra padrão; a previsão de outros
+    tempos e frações é "e se", conferida contra o TSNet, mas a bancada não
+    tem o sinal dessas manobras para mostrar.
+  - A pressão é prevista onde há sensor. Entre os sensores, ou no próprio
+    braço de carregamento, o pico pode ser um pouco diferente.

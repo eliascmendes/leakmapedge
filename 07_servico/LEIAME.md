@@ -15,7 +15,8 @@ evento num formato fixo, por webhook.
 | [`cadastro.exemplo.json`](cadastro.exemplo.json) | Cadastro de exemplo da linha simulada do cais |
 | [`cadastro_linha_cais.py`](cadastro_linha_cais.py) | Aplica o cadastro aos ensaios da linha do cais e grava `resultados/` |
 | [`sobrepressao.py`](sobrepressao.py) | Alerta de sobrepressão (golpe de aríete): recurso complementar, à parte da detecção de vazamento |
-| [`testes/`](testes) | Escala, evento, cadastro, sobrepressão e webhook de ponta a ponta com o receptor |
+| [`previsao_de_golpe.py`](previsao_de_golpe.py) | Previsão do pico de pressão antes da manobra, com o tempo mínimo seguro de fechamento |
+| [`testes/`](testes) | Escala, evento, cadastro, sobrepressão, previsão do golpe e webhook de ponta a ponta com o receptor |
 
 ## Escala de alerta
 
@@ -145,7 +146,7 @@ dado da planta):
 - A pressão só é medida onde há sensor: entre eles o pico pode ser maior. Um
   pico acima da faixa do transmissor fica cortado, e o evento avisa
   (`pico_pode_ser_maior`).
-- O alerta avisa quando o pico acontece; não é previsão.
+- O alerta avisa quando o pico acontece; a previsão, abaixo, responde antes.
 
 Campos principais do evento: `id`, `revisao`, `nivel`, `em_curso`,
 `limite_bar`, `origem_do_limite`, `pico_bar`, `fracao_do_limite`,
@@ -153,6 +154,35 @@ Campos principais do evento: `id`, `revisao`, `nivel`, `em_curso`,
 `causa_provavel`, `pico_pode_ser_maior`, `explicacao`. Pelo webhook, sai com
 os níveis próprios, sem passar pelo filtro de níveis de vazamento (ver o
 backend, `08_backend/repasse.py`).
+
+## Previsão do golpe antes da manobra (`leakmap.previsao_de_golpe`, versão 1)
+
+Recurso complementar, como o alerta. [`previsao_de_golpe.py`](previsao_de_golpe.py)
+responde, antes de o operador mexer numa válvula: o pico previsto, o nível
+(atenção, alarme) e o tempo mínimo de manobra para o pico ficar abaixo de 80%
+do limite.
+
+- **Tamanho do golpe (Joukowsky):** `dH = c / (g A n) * (Q0 - Q1)`, com `n` =
+  1 no fim da linha e 2 no meio; a válvula que fica parcialmente aberta é um
+  orifício, `Q1 = (1 - f) Q0 raiz(1 + dH/H0)`. Resolvido por bisseção.
+- **Alívio pelo tempo de manobra:** pelo estudo de transitórios da válvula
+  (tabela tempo → fração do golpe máximo, simulada uma vez por válvula, como
+  se faz na planta); além da tabela, cai com 1/t. Sem estudo, Michaud,
+  `(2L/c) / t`, marcado como estimativa.
+- Abrir uma válvula ou parar uma bomba derruba a pressão: sem risco. Partida
+  de bomba: sem previsão (curva da bomba e jeito de partir fora do cadastro).
+
+Conferência contra o TSNet (`08_backend/validar_previsao_de_golpe.py`):
+
+| Casos | Erro da subida prevista |
+|---|---|
+| 41 da tabela do estudo (a parte física e a interpolação) | de -6,1% a +10,7% |
+| 7 de conferência, fora da tabela (30% e 75% da vazão, tempos no meio e além da tabela) | de -16,1% a +2,1% |
+| Só a fórmula de Michaud, sem estudo (os 48) | de -40,8% a +48,7% |
+
+`MARGEM` = 20%: a faixa publicada contém todos os casos, e o tempo mínimo
+seguro usa o lado de cima dela. Tudo é premissa até chegarem a vazão de cada
+válvula, o diâmetro, o limite e o estudo de transitórios da linha real.
 
 ## Ligar o webhook
 

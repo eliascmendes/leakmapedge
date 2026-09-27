@@ -265,9 +265,10 @@ class Conferencia:
                       e.get('nivel') == 'provavel' and abs((e.get('posicao_m') or 0) - 450.0) < 2.0,
                       '%s %s m' % (e.get('nivel'), e.get('posicao_m')))
         e = await operar('B-01', 'parar', True)
-        # frente lenta da bomba, perto do limiar do detector (ver manobras_nas_outras_linhas): pode nao ser marcada
-        self.conferir(g, 'parar a bomba com registro: sem alarme (registro, ou nao marcada)',
-                      e == {} or e.get('nivel') == 'registro',
+        # frente lenta da bomba, perto do limiar do detector (ver manobras_nas_outras_linhas): pode nao ser marcada;
+        # marcada, sai do lado A (a chegada pelo nivel da bancada corrige o lado quando so o sensor B declara)
+        self.conferir(g, 'parar a bomba com registro: registro do lado A, ou nao marcada',
+                      e == {} or (e.get('nivel') == 'registro' and e.get('lado') == 'A'),
                       'frente lenta nao marcada' if e == {} else '%s lado %s' % (e.get('nivel'), e.get('lado')))
         await operar('B-01', 'partir', True)
         await self.preparar('cais', 'rapido')
@@ -326,11 +327,19 @@ class Conferencia:
         st, s = await self.api('GET', '/api/sobrepressao')
         self.conferir(g, 'GET /api/sobrepressao com o limite da linha', st == 200 and s.get('limite_bar') == 12.0,
                       '%s bar' % s.get('limite_bar'))
+        st, prev = await self.api('GET', '/api/sobrepressao/previsao?equipamento=XV-108&acao=fechar')
+        self.conferir(g, 'previsao antes de fechar a XV-108: atencao, tempo minimo seguro',
+                      st == 200 and prev.get('nivel') == 'atencao' and (prev.get('tempo_minimo_seguro_s') or 0) > 0.3,
+                      '%s bar, %s, pelo menos %s s' % (prev.get('pico_previsto_bar'), prev.get('nivel'),
+                                                       prev.get('tempo_minimo_seguro_s')))
         self.limpar_fila()
         await self.comando('/api/bancada/equipamento', {'equipamento': 'XV-108', 'acao': 'fechar',
                                                         'registrar_operacao': True})
         sp = [m['evento'] for m in await self.mensagens_por(7.0) if m['tipo'] == 'sobrepressao']
         abre = sp[0] if sp else {}
+        faixa = prev.get('faixa_bar') or [0, 0]
+        self.conferir(g, 'o pico medido cai na faixa prevista', faixa[0] <= (abre.get('pico_bar') or -1) <= faixa[1],
+                      'medido %s, previsto de %s a %s bar' % (abre.get('pico_bar'), faixa[0], faixa[1]))
         self.conferir(g, 'fechar XV-108: atencao, pico de 10 a 11 bar no sensor B, causa XV-108',
                       abre.get('nivel') == 'atencao' and abre.get('sensor_do_pico') == 'B'
                       and 10.0 <= (abre.get('pico_bar') or 0) <= 11.0

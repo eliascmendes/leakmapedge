@@ -1,0 +1,926 @@
+{
+ "descricao": "Golpe de ariete por tempo de manobra, para conferir a previsao do pico antes da manobra (07_servico/previsao_de_golpe.py). Cargas em metro de coluna do produto (diesel no cais e na rede, agua no trecho de 200 m).",
+ "metodo": "TSNet, add_demand_pulse: a retirada do no cai pela fracao, em rampa linear; passo de 0.002 s (0.001 s no trecho de 200 m)",
+ "resultados": [
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 43.900473277278095,
+    "B": 53.447625922290484
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 53.49972648965526
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 40.137166534019784,
+    "B": 50.65327796405256
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 50.873031886806544
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 30.892729048541426,
+    "B": 48.13727600211163
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 48.291964218411636
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 25.997437752559065,
+    "B": 47.02781117908046
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 47.14432150316152
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 22.55692402103088,
+    "B": 42.397450125717384
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 42.64831141784224
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 18.79069870251439,
+    "B": 34.4714843550169
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 34.6798846137678
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 132.63697957173684,
+    "B": 156.0850588625417
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 156.19905180803968
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 122.5197654926344,
+    "B": 147.8215526094212
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 148.3298232544184
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 95.71972988976276,
+    "B": 138.92264774878043
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 139.3007211726239
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 78.40563702378901,
+    "B": 134.6846929005407
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 134.9694793205511
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 62.92454168949163,
+    "B": 119.71134958376567
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 120.31056782464537
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 45.2639632169071,
+    "B": 90.19567810109814
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 90.73553166580959
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 13.13230641135901,
+    "B": 13.455245273654853
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 13.80511464635272
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 11.840293614773472,
+    "B": 13.368825291335583
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 13.716974976879229
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 9.010089756008782,
+    "B": 13.281546386772717
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 13.608216195716253
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 7.659794413119258,
+    "B": 12.079715440022397
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 12.37630741440428
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 6.977244926808638,
+    "B": 10.656988015456818
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 10.927325070513874
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 6.223028215056871,
+    "B": 9.144986868044924
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 9.382689899516734
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 28.8226375645539,
+    "B": 30.177323541646103
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 30.94572493258761
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 26.16921360444165,
+    "B": 29.968402371971308
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 30.73261557962715
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 20.244714981412457,
+    "B": 29.748845472614548
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 30.233699850832892
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 17.026217084812686,
+    "B": 26.94873332245625
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 27.37329921767416
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 15.149559413375627,
+    "B": 23.50624213058539
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 23.987089252758963
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "grade",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 13.185630208389796,
+    "B": 19.70707560451774
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 20.16385341525023
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 15.821711691826422,
+    "B104": 20.694544122063462,
+    "B106": 23.756146027022965,
+    "B108": 31.553859349069356
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 31.590509691768673
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 14.52978218836175,
+    "B104": 19.839292698907897,
+    "B106": 22.289889735455475,
+    "B108": 31.45156785951842
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 31.488245838869787
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 12.333563314365023,
+    "B104": 19.546892798941442,
+    "B106": 20.999752040443184,
+    "B108": 29.715217012215277
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 30.150835940354327
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 11.008495130554408,
+    "B104": 16.462929763991568,
+    "B106": 17.12691773705714,
+    "B108": 23.4401696746545
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 23.730172694900844
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 9.958216667078474,
+    "B104": 14.799278612424644,
+    "B106": 15.050956015662265,
+    "B108": 21.370885146410174
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 21.59084436322439
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 8.645476933769444,
+    "B104": 12.206707924725734,
+    "B106": 12.321170127147582,
+    "B108": 17.79735429792339
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 17.99971090099399
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.3,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 39.229830370830555,
+    "B104": 52.76654849295247,
+    "B106": 61.66347917375714,
+    "B108": 77.81717345440623
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 77.88194030847492
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.6,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 36.55663498402291,
+    "B104": 50.85436841890049,
+    "B106": 57.4676666610292,
+    "B108": 77.6575914850269
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 77.72233470403779
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 31.39562246256078,
+    "B104": 49.41229044822025,
+    "B106": 53.29034487908707,
+    "B108": 73.62082071345966
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 74.52282636732508
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 1.5,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 26.48257290158263,
+    "B104": 40.29442181110214,
+    "B106": 42.342018835432896,
+    "B108": 56.442526214511474
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 57.12203661236168
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 2.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 23.503015783229188,
+    "B104": 35.430023010195626,
+    "B106": 36.17593083989395,
+    "B108": 50.03921049402838
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 50.52981531399922
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "grade",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 3.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 19.56987397322709,
+    "B104": 28.248533168113127,
+    "B106": 28.59754013659422,
+    "B108": 40.668737513522444
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 41.121476567102704
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "grade",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.02,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 8.617459864719095,
+    "B": 8.5602708201749
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 8.741168617744492
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "grade",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.05,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 8.603369978954603,
+    "B": 8.546240250750607
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 8.727104654220163
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "grade",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.1,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 5.93272036013871,
+    "B": 5.940428056217122
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 8.681674463079787
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "grade",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.2,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 2.978124515537303,
+    "B": 3.02720858388124
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 7.131370577728845
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "grade",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 0.4,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 1.4227368832263139,
+    "B": 1.4423941247828296
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 3.456388394369881
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "conferencia",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.75,
+   "tempo_de_manobra_s": 1.2,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 52.516326814481005,
+    "B": 85.29229601273809
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 85.52017091063377
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "conferencia",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.3,
+   "tempo_de_manobra_s": 2.5,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 10.935199446108925,
+    "B": 20.180445115838538
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 20.300873778578804
+  },
+  {
+   "caso": "cais_xv108",
+   "papel": "conferencia",
+   "linha": "cais",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 1.0,
+   "tempo_de_manobra_s": 5.0,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 33.7907669963698,
+    "B": 62.623888513729725
+   },
+   "carga_de_regime_no_equipamento_m": 72.55612182617188,
+   "maior_subida_no_equipamento_m": 62.98227367985359
+  },
+  {
+   "caso": "cais_xv106",
+   "papel": "conferencia",
+   "linha": "cais",
+   "equipamento": "XV-106",
+   "fracao_da_vazao_cortada": 0.75,
+   "tempo_de_manobra_s": 0.8,
+   "carga_de_regime_m": {
+    "A": 80.7022476196289,
+    "B": 72.6324234008789
+   },
+   "maior_subida_m": {
+    "A": 16.002686670155796,
+    "B": 21.14088277605461
+   },
+   "carga_de_regime_no_equipamento_m": 74.54002380371094,
+   "maior_subida_no_equipamento_m": 21.686205990047057
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "conferencia",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.75,
+   "tempo_de_manobra_s": 1.2,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 19.57603603135648,
+    "B104": 30.19203191145047,
+    "B106": 32.20732828291899,
+    "B108": 44.053500928048805
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 44.663688208238696
+  },
+  {
+   "caso": "rede_xv108",
+   "papel": "conferencia",
+   "linha": "rede",
+   "equipamento": "XV-108",
+   "fracao_da_vazao_cortada": 0.3,
+   "tempo_de_manobra_s": 4.0,
+   "carga_de_regime_m": {
+    "A": 79.96234893798828,
+    "B104": 74.59494018554688,
+    "B106": 74.26900482177734,
+    "B108": 73.94306945800781
+   },
+   "maior_subida_m": {
+    "A": 4.550918399357741,
+    "B104": 6.1399009240540465,
+    "B106": 6.1760247480427495,
+    "B108": 8.687350852509766
+   },
+   "carga_de_regime_no_equipamento_m": 73.89961242675781,
+   "maior_subida_no_equipamento_m": 8.779943037131048
+  },
+  {
+   "caso": "trecho_200_xv100",
+   "papel": "conferencia",
+   "linha": "trecho_200",
+   "equipamento": "XV-100",
+   "fracao_da_vazao_cortada": 0.5,
+   "tempo_de_manobra_s": 0.15,
+   "carga_de_regime_m": {
+    "A": 57.934146881103516,
+    "B": 51.91667175292969
+   },
+   "maior_subida_m": {
+    "A": 1.9222887615039355,
+    "B": 1.9277413666790366
+   },
+   "carga_de_regime_no_equipamento_m": 54.835365295410156,
+   "maior_subida_no_equipamento_m": 4.164991259493966
+  }
+ ]
+}

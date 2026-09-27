@@ -267,6 +267,17 @@ async def sobrepressao_eventos(desde: Optional[str] = None, nivel: Optional[str]
                                                                           tabela='sobrepressoes')]
 
 
+@app.get('/api/sobrepressao/previsao', tags=['sobrepressao'],
+         summary='Previsao do pico de pressao de uma manobra, antes de fazer (nao mexe na bancada)')
+async def sobrepressao_previsao(equipamento: str,
+                                acao: Literal['fechar', 'abrir', 'partir', 'parar',
+                                              'fechamento', 'abertura', 'partida', 'parada'] = 'fechar',
+                                tempo_de_manobra_s: Optional[float] = None,
+                                fracao_da_vazao_cortada: Optional[float] = None,
+                                linha: Optional[Literal['trecho_200', 'cais', 'rede']] = None):
+    return E.bancada.prever_golpe(equipamento, acao, tempo_de_manobra_s, fracao_da_vazao_cortada, linha)
+
+
 @app.get('/api/cadastro', tags=['consultas'], summary='Valvulas e bombas da linha ativa')
 async def cadastro():
     b = E.bancada
