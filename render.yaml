@@ -1,0 +1,18 @@
+# Backend da bancada virtual do LEAKMAP Edge no Render (08_backend/LEIAME.md).
+# No painel do Render: New > Blueprint > este repositorio. A chave dos comandos
+# (LEAKMAP_CHAVE) e gerada pelo Render; copie-a da aba Environment para a equipe.
+services:
+  - type: web
+    name: leakmap-bancada
+    runtime: python
+    plan: free
+    buildCommand: pip install -r 08_backend/requirements.txt
+    startCommand: uvicorn --app-dir 08_backend app:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/servico
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: LEAKMAP_CHAVE
+        generateValue: true
+      - key: LEAKMAP_ORIGENS
+        value: "*"

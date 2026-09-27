@@ -27,6 +27,21 @@ jobs:
       - name: Trilha completa, testes do Python e da placa simulada, simulacao do Verilog e paridade do JavaScript
         run: python rodar_software.py
 
+  backend-da-bancada:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Dependencias do backend
+        run: pip install -r 08_backend/requirements.txt
+
+      - name: Testes do backend (gerador, bancada ao vivo, REST e WebSocket)
+        run: python -m unittest discover -s 08_backend/testes -p "teste_*.py"
+
   ambiente-do-tsnet:
     # numa maquina limpa: instala as versoes congeladas e refaz simulacoes gravadas
     runs-on: ubuntu-latest

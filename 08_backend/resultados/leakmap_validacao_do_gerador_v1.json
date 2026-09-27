@@ -1,0 +1,1302 @@
+{
+ "descricao": "Conferencia do gerador da bancada contra o TSNet: cada ponto simulado gerado a partir das simulacoes vizinhas, sem a propria.",
+ "itens": [
+  {
+   "linha": "trecho_200",
+   "simulacao": "EV-01",
+   "trecho": "principal",
+   "s_m": 60.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "EV-02",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.01701803502560248,
+     "chegada_gerador_s": 0.01701803502560248,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -37.7735996868511,
+     "amplitude_gerador_m": -37.21155592601568
+    },
+    "B": {
+     "chegada_tsnet_s": 0.08363476445224928,
+     "chegada_gerador_s": 0.08363476445224928,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -37.56132589541536,
+     "amplitude_gerador_m": -37.12077916801264
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.13013513482999883,
+   "erro_do_detector_no_gerador_m": 0.13013513482999883,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "trecho_200",
+   "simulacao": "EV-02",
+   "trecho": "principal",
+   "s_m": 80.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "EV-01",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.03367221738226418,
+     "chegada_gerador_s": 0.03367221738226418,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -37.21155592601568,
+     "amplitude_gerador_m": -37.210792229654956
+    },
+    "B": {
+     "chegada_tsnet_s": 0.06698058209558758,
+     "chegada_gerador_s": 0.06698058209558758,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -37.12077916801264,
+     "amplitude_gerador_m": -37.11840136500369
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.06506756741504205,
+   "erro_do_detector_no_gerador_m": 0.06506756741504205,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "trecho_200",
+   "simulacao": "EV-03",
+   "trecho": "principal",
+   "s_m": 100.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "EV-02",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.05032639973892587,
+     "chegada_gerador_s": 0.05032639973892587,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -36.6479847724588,
+     "amplitude_gerador_m": -36.647189520740454
+    },
+    "B": {
+     "chegada_tsnet_s": 0.05032639973892587,
+     "chegada_gerador_s": 0.05032639973892587,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -36.67547683459202,
+     "amplitude_gerador_m": -36.67306441104262
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.0,
+   "erro_do_detector_no_gerador_m": 0.0,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "trecho_200",
+   "simulacao": "EV-04",
+   "trecho": "principal",
+   "s_m": 120.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "EV-03",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.06698058209558758,
+     "chegada_gerador_s": 0.06698058209558758,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -36.082823115465224,
+     "amplitude_gerador_m": -36.08200504922407
+    },
+    "B": {
+     "chegada_tsnet_s": 0.03367221738226418,
+     "chegada_gerador_s": 0.03367221738226418,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -36.225349654072595,
+     "amplitude_gerador_m": -36.222885965380435
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.06506756741504205,
+   "erro_do_detector_no_gerador_m": 0.06506756741504205,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "trecho_200",
+   "simulacao": "EV-05",
+   "trecho": "principal",
+   "s_m": 140.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "EV-04",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.08363476445224928,
+     "chegada_gerador_s": 0.08363476445224928,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -35.51602532598935,
+     "amplitude_gerador_m": -36.082823115465224
+    },
+    "B": {
+     "chegada_tsnet_s": 0.01701803502560248,
+     "chegada_gerador_s": 0.01701803502560248,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -35.77029509616885,
+     "amplitude_gerador_m": -36.225349654072595
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.13013513482999883,
+   "erro_do_detector_no_gerador_m": 0.13013513482999883,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-01",
+   "trecho": "principal",
+   "s_m": 50.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-02",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.04131469499141732,
+     "chegada_gerador_s": 0.04131469499141732,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -18.37656947587938,
+     "amplitude_gerador_m": -18.159852848501576
+    },
+    "B": {
+     "chegada_tsnet_s": 0.5306042985007078,
+     "chegada_gerador_s": 0.5304038521248334,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.87366803818122,
+     "amplitude_gerador_m": -17.819222935656466
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.03285670943864716,
+   "erro_do_detector_no_gerador_m": 0.03285670943864716,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-02",
+   "trecho": "principal",
+   "s_m": 150.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-01",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12289636997227812,
+     "chegada_gerador_s": 0.12269592359640377,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -18.159862687226155,
+     "amplitude_gerador_m": -18.138508830101795
+    },
+    "B": {
+     "chegada_tsnet_s": 0.449022623519847,
+     "chegada_gerador_s": 0.449022623519847,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.819233009284314,
+     "amplitude_gerador_m": -17.84014281838393
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.1854546810318709,
+   "erro_do_detector_no_gerador_m": 0.1854546810318709,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-03",
+   "trecho": "principal",
+   "s_m": 250.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-02",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.20427759857726455,
+     "chegada_gerador_s": 0.20427759857726455,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.900455340358356,
+     "amplitude_gerador_m": -17.91351165577951
+    },
+    "B": {
+     "chegada_tsnet_s": 0.3676413949148605,
+     "chegada_gerador_s": 0.3674409485389861,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.80660860116758,
+     "amplitude_gerador_m": -17.78551877645881
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.09272734051594966,
+   "erro_do_detector_no_gerador_m": 0.09272734051594966,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-04",
+   "trecho": "principal",
+   "s_m": 350.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-03",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.28585927355812535,
+     "chegada_gerador_s": 0.285658827182251,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.66718421242057,
+     "amplitude_gerador_m": -17.66647433603582
+    },
+    "B": {
+     "chegada_tsnet_s": 0.2860597199339997,
+     "chegada_gerador_s": 0.2860597199339997,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.7518113778661,
+     "amplitude_gerador_m": -17.760503567691412
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.0,
+   "erro_do_detector_no_gerador_m": 0.24532531210905972,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-05",
+   "trecho": "principal",
+   "s_m": 450.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-04",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.3674409485389861,
+     "chegada_gerador_s": 0.36724050216311177,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.432480066287265,
+     "amplitude_gerador_m": -17.433173423731414
+    },
+    "B": {
+     "chegada_tsnet_s": 0.2044780449531389,
+     "chegada_gerador_s": 0.2044780449531389,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.714374430321662,
+     "amplitude_gerador_m": -17.713508919665617
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.09272734051592124,
+   "erro_do_detector_no_gerador_m": 0.15259797159319533,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-06",
+   "trecho": "principal",
+   "s_m": 550.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-05",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.449022623519847,
+     "chegada_gerador_s": 0.44882217714397266,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.199160185615263,
+     "amplitude_gerador_m": -17.208865937450533
+    },
+    "B": {
+     "chegada_tsnet_s": 0.12289636997227812,
+     "chegada_gerador_s": 0.12289636997227812,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.67519390004253,
+     "amplitude_gerador_m": -17.67285293185021
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.18545468103184248,
+   "erro_do_detector_no_gerador_m": 0.059870631077274084,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-07",
+   "trecho": "principal",
+   "s_m": 650.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-06",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.5306042985007078,
+     "chegada_gerador_s": 0.5304038521248334,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -16.985271437719398,
+     "amplitude_gerador_m": -17.199151775335213
+    },
+    "B": {
+     "chegada_tsnet_s": 0.04131469499141732,
+     "chegada_gerador_s": 0.04131469499141732,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.631328597611482,
+     "amplitude_gerador_m": -17.675183759454068
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.03285670943864716,
+   "erro_do_detector_no_gerador_m": 0.03285670943864716,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-08",
+   "trecho": "principal",
+   "s_m": -150.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "LC-01",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12309681634815248,
+     "chegada_gerador_s": 0.12269592359640377,
+     "diferenca_de_chegada_ms": -0.40089275174870487,
+     "amplitude_tsnet_m": -18.56975737404486,
+     "amplitude_gerador_m": -18.376565850902985
+    },
+    "B": {
+     "chegada_tsnet_s": 0.6937676484624293,
+     "chegada_gerador_s": 0.693567202086555,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -17.909052575328325,
+     "amplitude_gerador_m": -17.873670374377546
+    }
+   },
+   "erro_do_detector_no_tsnet_m": null,
+   "erro_do_detector_no_gerador_m": null,
+   "classe_tsnet": "fora_do_trecho",
+   "classe_gerador": "fora_do_trecho"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-09",
+   "trecho": "principal",
+   "s_m": 50.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-10",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.04131469499141732,
+     "chegada_gerador_s": 0.04131469499141732,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.2392276245441645,
+     "amplitude_gerador_m": -4.192838788175585
+    },
+    "B": {
+     "chegada_tsnet_s": 0.5306042985007078,
+     "chegada_gerador_s": 0.5306042985007078,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.116985874155328,
+     "amplitude_gerador_m": -4.1080103740719025
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.27818202154782057,
+   "erro_do_detector_no_gerador_m": 0.27818202154782057,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-10",
+   "trecho": "principal",
+   "s_m": 150.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-09",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12289636997227812,
+     "chegada_gerador_s": 0.12289636997227812,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.192841132554878,
+     "amplitude_gerador_m": -4.187881562132641
+    },
+    "B": {
+     "chegada_tsnet_s": 0.449022623519847,
+     "chegada_gerador_s": 0.449022623519847,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.108013143259267,
+     "amplitude_gerador_m": -4.112838614631122
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.1854546810318709,
+   "erro_do_detector_no_gerador_m": 0.1854546810318709,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-11",
+   "trecho": "principal",
+   "s_m": 250.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-10",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.20427759857726455,
+     "chegada_gerador_s": 0.2044780449531389,
+     "diferenca_de_chegada_ms": 0.20044637587435243,
+     "amplitude_tsnet_m": -4.136537400582056,
+     "amplitude_gerador_m": -4.139264015632005
+    },
+    "B": {
+     "chegada_tsnet_s": 0.3676413949148605,
+     "chegada_gerador_s": 0.3674409485389861,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -4.108688617720571,
+     "amplitude_gerador_m": -4.103587414646207
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.09272734051594966,
+   "erro_do_detector_no_gerador_m": 0.09272734051594966,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-12",
+   "trecho": "principal",
+   "s_m": 350.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-11",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.28585927355812535,
+     "chegada_gerador_s": 0.28585927355812535,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.085692523784777,
+     "amplitude_gerador_m": -4.085761387617373
+    },
+    "B": {
+     "chegada_tsnet_s": 0.2860597199339997,
+     "chegada_gerador_s": 0.2860597199339997,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.09916356626132,
+     "amplitude_gerador_m": -4.101444099122283
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.24532531210905972,
+   "erro_do_detector_no_gerador_m": 0.24532531210905972,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-13",
+   "trecho": "principal",
+   "s_m": 450.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-12",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.3674409485389861,
+     "chegada_gerador_s": 0.3674409485389861,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.034982375431069,
+     "amplitude_gerador_m": -4.03511358466092
+    },
+    "B": {
+     "chegada_tsnet_s": 0.2044780449531389,
+     "chegada_gerador_s": 0.2044780449531389,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.09419445553633,
+     "amplitude_gerador_m": -4.094011703875306
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.09272734051592124,
+   "erro_do_detector_no_gerador_m": 0.09272734051592124,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-14",
+   "trecho": "principal",
+   "s_m": 550.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-13",
+   "extrapolado": false,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.449022623519847,
+     "chegada_gerador_s": 0.449022623519847,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -3.984534148120256,
+     "amplitude_gerador_m": -3.987012850248834
+    },
+    "B": {
+     "chegada_tsnet_s": 0.12289636997227812,
+     "chegada_gerador_s": 0.12289636997227812,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.0888567385664025,
+     "amplitude_gerador_m": -4.088595136060697
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.18545468103184248,
+   "erro_do_detector_no_gerador_m": 0.059870631077274084,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-15",
+   "trecho": "principal",
+   "s_m": 650.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-14",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.5306042985007078,
+     "chegada_gerador_s": 0.5306042985007078,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -3.9390494290239495,
+     "amplitude_gerador_m": -3.9845314503863833
+    },
+    "B": {
+     "chegada_tsnet_s": 0.04131469499141732,
+     "chegada_gerador_s": 0.04131469499141732,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.082995154657014,
+     "amplitude_gerador_m": -4.0888541339383915
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.03285670943864716,
+   "erro_do_detector_no_gerador_m": 0.2124686026704694,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "cais",
+   "simulacao": "LC-16",
+   "trecho": "principal",
+   "s_m": -150.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "LC-09",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12309681634815248,
+     "chegada_gerador_s": 0.12289636997227812,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -4.275655529745691,
+     "amplitude_gerador_m": -4.239226662461043
+    },
+    "B": {
+     "chegada_tsnet_s": 0.6937676484624293,
+     "chegada_gerador_s": 0.693567202086555,
+     "diferenca_de_chegada_ms": -0.20044637587435243,
+     "amplitude_tsnet_m": -4.117285479894619,
+     "amplitude_gerador_m": -4.116986584304959
+    }
+   },
+   "erro_do_detector_no_tsnet_m": null,
+   "erro_do_detector_no_gerador_m": null,
+   "classe_tsnet": "fora_do_trecho",
+   "classe_gerador": "fora_do_trecho"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-01",
+   "trecho": "tronco",
+   "s_m": 150.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-08",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.771574878224037,
+     "amplitude_gerador_m": -18.400977997573325
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.32679591942491837,
+     "chegada_gerador_s": 0.32679591942491837,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.861041646677544,
+     "amplitude_gerador_m": -8.98678935962948
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.449424606132923,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.82243388550881,
+     "amplitude_gerador_m": -8.947387257633938
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.5718529191698363,
+     "chegada_gerador_s": 0.5718529191698363,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.794678209964475,
+     "amplitude_gerador_m": -8.919357185146684
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.05000000000001137,
+   "erro_do_detector_no_gerador_m": 0.05000000000001137,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-02",
+   "trecho": "ramal_104",
+   "s_m": 100.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-03",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.32699629309600986,
+     "chegada_gerador_s": 0.32699629309600986,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.601237822590065,
+     "amplitude_gerador_m": -8.569641271888168
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.12281552225376016,
+     "chegada_gerador_s": 0.12281552225376016,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.60651817222771,
+     "amplitude_gerador_m": -17.618425935455008
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.40854837723025483,
+     "chegada_gerador_s": 0.40854837723025483,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.710679858482255,
+     "amplitude_gerador_m": -8.678693084626286
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.530976690267168,
+     "chegada_gerador_s": 0.530976690267168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.683249532798884,
+     "amplitude_gerador_m": -8.651356299354509
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.30000000000001137,
+   "erro_do_detector_no_gerador_m": 0.15000000000000568,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-03",
+   "trecho": "ramal_104",
+   "s_m": 200.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-02",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.40854837723025483,
+     "chegada_gerador_s": 0.40854837723025483,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.56964299984529,
+     "amplitude_gerador_m": -8.601238718811505
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.04126343811951522,
+     "chegada_gerador_s": 0.04126343811951522,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.618427243565435,
+     "amplitude_gerador_m": -17.60652148734411
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.4901004613644998,
+     "chegada_gerador_s": 0.4901004613644998,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.678695159116929,
+     "amplitude_gerador_m": -8.710680307239858
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.612528774401413,
+     "chegada_gerador_s": 0.612528774401413,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.651357532861006,
+     "amplitude_gerador_m": -8.683250888271301
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.15000000000000568,
+   "erro_do_detector_no_gerador_m": 0.15000000000000568,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-04",
+   "trecho": "ramal_106",
+   "s_m": 30.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-05",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.2698897968349292,
+     "chegada_gerador_s": 0.2698897968349292,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.623423936992975,
+     "amplitude_gerador_m": -8.533981491742553
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.22881319426116944,
+     "chegada_gerador_s": 0.22881319426116944,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.771670122247128,
+     "amplitude_gerador_m": -8.680306063675177
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.30255070522284544,
+     "chegada_gerador_s": 0.30255070522284544,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.53725661490831,
+     "amplitude_gerador_m": -17.558763040751465
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.47387019400608743,
+     "chegada_gerador_s": 0.47387019400608743,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.705675328703844,
+     "amplitude_gerador_m": -8.615314682427172
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.05000000000000071,
+   "erro_do_detector_no_gerador_m": 0.05000000000000071,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-05",
+   "trecho": "ramal_106",
+   "s_m": 250.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-04",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.449424606132923,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.533977941653575,
+     "amplitude_gerador_m": -8.623422069877344
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.40834800355916334,
+     "chegada_gerador_s": 0.40834800355916334,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.680305749665441,
+     "amplitude_gerador_m": -8.771675165574639
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -17.558768114950894,
+     "amplitude_gerador_m": -17.537259616545807
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.6534050033040812,
+     "chegada_gerador_s": 0.6534050033040812,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -8.615310537613876,
+     "amplitude_gerador_m": -8.705674575968594
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.0,
+   "erro_do_detector_no_gerador_m": 0.09999999999999432,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-06",
+   "trecho": "ramal_108",
+   "s_m": 150.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-07",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.36787252199867804,
+     "chegada_gerador_s": 0.36807289566976953,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -8.581801437123081,
+     "amplitude_gerador_m": -8.463177333164255
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.32679591942491837,
+     "chegada_gerador_s": 0.32699629309600986,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -8.72903312264154,
+     "amplitude_gerador_m": -8.60828166470545
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.4496249798040145,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -8.6909773912463,
+     "amplitude_gerador_m": -8.570456833294498
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.32699629309600986,
+     "chegada_gerador_s": 0.32679591942491837,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -17.477494046903058,
+     "amplitude_gerador_m": -17.520582554316224
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.04999999999998295,
+   "erro_do_detector_no_gerador_m": 0.15000000000000568,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-07",
+   "trecho": "ramal_108",
+   "s_m": 450.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-06",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.6127291480725044,
+     "chegada_gerador_s": 0.612528774401413,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.463176174364614,
+     "amplitude_gerador_m": -8.58180511202904
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.5716525454987447,
+     "chegada_gerador_s": 0.5714521718276532,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.608287824188295,
+     "amplitude_gerador_m": -8.729032948732465
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.6942812322067494,
+     "chegada_gerador_s": 0.6940808585356579,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.570454541854073,
+     "amplitude_gerador_m": -8.69098060364676
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.08213966702218345,
+     "chegada_gerador_s": 0.08234004069327497,
+     "diferenca_de_chegada_ms": 0.20037367109151938,
+     "amplitude_tsnet_m": -17.520588868835098,
+     "amplitude_gerador_m": -17.477491489032865
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.25,
+   "erro_do_detector_no_gerador_m": 0.1500000000000341,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-08",
+   "trecho": "tronco",
+   "s_m": -150.0,
+   "tamanho": "grande",
+   "gerado_a_partir_de": "RC-01",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -18.400977997573325,
+     "amplitude_gerador_m": -17.771574878224037
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.5716525454987447,
+     "chegada_gerador_s": 0.5714521718276532,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.986795315355646,
+     "amplitude_gerador_m": -8.861041465616584
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.6942812322067494,
+     "chegada_gerador_s": 0.6940808585356579,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.947384980294752,
+     "amplitude_gerador_m": -8.822437142867257
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.8167095452436626,
+     "chegada_gerador_s": 0.8165091715725711,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -8.91935745222269,
+     "amplitude_gerador_m": -8.794683681057943
+    }
+   },
+   "erro_do_detector_no_tsnet_m": null,
+   "erro_do_detector_no_gerador_m": null,
+   "classe_tsnet": "fora_do_trecho",
+   "classe_gerador": "fora_do_trecho"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-09",
+   "trecho": "tronco",
+   "s_m": 150.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-16",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.10937646897056,
+     "amplitude_gerador_m": -4.239250731075513
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.32679591942491837,
+     "chegada_gerador_s": 0.32699629309600986,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -2.047185483239776,
+     "amplitude_gerador_m": -2.0687681811525898
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.4496249798040145,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -2.038098549954145,
+     "amplitude_gerador_m": -2.059310480291909
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.5718529191698363,
+     "chegada_gerador_s": 0.5720532928409278,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -2.0313140807369128,
+     "amplitude_gerador_m": -2.052542033190385
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.04999999999998295,
+   "erro_do_detector_no_gerador_m": 0.15000000000000568,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-10",
+   "trecho": "ramal_104",
+   "s_m": 100.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-11",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.32699629309600986,
+     "chegada_gerador_s": 0.32699629309600986,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -1.9930934199904575,
+     "amplitude_gerador_m": -1.9869162702142216
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.12281552225376016,
+     "chegada_gerador_s": 0.12281552225376016,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.0762907207091565,
+     "amplitude_gerador_m": -4.0811933565558425
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.40854837723025483,
+     "chegada_gerador_s": 0.40854837723025483,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.0170875968779907,
+     "amplitude_gerador_m": -2.0108816315667264
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.530976690267168,
+     "chegada_gerador_s": 0.530976690267168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.0103711941370883,
+     "amplitude_gerador_m": -2.004183530576451
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.30000000000001137,
+   "erro_do_detector_no_gerador_m": 0.30000000000001137,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-11",
+   "trecho": "ramal_104",
+   "s_m": 200.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-10",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.40854837723025483,
+     "chegada_gerador_s": 0.40854837723025483,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -1.9869166684545088,
+     "amplitude_gerador_m": -1.9930937307528922
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.04126343811951522,
+     "chegada_gerador_s": 0.04126343811951522,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.081193646897374,
+     "amplitude_gerador_m": -4.076291385166792
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.4901004613644998,
+     "chegada_gerador_s": 0.4901004613644998,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.010882161646489,
+     "amplitude_gerador_m": -2.0170876666659696
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.612528774401413,
+     "chegada_gerador_s": 0.612528774401413,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.004184020424891,
+     "amplitude_gerador_m": -2.0103716921788823
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.05000000000001137,
+   "erro_do_detector_no_gerador_m": 0.05000000000001137,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-12",
+   "trecho": "ramal_106",
+   "s_m": 30.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-13",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.2698897968349292,
+     "chegada_gerador_s": 0.2698897968349292,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -1.9976968095428396,
+     "amplitude_gerador_m": -1.9786243667130856
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.22881319426116944,
+     "chegada_gerador_s": 0.22881319426116944,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.0310346592222293,
+     "amplitude_gerador_m": -2.011323052372373
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.30255070522284544,
+     "chegada_gerador_s": 0.30255070522284544,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.0576671363730235,
+     "amplitude_gerador_m": -4.065841793653088
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.47387019400608743,
+     "chegada_gerador_s": 0.47387019400608743,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.0150151271226058,
+     "amplitude_gerador_m": -1.9958191597792567
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.09999999999999787,
+   "erro_do_detector_no_gerador_m": 0.25,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-13",
+   "trecho": "ramal_106",
+   "s_m": 250.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-12",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.449424606132923,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -1.978623522191131,
+     "amplitude_gerador_m": -1.9976961186835553
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.40834800355916334,
+     "chegada_gerador_s": 0.40834800355916334,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -2.0113229256574745,
+     "amplitude_gerador_m": -2.031035720926656
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.065843064461053,
+     "amplitude_gerador_m": -4.057667892308842
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.6534050033040812,
+     "chegada_gerador_s": 0.6534050033040812,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -1.9958183131425433,
+     "amplitude_gerador_m": -2.0150149753821935
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.05000000000001137,
+   "erro_do_detector_no_gerador_m": 0.0,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-14",
+   "trecho": "ramal_108",
+   "s_m": 150.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-15",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.36787252199867804,
+     "chegada_gerador_s": 0.36807289566976953,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -1.9889132364087874,
+     "amplitude_gerador_m": -1.9640259826761393
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.32679591942491837,
+     "chegada_gerador_s": 0.32699629309600986,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -2.0218298190095108,
+     "amplitude_gerador_m": -1.9965269712315714
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.449424606132923,
+     "chegada_gerador_s": 0.4496249798040145,
+     "diferenca_de_chegada_ms": 0.20037367109149162,
+     "amplitude_tsnet_m": -2.0128577090461515,
+     "amplitude_gerador_m": -1.9873969416429833
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.32699629309600986,
+     "chegada_gerador_s": 0.32679591942491837,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -4.043915114191832,
+     "amplitude_gerador_m": -4.058891922403132
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.0,
+   "erro_do_detector_no_gerador_m": 0.15000000000000568,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-15",
+   "trecho": "ramal_108",
+   "s_m": 450.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-14",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.6127291480725044,
+     "chegada_gerador_s": 0.612528774401413,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -1.9640258373000268,
+     "amplitude_gerador_m": -1.9889138012125045
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.5716525454987447,
+     "chegada_gerador_s": 0.5714521718276532,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -1.996528677843677,
+     "amplitude_gerador_m": -2.0218297848031455
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.6942812322067494,
+     "chegada_gerador_s": 0.6940808585356579,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -1.987396587239198,
+     "amplitude_gerador_m": -2.0128585203167297
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.08213966702218345,
+     "chegada_gerador_s": 0.08234004069327497,
+     "diferenca_de_chegada_ms": 0.20037367109151938,
+     "amplitude_tsnet_m": -4.058893551399026,
+     "amplitude_gerador_m": -4.043914384595271
+    }
+   },
+   "erro_do_detector_no_tsnet_m": 0.1500000000000341,
+   "erro_do_detector_no_gerador_m": 0.10000000000002274,
+   "classe_tsnet": "localizado",
+   "classe_gerador": "localizado"
+  },
+  {
+   "linha": "rede",
+   "simulacao": "RC-16",
+   "trecho": "tronco",
+   "s_m": -150.0,
+   "tamanho": "pequeno",
+   "gerado_a_partir_de": "RC-09",
+   "extrapolado": true,
+   "sensores": {
+    "A": {
+     "chegada_tsnet_s": 0.12301589592485168,
+     "chegada_gerador_s": 0.12301589592485168,
+     "diferenca_de_chegada_ms": 0.0,
+     "amplitude_tsnet_m": -4.239250731075513,
+     "amplitude_gerador_m": -4.10937646897056
+    },
+    "B104": {
+     "chegada_tsnet_s": 0.5716525454987447,
+     "chegada_gerador_s": 0.5714521718276532,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -2.068771053056406,
+     "amplitude_gerador_m": -2.04718541087497
+    },
+    "B106": {
+     "chegada_tsnet_s": 0.6942812322067494,
+     "chegada_gerador_s": 0.6940808585356579,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -2.059309883169191,
+     "amplitude_gerador_m": -2.0380994559719943
+    },
+    "B108": {
+     "chegada_tsnet_s": 0.8167095452436626,
+     "chegada_gerador_s": 0.8165091715725711,
+     "diferenca_de_chegada_ms": -0.20037367109149162,
+     "amplitude_tsnet_m": -2.052542040702407,
+     "amplitude_gerador_m": -2.031314563474998
+    }
+   },
+   "erro_do_detector_no_tsnet_m": null,
+   "erro_do_detector_no_gerador_m": null,
+   "classe_tsnet": "fora_do_trecho",
+   "classe_gerador": "fora_do_trecho"
+  }
+ ]
+}

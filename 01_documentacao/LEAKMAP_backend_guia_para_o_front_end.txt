@@ -545,3 +545,69 @@ publicação ficam com a equipe) e ligar a placa FPGA ou sensores reais.
   - O dashboard do operador precisa de mais algum dado (ex.: vazão, pressão
     média do dia, tempo desde o último evento)?
   - A bancada visual vai precisar de mais alguma ação além das da seção 10?
+
+
+-------------------------------------------------------------------------------
+15. O QUE MUDOU NA IMPLEMENTAÇÃO (versão 1 do contrato)
+-------------------------------------------------------------------------------
+
+O backend está pronto em 08_backend (como rodar: 08_backend/LEIAME.md). Tudo o
+que está nas seções 1 a 14 vale, com estas diferenças e acréscimos:
+
+  Ver funcionando sem o front
+    - <endereço>/teste: página de teste com todas as ações e mensagens.
+    - 08_backend/exemplos/*.jsonl: sessões gravadas do WebSocket, uma
+      mensagem por linha, com o instante em que chegou ("recebido_em_s"):
+      vazamento na linha do cais, abertura de válvula sem registro de
+      operação (o caso que alarma) e vazamento na rede. Servem de dado falso
+      para montar as telas e para simular o WebSocket.
+
+  Versão
+    - "versao_do_contrato" é "1" (em GET /api/servico e em boas_vindas).
+
+  Histórico
+    - GET /api/eventos e GET /api/eventos/{id} devolvem, por item,
+      {"evento": {...}, "verdade": {...}}. A verdade só vem com
+      ?perfil=demonstracao; sem o parâmetro (ou com perfil=operador) ela é
+      omitida.
+
+  Respostas dos comandos
+    - Todo POST que dá certo devolve {"ok": true, "resultado": {...},
+      "estado": {...}}. Em "resultado" vem o que foi criado (ex.: no
+      vazamento: id, fonte_usada, trecho, s_m, tamanho e a simulação do TSNet
+      usada como base).
+    - Os erros trazem, além de "erro", campos de ajuda quando existem:
+      "opcoes" (valores aceitos) ou "pontos_mais_proximos" (fonte "tsnet" num
+      ponto sem simulação completa).
+
+  Mensagens do WebSocket
+    - boas_vindas traz também "saude" (igual à mensagem saude).
+    - Ao trocar a linha, cada cliente recebe um novo boas_vindas, com a linha
+      nova: redesenhar o mapa a partir dele.
+    - evento traz também: "transmissor"; na linha reta,
+      "posicao_refinada_m" (refino por correlação, ao lado da posição); na
+      rede, "canais" com os quatro sensores.
+    - "instante_de_chegada_s" em cada canal está no relógio da bancada (o
+      mesmo "t_s" das amostras), para marcar a chegada no gráfico.
+    - Gás: quando o sensor de gás é ligado com um alerta provável recente, o
+      mesmo evento chega de novo, com o MESMO "id", "nivel": "confirmado" e
+      "revisao": 2. Atualizar o evento existente em vez de criar outro.
+    - verdade de uma falha de sensor: {"tipo": "falha_de_sensor",
+      "sensor": "A", "falha": "cabo_rompido"}. De uma manobra: "tipo":
+      "manobra", com "equipamento", "acao" e "operacao_registrada".
+    - estado traz também "instante_utc".
+
+  Linhas (GET /api/linhas)
+    - Cada trecho traz "vazamento": {de_s_m, ate_s_m}, a faixa onde se pode
+      romper, e cada linha traz "tamanhos_de_vazamento" e
+      "bar_por_metro_de_carga".
+    - O trecho de 200 m só tem o tamanho "grande".
+    - Manobras (equipamentos) só existem na linha do cais. Estado inicial:
+      B-01 ligada, XV-104 fechada, XV-106 e XV-108 abertas.
+    - "desenho_esquematico": a posição s_m cai ao longo da poligonal na
+      proporção do comprimento do trecho (de de_s_m a ate_s_m).
+
+  Tempos medidos
+    - O evento chega cerca de 1 a 1,5 s depois do comando: o comando entra
+      no passo seguinte, a onda cruza a linha e o detector espera a chegada
+      em todos os sensores.

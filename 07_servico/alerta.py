@@ -40,9 +40,14 @@ CLASSE_MANOBRA = 'manobra'
 CLASSE_FORA_DO_TRECHO = 'fora_do_trecho'
 
 
+def _canais(saude):
+    """Os canais do autoteste, na ordem: 'canal_A', 'canal_B' e, numa rede, 'canal_B104' etc."""
+    return sorted(k for k in (saude or {}) if k.startswith('canal_'))
+
+
 def canais_reprovados(saude):
-    """Canais ('A', 'B') que o autoteste acusou."""
-    return [canal[-1] for canal in ('canal_A', 'canal_B') if (saude or {}).get(canal, {}).get('falhas')]
+    """Canais ('A', 'B', ou os da rede) que o autoteste acusou."""
+    return [canal[len('canal_'):] for canal in _canais(saude) if (saude[canal] or {}).get('falhas')]
 
 
 def nivel_do_evento(registro, gas_na_regiao=False, saude=None):
@@ -65,8 +70,8 @@ def estado_do_monitoramento(saude):
     """`saude`: {'canal_A': {'falhas': [...]}, 'canal_B': {...}} do autoteste, ou None."""
     if not saude:
         return {'monitoramento': 'sem_autoteste', 'motivos': []}
-    motivos = ['canal %s: %s' % (canal[-1], ', '.join(saude[canal]['falhas']))
-               for canal in ('canal_A', 'canal_B') if saude.get(canal, {}).get('falhas')]
+    motivos = ['canal %s: %s' % (canal[len('canal_'):], ', '.join(saude[canal]['falhas']))
+               for canal in _canais(saude) if (saude[canal] or {}).get('falhas')]
     return {'monitoramento': 'degradado' if motivos else 'normal', 'motivos': motivos}
 
 

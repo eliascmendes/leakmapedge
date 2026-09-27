@@ -783,9 +783,9 @@
 
   /* Escala de alerta: 07_servico/alerta.nivel_do_evento. */
   function canaisReprovados(saude) {
-    return ["canal_A", "canal_B"].filter(function (c) {
-      return saude && saude[c] && saude[c].falhas && saude[c].falhas.length;
-    }).map(function (c) { return c.slice(-1); });
+    return Object.keys(saude || {}).filter(function (c) { return c.indexOf("canal_") === 0; }).sort()
+      .filter(function (c) { return saude[c] && saude[c].falhas && saude[c].falhas.length; })
+      .map(function (c) { return c.slice("canal_".length); });
   }
 
   function nivelDoEvento(registro, gasNaRegiao, saude) {
