@@ -16,6 +16,18 @@ A cada passo (0,1 s de relogio), a bancada:
      placa, 06_fpga/computador), o cadastro com o registro de operacao e a
      escala de alerta (07_servico).
 
+Confirmacao do degrau. O detector foi calibrado sobre registros de 0,2 s; em
+operacao continua ele toma cerca de 10 mil decisoes por segundo (2,5 mil por
+canal), e o ruido do transmissor acaba passando do limiar num canal so, cerca
+de uma vez a cada 2,5 minutos (medido: 4 em 10 minutos com o transmissor
+rapido e com o de 10 ms, nenhum com duas chegadas). Um evento de verdade num
+canal so (cabo rompido, frente lenta de bomba) muda o nivel e o nivel fica
+mudado; o pico de ruido nao. Quando so um canal declarou, a bancada confere o
+nivel medio de 5 a 25 ms depois da chegada contra o de 20 a 120 ms antes; sem
+degrau acima de 6 desvios da media (ou de 3 degraus de quantizacao), a
+deteccao e descartada como ruido e contada em `descartadas_como_ruido`. O
+detector em si nao muda.
+
 O detector so recebe o sinal dos sensores. A bancada sabe onde esta o
 vazamento, porque foi ela que o criou, e manda isso a parte, em "verdade".
 
@@ -78,6 +90,7 @@ class Bancada:
         self.transmissor = transmissor
         self.roteiro = None
         self._contador = 0
+        self.descartadas_como_ruido = 0
         self._reiniciar(linha)
 
     # --- estado ---------------------------------------------------------------
@@ -392,6 +405,9 @@ class Bancada:
                 registro['refino_por_correlacao'] = refino
         if registro.get('classe') in (P.D.CLASSE_SEM_DETECCAO, None):
             return []
+        if not self._confirmar_degrau(registro, t, sinais):
+            self.descartadas_como_ruido += 1
+            return []
         saude = self._saude(sinais)
         if self.linha.cadastro and self.linha.tipo != 'rede':
             sensores_cad = {s: {'posicao_m': v['s_m']} for s, v in self.linha.sensores.items()}
@@ -399,6 +415,28 @@ class Bancada:
                                  sensores_cad)
             registro = P.CD.aplicar(registro, conf)
         return [self._montar_evento(registro, saude, t_c, t, sinais)]
+
+    def _canais_que_declararam(self, registro):
+        if 'canais' in registro:
+            return {s: d for s, d in registro['canais'].items() if d.get('detectado')}
+        return {s: registro[c] for s, c in (('A', 'canal_A'), ('B', 'canal_B')) if (registro.get(c) or {}).get('detectado')}
+
+    def _confirmar_degrau(self, registro, t, sinais):
+        """Com um canal so, o nivel tem que ter mudado e ficado mudado (ver o comeco do modulo)."""
+        canais = self._canais_que_declararam(registro)
+        if len(canais) != 1:
+            return True
+        sensor, det = next(iter(canais.items()))
+        tc = det.get('tempo_de_chegada_s')
+        if tc is None:
+            return True
+        x = sinais[sensor]
+        antes = x[(t >= tc - 0.12) & (t < tc - 0.02)]
+        depois = x[(t >= tc + 0.005) & (t < tc + 0.025)]
+        if len(antes) < 10 or len(depois) < 5:
+            return True
+        limiar = max(6.0 * float(np.std(antes)) / np.sqrt(len(depois)), 3.0 * self.escala()['resolucao_declarada_m'])
+        return abs(float(np.mean(depois)) - float(np.mean(antes))) > limiar
 
     def _montar_evento(self, registro, saude, t_c, t, sinais):
         sensores = {s: {'nome': v['nome'], 'trecho': v['trecho'], 'posicao_m': v['s_m']}

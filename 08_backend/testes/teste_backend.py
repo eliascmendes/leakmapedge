@@ -134,6 +134,28 @@ class BancadaAoVivo(unittest.TestCase):
             b = nova('cais', transmissor)
             self.assertEqual(rodar(b, 50), [], transmissor)
 
+    def test_operacao_continua_sem_falso_alarme_de_ruido(self):
+        # 6 minutos de regime com transmissor real; antes da confirmacao do degrau, o ruido
+        # passava do limiar num canal so cerca de uma vez a cada 2,5 minutos
+        b = BA.Bancada(linhas=LINHAS, linha='cais', transmissor='rapido', semente=5)
+        self.assertEqual(rodar(b, 3600), [])
+        self.assertGreater(b.descartadas_como_ruido, 0)
+
+    def test_evento_real_num_canal_so_continua_saindo(self):
+        b = nova('cais', 'inteligente_100ms')
+        b.vazamento('principal', 320.0, 'grande')        # com 100 ms, o sensor B costuma perder o pulso curto
+        e = rodar(b, 20)
+        self.assertEqual(len(e), 1)
+        b.reparar()
+        rodar(b, 20)
+        b.sensor('B', 'cabo_rompido')
+        self.assertEqual(len(rodar(b, 20)), 1)
+
+    def test_parada_de_bomba_registrada_nao_alarma(self):
+        b = nova()
+        b.equipamento('B-01', 'parar', True)
+        self.assertEqual(rodar(b, 30)[0]['evento']['nivel'], 'registro')
+
     def test_evento_em_fluxo_igual_ao_detector_em_lote(self):
         b = nova()
         b.vazamento('principal', 320.0, 'grande')
@@ -182,6 +204,9 @@ class Api(unittest.TestCase):
         r = self.c.post('/api/bancada/vazamento', json={'trecho': 'principal', 's_m': 5000}, headers=self.chave)
         self.assertEqual(r.status_code, 422)
         self.assertIn('fora da linha', r.json()['erro'])
+        r = self.c.post('/api/bancada/transmissor', json={'transmissor': 'xyz'}, headers=self.chave)
+        self.assertEqual(r.status_code, 422)
+        self.assertIn('transmissor', r.json()['erro'])
 
     def test_websocket_boas_vindas_e_amostras(self):
         with self.c.websocket_connect('/ws?perfil=operador&taxa=20') as ws:

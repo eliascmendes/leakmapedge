@@ -97,6 +97,16 @@ class Cadastro(unittest.TestCase):
         r['delta_t_s'] = -0.30
         self.assertEqual(CD.conferir(r, CADASTRO, ops, T, SENSORES)['decisao'], CD.DECISAO_NADA)
 
+    def test_so_um_canal_viu_a_queda_o_lado_e_o_dele(self):
+        r = fora('A')
+        r.update(classe='detectado_sem_localizacao', lado_da_origem=None)
+        r['canal_B'] = {'detectado': False}
+        ops = [{'equipamento': 'B-01', 'acao': 'parada', 'instante_s': T - 0.3}]
+        c = CD.conferir(r, CADASTRO, ops, T, SENSORES)
+        self.assertEqual((c['decisao'], c['equipamento']), (CD.DECISAO_MANOBRA, 'B-01'))
+        # sem registro de operacao, nada rebaixa: so a anotacao
+        self.assertEqual(CD.conferir(r, CADASTRO, [], T, SENSORES)['decisao'], CD.DECISAO_CONFERIR)
+
     def test_o_evento_leva_a_conferencia(self):
         c = CD.conferir(localizado(452.0), CADASTRO, [], T, SENSORES)
         e = AL.montar_evento(CD.aplicar(localizado(452.0), c), 'L-01', SENSORES, 'software')

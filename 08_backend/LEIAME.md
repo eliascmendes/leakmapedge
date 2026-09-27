@@ -59,6 +59,17 @@ A cada 0,1 s de relógio, a bancada (`bancada.py`):
    placa, `06_fpga/computador`), o cadastro com o registro de operação e a
    escala de alerta (`07_servico`).
 
+**Confirmação do degrau.** O detector foi calibrado sobre registros de 0,2 s.
+Rodando sem parar, ele toma cerca de 10 mil decisões por segundo, e o ruído do
+transmissor passava do limiar num sensor só cerca de uma vez a cada 2,5
+minutos (4 em 10 minutos, com o transmissor rápido e com o de 10 ms; nenhuma
+virou alarme, porque alarme precisa de dois sensores). Quando só um sensor
+dispara, a bancada confere se o nível mudou e ficou mudado; o pico de ruído é
+descartado e contado em `deteccoes_descartadas_como_ruido`, no
+`/api/servico`. Depois disso: nenhuma detecção falsa em 10 minutos, em todas as
+linhas, e os eventos reais num sensor só (cabo rompido, parada de bomba)
+continuam saindo. O detector em si não mudou.
+
 O backend não reescreve nenhuma dessas partes: importa (`projeto.py`). O
 detector só recebe o sinal dos sensores; a posição real vai à parte, no campo
 `verdade`, só para o perfil de demonstração.
@@ -115,8 +126,24 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
 | `pagina_teste.html` | Página de teste (`/teste`) |
 | `cliente.py` | Cliente de linha de comando; grava sessões |
 | `validar_gerador.py` | Conferência do gerador contra o TSNet |
+| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 63 conferências com resultado esperado |
 | `exemplos/` | Sessões gravadas do WebSocket, uma mensagem por linha: vazamento na linha do cais, abertura de válvula sem registro de operação, vazamento na rede |
 | `testes/` | Gerador, bancada ao vivo, fluxo contra lote, REST e WebSocket |
 
 Testes: `python -m unittest discover -s 08_backend/testes -p "teste_*.py"`
-(16 testes; rodam também no GitHub Actions, no job `backend-da-bancada`).
+(19 testes; rodam também no GitHub Actions, no job `backend-da-bancada`).
+
+## Conferir o serviço no ar
+
+```bash
+python 08_backend/conferir_servico.py --endereco https://leakmap-bancada.onrender.com --chave <chave>
+```
+
+Roda 63 conferências com resultado esperado conhecido: consultas, chave,
+erros de validação, WebSocket (taxa, pressão de regime contra o TSNet, perfil
+do operador), vazamentos na linha do cais, na rede e no trecho de 200 m,
+manobras com e sem registro de operação, autoteste, gás, transmissor lento,
+histórico e 20 s de regime sem falso alarme. No fim devolve a bancada ao
+estado inicial. Como o serviço é compartilhado, não começa se houver alguém
+conectado ao WebSocket, a menos que se use `--forcar`. `--relatorio
+arquivo.json` grava o resultado.

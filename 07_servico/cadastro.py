@@ -74,12 +74,20 @@ def lado_alem_do_limite(registro):
     marcada tarde no sensor mais distante, e a diferenca de tempo passa de L/c
     alem da tolerancia do detector: o evento sai sem localizacao. O sinal da
     diferenca ainda diz de que lado a onda veio, e isso basta para confrontar
-    com os equipamentos daquele lado.
+    com os equipamentos daquele lado. Quando o sensor mais distante nem chega a
+    declarar (no acompanhamento continuo, a espera e mais curta que o registro
+    dos ensaios), o lado e o do unico sensor que viu a queda.
     """
     par = registro.get('parametros_do_detector') or {}
     dt = registro.get('delta_t_s')
-    if (registro.get('classe') != CLASSE_SEM_LOCALIZACAO or dt is None or polaridade_do_evento(registro) != 'queda'
-            or not par.get('distancia_entre_sensores_L_m') or not par.get('velocidade_de_onda_m_s')):
+    if registro.get('classe') != CLASSE_SEM_LOCALIZACAO or polaridade_do_evento(registro) != 'queda':
+        return None
+    declararam = [c[-1] for c in ('canal_A', 'canal_B') if (registro.get(c) or {}).get('detectado')]
+    if dt is None and len(declararam) == 1:
+        # so um canal viu a queda; o outro nao viu nada em toda a espera do detector: a frente e lenta
+        # demais para ele ou ainda nem chegou, e a onda veio do lado de quem viu
+        return declararam[0]
+    if dt is None or not par.get('distancia_entre_sensores_L_m') or not par.get('velocidade_de_onda_m_s'):
         return None
     if abs(dt) <= float(par['distancia_entre_sensores_L_m']) / float(par['velocidade_de_onda_m_s']):
         return None

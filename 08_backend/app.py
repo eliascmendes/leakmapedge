@@ -19,6 +19,8 @@ from typing import Literal, Optional
 
 import numpy as np
 from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field
@@ -138,6 +140,18 @@ async def _erro_http(request, exc):
     return JSONResponse(corpo, status_code=exc.status_code)
 
 
+@app.exception_handler(RequestValidationError)
+async def _erro_de_validacao(request, exc):
+    """Pedido com campo faltando ou valor fora das opcoes: o mesmo formato {"erro": ...} do contrato."""
+    partes = []
+    for e in exc.errors():
+        campo = '.'.join(str(x) for x in e.get('loc', ()) if x != 'body')
+        esperado = (e.get('ctx') or {}).get('expected')
+        partes.append('%s: %s' % (campo or 'corpo', 'use %s' % esperado if esperado else e.get('msg')))
+    return JSONResponse({'erro': 'pedido invalido: ' + '; '.join(partes), 'detalhes': jsonable_encoder(exc.errors())},
+                        status_code=422)
+
+
 @app.exception_handler(BA.ErroDaBancada)
 async def _erro_da_bancada(request, exc):
     return JSONResponse(dict({'erro': exc.texto}, **exc.extra), status_code=exc.codigo)
@@ -167,7 +181,7 @@ async def pagina_de_teste():
 async def servico():
     return {'situacao': 'ok', 'versao_do_contrato': VERSAO_DO_CONTRATO, 'modo': 'simulacao',
             'comandos_exigem_chave': bool(CHAVE), 't_s': round(E.bancada.t, 3), 'clientes_conectados': len(E.clientes),
-            'passos_atrasados': E.atrasos}
+            'passos_atrasados': E.atrasos, 'deteccoes_descartadas_como_ruido': E.bancada.descartadas_como_ruido}
 
 
 @app.get('/api/linhas', tags=['consultas'], summary='As linhas da bancada, com trechos, sensores e equipamentos')
