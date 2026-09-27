@@ -66,20 +66,27 @@ faixa fixa e bem visível escrita SIMULAÇÃO.
 3. ONDE O BACKEND RODA
 -------------------------------------------------------------------------------
 
-  Endereço na nuvem ...... https://<nome-do-servico>.onrender.com (a definir)
-  Endereço local ......... http://localhost:8000
-  Documentação viva ...... <endereço>/docs    (quando estiver no ar)
-  Contrato em JSON ....... <endereço>/openapi.json
-  WebSocket .............. wss://<endereço>/ws?perfil=demonstracao
-                           wss://<endereço>/ws?perfil=operador
-                           (ws:// no endereço local)
+  Endereço na nuvem ...... https://leakmap-bancada.onrender.com
+  Documentação viva ...... https://leakmap-bancada.onrender.com/docs
+  Contrato em JSON ....... https://leakmap-bancada.onrender.com/openapi.json
+  Página de teste ........ https://leakmap-bancada.onrender.com/teste
+  WebSocket .............. wss://leakmap-bancada.onrender.com/ws?perfil=demonstracao
+                           wss://leakmap-bancada.onrender.com/ws?perfil=operador
+
+  Endereço local ......... http://localhost:8000 (mesmas rotas; WebSocket em
+                           ws://localhost:8000/ws?...), rodando o backend na
+                           própria máquina (08_backend/LEIAME.md)
+
+A chave dos comandos (seção 4) é passada pela equipe do backend por um canal
+privado. Ela não vai neste documento nem no código do front.
 
 Hospedagem no Render, plano gratuito. Três coisas que o front precisa saber:
 
   a) O serviço "dorme" depois de uns 15 minutos sem acesso, e o primeiro acesso
      leva cerca de 1 minuto para acordar. Na demonstração, abrir o dashboard
      um pouco antes. Para acordar e saber se está no ar:
-         GET /api/servico  ->  {"situacao": "ok", "versao_do_contrato": "0"}
+         GET https://leakmap-bancada.onrender.com/api/servico
+           ->  {"situacao": "ok", "versao_do_contrato": "1", ...}
 
   b) O WebSocket pode cair (serviço reiniciando, rede do evento). O front deve
      reconectar sozinho, esperando 1 s, 2 s, 4 s... até 30 s entre tentativas.
@@ -551,11 +558,13 @@ publicação ficam com a equipe) e ligar a placa FPGA ou sensores reais.
 15. O QUE MUDOU NA IMPLEMENTAÇÃO (versão 1 do contrato)
 -------------------------------------------------------------------------------
 
-O backend está pronto em 08_backend (como rodar: 08_backend/LEIAME.md). Tudo o
-que está nas seções 1 a 14 vale, com estas diferenças e acréscimos:
+O backend está pronto em 08_backend (como rodar: 08_backend/LEIAME.md) e
+publicado no Render, em https://leakmap-bancada.onrender.com. Tudo o que está
+nas seções 1 a 14 vale, com estas diferenças e acréscimos:
 
   Ver funcionando sem o front
-    - <endereço>/teste: página de teste com todas as ações e mensagens.
+    - https://leakmap-bancada.onrender.com/teste: página de teste com todas
+      as ações e mensagens (a chave vai no campo "Chave dos comandos").
     - 08_backend/exemplos/*.jsonl: sessões gravadas do WebSocket, uma
       mensagem por linha, com o instante em que chegou ("recebido_em_s"):
       vazamento na linha do cais, abertura de válvula sem registro de
