@@ -259,6 +259,11 @@ O que cada ação provoca (para escrever os textos da tela):
   Romper antes do sensor A (ou depois  suspeita, "fora do trecho", com o lado
   do sensor da ponta)
   Manobra com registro de operação     registro (não alarma)
+  Parar a bomba                        em geral registro; a frente é lenta e
+                                       às vezes não é marcada, ou (linha do
+                                       cais) sai como suspeita do lado B,
+                                       "conferir": limite conhecido do
+                                       detector, nunca vira alarme
   Abrir válvula sem registro           linha do cais (XV-106) e trecho de
                                        200 m (XV-100): provável na posição da
                                        válvula, com "conferir"; rede (válvulas
@@ -313,6 +318,10 @@ A4. CUIDADOS QUE VALEM PARA OS DOIS
     ler tudo da API, sem fixar números no código.
   - Uma bancada só para todos: quem estiver conectado vê as ações dos
     outros.
+  - Entre duas manobras, esperar uns 5 s. Enquanto o transitório da primeira
+    não assenta, a onda da segunda pode não ser marcada (sobretudo a parada
+    da bomba), como aconteceria numa linha real. No simulador, vale travar
+    os botões de equipamento por uns segundos depois de cada manobra.
 
 
 -------------------------------------------------------------------------------
@@ -617,6 +626,8 @@ WebSocket para todos os conectados.
        registrada explica um evento só.
        Resultado: {"id": "mn-3", "equipamento": "XV-106", "estado": "aberta",
                    "operacao_registrada": true, "fonte_usada": "tsnet"}
+       Entre duas manobras, esperar uns 5 s (ver A4): com menos, a onda da
+       segunda pode se perder no transitório da primeira.
        Nas três linhas (equipamentos em B6). 404 para equipamento que não
        existe na linha ativa; 409 se ele já está no estado pedido; 422 para
        ação que não vale para o tipo (ex.: "partir" uma válvula).

@@ -177,8 +177,11 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
   (`RELAXACAO_DA_MANOBRA_S`, em `gerador.py`), e a manobra sai da conta
   quando o efeito já sumiu. É uma aproximação: o regime novo depois da
   manobra (um pouco acima ou abaixo do de antes) não está nas simulações.
-  Duas manobras seguidas em menos de uns 10 s se somam enquanto a primeira
-  decai.
+  Duas manobras seguidas se somam enquanto a primeira decai. Com menos de
+  uns 4 s entre elas, a frente lenta da segunda (a parada da bomba, sobretudo)
+  pode não ser marcada: o decaimento da primeira ainda enche a janela longa
+  do detector. Na linha real o transitório demora ainda mais para assentar;
+  `conferir_servico.py` espera 4 s entre as manobras (`ASSENTAR_S`).
 - Manobras nas três linhas, pelas simulações de manobra de cada uma: na
   linha do cais, a bomba e as válvulas XV-104, XV-106 e XV-108 (a XV-104 usa
   as simulações da XV-106, deslocadas para 200 m); na rede, a bomba e as
@@ -198,6 +201,13 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
   conferir.
 - Cada operação registrada explica um evento só: depois de usada, não serve
   para outro, mesmo dentro da janela de 5 s.
+- A parada da bomba tem frente lenta (a bomba desacelera), perto do limiar do
+  detector no sensor A: às vezes a onda não é marcada (na rede, a razão de
+  energia fica entre 10 e 23, com limiar 12), e na linha do cais o sensor A
+  às vezes não declara e o evento sai como suspeita do lado B, com
+  "conferir". O detector não foi recalibrado para
+  isso; a conferência do serviço aceita a parada não marcada, mas nunca um
+  alarme.
 - Vários eventos ao mesmo tempo se somam (superposição linear).
 
 ## Arquivos
