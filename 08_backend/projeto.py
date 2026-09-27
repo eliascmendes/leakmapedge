@@ -40,6 +40,7 @@ import refino as RF  # noqa: E402
 import alerta as AL  # noqa: E402
 import cadastro as CD  # noqa: E402
 import integracao as IN  # noqa: E402
+import sobrepressao as SP  # noqa: E402
 import placa_referencia as PLACA  # noqa: E402
 import preparo as PP  # noqa: E402
 import protocolo as PR  # noqa: E402

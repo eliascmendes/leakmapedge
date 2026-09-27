@@ -9,8 +9,8 @@ Tudo o que sai daqui é simulação e vem marcado com `"modo": "simulacao"`.
 
 O contrato para a equipe de front está em
 [`01_documentacao/LEAKMAP_backend_guia_para_o_front_end.txt`](../01_documentacao/LEAKMAP_backend_guia_para_o_front_end.txt)
-(seção 15: o que mudou na implementação). Com o backend no ar, a referência
-viva é o `/docs`.
+(parte A: o que o backend entrega; parte B: a referência técnica). Com o
+backend no ar, a referência viva é o `/docs`.
 
 ## Rodar
 
@@ -51,8 +51,8 @@ de processador do plano gratuito.
    ele tem prazo de validade, conferir no painel do Render).
 2. Na página do banco, copiar a *Internal Database URL*.
 3. No serviço `leakmap-bancada`, aba *Environment*: criar `LEAKMAP_BANCO` com
-   esse endereço. O serviço reinicia e passa a gravar no banco; a tabela é
-   criada sozinha.
+   esse endereço. O serviço reinicia e passa a gravar no banco; as tabelas
+   (`eventos` e `sobrepressoes`) são criadas sozinhas.
 
 `GET /api/servico` mostra `"historico": "postgresql"` quando deu certo. Se a
 conexão com o banco cair (banco gerenciado derruba conexão parada), o backend
@@ -106,6 +106,35 @@ descartado e contado em `deteccoes_descartadas_como_ruido`, no
 linhas, e os eventos reais num sensor só (cabo rompido, parada de bomba)
 continuam saindo. O detector em si não mudou.
 
+### Alerta de sobrepressão (recurso novo)
+
+Complementar à detecção e localização de vazamento, que continua sendo o centro
+e não mudou. No mesmo passo de 0,1 s, o monitor de `07_servico/sobrepressao.py`
+compara o pico de pressão de cada sensor com o limite da linha, a pressão
+máxima admissível do componente mais fraco (mangote, braço de carregamento,
+flange): **atenção** a partir de 80% do limite, **alarme** a partir de 95%. O
+episódio sai na mensagem `sobrepressao` do WebSocket, 1 s depois de começar,
+de novo com o mesmo `id` se subir para alarme e quando acabar; a causa
+provável é a operação registrada mais perto do pico. Fica numa tabela própria
+do histórico (`sobrepressoes`) e sai também pelo webhook, com
+`"tipo": "leakmap.sobrepressao"` e os níveis próprios, sem o filtro de níveis
+de vazamento. Sensores reprovados no autoteste ficam de fora.
+
+| Linha | Limite (premissa) | Manobras da bancada que chegam à atenção |
+|---|---|---|
+| `cais` | 12 bar | fechar XV-108: 10,5 bar em B (88%); partir B-01: 11,3 bar em A (94%) |
+| `rede` | 12 bar | partir B-01: 10,3 bar em A (86%) |
+| `trecho_200` | 8 bar | fechar XV-100: 6,5 bar em A (82%) |
+
+Os limites são premissas até chegar o dado da planta (`linhas.py`,
+`LIMITE_DE_PRESSAO_BAR`) e mudam pela API, até o serviço reiniciar:
+
+- `GET /api/sobrepressao`: limite, estado atual e último episódio;
+- `GET /api/sobrepressao/eventos`: histórico das sobrepressões;
+- `POST /api/sobrepressao/limite` (com a chave): `{"limite_bar": 10.5, "linha": "cais"}`.
+
+O alerta avisa quando o pico acontece; ele não prevê o pico antes da manobra.
+
 O backend não reescreve nenhuma dessas partes: importa (`projeto.py`). O
 detector só recebe o sinal dos sensores; a posição real vai à parte, no campo
 `verdade`, só para o perfil de demonstração.
@@ -138,9 +167,18 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
   simulado mais próximo: ficam deslocadas de até o dobro da distância até ele,
   dividido pela velocidade da onda. A chegada, que é o que o detector usa, é
   exata.
-- Depois que a simulação acaba, o sinal segura o último valor: o vazamento
-  fica aberto até reparar. No trecho de 200 m a simulação gravada é curta
-  (0,1 s), e o nível que fica é o do meio do transitório.
+- Depois que a simulação de um vazamento acaba, o sinal segura o último
+  valor: o vazamento fica aberto até reparar. No trecho de 200 m a simulação
+  gravada é curta (0,1 s), e o nível que fica é o do meio do transitório.
+- As simulações de manobra acabam (1,2 s) no meio do transitório. Segurar o
+  último valor deixaria o golpe de aríete na linha para sempre (e o alerta de
+  sobrepressão aceso); por isso, depois do fim da simulação, a variação da
+  manobra decai para o regime com constante de tempo de 2 s
+  (`RELAXACAO_DA_MANOBRA_S`, em `gerador.py`), e a manobra sai da conta
+  quando o efeito já sumiu. É uma aproximação: o regime novo depois da
+  manobra (um pouco acima ou abaixo do de antes) não está nas simulações.
+  Duas manobras seguidas em menos de uns 10 s se somam enquanto a primeira
+  decai.
 - Manobras nas três linhas, pelas simulações de manobra de cada uma: na
   linha do cais, a bomba e as válvulas XV-104, XV-106 e XV-108 (a XV-104 usa
   as simulações da XV-106, deslocadas para 200 m); na rede, a bomba e as
@@ -177,12 +215,12 @@ Resultado completo em `resultados/leakmap_validacao_do_gerador_v1.json`.
 | `pagina_teste.html` | Página de teste (`/teste`) |
 | `cliente.py` | Cliente de linha de comando; grava sessões |
 | `validar_gerador.py` | Conferência do gerador contra o TSNet |
-| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 72 conferências com resultado esperado |
+| `conferir_servico.py` | Conferência de um serviço no ar (Render ou local): 77 conferências com resultado esperado |
 | `exemplos/` | Sessões gravadas do WebSocket, uma mensagem por linha: vazamento na linha do cais, abertura de válvula sem registro de operação, vazamento na rede |
-| `testes/` | Gerador, bancada ao vivo, manobras nas três linhas, fluxo contra lote, REST, WebSocket, webhook de ponta a ponta e histórico em SQLite e PostgreSQL |
+| `testes/` | Gerador, bancada ao vivo, manobras nas três linhas, sobrepressão, fluxo contra lote, REST, WebSocket, webhook de ponta a ponta e histórico em SQLite e PostgreSQL |
 
 Testes: `python -m unittest discover -s 08_backend/testes -p "teste_*.py"`
-(38 testes; os 6 do PostgreSQL rodam quando `LEAKMAP_BANCO_DE_TESTE` aponta
+(44 testes; os 6 do PostgreSQL rodam quando `LEAKMAP_BANCO_DE_TESTE` aponta
 para um banco descartável, como no GitHub Actions, job `backend-da-bancada`,
 que sobe um PostgreSQL para eles).
 
@@ -192,11 +230,13 @@ que sobe um PostgreSQL para eles).
 python 08_backend/conferir_servico.py --endereco https://leakmap-bancada.onrender.com --chave <chave>
 ```
 
-Roda 72 conferências com resultado esperado conhecido: consultas, chave,
+Roda 77 conferências com resultado esperado conhecido: consultas, chave,
 erros de validação, WebSocket (taxa, pressão de regime contra o TSNet, perfil
 do operador), vazamentos na linha do cais, na rede e no trecho de 200 m,
 manobras com e sem registro de operação nas três linhas, autoteste, gás,
-transmissor lento, histórico, webhook e 20 s de regime sem falso alarme. No fim devolve a bancada ao
-estado inicial. Como o serviço é compartilhado, não começa se houver alguém
+transmissor lento, histórico, webhook, sobrepressão (atenção no fechamento
+da XV-108, o mesmo episódio encerrando, e alarme com o limite em 10,5 bar) e
+20 s de regime sem falso alarme. No fim devolve a bancada ao estado inicial. Como o serviço é compartilhado, não começa se houver alguém
 conectado ao WebSocket, a menos que se use `--forcar`. `--relatorio
-arquivo.json` grava o resultado.
+arquivo.json` grava o resultado; `--grupos manobras,sobrepressao` roda só
+os grupos pedidos.

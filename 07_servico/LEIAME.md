@@ -14,7 +14,8 @@ evento num formato fixo, por webhook.
 | [`cadastro.py`](cadastro.py) | Confronta o evento com o cadastro de válvulas e bombas e com o registro de operação |
 | [`cadastro.exemplo.json`](cadastro.exemplo.json) | Cadastro de exemplo da linha simulada do cais |
 | [`cadastro_linha_cais.py`](cadastro_linha_cais.py) | Aplica o cadastro aos ensaios da linha do cais e grava `resultados/` |
-| [`testes/`](testes) | Escala, evento, cadastro e webhook de ponta a ponta com o receptor |
+| [`sobrepressao.py`](sobrepressao.py) | Alerta de sobrepressão (golpe de aríete): recurso complementar, à parte da detecção de vazamento |
+| [`testes/`](testes) | Escala, evento, cadastro, sobrepressão e webhook de ponta a ponta com o receptor |
 
 ## Escala de alerta
 
@@ -115,6 +116,43 @@ lançamento do operador. No evento, a conferência sai no campo `cadastro`.
 
 A versão só muda se um campo existente mudar de sentido; campos novos podem
 entrar sem mudar a versão.
+
+## Alerta de sobrepressão (`leakmap.sobrepressao`, versão 1)
+
+Recurso complementar, que entra agora: a detecção e a localização de
+vazamento continuam sendo o centro do LEAKMAP e não mudaram. Os mesmos
+sensores de pressão mostram também os picos de golpe de aríete (fechar uma
+válvula ou partir uma bomba de repente), que com o tempo causam o próximo
+vazamento nos elos fracos da linha: mangotes, braços de carregamento, flanges.
+
+`sobrepressao.py` compara o pico de cada sensor com o **limite** da linha, a
+pressão máxima admissível do componente mais fraco (premissa até chegar o
+dado da planta):
+
+| Nível | Quando |
+|---|---|
+| `atencao` | o pico passou de 80% do limite |
+| `alarme` | o pico passou de 95% do limite |
+
+- O episódio começa quando algum sensor passa do nível de atenção; o evento
+  sai 1 s depois (para pegar o pico inteiro), de novo com o mesmo `id` e a
+  `revisao` seguinte se subir para alarme, e quando acabar (todos os sensores
+  abaixo do nível de atenção, com 0,3 bar de folga, por 1 s).
+- A causa provável é a operação registrada mais perto do pico (de 5 s antes a
+  1 s depois), no mesmo registro de operação do cadastro. Sem operação, a
+  explicação pede para conferir a linha.
+- Sensores reprovados no autoteste ficam de fora.
+- A pressão só é medida onde há sensor: entre eles o pico pode ser maior. Um
+  pico acima da faixa do transmissor fica cortado, e o evento avisa
+  (`pico_pode_ser_maior`).
+- O alerta avisa quando o pico acontece; não é previsão.
+
+Campos principais do evento: `id`, `revisao`, `nivel`, `em_curso`,
+`limite_bar`, `origem_do_limite`, `pico_bar`, `fracao_do_limite`,
+`sensor_do_pico`, `instante_do_pico_s`, `picos_por_sensor_bar`, `duracao_s`,
+`causa_provavel`, `pico_pode_ser_maior`, `explicacao`. Pelo webhook, sai com
+os níveis próprios, sem passar pelo filtro de níveis de vazamento (ver o
+backend, `08_backend/repasse.py`).
 
 ## Ligar o webhook
 

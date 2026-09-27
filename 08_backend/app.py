@@ -86,7 +86,7 @@ def para_o_perfil(mensagem, perfil):
 
 
 def difundir(mensagem):
-    if mensagem.get('tipo') == 'evento' and E.repasse is not None:
+    if mensagem.get('tipo') in ('evento', 'sobrepressao') and E.repasse is not None:
         E.repasse.por(mensagem['evento'])       # o webhook recebe so o evento, nunca a verdade
     for c in list(E.clientes):
         c.por(para_o_perfil(mensagem, c.perfil))
@@ -202,7 +202,8 @@ async def integracao():
 async def linhas():
     b = E.bancada
     return {'linha_ativa': b.linha.id,
-            'linhas': [l.descricao(b.equipamentos if l.id == b.linha.id else None) for l in b.linhas.values()]}
+            'linhas': [l.descricao(b.equipamentos if l.id == b.linha.id else None, b.limites[l.id])
+                       for l in b.linhas.values()]}
 
 
 @app.get('/api/linhas/{ident}', tags=['consultas'], summary='Uma linha')
@@ -210,7 +211,7 @@ async def linha(ident: str):
     b = E.bancada
     if ident not in b.linhas:
         raise HTTPException(404, 'linha desconhecida: %s' % ident)
-    return b.linhas[ident].descricao(b.equipamentos if ident == b.linha.id else None)
+    return b.linhas[ident].descricao(b.equipamentos if ident == b.linha.id else None, b.limites[ident])
 
 
 @app.get('/api/transmissores', tags=['consultas'], summary='Os tipos de transmissor da bancada')
@@ -249,6 +250,21 @@ async def sinal(ident: str):
     if s is None:
         raise HTTPException(404, 'evento desconhecido: %s' % ident)
     return s
+
+
+@app.get('/api/sobrepressao', tags=['sobrepressao'],
+         summary='Alerta de sobrepressao: limite da linha, estado atual e o ultimo episodio')
+async def sobrepressao():
+    return E.bancada.situacao_da_sobrepressao()
+
+
+@app.get('/api/sobrepressao/eventos', tags=['sobrepressao'],
+         summary='Historico dos episodios de sobrepressao, do mais novo para o mais antigo')
+async def sobrepressao_eventos(desde: Optional[str] = None, nivel: Optional[str] = None, linha: Optional[str] = None,
+                               limite: int = Query(50, ge=1, le=500),
+                               perfil: Literal['demonstracao', 'operador'] = 'operador'):
+    return [para_o_perfil(e, perfil) for e in E.bancada.historico.listar(desde, nivel, linha, limite,
+                                                                          tabela='sobrepressoes')]
 
 
 @app.get('/api/cadastro', tags=['consultas'], summary='Valvulas e bombas da linha ativa')
@@ -360,6 +376,17 @@ async def roteiro(p: PedidoRoteiro):
     return _depois()
 
 
+class PedidoLimite(BaseModel):
+    limite_bar: float = Field(..., examples=[12.0])
+    linha: Optional[Literal['trecho_200', 'cais', 'rede']] = None
+
+
+@app.post('/api/sobrepressao/limite', tags=['sobrepressao'], dependencies=COMANDO,
+          summary='Muda o limite de pressao de uma linha (premissa ate chegar o dado da planta)')
+async def sobrepressao_limite(p: PedidoLimite):
+    return _depois(E.bancada.definir_limite(p.limite_bar, p.linha))
+
+
 @app.post('/api/integracao/teste', tags=['integracao'], dependencies=COMANDO,
           summary='Manda agora um evento de teste pelo webhook (marcado "teste": true)')
 async def integracao_teste():
@@ -383,7 +410,8 @@ async def operacoes(p: PedidoOperacao):
 def boas_vindas(perfil):
     b = E.bancada
     return {'tipo': 'boas_vindas', 'versao_do_contrato': VERSAO_DO_CONTRATO, 'perfil': perfil,
-            'estado': b.estado(perfil), 'linha': b.linha.descricao(b.equipamentos), 'saude': b.mensagem_de_saude()}
+            'estado': b.estado(perfil), 'linha': b.linha.descricao(b.equipamentos, b.limites[b.linha.id]),
+            'saude': b.mensagem_de_saude()}
 
 
 @app.websocket('/ws')

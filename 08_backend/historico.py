@@ -18,11 +18,12 @@ import json
 import sqlite3
 import threading
 
-COLUNAS = ('id', 'instante_utc', 'linha', 'nivel', 'evento', 'verdade', 'sinal')
-CRIAR = ('CREATE TABLE IF NOT EXISTS eventos (id TEXT PRIMARY KEY, instante_utc TEXT, linha TEXT, nivel TEXT, '
+# "eventos": os alertas de vazamento; "sobrepressoes": os alertas de sobrepressao, a parte
+TABELAS = ('eventos', 'sobrepressoes')
+CRIAR = ('CREATE TABLE IF NOT EXISTS {t} (id TEXT PRIMARY KEY, instante_utc TEXT, linha TEXT, nivel TEXT, '
          'evento TEXT, verdade TEXT, sinal TEXT)')
-INDICE = 'CREATE INDEX IF NOT EXISTS eventos_por_instante ON eventos (instante_utc)'
-GRAVAR = ('INSERT INTO eventos (id, instante_utc, linha, nivel, evento, verdade, sinal) '
+INDICE = 'CREATE INDEX IF NOT EXISTS {t}_por_instante ON {t} (instante_utc)'
+GRAVAR = ('INSERT INTO {t} (id, instante_utc, linha, nivel, evento, verdade, sinal) '
           'VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id) DO UPDATE SET instante_utc = excluded.instante_utc, '
           'linha = excluded.linha, nivel = excluded.nivel, evento = excluded.evento, verdade = excluded.verdade, '
           'sinal = excluded.sinal')
@@ -39,8 +40,9 @@ class Historico:
         self._trava = threading.Lock()
         self._db = None
         self._conectar()
-        self._executar(CRIAR)
-        self._executar(INDICE)
+        for t in TABELAS:
+            self._executar(CRIAR.format(t=t))
+            self._executar(INDICE.format(t=t))
 
     @property
     def tipo(self):
@@ -71,13 +73,13 @@ class Historico:
                         raise
                     self._conectar()
 
-    def gravar(self, evento, verdade, sinal):
-        self._executar(GRAVAR, (evento['id'], evento['instante_utc'], evento['linha'], evento['nivel'],
+    def gravar(self, evento, verdade, sinal, tabela='eventos'):
+        self._executar(GRAVAR.format(t=_tabela(tabela)), (evento['id'], evento['instante_utc'], evento['linha'], evento['nivel'],
                                 json.dumps(evento, ensure_ascii=False), json.dumps(verdade, ensure_ascii=False),
                                 json.dumps(sinal)))
 
-    def listar(self, desde=None, nivel=None, linha=None, limite=50):
-        sql, par = 'SELECT evento, verdade FROM eventos WHERE 1=1', []
+    def listar(self, desde=None, nivel=None, linha=None, limite=50, tabela='eventos'):
+        sql, par = 'SELECT evento, verdade FROM %s WHERE 1=1' % _tabela(tabela), []
         if desde:
             sql, par = sql + ' AND instante_utc >= ?', par + [desde]
         if nivel:
@@ -95,12 +97,18 @@ class Historico:
         r = self._executar('SELECT sinal FROM eventos WHERE id = ?', (ident,), 'um')
         return None if r is None else json.loads(r[0])
 
-    def contar(self):
-        return int(self._executar('SELECT COUNT(*) FROM eventos', (), 'um')[0])
+    def contar(self, tabela='eventos'):
+        return int(self._executar('SELECT COUNT(*) FROM %s' % _tabela(tabela), (), 'um')[0])
 
     def fechar(self):
         with self._trava:
             self._db.close()
+
+
+def _tabela(nome):
+    if nome not in TABELAS:
+        raise ValueError('tabela desconhecida: %s' % nome)
+    return nome
 
 
 def _conexao_caiu(erro):

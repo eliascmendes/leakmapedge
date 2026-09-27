@@ -32,6 +32,11 @@ import projeto as P
 G = 9.81
 FAIXA_BAR = 15.0                 # transmissor de 0 a 15 bar, como nos ensaios da linha do cais
 APOS_A_CHEGADA_S = 0.003         # a amplitude do molde e lida 3 ms depois da chegada
+# limite de pressao da linha para o alerta de sobrepressao (07_servico/sobrepressao.py): a pressao maxima
+# admissivel do componente mais fraco. PREMISSA ate chegar o dado da planta.
+LIMITE_DE_PRESSAO_BAR = {'trecho_200': 8.0, 'cais': 12.0, 'rede': 12.0}
+ORIGEM_DO_LIMITE = ('premissa: pressao maxima admissivel do componente mais fraco da linha (mangote, braco de '
+                    'carregamento ou flange), ate chegar o dado da planta')
 ACAO_DA_BANCADA = {'abertura': 'abrir', 'fechamento': 'fechar', 'parada': 'parar', 'partida': 'partir'}
 CONTRARIA = {'abrir': 'fechar', 'fechar': 'abrir', 'parar': 'partir', 'partir': 'parar'}
 
@@ -63,6 +68,8 @@ class Linha:
         self.equipamentos = equipamentos or []
         self.cadastro, self.topo, self.tamanhos = cadastro, topo, list(tamanhos)
         self.moldes_de_vazamento, self.moldes_de_manobra = [], {}
+        self.limite_de_pressao_bar = LIMITE_DE_PRESSAO_BAR.get(ident, 12.0)
+        self.origem_do_limite = ORIGEM_DO_LIMITE
         self.manobras = {}                # (equipamento, acao da bancada) -> (molde, sinal)
         self.faixa_m = FAIXA_BAR * 1e5 / (self.rho * G)
 
@@ -100,7 +107,7 @@ class Linha:
             pontos.setdefault((m.trecho, m.s_m), []).append(m.tamanho)
         return [{'trecho': t, 's_m': s, 'tamanhos': sorted(v)} for (t, s), v in sorted(pontos.items())]
 
-    def descricao(self, estados_dos_equipamentos=None):
+    def descricao(self, estados_dos_equipamentos=None, limite_bar=None):
         estados = estados_dos_equipamentos or {}
         return {
             'id': self.id, 'nome': self.nome, 'tipo': self.tipo, 'produto': self.produto, 'tubo': self.tubo,
@@ -117,6 +124,8 @@ class Linha:
             'referencias': self.referencias,
             'desenho_esquematico': self.desenho,
             'cenarios_tsnet': self.cenarios_tsnet(),
+            'limite_de_pressao_bar': limite_bar if limite_bar is not None else self.limite_de_pressao_bar,
+            'origem_do_limite': self.origem_do_limite,
         }
 
 

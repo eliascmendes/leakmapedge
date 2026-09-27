@@ -299,6 +299,53 @@ class Conferencia:
         await self.operar('B-01', 'partir', True)
         await self.preparar('cais', 'rapido')
 
+    async def mensagens_por(self, segundos):
+        """Todas as mensagens (menos amostras) que chegarem nesse tempo."""
+        saida, limite = [], time.monotonic() + segundos
+        while time.monotonic() < limite:
+            try:
+                saida.append(await asyncio.wait_for(self.fila.get(), max(0.05, limite - time.monotonic())))
+            except asyncio.TimeoutError:
+                break
+        return saida
+
+    async def sobrepressao(self):
+        g = 'sobrepressao'
+        await self.preparar('cais', 'rapido')
+        st, s = await self.api('GET', '/api/sobrepressao')
+        self.conferir(g, 'GET /api/sobrepressao com o limite da linha', st == 200 and s.get('limite_bar') == 12.0,
+                      '%s bar' % s.get('limite_bar'))
+        self.limpar_fila()
+        await self.comando('/api/bancada/equipamento', {'equipamento': 'XV-108', 'acao': 'fechar',
+                                                        'registrar_operacao': True})
+        sp = [m['evento'] for m in await self.mensagens_por(7.0) if m['tipo'] == 'sobrepressao']
+        abre = sp[0] if sp else {}
+        self.conferir(g, 'fechar XV-108: atencao, pico de 10 a 11 bar no sensor B, causa XV-108',
+                      abre.get('nivel') == 'atencao' and abre.get('sensor_do_pico') == 'B'
+                      and 10.0 <= (abre.get('pico_bar') or 0) <= 11.0
+                      and (abre.get('causa_provavel') or {}).get('equipamento') == 'XV-108',
+                      '%s %s bar em %s' % (abre.get('nivel'), abre.get('pico_bar'), abre.get('sensor_do_pico')))
+        self.conferir(g, 'o episodio encerra com o mesmo id', len(sp) >= 2 and sp[-1].get('id') == abre.get('id')
+                      and sp[-1].get('em_curso') is False, '%d mensagens' % len(sp))
+        st, hist = await self.api('GET', '/api/sobrepressao/eventos?limite=1')
+        self.conferir(g, 'historico da sobrepressao', st == 200 and hist and hist[0]['evento'].get('id') == abre.get('id'))
+        await self.comando('/api/bancada/equipamento', {'equipamento': 'XV-108', 'acao': 'abrir',
+                                                        'registrar_operacao': True})
+        # o transitorio da reabertura decai com 2 s de constante (gerador.py): sem essa espera, o resto dele
+        # abaixa o pico do fechamento seguinte
+        await self.calma(10.0)
+        await self.comando('/api/sobrepressao/limite', {'limite_bar': 10.5})
+        try:
+            self.limpar_fila()
+            await self.comando('/api/bancada/equipamento', {'equipamento': 'XV-108', 'acao': 'fechar',
+                                                            'registrar_operacao': True})
+            sp = [m['evento'] for m in await self.mensagens_por(5.0) if m['tipo'] == 'sobrepressao']
+            self.conferir(g, 'com o limite em 10,5 bar, o mesmo fechamento vira alarme',
+                          bool(sp) and sp[0].get('nivel') == 'alarme', sp[0].get('nivel') if sp else 'nada')
+        finally:
+            await self.comando('/api/sobrepressao/limite', {'limite_bar': 12.0})
+        await self.preparar('cais', 'rapido')
+
     async def integracao_e_historico(self):
         g = 'integracao'
         st, s = await self.api('GET', '/api/servico')
@@ -401,7 +448,7 @@ class Conferencia:
               % s.get('deteccoes_descartadas_como_ruido'), flush=True)
 
     # --- tudo ---------------------------------------------------------------------------------
-    async def rodar(self, forcar):
+    async def rodar(self, forcar, so=None):
         print('servico:', self.endereco, flush=True)
         st, s = await self.api('GET', '/api/servico')          # acorda o servico no plano gratuito
         if st != 200:
@@ -418,10 +465,13 @@ class Conferencia:
             escuta = asyncio.create_task(self.escutar())
             try:
                 await self.comando('/api/bancada/roteiro', {'roteiro': None})
-                for grupo in (self.consultas, self.seguranca_e_validacao, self.websocket, self.linha_do_cais,
-                              self.manobras, self.manobras_nas_outras_linhas, self.sensores_e_gas,
-                              self.transmissor_lento, self.rede, self.trecho_200, self.historico,
-                              self.integracao_e_historico, self.sem_falso_alarme):
+                grupos = (self.consultas, self.seguranca_e_validacao, self.websocket, self.linha_do_cais,
+                          self.manobras, self.manobras_nas_outras_linhas, self.sensores_e_gas,
+                          self.transmissor_lento, self.rede, self.trecho_200, self.historico,
+                          self.integracao_e_historico, self.sobrepressao, self.sem_falso_alarme)
+                for grupo in grupos:
+                    if so and grupo.__name__ not in so:
+                        continue
                     print('\n%s' % grupo.__name__.replace('_', ' '), flush=True)
                     try:
                         await grupo()
@@ -443,10 +493,11 @@ def main():
     ap.add_argument('--espera', type=float, default=8.0, help='segundos esperando cada evento')
     ap.add_argument('--forcar', action='store_true', help='roda mesmo com clientes conectados')
     ap.add_argument('--relatorio', help='grava o resultado em JSON')
+    ap.add_argument('--grupos', help='roda so estes grupos, separados por virgula (ex.: manobras,sobrepressao)')
     args = ap.parse_args()
     c = Conferencia(args.endereco, args.chave, args.espera)
     inicio = time.monotonic()
-    asyncio.run(c.rodar(args.forcar))
+    asyncio.run(c.rodar(args.forcar, args.grupos.split(',') if args.grupos else None))
     falhas = [r for r in c.resultados if not r['ok']]
     print('\n%d de %d conferencias ok em %.0f s' % (len(c.resultados) - len(falhas), len(c.resultados),
                                                     time.monotonic() - inicio))

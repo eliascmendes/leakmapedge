@@ -28,6 +28,11 @@ degrau acima de 6 desvios da media (ou de 3 degraus de quantizacao), a
 deteccao e descartada como ruido e contada em `descartadas_como_ruido`. O
 detector em si nao muda.
 
+Em paralelo, e sem mexer na deteccao de vazamento, o alerta de sobrepressao
+(07_servico/sobrepressao.py) acompanha o pico de pressao de cada sensor contra
+o limite da linha (premissa, ajustavel) e publica os episodios de golpe de
+ariete a parte, na mensagem "sobrepressao".
+
 O detector so recebe o sinal dos sensores. A bancada sabe onde esta o
 vazamento, porque foi ela que o criou, e manda isso a parte, em "verdade".
 
@@ -91,6 +96,8 @@ class Bancada:
         self.roteiro = None
         self._contador = 0
         self.descartadas_como_ruido = 0
+        # limite de pressao de cada linha para o alerta de sobrepressao: premissa, ajustavel pela API
+        self.limites = {k: l.limite_de_pressao_bar for k, l in self.linhas.items()}
         self._reiniciar(linha)
 
     # --- estado ---------------------------------------------------------------
@@ -115,6 +122,8 @@ class Bancada:
         self.pares = [tuple(nomes[i:i + 2]) for i in range(0, len(nomes), 2)]
         # fase propria da saida em degraus de cada transmissor, fixa na sessao
         self.fase = {s: float(self.rng.uniform(0.0, 1.0)) for s in nomes}
+        self.monitor = P.SP.Monitor(self.limites[self.linha.id], faixa_bar=LN.FAIXA_BAR)
+        self.ultima_sobrepressao = None
 
     def utc(self, t_s):
         return (self.inicio_utc + datetime.timedelta(seconds=float(t_s))).isoformat().replace('+00:00', 'Z')
@@ -152,6 +161,9 @@ class Bancada:
             'nivel_atual': self.nivel_atual(),
             'roteiro': None if self.roteiro is None else {'roteiro': self.roteiro['nome'],
                                                           'intervalo_s': self.roteiro['intervalo_s']},
+            'sobrepressao': {'limite_bar': self.limites[self.linha.id], 'nivel_atual': self.monitor.nivel_atual(),
+                             'pico_bar': (round(P.SP.Monitor.pico(self.monitor.episodio)[1], 3)
+                                          if self.monitor.nivel_atual() else None)},
         }
         if perfil == 'demonstracao':
             e['vazamentos_abertos'] = [{'id': v['id'], 'trecho': v['trecho'], 's_m': v['s_m'], 'tamanho': v['tamanho'],
@@ -163,6 +175,30 @@ class Bancada:
     def _novo_id(self, prefixo):
         self._contador += 1
         return '%s-%d' % (prefixo, self._contador)
+
+    def definir_limite(self, limite_bar, linha=None):
+        """Muda o limite de pressao de uma linha (o componente mais fraco): premissa ate o dado da planta."""
+        linha = linha or self.linha.id
+        if linha not in self.linhas:
+            raise ErroDaBancada(422, 'linha desconhecida: %s' % linha)
+        if not 1.0 <= float(limite_bar) <= LN.FAIXA_BAR:
+            raise ErroDaBancada(422, 'o limite tem de ficar entre 1 e %.0f bar (a faixa do transmissor)' % LN.FAIXA_BAR)
+        self.limites[linha] = float(limite_bar)
+        if linha == self.linha.id:
+            self.monitor.limite_bar = float(limite_bar)
+        resposta = {'linha': linha, 'limite_bar': float(limite_bar), 'aviso': None}
+        regime = max(float(self.linhas[linha].bar(h)) for h in self.linhas[linha].regime.values())
+        if regime >= P.SP.FRACAO_ATENCAO * float(limite_bar):
+            resposta['aviso'] = ('a pressao de regime da linha (%.2f bar) ja passa de %d%% deste limite: a linha fica em '
+                                 'atencao o tempo todo' % (regime, round(100 * P.SP.FRACAO_ATENCAO)))
+        return resposta
+
+    def situacao_da_sobrepressao(self):
+        return {'linha': self.linha.id, 'limite_bar': self.limites[self.linha.id],
+                'origem_do_limite': self.linha.origem_do_limite,
+                'fracao_atencao': P.SP.FRACAO_ATENCAO, 'fracao_alarme': P.SP.FRACAO_ALARME,
+                'limites_por_linha_bar': dict(self.limites), 'estado': self.estado()['sobrepressao'],
+                'ultima': self.ultima_sobrepressao}
 
     def trocar_linha(self, linha):
         self._reiniciar(linha)
@@ -516,6 +552,34 @@ class Bancada:
                 v['erro_m'] = round(abs(float(ev['posicao_m']) - e['s_m']), 3)
         return v
 
+    # --- sobrepressao -------------------------------------------------------------
+    def _sobrepressao(self, t_novo, pressao_bar):
+        reprovados = [s for s in self.linha.sensores if ((self.saude or {}).get('canal_' + s) or {}).get('falhas')]
+        acontecimentos = self.monitor.passo(t_novo, pressao_bar, excluir=reprovados)
+        tipos = [a for a, _ in acontecimentos]
+        mensagens = []
+        for acontecimento, ep in acontecimentos:
+            if acontecimento == 'encerrar' and 'abrir' in tipos:
+                continue                        # episodio curto: abriu e acabou no mesmo passo, sai uma vez so
+            mensagens.append(self._mensagem_de_sobrepressao(ep, em_curso=acontecimento != 'encerrar'
+                                                            and 'encerrar' not in tipos))
+        return mensagens
+
+    def _mensagem_de_sobrepressao(self, ep, em_curso):
+        _, _, instante = P.SP.Monitor.pico(ep)
+        ev = P.SP.montar_evento(ep, self.linha.id, self.limites[self.linha.id], self.linha.origem_do_limite,
+                                self.operacoes, self.utc(instante), em_curso, faixa_bar=LN.FAIXA_BAR, modo='simulacao')
+        # a verdade da simulacao: a manobra da bancada que provocou o pico, se houve
+        manobras = [e for e in self.eventos if e['tipo'] == 'manobra' and -0.5 <= ep['inicio_s'] - e['t0'] <= 3.0]
+        verdade = None
+        if manobras:
+            e = max(manobras, key=lambda x: x['t0'])
+            verdade = {'tipo': 'manobra', 'equipamento': e['equipamento'], 'acao': e['acao'],
+                       'operacao_registrada': e.get('registrada', False)}
+        self.historico.gravar(ev, verdade, None, tabela='sobrepressoes')
+        self.ultima_sobrepressao = ev
+        return {'tipo': 'sobrepressao', 'evento': ev, 'verdade': verdade}
+
     # --- o passo ----------------------------------------------------------------
     def passo(self):
         """Avanca 0,1 s. Devolve (t, pressao_bar por sensor, mensagens)."""
@@ -532,6 +596,8 @@ class Bancada:
                 self.aguardando = {'t_c': t_c, 'fim': t_c + self.linha.espera_s() + FOLGA_DE_ESPERA_S}
         if self.aguardando is not None and self.t >= self.aguardando['fim']:
             mensagens += self._fechar_evento()
+        pressao_bar = {s: self.linha.bar(x) for s, x in saida.items()}
+        mensagens += self._sobrepressao(t_novo, pressao_bar)
         if self.n_passo % SAUDE_A_CADA_PASSOS == 0:
             n = int(JANELA_DE_SAUDE_S * FS_HZ)
             antes = self.mensagem_de_saude()
@@ -539,7 +605,14 @@ class Bancada:
             depois = self.mensagem_de_saude()
             if depois != antes:
                 mensagens.append(depois)
-        # eventos que ja terminaram de sumir saem da conta
-        self.eventos = [e for e in self.eventos
-                        if e['fim'] is None or self.t < e['fim'] + GE.RAMPA_DE_REPARO_S + 0.1]
-        return t_novo, {s: self.linha.bar(x) for s, x in saida.items()}, mensagens
+        # eventos que ja terminaram de sumir saem da conta: reparados, e manobras cujo efeito ja decaiu
+        self.eventos = [e for e in self.eventos if not self._efeito_acabou(e)]
+        return t_novo, pressao_bar, mensagens
+
+    def _efeito_acabou(self, e):
+        if e['fim'] is not None:
+            return self.t >= e['fim'] + GE.RAMPA_DE_REPARO_S + 0.1
+        if e['tipo'] == 'manobra':
+            # depois do fim da simulacao, 6 constantes de relaxacao (0,25%), mais o maior percurso da onda
+            return self.t >= e['t0'] + e['molde'].t_rel[-1] + 6 * GE.RELAXACAO_DA_MANOBRA_S + self.linha.espera_s()
+        return False

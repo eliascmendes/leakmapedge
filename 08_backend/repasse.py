@@ -9,7 +9,9 @@ O envio roda numa linha de execucao propria: um destino lento ou fora do ar
 nunca atrasa a bancada nem o detector. Vai so o evento (leakmap.evento), sem a
 verdade da simulacao; o evento traz "modo": "simulacao", e o receptor deve
 tratar assim. Quando o gas confirma um alerta, o mesmo evento sai de novo com o
-mesmo "id" e "revisao": 2.
+mesmo "id" e "revisao": 2. Os alertas de sobrepressao (leakmap.sobrepressao)
+saem tambem, com os niveis proprios deles (atencao, alarme), sem passar pelo
+filtro de niveis de vazamento.
 
 Configuracao, pela ordem:
   LEAKMAP_WEBHOOK_URL          liga o repasse para esta URL
@@ -80,7 +82,11 @@ class Repasse:
         while True:
             try:
                 evento = self.fila.get(timeout=5.0)
-                self._registrar(P.IN.enviar(evento, self.cfg, self.pendentes), evento)
+                cfg = self.cfg
+                if evento.get('tipo') == 'leakmap.sobrepressao':
+                    # o alerta de sobrepressao tem niveis proprios (atencao, alarme) e sai sempre
+                    cfg = dict(self.cfg, niveis=list(self.cfg.get('niveis') or []) + list(P.SP.NIVEIS))
+                self._registrar(P.IN.enviar(evento, cfg, self.pendentes), evento)
             except queue.Empty:
                 pass
             if time.monotonic() >= proximo_reenvio:

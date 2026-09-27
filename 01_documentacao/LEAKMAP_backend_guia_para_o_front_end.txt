@@ -19,7 +19,14 @@ mostra o que ele entrega e o que isso torna possível construir.
     B1 como funciona · B2 perfis · B3 onde roda · B4 segurança ·
     B5 convenções · B6 linhas · B7 rotas REST · B8 exemplos de resposta ·
     B9 mensagens do WebSocket · B10 de onde vêm os sinais · B11 pendências ·
-    B12 perguntas · B13 mudanças desde a proposta
+    B12 perguntas · B13 mudanças desde a proposta · B14 alerta de
+    sobrepressão (recurso novo)
+
+NOVO NESTA VERSÃO: alerta de sobrepressão. É um recurso complementar, que
+entra agora ao lado do principal (detecção e localização de vazamento, que não
+mudou): avisa quando uma manobra leva a pressão para perto do limite da linha.
+Chega por uma mensagem própria, "sobrepressao", separada dos eventos de
+vazamento. Resumo em A1, ideias em A2 e A3, referência completa em B14.
 
 O dashboard do operador e o simulador da bancada são construídos pela equipe
 de front-end. As ideias da parte A são possibilidades abertas pelo backend,
@@ -98,11 +105,25 @@ O que já funciona, medido no serviço publicado:
     evento, o sinal em alta resolução (2.500 amostras por segundo) com as
     marcas de chegada da onda em cada sensor.
 
+  Alerta de sobrepressão (recurso novo, complementar)
+    Além de detectar e localizar vazamentos, o backend agora acompanha o pico
+    de pressão de cada sensor contra o limite da linha (a pressão máxima que
+    o componente mais fraco aguenta: mangote, braço de carregamento, flange).
+    Quando uma manobra rápida (golpe de aríete) leva a pressão perto do
+    limite, sai um alerta à parte, com dois níveis:
+    - atenção: pico a partir de 80% do limite;
+    - alarme: pico a partir de 95% do limite.
+    O alerta diz o pico, o sensor, quanto do limite foi usado, a manobra que
+    provavelmente causou (pelo registro de operação) e uma explicação em
+    português. Não mexe na detecção de vazamento: é outra mensagem, outro
+    histórico, outra escala. O limite de cada linha é premissa até chegar o
+    dado da planta e pode ser mudado pela API.
+
   Integração com a empresa
     - webhook: cada evento sai também por HTTP POST para a automação da
       empresa (n8n, Node-RED, sistema de controle); pronto, falta o destino;
-    - banco PostgreSQL para o histórico sobreviver a reinícios; pronto, falta
-      ligar no Render;
+    - banco PostgreSQL para o histórico sobreviver a reinícios; ligado no
+      Render;
     - rota para o sistema de controle informar operações de válvulas e
       bombas.
 
@@ -111,7 +132,7 @@ O que já funciona, medido no serviço publicado:
     - /teste: página de teste que usa todas as ações e mensagens;
     - sessões gravadas do WebSocket (08_backend/exemplos/), para montar as
       telas sem o backend no ar;
-    - conferência automática do serviço: 72 verificações com resultado
+    - conferência automática do serviço: 77 verificações com resultado
       esperado.
 
 
@@ -154,6 +175,18 @@ tudo o que o sistema real mandaria, sem a verdade da simulação.
   atual e as operações registradas
   Dashboard que se movimenta sozinho durante   POST /api/bancada/roteiro
   a apresentação                               (ligado pelo simulador)
+  (novo) Indicador de sobrepressão: pressão    mensagem "sobrepressao";
+  máxima x limite da linha, em atenção ou      estado.sobrepressao;
+  alarme, com a manobra que causou             GET /api/sobrepressao
+  (novo) Histórico de sobrepressões, separado  GET /api/sobrepressao/eventos
+  do de vazamentos
+  (novo) Linha de limite no gráfico de         linha: limite_de_pressao_bar
+  pressão ao vivo (e as faixas de 80% e 95%)
+
+Sobrepressão e vazamento são coisas diferentes para o operador: o vazamento
+pede isolar e ir ao ponto; a sobrepressão pede rever a manobra (fazer mais
+devagar) e conferir os componentes. Vale mostrar em lugares ou cores
+diferentes, sem misturar na mesma lista.
 
 A faixa SIMULAÇÃO: enquanto a fonte for a bancada virtual, todo dado vem com
 "modo": "simulacao". É a informação mais importante de mostrar: o operador
@@ -189,6 +222,8 @@ os comandos, com a chave.
   A onda chegando primeiro ao sensor mais      GET /api/eventos/{id}/sinal
   perto, em câmera lenta (o momento mais
   bonito da demo)
+  (novo) Controle do limite de pressão da      POST /api/sobrepressao/limite
+  linha, para mostrar atenção virando alarme
 
 Uma sequência que conta a história do LEAKMAP em poucos minutos, com o que o
 backend já faz:
@@ -206,6 +241,15 @@ backend já faz:
   7. Trocar para transmissor inteligente de 100 ms: a precisão cai, ou a
      posição some; é física do instrumento, não defeito do detector.
   8. Trocar para a rede e romper num ramal: o alerta diz o ramal certo.
+
+E, se sobrar tempo, o recurso novo (depois da história principal):
+
+  9. Voltar para a linha do cais e fechar a XV-108 (válvula do navio) com
+     registro: a detecção dá "registro" (manobra, não vazamento) e, à parte,
+     sai o alerta de sobrepressão em atenção: 10,5 bar no sensor B, 88% do
+     limite de 12 bar, causado pelo fechamento da XV-108. Abrir a XV-108,
+     esperar uns 10 s, baixar o limite para 10,5 bar e fechar de novo: o
+     mesmo golpe vira alarme. Voltar o limite para 12 bar no fim.
 
 O que cada ação provoca (para escrever os textos da tela):
 
@@ -227,6 +271,23 @@ O que cada ação provoca (para escrever os textos da tela):
   Transmissor inteligente lento        erro de metros a dezenas de metros; com
                                        100 ms, às vezes suspeita sem posição
 
+Sobrepressão, com os limites-premissa (12 bar no cais e na rede, 8 bar no
+trecho de 200 m), além do evento de manobra de sempre:
+
+  Ação                                 Resultado
+  -----------------------------------  ----------------------------------------
+  Cais: fechar XV-108                  atenção, cerca de 10,5 bar no sensor B
+                                       (88%)
+  Cais: partir B-01                    atenção, cerca de 11,3 bar no sensor A
+                                       (94%)
+  Trecho de 200 m: fechar XV-100       atenção, cerca de 6,5 bar no sensor A
+                                       (82%)
+  Rede: partir B-01                    atenção, cerca de 10,3 bar no sensor A
+                                       (86%)
+  Qualquer uma com o limite mais       alarme (a partir de 95%); acima de 100%,
+  baixo                                "o pico passou do limite"
+  Vazamentos, aberturas, paradas       nada: a pressão cai ou sobe pouco
+
 
 -------------------------------------------------------------------------------
 A4. CUIDADOS QUE VALEM PARA OS DOIS
@@ -237,7 +298,9 @@ A4. CUIDADOS QUE VALEM PARA OS DOIS
   - "explicacao" é o texto para a tela; "motivo" é técnico, sem acento, para
     depuração.
   - O mesmo evento pode chegar de novo (gás): mesmo "id", "revisao": 2.
-    Atualizar o alerta existente em vez de criar outro.
+    Atualizar o alerta existente em vez de criar outro. A sobrepressão faz o
+    mesmo: o episódio abre, pode subir de atenção para alarme e encerra, tudo
+    com o mesmo "id" e revisões crescentes.
   - Reconexão: o WebSocket cai quando o serviço reinicia ou a rede falha.
     Reconectar sozinho (1 s, 2 s, 4 s... até 30 s); a primeira mensagem
     depois de reconectar traz o estado inteiro.
@@ -353,10 +416,10 @@ Hospedagem no Render, plano gratuito:
   c) Existe uma bancada só. O estado dela é um só para todo mundo conectado:
      se duas pessoas mexem ao mesmo tempo, as duas veem as ações uma da outra.
 
-  d) O histórico de eventos fica num banco PostgreSQL quando a equipe do
-     backend liga um (08_backend/LEIAME.md); aí ele sobrevive a reinícios e
-     publicações. Sem o banco, fica na memória do serviço e se perde quando ele
-     reinicia. GET /api/servico diz qual está valendo ("historico":
+  d) O histórico de eventos (vazamentos e sobrepressões) fica num banco
+     PostgreSQL, já ligado no Render; ele sobrevive a reinícios e publicações.
+     Sem o banco (rodando local, por exemplo), fica na memória do serviço e se
+     perde quando ele reinicia. GET /api/servico diz qual está valendo ("historico":
      "postgresql" ou "sqlite em memoria").
 
 CORS: hoje liberado para todos os endereços. Com os endereços das telas, ele
@@ -460,6 +523,10 @@ B6. AS LINHAS DA BANCADA
                  fora da rede monitorada)
                  Regime: A 6,60 bar, B104 6,16, B106 6,13, B108 6,11 bar.
 
+Limite de pressão de cada linha, para o alerta de sobrepressão (B14):
+12 bar no cais e na rede, 8 bar no trecho de 200 m. Também premissa (a pressão
+máxima admissível do componente mais fraco) e ajustável pela API.
+
 Comprimentos, espessura e vazão são PREMISSAS até chegarem os dados da planta.
 Quando chegarem, os números mudam no backend; a tela que lê tudo de
 GET /api/linhas não precisa mudar.
@@ -500,6 +567,10 @@ B7.1 Consultas (abertas)
                                  e as últimas 50 operações registradas (as já
                                  usadas para explicar um evento vêm com
                                  "usada": true)
+  GET /api/sobrepressao          (novo) limite da linha ativa, estado atual e o
+                                 último episódio de sobrepressão (B14)
+  GET /api/sobrepressao/eventos  (novo) histórico das sobrepressões, com os
+                                 mesmos filtros de /api/eventos
 
 B7.2 Comandos da bancada (exigem a chave)
 
@@ -578,6 +649,15 @@ WebSocket para todos os conectados.
        do cais e na rede e a XV-100 no trecho de 200 m.
        {"roteiro": null} para parar.
 
+  POST /api/sobrepressao/limite
+       {"limite_bar": 10.5, "linha": "cais"}
+       (novo) Muda o limite de pressão de uma linha para o alerta de
+       sobrepressão; sem "linha", vale a ativa. De 1 a 15 bar (a faixa do
+       transmissor); fora disso, 422. Fica valendo até o serviço reiniciar.
+       Resultado: {"linha": "cais", "limite_bar": 10.5}, com "aviso" quando a
+       pressão de regime da linha já passa de 80% do limite novo (a linha
+       ficaria em atenção o tempo todo).
+
 B7.3 Integração real (exige a chave, menos GET /api/integracao)
 
   POST /api/operacoes
@@ -603,8 +683,11 @@ B7.3 Integração real (exige a chave, menos GET /api/integracao)
   O webhook: quando a equipe do backend liga (LEAKMAP_WEBHOOK_URL), cada evento
   que sai no WebSocket sai também por HTTP POST, em JSON, para a automação da
   empresa: o mesmo objeto "evento" de B9.3, sem a verdade da simulação. A
-  revisão do gás (mesmo id, "revisao": 2) também sai. As telas não precisam
-  fazer nada com isso; fica registrado aqui para quem for montar o receptor.
+  revisão do gás (mesmo id, "revisao": 2) também sai. Os alertas de
+  sobrepressão também saem, com "tipo": "leakmap.sobrepressao" e os níveis
+  próprios (atencao, alarme), sem passar pelo filtro de níveis de vazamento.
+  As telas não precisam fazer nada com isso; fica registrado aqui para quem
+  for montar o receptor.
 
 B7.4 Posições dos cenários completos do TSNet
 
@@ -658,7 +741,9 @@ B8.1 GET /api/linhas/cais  (equipamentos e cenários resumidos)
   "cenarios_tsnet": [
     {"trecho": "principal", "s_m": -150.0, "tamanhos": ["grande", "pequeno"]},
     {"trecho": "principal", "s_m": 50.0, "tamanhos": ["grande", "pequeno"]}
-  ]
+  ],
+  "limite_de_pressao_bar": 12.0,
+  "origem_do_limite": "premissa: pressao maxima admissivel do componente mais fraco da linha (mangote, braco de carregamento ou flange), ate chegar o dado da planta"
 }
 
 Como ler os campos da linha:
@@ -671,6 +756,9 @@ Como ler os campos da linha:
     só para ajudar a desenhar. A posição s_m cai ao longo dela na proporção
     do comprimento do trecho (de de_s_m a ate_s_m). Na rede, os ramais saem do
     manifold em leque. A tela pode ignorar e desenhar do seu jeito.
+  - "limite_de_pressao_bar": o limite em vigor para o alerta de sobrepressão
+    (já com a mudança feita pela API, se houve); "origem_do_limite" diz de
+    onde ele vem.
 
 B8.2 GET /api/estado
 
@@ -686,6 +774,7 @@ B8.2 GET /api/estado
   "monitoramento": "normal",
   "nivel_atual": null,
   "roteiro": null,
+  "sobrepressao": {"limite_bar": 12.0, "nivel_atual": null, "pico_bar": null},
   "vazamentos_abertos": []
 }
 
@@ -695,6 +784,9 @@ B8.2 GET /api/estado
     0,5 s depois de iniciar ou trocar de linha).
   - "nivel_atual": o nível do último alerta, até reparar; null sem alerta.
   - "roteiro": null ou {"roteiro": "demonstracao", "intervalo_s": 60}.
+  - "sobrepressao": o limite da linha ativa e, durante um episódio, o nível
+    ("atencao" ou "alarme") e o pico até agora; fora de episódio, null nos
+    dois (B14).
   - "vazamentos_abertos": a verdade da simulação; no perfil operador não vem.
     Cada item: {"id", "trecho", "s_m", "tamanho", "fonte"}.
 
@@ -921,6 +1013,12 @@ B9.6 pulso  (a cada 15 s, para saber que a conexão está viva)
 
 {"tipo": "pulso", "t_s": 135.0}
 
+B9.7 sobrepressao  (novo: quando a pressão chega perto do limite da linha)
+
+{"tipo": "sobrepressao", "evento": {...}, "verdade": {...}}
+
+Formato completo, exemplo e regras em B14.
+
 
 -------------------------------------------------------------------------------
 B10. DE ONDE VÊM OS SINAIS
@@ -956,14 +1054,16 @@ B11. O QUE AINDA NÃO ESTÁ NO BACKEND
     reais.
   - CORS restrito aos endereços das telas (depende de B12).
 
-  Prontos no backend, mas dependem de configuração no Render:
-  - Histórico persistente: falta criar o banco PostgreSQL e ligar
-    (LEAKMAP_BANCO). Até lá, o histórico some a cada reinício.
+  - Limites de pressão reais das linhas (hoje premissas, B6 e B14).
+  - Previsão do pico ANTES da manobra (hoje o alerta de sobrepressão avisa
+    quando o pico acontece).
+
+  Pronto no backend, mas depende de configuração no Render:
   - Webhook: falta o endereço de destino (LEAKMAP_WEBHOOK_URL).
 
 Para conferir o serviço depois de qualquer mudança, a equipe do backend roda
-08_backend/conferir_servico.py: 72 conferências com resultado esperado,
-incluindo manobras nas três linhas e o webhook.
+08_backend/conferir_servico.py: 77 conferências com resultado esperado,
+incluindo manobras nas três linhas, a sobrepressão e o webhook.
 
 
 -------------------------------------------------------------------------------
@@ -972,9 +1072,6 @@ B12. PERGUNTAS PARA A EQUIPE DE FRONT-END
 
   - Qual framework e em que endereços as telas vão rodar (para o CORS)?
   - 30 pontos por segundo por sensor basta para o gráfico?
-  - O dashboard do operador precisa de histórico que sobreviva a reinícios
-    do serviço? (o backend já sabe gravar em PostgreSQL; falta criar o banco
-    no Render e ligar)
   - A empresa já tem um destino para o webhook (n8n, Node-RED, sistema de
     controle)?
   - O dashboard do operador precisa de mais algum dado (ex.: vazão, pressão
@@ -1013,3 +1110,154 @@ Para quem começou pela versão 0 deste guia:
   - Repasse dos eventos por webhook, com GET /api/integracao e
     POST /api/integracao/teste.
   - Cada operação registrada explica um evento só ("usada" em /api/cadastro).
+  - Histórico em PostgreSQL ligado no Render.
+  - Recurso novo: alerta de sobrepressão (B14), com a mensagem
+    "sobrepressao", GET /api/sobrepressao, GET /api/sobrepressao/eventos,
+    POST /api/sobrepressao/limite, "sobrepressao" no estado e
+    "limite_de_pressao_bar" / "origem_do_limite" nas linhas. Nada do que já
+    existia mudou de formato.
+  - Depois de uma manobra, a pressão volta ao regime em alguns segundos
+    (antes, o fim do transitório simulado ficava parado na tela).
+
+
+-------------------------------------------------------------------------------
+B14. ALERTA DE SOBREPRESSÃO (recurso novo)
+-------------------------------------------------------------------------------
+
+O que é. Um recurso complementar, ao lado da detecção de vazamento (que não
+mudou). Uma manobra rápida (fechar a válvula do navio, partir a bomba) manda
+uma onda de alta pela linha: o golpe de aríete. Se o pico chega perto da
+pressão máxima que o componente mais fraco aguenta (mangote, braço de
+carregamento, flange), é aí que a linha pode romper. O backend acompanha o
+pico de cada sensor contra o limite da linha e avisa, com a manobra que
+provavelmente causou.
+
+O que ele não é. Não é previsão: avisa quando o pico acontece, não antes da
+manobra. Não é detecção de vazamento: o evento de vazamento (B9.3) continua
+saindo como sempre, e a mesma manobra pode gerar os dois (um "registro" de
+manobra na detecção e um alerta de sobrepressão à parte).
+
+Níveis:
+  "atencao"   pico a partir de 80% do limite
+  "alarme"    pico a partir de 95% do limite
+(acima de 100%, o alerta continua "alarme" e a explicação diz que o pico
+passou do limite)
+
+Como um episódio funciona:
+  - começa quando a pressão de algum sensor passa de 80% do limite; a
+    mensagem sai 1 s depois (para pegar o pico inteiro, não só a subida),
+    com "revisao": 1 e "em_curso": true;
+  - se o pico sobe de atenção para alarme durante o episódio, sai de novo,
+    com o mesmo "id" e a revisão seguinte;
+  - encerra quando a pressão fica 1 s abaixo do nível de atenção (com 0,3 bar
+    de folga, para não piscar): sai de novo, mesmo "id", "em_curso": false e
+    "duracao_s" preenchida;
+  - um golpe curto, que acaba antes de a primeira mensagem sair, sai uma vez
+    só, já encerrado ("em_curso": false).
+Tempo de resposta: a primeira mensagem chega cerca de 1 s depois de a pressão
+passar do nível de atenção.
+Sensor reprovado no autoteste fica fora da conta (o sinal dele não é
+confiável).
+
+Mensagem no WebSocket (exemplo real, fechar a XV-108 na linha do cais, perfil
+demonstracao):
+
+{
+  "tipo": "sobrepressao",
+  "evento": {
+    "tipo": "leakmap.sobrepressao",
+    "versao": "1",
+    "id": "87702627-3da8-4326-8445-a3e782d7a783",
+    "revisao": 1,
+    "instante_utc": "2026-09-27T12:19:04.202360Z",
+    "linha": "cais",
+    "nivel": "atencao",
+    "em_curso": true,
+    "limite_bar": 12.0,
+    "origem_do_limite": "premissa: pressao maxima admissivel do componente mais fraco da linha (mangote, braco de carregamento ou flange), ate chegar o dado da planta",
+    "pico_bar": 10.548,
+    "fracao_do_limite": 0.879,
+    "sensor_do_pico": "B",
+    "instante_do_pico_s": 2.4188,
+    "picos_por_sensor_bar": {"A": 10.374, "B": 10.548},
+    "duracao_s": null,
+    "causa_provavel": {
+      "equipamento": "XV-108",
+      "acao": "fechamento",
+      "instante_s": 2.02,
+      "antes_do_pico_s": 0.4,
+      "origem": "bancada (registro do sistema de controle simulado)"
+    },
+    "pico_pode_ser_maior": false,
+    "explicacao": "A pressão no sensor B chegou a 10,55 bar, 88% do limite de 12,00 bar da linha. O pico veio 0,4 s depois do fechamento da XV-108, registrado pelo sistema de controle: é golpe de aríete de manobra, não vazamento. Fazer a manobra mais devagar reduz o pico. A pressão ainda está acima do nível de atenção.",
+    "modo": "simulacao"
+  },
+  "verdade": {
+    "tipo": "manobra",
+    "equipamento": "XV-108",
+    "acao": "fechar",
+    "operacao_registrada": true
+  }
+}
+
+Uns 2,6 s depois chega o encerramento do mesmo episódio: mesmo "id",
+"revisao": 2, "em_curso": false, "duracao_s": 2.6, e a explicação terminando
+em "A pressão voltou abaixo do nível de atenção."
+
+Os campos:
+
+  id, revisao      o episódio; o mesmo id volta ao subir de nível e ao
+                   encerrar. Atualizar o alerta existente.
+  nivel            "atencao" ou "alarme".
+  em_curso         true enquanto a pressão está alta; false no encerramento.
+  limite_bar, origem_do_limite
+                   o limite usado na conta e de onde ele vem (premissa).
+  pico_bar         o maior valor do episódio, em qualquer sensor.
+  fracao_do_limite pico / limite (0.879 = 88%): bom para uma barra ou
+                   medidor.
+  sensor_do_pico, instante_do_pico_s
+                   onde e quando (no relógio t_s, o mesmo das amostras) foi o
+                   pico: serve para marcar no gráfico.
+  picos_por_sensor_bar
+                   o pico de cada sensor.
+  duracao_s        do começo ao fim do episódio; null enquanto em curso.
+  causa_provavel   a operação registrada mais perto do pico (até 5 s antes
+                   ou 1 s depois, pelo atraso do registro): equipamento, acao
+                   ("fechamento", "abertura", "partida", "parada"),
+                   instante_s, antes_do_pico_s e origem. null quando nenhuma
+                   operação registrada explica: a explicação pede para
+                   conferir a linha.
+  pico_pode_ser_maior
+                   true quando o pico bateu no fundo da escala do transmissor
+                   (15 bar): o valor real pode ser maior.
+  explicacao       texto pronto para a tela, em português.
+  modo             "simulacao".
+
+"verdade" (só no perfil demonstracao): a manobra da bancada que provocou o
+pico, {"tipo": "manobra", "equipamento", "acao", "operacao_registrada"}, ou
+null.
+
+Rotas:
+  GET /api/sobrepressao
+    {"linha": "cais", "limite_bar": 12.0, "origem_do_limite": "...",
+     "fracao_atencao": 0.8, "fracao_alarme": 0.95,
+     "limites_por_linha_bar": {"trecho_200": 8.0, "cais": 12.0, "rede": 12.0},
+     "estado": {"limite_bar": 12.0, "nivel_atual": null, "pico_bar": null},
+     "ultima": {...o último evento de sobrepressão, ou null...}}
+  GET /api/sobrepressao/eventos?desde=...&nivel=alarme&linha=cais&limite=50
+    histórico só das sobrepressões, do mais novo para o mais antigo, no
+    formato {"evento", "verdade"} (a verdade com ?perfil=demonstracao).
+    Guarda a última revisão de cada episódio.
+  POST /api/sobrepressao/limite  (exige a chave; ver B7.2)
+
+Onde aparece também:
+  - estado.sobrepressao (B8.2), em boas_vindas, GET /api/estado e na
+    mensagem "estado";
+  - "limite_de_pressao_bar" em cada linha (B8.1): para desenhar a linha de
+    limite no gráfico ao vivo;
+  - webhook (B7.3), com "tipo": "leakmap.sobrepressao".
+
+Os limites (12 bar no cais e na rede, 8 bar no trecho de 200 m) são
+premissas até chegar a pressão máxima admissível real de cada linha. Com os
+limites de agora, as manobras da bancada chegam no máximo a atenção (tabela
+em A3); para mostrar o alarme, baixar o limite pela API.

@@ -16,8 +16,14 @@ proximo (fonte "gerador"); as reflexoes que vem depois ficam deslocadas de ate
 o dobro da distancia ate esse ponto, dividido pela velocidade da onda. A
 conferencia contra o TSNet esta em validar_gerador.py.
 
-Depois que o molde acaba, o sinal segura o ultimo valor: o vazamento continua
-aberto ate a bancada reparar.
+Depois que o molde acaba, o sinal de um vazamento segura o ultimo valor: o
+vazamento continua aberto ate a bancada reparar, e as simulacoes de vazamento
+terminam perto do novo regime. As de manobra nao: terminam (1,2 s) no meio do
+transitorio, com a pressao ainda longe do regime novo. Segurar esse valor
+deixaria a linha com o golpe de ariete para sempre; por isso, depois do fim do
+molde, a variacao de uma manobra decai para zero com constante de tempo de
+2 s. E uma aproximacao: o regime depois da manobra (um pouco acima ou abaixo do
+de antes) nao esta nas simulacoes.
 
 As manobras usam os moldes das manobras simuladas de cada linha (linhas.py).
 O sentido contrario de uma manobra que nao foi simulada (reabrir a valvula do
@@ -27,6 +33,7 @@ import numpy as np
 
 RAMPA_DE_REPARO_S = 0.5         # ao reparar, o efeito do evento some nesse tempo
 TOLERANCIA_DO_PONTO_M = 0.5     # a menos disso de um ponto simulado, a fonte e o proprio TSNet
+RELAXACAO_DA_MANOBRA_S = 2.0    # depois do fim da simulacao, a manobra decai para o regime com esta constante
 
 
 
@@ -77,6 +84,10 @@ def variacao(linha, evento, sensor, t):
     atraso = linha.tempo_de_percurso(evento['trecho'], evento['s_m'], sensor) - m.chegada[sensor]
     tau = np.asarray(t, dtype=float) - evento['t0'] - atraso
     v = np.interp(tau, m.t_rel, m.delta[sensor], left=0.0, right=m.delta[sensor][-1])
+    if evento['tipo'] == 'manobra':
+        depois = tau > m.t_rel[-1]
+        if depois.any():
+            v = np.where(depois, v * np.exp(-(tau - m.t_rel[-1]) / RELAXACAO_DA_MANOBRA_S), v)
     v = v * evento['escala'][sensor] * evento['sinal']
     if evento['fim'] is not None:
         v = v * np.clip(1.0 - (np.asarray(t) - evento['fim']) / RAMPA_DE_REPARO_S, 0.0, 1.0)

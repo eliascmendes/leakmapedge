@@ -188,6 +188,46 @@ class BancadaAoVivo(unittest.TestCase):
         e = rodar(b, 35)[0]['evento']
         self.assertEqual((e['nivel'], e['cadastro']['equipamento']), ('registro', 'B-01'))
 
+    def test_sobrepressao_no_fechamento_da_valvula_do_navio(self):
+        b = nova()
+        b.equipamento('XV-108', 'fechar', True)
+        msgs = []
+        for _ in range(60):
+            msgs += [m for m in b.passo()[2] if m['tipo'] == 'sobrepressao']
+        self.assertEqual([m['evento']['revisao'] for m in msgs], [1, 2])
+        abre, fecha = msgs[0]['evento'], msgs[1]['evento']
+        self.assertEqual((abre['nivel'], abre['sensor_do_pico'], abre['em_curso']), ('atencao', 'B', True))
+        self.assertAlmostEqual(abre['pico_bar'], 10.55, delta=0.2)
+        self.assertEqual(abre['causa_provavel']['equipamento'], 'XV-108')
+        self.assertEqual(msgs[0]['verdade']['equipamento'], 'XV-108')
+        self.assertEqual((fecha['id'], fecha['em_curso']), (abre['id'], False))
+        self.assertGreater(fecha['duracao_s'], 0.0)
+        self.assertEqual(b.historico.contar('sobrepressoes'), 1)
+
+    def test_limite_mais_baixo_vira_alarme_e_limite_invalido(self):
+        b = nova()
+        self.assertIsNone(b.definir_limite(10.5)['aviso'])
+        b.equipamento('XV-108', 'fechar', True)
+        niveis = [m['evento']['nivel'] for _ in range(40) for m in b.passo()[2] if m['tipo'] == 'sobrepressao']
+        self.assertEqual(niveis[0], 'alarme')
+        with self.assertRaises(BA.ErroDaBancada):
+            b.definir_limite(20.0)
+        self.assertIsNotNone(b.definir_limite(7.0)['aviso'])     # o proprio regime (6,75 bar) ja passa de 80%
+
+    def test_vazamento_e_manobra_abaixo_do_limite_nao_geram_sobrepressao(self):
+        b = nova()
+        b.vazamento('principal', 320.0, 'grande')
+        b.equipamento('XV-106', 'fechar', True)
+        tipos = [m['tipo'] for _ in range(40) for m in b.passo()[2]]
+        self.assertNotIn('sobrepressao', tipos)
+        self.assertIn('evento', tipos)
+
+    def test_manobras_antigas_saem_da_conta(self):
+        b = nova()
+        b.equipamento('XV-108', 'fechar', True)
+        rodar(b, 200)                                     # 20 s: o efeito ja decaiu
+        self.assertEqual([e for e in b.eventos if e['tipo'] == 'manobra'], [])
+
     def test_evento_em_fluxo_igual_ao_detector_em_lote(self):
         b = nova()
         b.vazamento('principal', 320.0, 'grande')
@@ -253,6 +293,13 @@ class Webhook(unittest.TestCase):
         r.por({'id': 'y', 'nivel': 'provavel'})
         self.assertTrue(self.esperar(lambda: r.situacao()['contagem']['pendente'] == 1))
         self.assertEqual(r.situacao()['na_fila_local_para_reenvio'], 1)
+
+    def test_sobrepressao_sai_pelo_webhook_com_niveis_proprios(self):
+        import repasse as RE
+        r = RE.Repasse(dict(P.IN.PADRAO, ligado=True, url=self.url), self.pendentes)
+        r.por({'tipo': 'leakmap.sobrepressao', 'id': 's', 'nivel': 'atencao'})
+        self.assertTrue(self.esperar(lambda: len(self.RT.Receptor.recebidos) == 1))
+        self.assertEqual(self.RT.Receptor.recebidos[0]['tipo'], 'leakmap.sobrepressao')
 
     def test_desligado_sem_configuracao(self):
         import repasse as RE
@@ -347,6 +394,19 @@ class Api(unittest.TestCase):
         self.assertFalse(i['ligado'])
         r = self.c.post('/api/integracao/teste', headers=self.chave).json()
         self.assertEqual(r['resultado'], 'desligado')
+
+    def test_rotas_da_sobrepressao(self):
+        s = self.c.get('/api/sobrepressao').json()
+        self.assertEqual(set(s['limites_por_linha_bar']), {'trecho_200', 'cais', 'rede'})
+        self.assertIn('premissa', s['origem_do_limite'])
+        self.assertEqual(self.c.post('/api/sobrepressao/limite', json={'limite_bar': 11.0}).status_code, 401)
+        r = self.c.post('/api/sobrepressao/limite', json={'limite_bar': 11.0}, headers=self.chave).json()
+        self.assertEqual(r['estado']['sobrepressao']['limite_bar'], 11.0)
+        self.assertEqual(self.c.post('/api/sobrepressao/limite', json={'limite_bar': 40}, headers=self.chave)
+                         .status_code, 422)
+        self.c.post('/api/sobrepressao/limite', json={'limite_bar': 12.0}, headers=self.chave)
+        self.assertIsInstance(self.c.get('/api/sobrepressao/eventos').json(), list)
+        self.assertEqual(self.c.get('/api/linhas/cais').json()['limite_de_pressao_bar'], 12.0)
 
     def test_perfil_operador_nao_recebe_a_verdade(self):
         msg = {'tipo': 'evento', 'evento': {}, 'verdade': {'s_m': 1.0}}
