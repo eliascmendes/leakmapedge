@@ -132,6 +132,18 @@ def autoteste_na_placa(saude, identificador):
     return saida
 
 
+def degrau_na_placa(degrau, identificador):
+    """O degrau da onda somado pela placa (DEGRAU), por canal, em metros de carga; None sem ele."""
+    if not degrau or degrau['situacao'] != PR.RESULTADO_CONCLUIDO or degrau['id'] != identificador:
+        return None
+    saida = {'janelas_em_amostras': degrau['janelas']}
+    for canal in ('canal_A', 'canal_B'):
+        c = degrau[canal]
+        saida[canal] = ({'indice_de_chegada': c['indice_de_chegada'], 'degrau_em_codigos': c['degrau_em_codigos'],
+                         'degrau_m': c.get('degrau_m')} if c['valido'] else None)
+    return saida
+
+
 def montar_registro(ensaio, preparo, rodada, escala, cal, origem):
     """Um registro por ensaio, inclusive quando nao houve resultado (A-15)."""
     registro = {
@@ -155,6 +167,9 @@ def montar_registro(ensaio, preparo, rodada, escala, cal, origem):
         autoteste = autoteste_na_placa(rodada.get('saude_na_placa'), ensaio['id'])
         if autoteste:
             registro['autoteste_na_placa'] = autoteste
+        degrau = degrau_na_placa(rodada.get('degrau_na_placa'), ensaio['id'])
+        if degrau:
+            registro['degrau_na_placa'] = degrau
     resultado = rodada and rodada['resultado']
     if not resultado:
         registro['classe'] = D.CLASSE_FALHA

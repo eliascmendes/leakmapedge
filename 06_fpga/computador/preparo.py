@@ -61,4 +61,5 @@ def preparar_ensaio(ensaio, escala, cal):
     parametros = PF.parametros_inteiros(cal, RB.periodo(ensaio), espec['degrau_m'],
                                         (escala or {}).get('resolucao_declarada_m'))
     return {'representacao': espec, 'conversao': conversao, 'parametros': parametros,
-            'limites_de_saude': limites_de_saude(ensaio, espec)}
+            'limites_de_saude': limites_de_saude(ensaio, espec),
+            'janelas_do_degrau': PR.janelas_do_degrau(RB.periodo(ensaio))}

@@ -161,6 +161,50 @@ zerados e `situacao` diz por quê (0xFF antes de qualquer execução). Tamanho
 errado: recibo mal formado. Uma placa gravada antes do autoteste ignora
 PEDIR_SAUDE; o computador fica sem autoteste e não pergunta de novo.
 
+### Degrau da onda
+
+| Tipo | Nome | Carga útil (bytes) |
+|---|---|---|
+| `0x0A` | PEDIR_DEGRAU (16) | id (8), n_antes u16, guarda_antes u16, inicio_depois u16, n_depois u16 |
+| `0x89` | DEGRAU (39) | id (8) e situacao u8 da última execução, as quatro janelas como vieram, depois por canal (A e B) bandeiras u8 (bit 0: válido), indice_de_chegada u16, soma_antes u32, soma_depois u32 |
+
+A posição sai da diferença entre as chegadas. A vazão do furo sai da altura
+da frente de onda: pela equação de Joukowsky, ΔQ = 2·g·A·ΔH / c
+([`../04_detector/fisica.py`](../04_detector/fisica.py)). A placa já tem as
+amostras na memória, então mede ΔH ali mesmo. Ao receber PEDIR_DEGRAU, percorre
+a memória uma vez e soma, em cada canal que declarou evento, os códigos de duas
+janelas em torno do índice de chegada:
+
+```
+antes  = [chegada - guarda_antes - n_antes, chegada - guarda_antes)   // nível de regime
+depois = [chegada + inicio_depois, chegada + inicio_depois + n_depois) // depois da frente
+```
+
+O computador faz `soma_depois / n_depois − soma_antes / n_antes` e multiplica
+pelo `degrau_m` da representação. O resultado é o degrau em metros de carga,
+a entrada da Joukowsky. As somas cabem em 32 bits: são no máximo
+65 535 amostras de 65 535. As janelas padrão são as de `fisica.py`, com os
+extremos incluídos (`protocolo.janelas_do_degrau`):
+
+- antes: de 30 ms a 3 ms antes da chegada, fora da subida da frente;
+- depois: de 4 ms a 24 ms depois da chegada, antes da primeira reflexão.
+
+O computador as encurta para caberem no registro nos dois canais
+(`protocolo.janelas_no_registro`), como `fisica.py` recorta no começo e no fim.
+
+Um canal vem zerado quando:
+
+- não declarou evento;
+- alguma janela é vazia ou sai do registro;
+- a memória não é mais a da última execução concluída, porque houve
+  CONFIGURAR ou um bloco gravado depois dela, ou porque não houve execução.
+
+`situacao` diz qual foi a última execução (0xFF: nenhuma). Com tamanho errado,
+a placa responde recibo mal formado. Uma placa gravada antes desta mensagem
+ignora PEDIR_DEGRAU, e o computador fica sem degrau e não pergunta de novo.
+Na DE10-Standard (Cyclone V a 50 MHz), a passada leva 3 ciclos por amostra:
+4 096 amostras custam 246 µs, depois do resultado já entregue.
+
 ### Identificação da placa simulada
 
 | Tipo | Nome | Carga útil (bytes) |
@@ -265,8 +309,8 @@ de 1 mm, 16 bits ou 12 bits.
 
 ## 8. Critério de aceitação do Verilog
 
-**Situação:** o Verilog em [`rtl/`](rtl) cumpre os cinco critérios abaixo em
-simulação (Icarus Verilog), nos 67 casos gerados por
+**Situação:** o Verilog em [`rtl/`](rtl) cumpre os seis critérios abaixo em
+simulação (Icarus Verilog), nos 68 casos gerados por
 [`computador/gerar_vetores.py`](computador/gerar_vetores.py) e no sistema
 completo com a serial. A resposta do próprio Verilog também é decodificada e
 conferida direto contra `04_detector/detector_ponto_fixo.py`, sem passar pelo
@@ -286,6 +330,9 @@ modelo da placa, em [`sim/prova_cenario_b.py`](sim/prova_cenario_b.py): 90 de
    resultado.
 5. Com o canal B igual ao A atrasado 40 amostras, a diferença entre os
    índices de chegada devolvidos é exatamente 40.
+6. As somas de DEGRAU são iguais às feitas direto nas amostras enviadas, em
+   todos os canais da matriz que declararam evento, e saem zeradas nos
+   pedidos que não valem.
 
 Com a placa ligada, basta rodar:
 

@@ -23,6 +23,11 @@ Casos:
     rompido (codigo 0), pico isolado, e o pedido antes de executar, depois
     de uma execucao recusada e mal formado.
 
+  - degrau da onda (DEGRAU): todos os ensaios da matriz pedem as somas com as
+    janelas do periodo de amostragem; e o pedido antes de executar, com
+    janela vazia, com janela que sai do registro, depois de CONFIGURAR (a
+    memoria nao e mais a da execucao) e mal formado.
+
 casos.json guarda, para cada caso, os ensaios que ele roda na ordem, que e
 o que 06_fpga/sim/prova_cenario_b.py usa para conferir os criterios.
 
@@ -84,9 +89,10 @@ def conversa(execucoes, corromper=None, frequencia_hz=100_000_000):
     placa = PLACA.PlacaReferencia(capacidade_de_amostras=CAPACIDADE, frequencia_hz=frequencia_hz)
     transporte = TransporteGravado(placa, corromper)
     host = HO.Hospedeiro(transporte)
-    for identificador, codigos_a, codigos_b, parametros, *limites in execucoes:
+    for identificador, codigos_a, codigos_b, parametros, *extras in execucoes:
         host.rodar(identificador, codigos_a, codigos_b, parametros,
-                   limites_de_saude=limites[0] if limites else None)
+                   limites_de_saude=extras[0] if extras else None,
+                   janelas_de_degrau=extras[1] if len(extras) > 1 else None)
     return bytes(transporte.entrada), bytes(transporte.saida)
 
 
@@ -136,7 +142,8 @@ def main():
         ensaio = SE.selecionar(identificador, pacote, selos)
         p = PP.preparar_ensaio(ensaio, escala, cal)
         return (identificador, p['conversao']['canal_A']['codigos'],
-                p['conversao']['canal_B']['codigos'], p['parametros'], p['limites_de_saude'])
+                p['conversao']['canal_B']['codigos'], p['parametros'], p['limites_de_saude'],
+                p['janelas_do_degrau'])
 
     # --- os 45 ensaios da matriz ---------------------------------------------------
     for ensaio in pacote['ensaios']:
@@ -165,7 +172,7 @@ def main():
 
     base = execucao('MX-005')
     atraso = [base[1][0]] * 40 + list(base[1][:-40])
-    e, s = conversa([('ATRASO40', base[1], atraso, base[3], base[4])])
+    e, s = conversa([('ATRASO40', base[1], atraso, base[3], base[4], base[5])])
     gravar('sintetico_atraso_40', e, s, 'canal B igual ao A atrasado 40 amostras', indice, ['ATRASO40'])
 
     # --- protocolo -------------------------------------------------------------------------
@@ -186,7 +193,7 @@ def main():
     gravar('protocolo_tres_ensaios_seguidos', e, s, 'MX-021, MX-001 e MX-021 na mesma placa', indice,
            ['MX-021', 'MX-001', 'MX-021'])
 
-    ident, ca, cb, par, _ = execucao('MX-003')
+    ident, ca, cb, par, _, _ = execucao('MX-003')
     blocos = PR.blocos_do_ensaio(ident, ca, cb)
     configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(ident, par, len(ca)))
     executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(ident, len(blocos), len(ca)))
@@ -229,7 +236,7 @@ def main():
 
     # --- tempos contados pelo circuito e execucao em tempo real ----------------------
     def quadros_do_ensaio(ident):
-        _, ca, cb, par, _ = execucao(ident)
+        _, ca, cb, par, _, _ = execucao(ident)
         blocos = PR.blocos_do_ensaio(ident, ca, cb)
         configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(ident, par, len(ca)))
         return configurar, blocos, len(blocos), len(ca)
@@ -276,7 +283,7 @@ def main():
            'tempo real sem configuracao, com periodo zero e com tamanhos errados', indice)
 
     # --- autoteste dos canais: canais doentes de proposito ---------------------------------
-    ident, ca, cb, par, limites = execucao('MX-013')
+    ident, ca, cb, par, limites, _ = execucao('MX-013')
     congelado = list(cb[:60]) + [cb[60]] * (len(cb) - 60)
     configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar('CONGELA', par, len(ca)))
     blocos = PR.blocos_do_ensaio('CONGELA', ca, congelado)
@@ -295,7 +302,7 @@ def main():
            'canal A cai a codigo 0 na amostra 100 (MX-013): congelado, saturado e fora da faixa',
            indice, ['ROMPIDO'])
 
-    ident, ca, cb, par, limites = execucao('MX-021')
+    ident, ca, cb, par, limites, _ = execucao('MX-021')
     pico = list(cb)
     pico[90] -= limites['limite_salto'] + 60
     e, s = conversa([('PICO', ca, pico, par, limites)])
@@ -311,6 +318,29 @@ def main():
     ])
     gravar('saude_sem_execucao_e_mal_formado', e, s,
            'SAUDE antes de executar, depois de uma execucao recusada e com tamanho errado', indice)
+
+    # --- degrau da onda: pedidos que a placa tem de recusar canal a canal -----------------
+    ident, ca, cb, par, _, _ = execucao('MX-005')
+    janelas = {'n_antes': 20, 'guarda_antes': 3, 'inicio_depois': 5, 'n_depois': 20}   # cabem: chegada em 51 de 101
+    blocos = PR.blocos_do_ensaio(ident, ca, cb)
+    configurar = PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar(ident, par, len(ca)))
+    executar = PR.montar_quadro(PR.EXECUTAR, PR.carga_executar(ident, len(blocos), len(ca)))
+
+    def pedir_degrau(j):
+        return PR.montar_quadro(PR.PEDIR_DEGRAU, PR.carga_pedir_degrau(ident, j))
+    vazia = dict(janelas, n_depois=0)
+    longe = dict(janelas, n_depois=len(ca))                        # sai do fim do registro
+    cedo = dict(janelas, guarda_antes=len(ca))                      # comeca antes da amostra 0
+    e, s = fluxo_bruto([
+        pedir_degrau(janelas),                                      # antes de qualquer execucao
+        configurar] + blocos + [executar, confirmar(ident),
+        pedir_degrau(janelas), pedir_degrau(vazia), pedir_degrau(longe), pedir_degrau(cedo),
+        PR.montar_quadro(PR.PEDIR_DEGRAU, bytes(15)),              # tamanho errado
+        configurar, pedir_degrau(janelas),                          # memoria nao e mais a da execucao
+    ])
+    gravar('degrau_janelas_e_memoria', e, s,
+           'DEGRAU antes de executar, com a execucao (MX-005), com janela vazia, fora do registro '
+           'dos dois lados, mal formado e depois de CONFIGURAR', indice, ['MX-005'])
 
     with open(os.path.join(SAIDA, 'casos.json'), 'w', encoding='utf-8') as f:
         json.dump({'capacidade_de_amostras': CAPACIDADE, 'casos': indice}, f, ensure_ascii=False, indent=2)

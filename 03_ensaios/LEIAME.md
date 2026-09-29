@@ -25,6 +25,13 @@ amostras. Nunca a posicao real.
 | `matriz/leakmap_matriz_v1.json` | — | Plano da matriz |
 | `verdade_do_cenario/leakmap_verdade_v1.json` | — | Verdade da rodada de referencia |
 | `verdade_do_cenario/leakmap_verdade_matriz_v1.json` | — | Verdade da matriz |
+| `parametros/leakmap_parametros_v1.json` | — | Parametros da rodada de referencia |
+| `pacotes/leakmap_selos_v1.json` | B-01 | Selos de verificacao dos ensaios do cenario B |
+| `matriz/leakmap_plano_linha_cais_v1.json`, `amostras/leakmap_amostras_linha_cais_v1.json` | A-08 | Linha do cais: plano e sinais do TSNet |
+| `matriz/leakmap_plano_rede_cais_v1.json`, `amostras/leakmap_amostras_rede_cais_v1.json` | A-08 | Rede do cais com manifold: plano e sinais do TSNet |
+| `amostras/leakmap_amostras_manobras_*_v1.json`, `amostras/leakmap_operacoes_manobras_cais_v1.json` | A-08 | Manobras de valvulas e bomba no trecho de 200 m, no cais e na rede, e o registro de operacao |
+| `verdade_do_cenario/leakmap_verdade_linha_cais_v1.json`, `..._rede_cais_v1.json`, `..._manobras_*_v1.json` | — | Verdade da linha, da rede e das manobras |
+| `verdade_do_cenario/leakmap_golpe_por_tempo_de_manobra_v1.json` | — | Golpe de ariete por tempo de manobra, base da previsao do golpe |
 
 Arquivo de ensaio nunca e sobrescrito: cada rodada nova recebe sufixo de
 versao proprio.

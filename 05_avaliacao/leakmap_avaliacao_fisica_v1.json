@@ -1,0 +1,613 @@
+{
+ "descricao": "LEAKMAP - avaliacao da fisica da linha (04_detector/fisica.py) contra a verdade do cenario.",
+ "linha_do_cais": {
+  "velocidade_real_m_s": 1226.6265605455458,
+  "vazao_de_regime_real_m3_s": 0.04705393368340794,
+  "por_transmissor": {
+   "ideal": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 14,
+      "mediana": 0.0023244883392541382,
+      "minimo": -0.008813020172131703,
+      "maximo": 0.011763847550562812
+     },
+     "diametro_equivalente_mm": {
+      "n": 14,
+      "mediana": 17.286399562786357,
+      "minimo": 10.825721197715765,
+      "maximo": 23.91914175431007
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 14
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 14,
+     "mediana": 0.04713263167714186,
+     "minimo": 0.04713263094469298,
+     "maximo": 0.04713263609746969
+    },
+    "cobertura_2_sigma": {
+     "n": 15,
+     "incerteza_de_hoje": 1.0,
+     "incerteza_completa": 1.0,
+     "erro_mediano_m": 0.10537407797679066,
+     "incerteza_completa_mediana_m": 0.5018858505878229
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1223.752381213319,
+     "incerteza_m_s": 0.7545939813380768,
+     "n_eventos": 18,
+     "n_descartados": 0,
+     "residuos_s": [
+      0.0008052167153508316,
+      0.0009377038953158889,
+      0.00026840557178359203,
+      -0.00026840557178359203,
+      -0.0009377038953158889,
+      -0.0008052167153508316,
+      0.0011398658771170078,
+      0.0008052167153508316,
+      0.0009377038953158889,
+      0.00026840557178359203,
+      -0.00026840557178359203,
+      -0.0009377038953158889,
+      -0.0008052167153508316,
+      0.0011398658771170078,
+      0.0018319970969401522,
+      0.00046589960750020865,
+      0.00046589960750020865,
+      -0.0018319970969400412
+     ],
+     "erro_relativo": -0.0023431575873821275
+    }
+   },
+   "rapido": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 14,
+      "mediana": 0.0017952859606815696,
+      "minimo": -0.010229303424092562,
+      "maximo": 0.012081010413866
+     },
+     "diametro_equivalente_mm": {
+      "n": 14,
+      "mediana": 17.285744107639143,
+      "minimo": 10.844789960648967,
+      "maximo": 23.922890489289944
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 14
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 14,
+     "mediana": 0.04731706650796334,
+     "minimo": 0.04727860169144186,
+     "maximo": 0.04733643617389711
+    },
+    "cobertura_2_sigma": {
+     "n": 15,
+     "incerteza_de_hoje": 1.0,
+     "incerteza_completa": 1.0,
+     "erro_mediano_m": 0.17562346329469847,
+     "incerteza_completa_mediana_m": 0.43765262725657567
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1226.1535931763738,
+     "incerteza_m_s": 0.6317201346268299,
+     "n_eventos": 16,
+     "n_descartados": 2,
+     "residuos_s": [
+      -0.00015494265305299182,
+      0.0002975976497133215,
+      -5.1647551017691695e-05,
+      -0.00034924520073101317,
+      -0.0002975976497133215,
+      0.00015494265305299182,
+      1.96799473125564e-05,
+      -0.00015494265305299182,
+      0.0002975976497133215,
+      -5.1647551017691695e-05,
+      5.1647551017691695e-05,
+      -0.0002975976497133215,
+      0.00015494265305299182,
+      1.96799473125564e-05,
+      0.0033548799681228925,
+      0.0007859527303015479,
+      0.0007859527303015479,
+      -0.0029521830267444926
+     ],
+     "erro_relativo": -0.0003855838316118021
+    }
+   },
+   "inteligente_1ms": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 15,
+      "mediana": 0.0018776827019373332,
+      "minimo": -0.01032936005456564,
+      "maximo": 0.012990239169917706
+     },
+     "diametro_equivalente_mm": {
+      "n": 15,
+      "mediana": 23.656547199918236,
+      "minimo": 10.84236878565838,
+      "maximo": 23.933633945941914
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 15
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 15,
+     "mediana": 0.04731551967499289,
+     "minimo": 0.04727616909270934,
+     "maximo": 0.04733599435869752
+    },
+    "cobertura_2_sigma": {
+     "n": 15,
+     "incerteza_de_hoje": 1.0,
+     "incerteza_completa": 1.0,
+     "erro_mediano_m": 0.21074815595363816,
+     "incerteza_completa_mediana_m": 0.5608757470659201
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1226.3496429499512,
+     "incerteza_m_s": 0.7440730618299953,
+     "n_eventos": 16,
+     "n_descartados": 2,
+     "residuos_s": [
+      0.00016772278601379087,
+      0.0002454461079254844,
+      -0.0008795088254090755,
+      -0.0003231694298370391,
+      -0.0002454461079254844,
+      0.000233169965734914,
+      0.0007302002526811124,
+      0.0005686155377624957,
+      0.0002454461079254844,
+      -0.0004786160736603706,
+      7.772332191166575e-05,
+      0.0005563393955719254,
+      0.000233169965734914,
+      -0.00047247800256500216,
+      0.003446145166251746,
+      -0.0003960623229396776,
+      0.0008120285011954664,
+      -0.004251539049008546
+     ],
+     "erro_relativo": -0.00022575542100722323
+    }
+   },
+   "inteligente_10ms": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 14,
+      "mediana": 0.0021052238049013017,
+      "minimo": -0.007443462940495582,
+      "maximo": 0.012027032447409436
+     },
+     "diametro_equivalente_mm": {
+      "n": 14,
+      "mediana": 17.304988998217624,
+      "minimo": 10.830801483129967,
+      "maximo": 23.917826019163627
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 14
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 14,
+     "mediana": 0.04730719492641662,
+     "minimo": 0.04727904397049007,
+     "maximo": 0.047336509809416984
+    },
+    "cobertura_2_sigma": {
+     "n": 15,
+     "incerteza_de_hoje": 0.4,
+     "incerteza_completa": 1.0,
+     "erro_mediano_m": 1.2293642430628893,
+     "incerteza_completa_mediana_m": 2.553646230328197
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1224.1779660912784,
+     "incerteza_m_s": 3.017204913012664,
+     "n_eventos": 18,
+     "n_descartados": 0,
+     "residuos_s": [
+      -0.00016701970049753934,
+      -0.0007795010532462565,
+      0.005022301621984304,
+      0.004599124419984502,
+      -0.003229426464240792,
+      0.002171483459241008,
+      0.0005401137276254131,
+      0.003441015065240749,
+      -0.000779501053246201,
+      -0.0009910896542461578,
+      -0.0014142668562460714,
+      -0.0004231772019999136,
+      -0.005445478823984273,
+      -0.0002616717758718856,
+      0.00444703814295333,
+      -0.006323131425148731,
+      -0.0014907681286080443,
+      -0.00525243202571013
+     ],
+     "erro_relativo": -0.001996202049610152
+    }
+   },
+   "inteligente_50ms": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 14,
+      "mediana": 0.007423584426155427,
+      "minimo": -0.0002789130823890318,
+      "maximo": 0.01207057034059078
+     },
+     "diametro_equivalente_mm": {
+      "n": 14,
+      "mediana": 23.782666697272486,
+      "minimo": 10.871392296105205,
+      "maximo": 23.91073944046353
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 0
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 14,
+     "mediana": 0.04730999461541965,
+     "minimo": 0.04728066562971876,
+     "maximo": 0.04733628890256038
+    },
+    "cobertura_2_sigma": {
+     "n": 13,
+     "incerteza_de_hoje": 0.0,
+     "incerteza_completa": 1.0,
+     "erro_mediano_m": 6.28731998595012,
+     "incerteza_completa_mediana_m": 12.529260990706872
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1235.0226430953876,
+     "incerteza_m_s": 15.737200702178361,
+     "n_eventos": 17,
+     "n_descartados": 0,
+     "residuos_s": [
+      0.031208671749824946,
+      -0.012468317228592318,
+      0.022028780383987312,
+      -0.022429673135736017,
+      -0.005972749351847995,
+      0.0257180989984907,
+      0.012757444688288988,
+      0.03644059848474934,
+      -0.010443532507657505,
+      -0.0015832500448035303,
+      0.00805849695935662,
+      0.03854666705444926,
+      0.006744053412058415,
+      0.003024944445429667,
+      0.02048136370012721,
+      -0.0044858466653330265,
+      -0.006246519976456755
+     ],
+     "erro_relativo": 0.006844856307454794
+    }
+   },
+   "inteligente_100ms": {
+    "quantificacao": {
+     "erro_do_coeficiente_de_emissor": {
+      "n": 10,
+      "mediana": 0.010825963691639129,
+      "minimo": -0.0329133693638437,
+      "maximo": 0.020215370057590665
+     },
+     "diametro_equivalente_mm": {
+      "n": 10,
+      "mediana": 17.167175956392242,
+      "minimo": 10.714488750479369,
+      "maximo": 24.018835353827395
+     },
+     "diametros_reais_mm": [
+      10.85,
+      23.78
+     ],
+     "com_os_dois_canais": 0
+    },
+    "vazao_de_regime_estimada_m3_s": {
+     "n": 10,
+     "mediana": 0.04732218502990015,
+     "minimo": 0.04728140273164727,
+     "maximo": 0.04761085076135559
+    },
+    "cobertura_2_sigma": {
+     "n": 10,
+     "incerteza_de_hoje": 0.0,
+     "incerteza_completa": 0.6,
+     "erro_mediano_m": 40.65260976548629,
+     "incerteza_completa_mediana_m": 25.043247375866677
+    },
+    "calibracao_da_velocidade": {
+     "velocidade_m_s": 1229.5329144423622,
+     "incerteza_m_s": 46.284177733679996,
+     "n_eventos": 10,
+     "n_descartados": 3,
+     "residuos_s": [
+      -0.020742712400145913,
+      0.08328663167674263,
+      -0.38315440998477146,
+      -0.4896928212629387,
+      0.02255370478871399,
+      0.017540220389955535,
+      -0.44248653724357934,
+      0.037882040038352716,
+      0.04856220330888594,
+      -0.03212416803167473,
+      0.0016369555593983287,
+      0.051571376290318854,
+      -0.07418782449222061
+     ],
+     "erro_relativo": 0.0023693877095924964
+    }
+   }
+  }
+ },
+ "matriz": {
+  "evento/sem_ruido/casada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.0012502823170372768,
+    "minimo": -0.010469567246507827,
+    "maximo": 0.001484736148571697
+   },
+   "velocidade_declarada_m_s": 1200.899544131626,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1200.8995441316256,
+    "minimo": 1200.8995441316256,
+    "maximo": 1200.8995441316256
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   }
+  },
+  "evento/sem_ruido/desviada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.022018311046655525,
+    "minimo": -0.02987212475147827,
+    "maximo": -0.017831400530961994
+   },
+   "velocidade_declarada_m_s": 1224.9175350142586,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1200.8995441316256,
+    "minimo": 1200.8995441316256,
+    "maximo": 1200.8995441316256
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 0.4800000000000068,
+    "maximo": 0.8000000000000114
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   }
+  },
+  "evento/baixo/casada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.001629079452439619,
+    "minimo": -0.010408694923635053,
+    "maximo": 0.0015106989192139597
+   },
+   "velocidade_declarada_m_s": 1200.899544131626,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1200.899544131626,
+    "minimo": 1200.899544131626,
+    "maximo": 1200.8995441316263
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   }
+  },
+  "evento/baixo/desviada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.022397089119719826,
+    "minimo": -0.029812446003563697,
+    "maximo": -0.017793560107785322
+   },
+   "velocidade_declarada_m_s": 1224.9175350142586,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1200.899544131626,
+    "minimo": 1200.899544131626,
+    "maximo": 1200.8995441316263
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 0.480000000000004,
+    "maximo": 0.8000000000000114
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 1.4210854715202005e-15,
+    "maximo": 7.105427357601002e-15
+   }
+  },
+  "evento/alto/casada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.004038003448466609,
+    "minimo": -0.01405798826899507,
+    "maximo": 0.0035561160208830156
+   },
+   "velocidade_declarada_m_s": 1200.899544131626,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1201.4408673290673,
+    "minimo": 1195.4144805359133,
+    "maximo": 1205.2023906731781
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 0.24096385542168264,
+    "maximo": 0.24096385542168264
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 0.31707509349109697,
+    "maximo": 0.42256176077765417
+   }
+  },
+  "evento/alto/desviada": {
+   "erro_do_coeficiente_de_emissor": {
+    "n": 5,
+    "mediana": -0.02430539275087451,
+    "minimo": -0.033396825901788385,
+    "maximo": -0.015826829326167857
+   },
+   "velocidade_declarada_m_s": 1224.9175350142586,
+   "velocidade_real_m_s": 1200.899544131626,
+   "velocidade_calibrada_m_s": {
+    "n": 5,
+    "mediana": 1201.4408673290673,
+    "minimo": 1195.4144805359133,
+    "maximo": 1205.2023906731781
+   },
+   "erro_de_posicao_com_a_velocidade_declarada_m": {
+    "medio": 0.5291566265060255,
+    "maximo": 1.0457831325301186
+   },
+   "erro_de_posicao_com_a_velocidade_calibrada_m": {
+    "medio": 0.31707509349109697,
+    "maximo": 0.42256176077765417
+   }
+  }
+ },
+ "detectabilidade": {
+  "rapido": {
+   "ruido_do_canal_m": 0.02605040381278404,
+   "teoria": {
+    "degrau_minimo_m": 0.1041704944590551,
+    "limitado_por": "ruido",
+    "fracao_de_energia_na_janela_curta": 0.7504481898769364,
+    "vazao_minima_m3_s": 5.3789824827509926e-05,
+    "vazao_minima_l_min": 3.2273894896505957
+   },
+   "simulacao": {
+    "escalas": [
+     0.005,
+     0.0075,
+     0.01,
+     0.0125,
+     0.015,
+     0.02,
+     0.025,
+     0.03,
+     0.04,
+     0.05,
+     0.07,
+     0.1
+    ],
+    "taxa_de_localizacao": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.16666666666666666,
+     0.6666666666666666,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "degrau_da_onda_base_m": 4.0890312659995605,
+    "degrau_com_metade_localizada_m": 0.12267093797998681,
+    "vazao_com_metade_localizada_l_min": 3.800566542168072
+   }
+  },
+  "inteligente_10ms": {
+   "ruido_do_canal_m": 0.02605040381278404,
+   "teoria": {
+    "degrau_minimo_m": 0.1041704944590551,
+    "limitado_por": "ruido",
+    "fracao_de_energia_na_janela_curta": 0.7504481898769364,
+    "vazao_minima_m3_s": 5.3789824827509926e-05,
+    "vazao_minima_l_min": 3.2273894896505957
+   },
+   "simulacao": {
+    "escalas": [
+     0.005,
+     0.0075,
+     0.01,
+     0.0125,
+     0.015,
+     0.02,
+     0.025,
+     0.03,
+     0.04,
+     0.05,
+     0.07,
+     0.1
+    ],
+    "taxa_de_localizacao": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.5,
+     1.0,
+     1.0,
+     1.0,
+     1.0,
+     1.0
+    ],
+    "degrau_da_onda_base_m": 4.0890312659995605,
+    "degrau_com_metade_localizada_m": 0.10222578164998902,
+    "vazao_com_metade_localizada_l_min": 3.167138785140061
+   }
+  }
+ },
+ "adveccao": {
+  "velocidade_do_escoamento_m_s": 1.4575624465942387,
+  "vies_previsto_m": -0.41589418712822773,
+  "exemplo_meio_do_trecho": {
+   "delta_t_s": 0.0006781114770249563,
+   "posicao_sem_adveccao_m": 350.4158947743648,
+   "posicao_com_adveccao_m": 350.0
+  },
+  "observacao": "o TSNet, como a teoria classica do golpe de ariete, despreza V diante de c; a correcao e para o campo e nao entra na comparacao com as simulacoes"
+ }
+}

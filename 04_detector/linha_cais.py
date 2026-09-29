@@ -36,6 +36,7 @@ import numpy as np
 
 import amostragem as AM
 import detector as D
+import fisica as FL
 import modelo_sensor as MS
 import refino as RF
 
@@ -58,6 +59,19 @@ SEMENTES_SEM_EVENTO = (201, 202, 203, 204, 205)
 def faixa_em_carga_m(amostras):
     rho = amostras['premissas']['massa_especifica_kg_m3']
     return FAIXA_BAR * 1e5 / (rho * 9.81)
+
+
+def geometria(amostras):
+    """Geometria da linha para a fisica (fisica.py): as premissas gravadas com as amostras.
+
+    Rugosidade e viscosidade sao as de 02_bancada/codigo/linha_cais.py (aco comercial, diesel de 3 cSt). O contorno
+    antes de A e a bomba; depois de B, o navio.
+    """
+    pos = amostras['premissas']['posicoes_m']
+    return {'diametro_interno_m': float(amostras['premissas']['diametro_interno_m']),
+            'rugosidade_m': 0.046e-3, 'viscosidade_m2_s': 3.0e-6,
+            'contorno_antes_de_a_m': pos['sensor_A'] - pos['bomba'],
+            'contorno_depois_de_b_m': pos['navio'] - pos['sensor_B_berco_108']}
 
 
 def configuracoes(faixa_m, semente):
@@ -147,6 +161,7 @@ def main():
     # com a classificacao por polaridade e origem, e sem ela (o detector de antes)
     for classificar, caminho in ((True, RESULTADO), (False, RESULTADO_SEM_CLASSIFICACAO)):
         registros = RF.refinar_pacote(pacote, D.processar_pacote(pacote, classificar=classificar))
+        registros = FL.caracterizar_pacote(pacote, registros, geometria(amostras))
         with open(caminho, 'w', encoding='utf-8') as f:
             json.dump({'descricao': ('Registros do detector (A-15) sobre a linha do cais, %s a classificacao '
                                      'por polaridade e origem.' % ('com' if classificar else 'sem')),

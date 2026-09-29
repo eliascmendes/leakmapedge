@@ -9,8 +9,8 @@
     "06_fpga/rtl/leakmap_topo.v",
     "06_fpga/rtl/leakmap_uart.v"
   ],
-  "casos_simulados": 67,
-  "casos_identicos_ao_modelo_byte_a_byte": 67,
+  "casos_simulados": 68,
+  "casos_identicos_ao_modelo_byte_a_byte": 68,
   "criterios": {
     "B-06": {
       "criterio": "bloco corrompido rejeitado; so segue com o bloco certo",
@@ -322,6 +322,40 @@
           ]
         ]
       },
+      "falhas": [],
+      "passou": true
+    },
+    "Degrau": {
+      "criterio": "o circuito soma, numa passada pela memoria, os codigos de cada canal com evento nas janelas antes e depois da chegada (o degrau da onda, entrada da Joukowsky), e zera o canal quando a janela nao cabe ou a memoria nao e mais a da execucao",
+      "canais_da_matriz_com_evento": 60,
+      "canais_com_as_somas_iguais_as_das_amostras": 60,
+      "canais_sem_evento_zerados": 30,
+      "pedidos_que_devem_sair_zerados": [
+        [
+          false,
+          false
+        ],
+        [
+          true,
+          true
+        ],
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          false
+        ],
+        [
+          false,
+          false
+        ]
+      ],
       "falhas": [],
       "passou": true
     }

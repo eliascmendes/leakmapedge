@@ -493,6 +493,119 @@ class AutotesteDosCanais(unittest.TestCase):
         self.assertEqual(PlacaAntiga.pedidos, 1)
 
 
+class DegrauDaOnda(unittest.TestCase):
+    """Mensagem DEGRAU: as somas das janelas antes e depois da chegada, feitas pela placa.
+
+    O degrau que sai delas tem de ser o de 04_detector/fisica.py (a entrada da
+    Joukowsky), a menos da quantizacao da representacao.
+    """
+
+    def rodar(self, ensaio_id, placa=None):
+        preparo = PP.preparar_ensaio(POR_ID[ensaio_id], ESCALA, CAL)
+        host = HO.Hospedeiro(TR.TransporteMemoria(placa or PLACA.PlacaReferencia()))
+        rodada = host.rodar(ensaio_id, preparo['conversao']['canal_A']['codigos'],
+                            preparo['conversao']['canal_B']['codigos'], preparo['parametros'],
+                            janelas_de_degrau=preparo['janelas_do_degrau'],
+                            degrau_m=preparo['representacao']['degrau_m'])
+        return preparo, rodada, host
+
+    def test_janelas_em_amostras_sao_as_de_fisica(self):
+        import fisica as FL
+        for ts in (4.0130559895570352e-4, 1e-3, 1 / 2491.87):
+            t = np.arange(400) * ts
+            i = 200
+            j = PR.janelas_do_degrau(ts)
+            antes = set(np.flatnonzero((t >= t[i] - FL.ANTES_DA_CHEGADA_S[0])
+                                       & (t <= t[i] - FL.ANTES_DA_CHEGADA_S[1])))
+            inicio, fim = FL.janela_depois(None, 1000.0)
+            depois = set(np.flatnonzero((t >= t[i] + inicio) & (t <= t[i] + fim)))
+            self.assertEqual(antes, set(range(i - j['guarda_antes'] - j['n_antes'], i - j['guarda_antes'])))
+            self.assertEqual(depois, set(range(i + j['inicio_depois'], i + j['inicio_depois'] + j['n_depois'])))
+        # recorte no registro: a janela encolhe para caber em todos os canais que declararam
+        j = PR.janelas_do_degrau(4.0130559895570352e-4)
+        self.assertEqual(PR.janelas_no_registro(j, [51, 60], 101),
+                         dict(j, n_antes=51 - j['guarda_antes'], n_depois=101 - 60 - j['inicio_depois']))
+
+    def test_degrau_da_placa_e_o_da_fisica(self):
+        import fisica as FL
+        for ensaio_id in ('MX-005', 'MX-013', 'MX-021'):
+            preparo, rodada, _ = self.rodar(ensaio_id)
+            ensaio = POR_ID[ensaio_id]
+            degrau = rodada['degrau_na_placa']
+            dm = preparo['representacao']['degrau_m']
+            for canal in ('canal_A', 'canal_B'):
+                r = rodada['resultado'][canal]
+                if not r['detectado']:
+                    self.assertFalse(degrau[canal]['valido'])
+                    continue
+                self.assertTrue(degrau[canal]['valido'])
+                self.assertEqual(degrau[canal]['indice_de_chegada'], r['indice_de_chegada'])
+                # com as mesmas janelas, so a quantizacao separa a placa do sinal em metros
+                i, j = r['indice_de_chegada'], degrau['janelas']
+                x = np.asarray(ensaio[canal + '_carga_m'], dtype=float)
+                em_metros = (x[i + j['inicio_depois']:i + j['inicio_depois'] + j['n_depois']].mean()
+                             - x[i - j['guarda_antes'] - j['n_antes']:i - j['guarda_antes']].mean())
+                self.assertAlmostEqual(degrau[canal]['degrau_m'], em_metros, delta=dm)
+                # e fisica.py, que recorta a janela canal a canal, da o mesmo degrau a 0,1 %
+                sw = FL.degrau_no_sensor(x, ensaio['tempo_s'], i, FL.janela_depois(None, 1000.0))
+                self.assertAlmostEqual(degrau[canal]['degrau_m'], sw['degrau_m'], delta=1e-3 * abs(sw['degrau_m']))
+        registro = RB.montar_registro(ensaio, preparo, rodada, ESCALA, CAL, 'referencia_python_da_placa')
+        self.assertIn('degrau_na_placa', registro)
+
+    def test_canal_so_vale_com_a_memoria_da_execucao(self):
+        preparo = PP.preparar_ensaio(POR_ID['MX-005'], ESCALA, CAL)
+        a = preparo['conversao']['canal_A']['codigos']
+        janelas = {'n_antes': 20, 'guarda_antes': 3, 'inicio_depois': 5, 'n_depois': 20}
+        placa = PLACA.PlacaReferencia()
+
+        def pedir(j, carga=None):
+            q = PR.montar_quadro(PR.PEDIR_DEGRAU, carga if carga is not None
+                                 else PR.carga_pedir_degrau('MX-005', j))
+            return PR.LeitorDeQuadros().alimentar(placa.receber(q))[0]
+
+        antes = PR.ler_degrau(pedir(janelas)[2])
+        self.assertEqual(antes['situacao'], PR.SAUDE_SEM_EXECUCAO)
+        self.assertFalse(antes['canal_A']['valido'] or antes['canal_B']['valido'])
+        HO.Hospedeiro(TR.TransporteMemoria(placa)).rodar('MX-005', a, preparo['conversao']['canal_B']['codigos'],
+                                                         preparo['parametros'])
+        valido = PR.ler_degrau(pedir(janelas)[2])
+        self.assertTrue(valido['canal_A']['valido'] and valido['canal_B']['valido'])
+        i = valido['canal_A']['indice_de_chegada']
+        self.assertEqual(valido['canal_A']['soma_antes'], sum(a[i - 23:i - 3]))
+        self.assertEqual(valido['canal_A']['soma_depois'], sum(a[i + 5:i + 25]))
+        for ruim in (dict(janelas, n_antes=0), dict(janelas, n_depois=len(a)), dict(janelas, guarda_antes=i)):
+            self.assertFalse(PR.ler_degrau(pedir(ruim)[2])['canal_A']['valido'])
+        self.assertEqual(PR.ler_bloco_recebido(pedir(None, bytes(15))[2])[2], PR.BLOCO_MAL_FORMADO)
+        placa.receber(PR.montar_quadro(PR.CONFIGURAR, PR.carga_configurar('MX-005', preparo['parametros'], len(a))))
+        depois = PR.ler_degrau(pedir(janelas)[2])
+        self.assertEqual(depois['situacao'], PR.RESULTADO_CONCLUIDO)      # a execucao continua sendo a ultima
+        self.assertFalse(depois['canal_A']['valido'] or depois['canal_B']['valido'])
+
+    def test_somas_cabem_em_32_bits(self):
+        self.assertLessEqual(65535 * 65535, (1 << 32) - 1)
+        carga = PR.carga_degrau('X', 0, {'n_antes': 65535, 'guarda_antes': 0, 'inicio_depois': 0,
+                                         'n_depois': 65535}, (1, 65535 * 65535, 65535 * 65535))
+        self.assertEqual(PR.ler_degrau(carga)['canal_A']['degrau_em_codigos'], 0.0)
+
+    def test_placa_sem_degrau_fica_sem_e_nao_e_perguntada_de_novo(self):
+        class PlacaAntiga(PLACA.PlacaReferencia):
+            pedidos = 0
+
+            def _tratar(self, tipo, carga):
+                if tipo == PR.PEDIR_DEGRAU:
+                    PlacaAntiga.pedidos += 1
+                    return b''
+                return super()._tratar(tipo, carga)
+
+        placa = PlacaAntiga()
+        preparo, rodada, host = self.rodar('MX-001', placa=placa)
+        self.assertIsNone(rodada['degrau_na_placa'])
+        self.assertIsNotNone(rodada['resultado'])
+        host.rodar('MX-005', preparo['conversao']['canal_A']['codigos'], preparo['conversao']['canal_B']['codigos'],
+                   preparo['parametros'], janelas_de_degrau=preparo['janelas_do_degrau'])
+        self.assertEqual(PlacaAntiga.pedidos, 1)
+
+
 class B10Resultado(unittest.TestCase):
 
     def test_resultado_perdido_e_pedido_de_novo(self):

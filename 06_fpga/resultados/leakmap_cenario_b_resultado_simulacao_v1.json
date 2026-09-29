@@ -124,6 +124,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -37790.0,
+          "degrau_m": -37.79
+        },
+        "canal_B": {
+          "indice_de_chegada": 217,
+          "degrau_em_codigos": -37577.525,
+          "degrau_m": -37.577525
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -310,6 +328,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -37790.0,
+          "degrau_m": -37.79
+        },
+        "canal_B": {
+          "indice_de_chegada": 217,
+          "degrau_em_codigos": -37577.525,
+          "degrau_m": -37.577525
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -498,6 +534,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -37227.575,
+          "degrau_m": -37.227574999999995
+        },
+        "canal_B": {
+          "indice_de_chegada": 134,
+          "degrau_em_codigos": -37136.7,
+          "degrau_m": -37.1367
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -684,6 +738,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -37227.575,
+          "degrau_m": -37.227574999999995
+        },
+        "canal_B": {
+          "indice_de_chegada": 134,
+          "degrau_em_codigos": -37136.7,
+          "degrau_m": -37.1367
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -872,6 +944,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36663.625,
+          "degrau_m": -36.663625
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36691.125,
+          "degrau_m": -36.691125
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1058,6 +1148,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36663.625,
+          "degrau_m": -36.663625
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36691.125,
+          "degrau_m": -36.691125
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1246,6 +1354,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 134,
+          "degrau_em_codigos": -36098.125,
+          "degrau_m": -36.098125
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36240.7,
+          "degrau_m": -36.2407
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1432,6 +1558,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 134,
+          "degrau_em_codigos": -36098.125,
+          "degrau_m": -36.098125
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -36240.7,
+          "degrau_m": -36.2407
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1620,6 +1764,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 217,
+          "degrau_em_codigos": -35531.0,
+          "degrau_m": -35.531
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -35785.325,
+          "degrau_m": -35.785325
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -1806,6 +1968,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 44,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 40
+        },
+        "canal_A": {
+          "indice_de_chegada": 217,
+          "degrau_em_codigos": -35531.0,
+          "degrau_m": -35.531
+        },
+        "canal_B": {
+          "indice_de_chegada": 51,
+          "degrau_em_codigos": -35785.325,
+          "degrau_m": -35.785325
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -1994,6 +2174,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24764.12929061785,
+          "degrau_m": -37.7876391098159
+        },
+        "canal_B": {
+          "indice_de_chegada": 219,
+          "degrau_em_codigos": -24625.7643020595,
+          "degrau_m": -37.5765076708011
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2180,6 +2378,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24764.12929061785,
+          "degrau_m": -37.7876391098159
+        },
+        "canal_B": {
+          "indice_de_chegada": 219,
+          "degrau_em_codigos": -24625.7643020595,
+          "degrau_m": -37.5765076708011
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -2368,6 +2584,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24396.454233409608,
+          "degrau_m": -37.22660293493493
+        },
+        "canal_B": {
+          "indice_de_chegada": 136,
+          "degrau_em_codigos": -24336.454233409608,
+          "degrau_m": -37.13504880355475
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2554,6 +2788,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24396.454233409608,
+          "degrau_m": -37.22660293493493
+        },
+        "canal_B": {
+          "indice_de_chegada": 136,
+          "degrau_em_codigos": -24336.454233409608,
+          "degrau_m": -37.13504880355475
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -2742,6 +2994,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24026.900457665906,
+          "degrau_m": -36.662700019326934
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24041.28718535469,
+          "degrau_m": -36.68465275860943
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -2928,6 +3198,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24026.900457665906,
+          "degrau_m": -36.662700019326934
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -24041.28718535469,
+          "degrau_m": -36.68465275860943
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3116,6 +3404,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 136,
+          "degrau_em_codigos": -23658.03661327231,
+          "degrau_m": -36.099849871476785
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -23748.18535469108,
+          "degrau_m": -36.237408033403646
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -3302,6 +3608,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 136,
+          "degrau_em_codigos": -23658.03661327231,
+          "degrau_m": -36.099849871476785
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -23748.18535469108,
+          "degrau_m": -36.237408033403646
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3490,6 +3814,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 219,
+          "degrau_em_codigos": -23284.83295194508,
+          "degrau_m": -35.53037758746484
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -23449.863844393592,
+          "degrau_m": -35.782198587615156
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -3676,6 +4018,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 46,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 38
+        },
+        "canal_A": {
+          "indice_de_chegada": 219,
+          "degrau_em_codigos": -23284.83295194508,
+          "degrau_m": -35.53037758746484
+        },
+        "canal_B": {
+          "indice_de_chegada": 53,
+          "degrau_em_codigos": -23449.863844393592,
+          "degrau_m": -35.782198587615156
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -3864,6 +4224,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1543.855342136855,
+          "degrau_m": -37.70098515596715
+        },
+        "canal_B": {
+          "indice_de_chegada": 223,
+          "degrau_em_codigos": -1535.1308523409364,
+          "degrau_m": -37.48793290209857
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4050,6 +4428,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1543.855342136855,
+          "degrau_m": -37.70098515596715
+        },
+        "canal_B": {
+          "indice_de_chegada": 223,
+          "degrau_em_codigos": -1535.1308523409364,
+          "degrau_m": -37.48793290209857
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4238,6 +4634,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1522.5246098439375,
+          "degrau_m": -37.180088152477104
+        },
+        "canal_B": {
+          "indice_de_chegada": 140,
+          "degrau_em_codigos": -1518.2376950780313,
+          "degrau_m": -37.07540158920711
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4424,6 +4838,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1522.5246098439375,
+          "degrau_m": -37.180088152477104
+        },
+        "canal_B": {
+          "indice_de_chegada": 140,
+          "degrau_em_codigos": -1518.2376950780313,
+          "degrau_m": -37.07540158920711
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4612,6 +5044,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1499.300120048019,
+          "degrau_m": -36.61294554451817
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1499.3037214885953,
+          "degrau_m": -36.61303349178499
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -4798,6 +5248,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 49,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 34
+        },
+        "canal_A": {
+          "indice_de_chegada": 56,
+          "degrau_em_codigos": -1499.300120048019,
+          "degrau_m": -36.61294554451817
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1499.3037214885953,
+          "degrau_m": -36.61303349178499
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -4986,6 +5454,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 50,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 35
+        },
+        "canal_A": {
+          "indice_de_chegada": 139,
+          "degrau_em_codigos": -1476.2514285714287,
+          "degrau_m": -36.050095935810226
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1482.7828571428572,
+          "degrau_m": -36.209593581022155
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5172,6 +5658,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 50,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 35
+        },
+        "canal_A": {
+          "indice_de_chegada": 139,
+          "degrau_em_codigos": -1476.2514285714287,
+          "degrau_m": -36.050095935810226
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1482.7828571428572,
+          "degrau_m": -36.209593581022155
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5360,6 +5864,24 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 50,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 35
+        },
+        "canal_A": {
+          "indice_de_chegada": 222,
+          "degrau_em_codigos": -1451.9714285714285,
+          "degrau_m": -35.45717774289203
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1462.1542857142858,
+          "degrau_m": -35.70584336298622
+        }
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5546,6 +6068,24 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 50,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 35
+        },
+        "canal_A": {
+          "indice_de_chegada": 222,
+          "degrau_em_codigos": -1451.9714285714285,
+          "degrau_m": -35.45717774289203
+        },
+        "canal_B": {
+          "indice_de_chegada": 57,
+          "degrau_em_codigos": -1462.1542857142858,
+          "degrau_m": -35.70584336298622
+        }
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -5734,6 +6274,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -5874,6 +6424,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -6016,6 +6576,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -6156,6 +6726,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -6298,6 +6878,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -6438,6 +7028,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -6580,6 +7180,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -6720,6 +7330,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -6862,6 +7482,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -7002,6 +7632,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -7144,6 +7784,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -7284,6 +7934,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
@@ -7426,6 +8086,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -7567,6 +8237,16 @@
         },
         "canais_saudaveis": 2
       },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
+      },
       "contadores_da_placa": {
         "falhas_de_crc": 0,
         "descontinuidades_de_sequencia": 0,
@@ -7707,6 +8387,16 @@
           "falhas": []
         },
         "canais_saudaveis": 2
+      },
+      "degrau_na_placa": {
+        "janelas_em_amostras": {
+          "n_antes": 67,
+          "guarda_antes": 7,
+          "inicio_depois": 10,
+          "n_depois": 50
+        },
+        "canal_A": null,
+        "canal_B": null
       },
       "contadores_da_placa": {
         "falhas_de_crc": 0,

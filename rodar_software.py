@@ -79,6 +79,8 @@ PASSOS = [
      os.path.join('04_detector', 'rede_cais.py')),
     ('rede do cais  avaliacao independente',
      os.path.join('05_avaliacao', 'avaliar_rede_cais.py')),
+    ('fisica       vazao, furo, incerteza, velocidade calibrada e menor vazamento contra a verdade',
+     os.path.join('05_avaliacao', 'avaliar_fisica.py')),
     ('front-end    dados da tela da rede do cais',
      os.path.join('web', 'gerar_dados_rede.py')),
 ]

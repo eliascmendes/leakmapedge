@@ -79,6 +79,15 @@
     "canais_com_falha": [],
     "observacao": "autoteste feito pela placa amostra a amostra durante a execucao (mensagem SAUDE): canal congelado, saturado, fora da faixa do transmissor ou com salto impossivel entre duas amostras."
   },
+  "degrau_da_onda_na_placa": {
+    "canais_com_evento": 60,
+    "canais_com_degrau_medido_na_placa": 60,
+    "degrau_m": {
+      "min": 35.45717774289203,
+      "max": 37.79
+    },
+    "observacao": "a placa soma os codigos de cada canal nas janelas antes e depois da chegada (mensagem DEGRAU); a diferenca das medias e o degrau da onda, a entrada da Joukowsky (04_detector/fisica.py) para a vazao do furo."
+  },
   "avaliacao_contra_a_verdade": {
     "arquivo": "leakmap_cenario_b_avaliacao_simulacao_v1.json",
     "contagens": {

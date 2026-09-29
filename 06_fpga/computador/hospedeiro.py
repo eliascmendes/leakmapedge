@@ -18,7 +18,10 @@ placa, ver dimensionamento.py):
      circuito. Uma placa que nao responde (projeto antigo) fica sem tempos;
   5. pedir SAUDE, com os limites do transmissor: o autoteste que a placa fez
      em cada canal durante a execucao. Sem resposta, o ensaio fica sem
-     autoteste e o computador nao pergunta mais nesta placa.
+     autoteste e o computador nao pergunta mais nesta placa;
+  6. pedir DEGRAU, com as janelas antes e depois da chegada: as somas que a
+     placa fez na memoria, de onde sai o degrau da onda em cada canal (a
+     entrada da Joukowsky). Sem resposta, idem: nao pergunta mais.
 
 Num enlace de verdade chegam respostas atrasadas: o recibo de um bloco que
 ja foi confirmado, a resposta a uma mensagem reenviada. O computador as
@@ -45,6 +48,7 @@ class Hospedeiro:
         self.leitor = PR.LeitorDeQuadros()
         self.pendentes = []
         self.responde_saude = True
+        self.responde_degrau = True
         self._zerar_eventos()
 
     def _zerar_eventos(self):
@@ -143,6 +147,12 @@ class Hospedeiro:
         tipo, carga = self._esperar({PR.SAUDE})
         return PR.ler_saude(carga) if tipo == PR.SAUDE else None
 
+    def pedir_degrau(self, identificador, janelas, degrau_m=None):
+        """DEGRAU da ultima execucao com `janelas`; None se a placa nao responder."""
+        self.transporte.enviar(PR.montar_quadro(PR.PEDIR_DEGRAU, PR.carga_pedir_degrau(identificador, janelas)))
+        tipo, carga = self._esperar({PR.DEGRAU})
+        return PR.ler_degrau(carga, degrau_m) if tipo == PR.DEGRAU else None
+
     def executar(self, identificador, n_blocos, n_amostras, periodo_ciclos=None):
         if periodo_ciclos:
             executar = PR.montar_quadro(PR.EXECUTAR_TEMPO_REAL, PR.carga_executar_tempo_real(
@@ -183,7 +193,7 @@ class Hospedeiro:
 
     # --- ensaio completo -----------------------------------------------------------------------
     def rodar(self, identificador, codigos_a, codigos_b, parametros, periodo_ciclos=None,
-              medir_tempos=True, limites_de_saude=None):
+              medir_tempos=True, limites_de_saude=None, janelas_de_degrau=None, degrau_m=None):
         self._zerar_eventos()
         n = len(codigos_a)
         blocos = PR.blocos_do_ensaio(identificador, codigos_a, codigos_b)
@@ -201,6 +211,13 @@ class Hospedeiro:
         if limites_de_saude and self.responde_saude and resultado is not None:
             saude = self.pedir_saude(identificador, limites_de_saude)
             self.responde_saude = saude is not None
+        degrau = None
+        if janelas_de_degrau and self.responde_degrau and resultado is not None:
+            chegadas = [resultado[c]['indice_de_chegada'] for c in ('canal_A', 'canal_B')
+                        if resultado[c]['detectado']]
+            janelas = PR.janelas_no_registro(janelas_de_degrau, chegadas, n)
+            degrau = self.pedir_degrau(identificador, janelas, degrau_m)
+            self.responde_degrau = degrau is not None
         tempos = {'configuracao_s': t1 - t0, 'carga_s': t2 - t1,
                   'execucao_ate_resultado_s': t3 - t2}
         if getattr(self.transporte, 'sincrono', False):
@@ -214,4 +231,5 @@ class Hospedeiro:
             'tempos_de_comunicacao': tempos,
             'tempos_na_placa': tempos_na_placa,
             'saude_na_placa': saude,
+            'degrau_na_placa': degrau,
         }

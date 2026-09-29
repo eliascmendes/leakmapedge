@@ -61,6 +61,8 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
 - o sistema completo, com a serial de verdade no caminho;
 - o autoteste dos canais: a mensagem SAUDE em todos os ensaios da matriz e em
   canais estragados de propósito (congelado, cabo rompido, pico isolado);
+- o degrau da onda: a mensagem DEGRAU em todos os ensaios da matriz, e os
+  pedidos que têm de sair zerados;
 - a demonstração autônoma, contra o modelo em 242 posições e em 18 casos com
   sensor estragado, e o topo dela na DE10-Standard, com botões e displays;
 - o topo da DE10-Standard pelo cabo de gravação, `placas/intel/leakmap_topo_jtag.v`
@@ -70,7 +72,7 @@ compila o Verilog no Icarus Verilog e exige, byte a byte, a mesma resposta:
   testbench roda no Questa que vem com o Quartus; ver
   [`sim/questa/LEIAME.md`](sim/questa/LEIAME.md).
 
-**Situação: 71 de 71 casos idênticos ao modelo.** O teste foi conferido
+**Situação: 72 de 72 casos idênticos ao modelo.** O teste foi conferido
 estragando o Verilog de propósito: trocar `>` por `>=` no retrocesso derruba
 15 casos, e deixar de contar uma descontinuidade derruba o caso da lacuna.
 
@@ -195,6 +197,53 @@ Na placa, o autoteste ainda não rodou: o `leakmap.sof` gravado na
 DE10-Standard em 25/09/2026 é anterior a ele. Com o projeto recompilado, o
 teste é o passo B.6 do
 [roteiro de testes](placas/de10_standard/ROTEIRO_DE_TESTES.txt).
+
+## Degrau da onda na placa: da posição para o tamanho do furo
+
+A posição do furo sai da diferença entre as chegadas. O tamanho sai da altura
+da frente de onda. Um furo que se abre tira de uma vez uma vazão ΔQ da linha,
+e a carga cai o que a equação de Joukowsky manda:
+
+```
+ΔH = c · ΔQ / (2 · g · A)
+```
+
+Cada lado recebe metade do déficit, por isso o 2. Com ΔH medido nos sensores,
+[`04_detector/fisica.py`](../04_detector/fisica.py) calcula três coisas:
+
+- a vazão do vazamento;
+- o coeficiente de emissor (Q = C·√h, pela lei do orifício);
+- o diâmetro equivalente do furo.
+
+A placa já tem as amostras na memória, então mede ΔH ali mesmo
+(mensagem DEGRAU). Numa passada pela memória, soma os códigos de cada canal
+com evento em duas janelas:
+
+- antes da chegada, de 30 ms a 3 ms: o nível de regime;
+- depois da chegada, de 4 ms a 24 ms: a frente, antes da primeira reflexão.
+
+O computador tira as médias e a diferença. A conta cara, a soma de centenas
+de amostras em 32 bits, fica no circuito; as duas divisões ficam no
+computador, que já faz a Joukowsky. Detalhes em
+[`ESPECIFICACAO.md`](ESPECIFICACAO.md).
+
+Resultados na simulação do Verilog (critério Degrau de `sim/prova_cenario_b.py`):
+
+- nos 60 canais da matriz com evento, as somas do Verilog são iguais às feitas
+  direto nas amostras enviadas;
+- os canais sem evento saem zerados;
+- também saem zerados os pedidos que não valem: antes de executar, com janela
+  vazia ou fora do registro, e depois de um CONFIGURAR que trocou a memória;
+- o degrau da placa, em metros, bate com o de `fisica.py` sobre o sinal
+  original com 0,008 % de diferença mediana e 0,06 % no pior canal. A
+  diferença é a quantização da representação e o recorte da janela, que a
+  placa faz igual para os dois canais.
+
+A passada leva 3 ciclos por amostra, 246 µs para 4 096 amostras a 50 MHz,
+depois de o resultado já ter saído. Não atrasa a detecção.
+
+Na placa, o DEGRAU ainda não rodou: precisa recompilar o projeto no Quartus.
+Um `.sof` antigo ignora a mensagem, e o computador segue sem ela.
 
 ## Demonstração autônoma na placa
 

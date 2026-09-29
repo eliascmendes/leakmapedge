@@ -35,6 +35,10 @@ uvicorn --app-dir 08_backend app:app --port 8000
 
 ## Publicar no Render
 
+Com o projeto arquivado (29/09/2026), o serviço publicado pode ser desligado a
+qualquer momento. Para rodar a bancada, use o caminho local acima ou publique
+de novo pelo blueprint.
+
 O arquivo [`render.yaml`](../render.yaml), na raiz, descreve o serviço. No
 Render: *New > Blueprint*, escolher este repositório. O Render gera a chave dos
 comandos (`LEAKMAP_CHAVE`); ela fica na aba *Environment* do serviço.
@@ -106,7 +110,7 @@ descartado e contado em `deteccoes_descartadas_como_ruido`, no
 linhas, e os eventos reais num sensor só (cabo rompido, parada de bomba)
 continuam saindo. O detector em si não mudou.
 
-### Alerta de sobrepressão (recurso novo)
+### Alerta de sobrepressão
 
 Complementar à detecção e localização de vazamento, que continua sendo o centro
 e não mudou. No mesmo passo de 0,1 s, o monitor de `07_servico/sobrepressao.py`
@@ -135,7 +139,7 @@ Os limites são premissas até chegar o dado da planta (`linhas.py`,
 
 O alerta avisa quando o pico acontece; para saber antes, a previsão abaixo.
 
-### Previsão do golpe antes da manobra (recurso novo)
+### Previsão do golpe antes da manobra
 
 Também complementar. Antes de o operador fechar uma válvula,
 `07_servico/previsao_de_golpe.py` calcula o pico previsto, o nível e o tempo

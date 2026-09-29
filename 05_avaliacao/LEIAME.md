@@ -27,6 +27,7 @@ sem `04_detector` no caminho de busca, e confere que a tabela sai igual.
 | `leakmap_avaliacao_v1.json` | Rodada v1 de referencia, mantida para conferencia de regressao |
 | `avaliar_linha_cais.py`, `leakmap_avaliacao_linha_cais_v1.json` | Linha do cais: seis transmissores, manobras, com e sem classificacao e cadastro |
 | `avaliar_rede_cais.py`, `leakmap_avaliacao_rede_cais_v1.json` | Rede do cais com manifold e tres ramais, erro medido pela tubulacao |
+| `avaliar_fisica.py`, `leakmap_avaliacao_fisica_v1.json` | Fisica da linha (`04_detector/fisica.py`) contra a verdade: vazao e furo, cobertura da incerteza, velocidade calibrada, menor vazamento detectavel, adveccao |
 | `testes/teste_avaliador.py` | Testes de A-17 e os criterios de A-12 e A-14 que precisam da posicao real |
 
 Os testes que precisam da posicao real do vazamento ficam aqui, e nao em
@@ -252,3 +253,54 @@ ja acertam exatamente, pela forma como os eventos foram simulados. A 2,5 mil
 amostras por segundo a frente dura poucas amostras: o ganho grande de
 resolucao viria de amostrar mais rapido (a 10 mil por segundo, uma amostra
 vale 6 cm), nao do refino.
+
+## Fisica da linha: quanto vaza, com que incerteza, e o menor vazamento
+
+`avaliar_fisica.py` mede `04_detector/fisica.py` contra a verdade do
+simulador. Os principios e as equacoes estao em `04_detector/LEIAME.md`.
+
+**Quanto vaza.** A verdade grava o coeficiente de emissor do furo, `C` em
+`Q = C sqrt(h)`. A fisica o recupera pela Joukowsky e pelo orificio:
+
+| Caso | Erro do coeficiente, mediana (faixa) |
+|---|---|
+| Linha do cais, ideal, rapido, 1 ms e 10 ms | +0,2 % (-1,0 a +1,3 %) |
+| Linha do cais, inteligente 50 ms | +0,7 % |
+| Linha do cais, inteligente 100 ms | +1,1 % (-3,3 a +2,0 %) |
+| Matriz, velocidade casada | -0,1 a -0,4 % (ate -1,4 %) |
+| Matriz, velocidade declarada 2 % acima | cerca de -2 %: o erro de `c` entra direto na Joukowsky |
+
+Furo equivalente do vazamento grande do cais: 23,8 mm, para 23,8 mm reais.
+Vazao de regime pela perda de carga (Darcy-Weisbach): 0,0471 a 0,0473 m3/s,
+para 0,0471 reais.
+
+**Incerteza que cobre o erro.** Fracao dos eventos com erro de posicao dentro
+de 2 sigma, com a incerteza de hoje (so as marcas) e com a completa (mais o
+periodo de atualizacao do transmissor e a incerteza de `c`):
+
+| Transmissor | Hoje | Completa |
+|---|---|---|
+| ideal, rapido, 1 ms | 100 % | 100 % |
+| inteligente 10 ms | 40 % | 100 % |
+| inteligente 50 ms | 0 % | 100 % |
+| inteligente 100 ms | 0 % | 60 % |
+
+**Velocidade de onda calibrada pelos eventos** (real 1226,6 m/s no cais):
+1226,2 com o transmissor rapido, 1226,3 com 1 ms, 1224,2 com 10 ms, 1235 +-
+16 com 50 ms e 1230 +- 46 com 100 ms. Na matriz, validacao cruzada deixando um
+fora: com a velocidade declarada 2 % acima, o erro de posicao cai de 0,48 m
+(maximo 0,80) para zero sem ruido e com ruido baixo, e de 0,53 m (maximo 1,05)
+para 0,32 m (maximo 0,42) com ruido alto. Com a velocidade ja certa e ruido
+alto, calibrar piora de 0,24 m para 0,32 m. Por isso a posicao calibrada fica
+ao lado da publicada e nao a substitui.
+
+**Menor vazamento detectavel no cais**, com o ruido do transmissor rapido:
+0,104 m de degrau, cerca de 3,2 L/min, pela teoria (limiar 12 na razao de
+energia, fator 0,75 da janela curta depois do passa-altas); 0,10 a 0,12 m,
+3,2 a 3,8 L/min, na simulacao com a onda de um vazamento real escalada, 6
+sementes de ruido.
+
+**Adveccao.** O escoamento de 1,46 m/s arrasta a onda: a posicao pela
+formula simples fica 0,42 m para o lado de A, o vies `-L V / 2c`. O TSNet
+despreza a adveccao, entao a correcao fica opcional e nao entra na avaliacao
+dos numeros publicados.

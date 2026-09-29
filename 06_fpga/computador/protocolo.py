@@ -17,6 +17,7 @@ A identidade do ensaio viaja em todas as mensagens, em 8 bytes ASCII
 completados com zero, para que nenhuma etapa processe um ensaio no lugar
 de outro (B-01).
 """
+import math
 import struct
 
 SINCRONISMO = b'\xA5\x5A'
@@ -32,6 +33,7 @@ IDENTIFICAR = 0x06
 EXECUTAR_TEMPO_REAL = 0x07
 PEDIR_TEMPOS = 0x08
 PEDIR_SAUDE = 0x09
+PEDIR_DEGRAU = 0x0A
 
 # placa -> computador
 CONFIGURACAO_LIDA = 0x81
@@ -40,6 +42,7 @@ RESULTADO = 0x83
 IDENTIDADE = 0x86
 TEMPOS = 0x87
 SAUDE = 0x88
+DEGRAU = 0x89
 
 NOMES = {
     CONFIGURAR: 'CONFIGURAR', AMOSTRAS: 'AMOSTRAS', EXECUTAR: 'EXECUTAR',
@@ -47,7 +50,7 @@ NOMES = {
     CONFIGURACAO_LIDA: 'CONFIGURACAO_LIDA', BLOCO_RECEBIDO: 'BLOCO_RECEBIDO',
     RESULTADO: 'RESULTADO', IDENTIFICAR: 'IDENTIFICAR', IDENTIDADE: 'IDENTIDADE',
     EXECUTAR_TEMPO_REAL: 'EXECUTAR_TEMPO_REAL', PEDIR_TEMPOS: 'PEDIR_TEMPOS', TEMPOS: 'TEMPOS',
-    PEDIR_SAUDE: 'PEDIR_SAUDE', SAUDE: 'SAUDE',
+    PEDIR_SAUDE: 'PEDIR_SAUDE', SAUDE: 'SAUDE', PEDIR_DEGRAU: 'PEDIR_DEGRAU', DEGRAU: 'DEGRAU',
 }
 
 # situacao do bloco recebido
@@ -292,12 +295,62 @@ def ler_pedir_saude(carga):
     return decodificar_id(ident), dict(zip(CAMPOS_DOS_LIMITES, valores))
 
 
+# --- degrau da onda: janelas que o computador manda em PEDIR_DEGRAU ------------------------
+#
+# id (8), n_antes u16 (amostras da janela antes da chegada), guarda_antes u16
+# (amostras entre o fim dessa janela e a chegada), inicio_depois u16 (amostras
+# da chegada ao comeco da janela depois), n_depois u16. As janelas saem da
+# fisica da linha (04_detector/fisica.py): antes da chegada o nivel de regime;
+# depois, o degrau da onda, ate antes da primeira reflexao.
+_PEDIR_DEGRAU = struct.Struct('<8sHHHH')
+CAMPOS_DA_JANELA = ('n_antes', 'guarda_antes', 'inicio_depois', 'n_depois')
+
+
+def carga_pedir_degrau(identificador, janelas):
+    return _PEDIR_DEGRAU.pack(codificar_id(identificador), *[int(janelas[c]) for c in CAMPOS_DA_JANELA])
+
+
+def ler_pedir_degrau(carga):
+    ident, *valores = _PEDIR_DEGRAU.unpack(carga)
+    return decodificar_id(ident), dict(zip(CAMPOS_DA_JANELA, valores))
+
+
+def janelas_do_degrau(periodo_s, antes_s=(0.030, 0.003), depois_s=(0.004, 0.024)):
+    """Janelas em amostras a partir das janelas em segundos (as mesmas de fisica.py, por padrao).
+
+    `antes_s` = (de quanto antes da chegada, ate quanto antes); `depois_s` = (inicio, fim) depois da
+    chegada. Os extremos entram, como em fisica.py: antes vai de -floor(30 ms / ts) a -ceil(3 ms / ts),
+    depois de +ceil(4 ms / ts) a +floor(24 ms / ts).
+    """
+    ts = float(periodo_s)
+
+    def teto(x):
+        return int(math.ceil(x / ts - 1e-9))
+
+    def piso(x):
+        return int(math.floor(x / ts + 1e-9))
+    guarda = teto(antes_s[1]) - 1
+    inicio = teto(depois_s[0])
+    return {'n_antes': max(0, piso(antes_s[0]) - guarda), 'guarda_antes': guarda,
+            'inicio_depois': inicio, 'n_depois': max(0, piso(depois_s[1]) - inicio + 1)}
+
+
+def janelas_no_registro(janelas, chegadas, n_amostras):
+    """Encurta as janelas para caberem no registro em todos os canais que declararam, como fisica.py
+    recorta as janelas no comeco e no fim do registro. `chegadas` = indices de chegada dos canais."""
+    saida = dict(janelas)
+    if chegadas:
+        saida['n_antes'] = max(0, min(saida['n_antes'], min(chegadas) - saida['guarda_antes']))
+        saida['n_depois'] = max(0, min(saida['n_depois'], n_amostras - max(chegadas) - saida['inicio_depois']))
+    return saida
+
+
 # tamanho exato da carga util de cada mensagem que a placa recebe;
 # AMOSTRAS e conferida a parte, porque o tamanho depende de n_pares
 TAMANHO_EXATO = {CONFIGURAR: _CONFIG.size, EXECUTAR: _EXECUTAR.size,
                  CONFIRMAR_RESULTADO: TAMANHO_DO_ID, PEDIR_RESULTADO: TAMANHO_DO_ID,
                  EXECUTAR_TEMPO_REAL: _EXECUTAR_TR.size, PEDIR_TEMPOS: TAMANHO_DO_ID,
-                 PEDIR_SAUDE: _PEDIR_SAUDE.size}
+                 PEDIR_SAUDE: _PEDIR_SAUDE.size, PEDIR_DEGRAU: _PEDIR_DEGRAU.size}
 
 
 # --- TEMPOS: ciclos de relogio da ultima execucao, contados pelo circuito ----------------
@@ -408,6 +461,66 @@ def ler_saude(carga):
         canal['falhas'] = [n for bit, n in NOMES_DA_SAUDE if canal['bandeiras'] & bit]
         saude[nome] = canal
     return saude
+
+
+# --- DEGRAU: nivel antes e depois da chegada, somado pela placa ----------------------------
+#
+# Depois de uma execucao concluida, a placa percorre a memoria das amostras uma
+# vez e soma, em cada canal que declarou evento, os codigos da janela antes da
+# chegada ([chegada - guarda - n_antes, chegada - guarda)) e os da janela
+# depois ([chegada + inicio, chegada + inicio + n_depois)). O computador tira as
+# medias e a diferenca: o degrau da onda em codigos, que vezes o degrau da
+# representacao da o degrau em metros de carga, a entrada da Joukowsky.
+#
+# id (8, o da ultima execucao), situacao u8 (a do RESULTADO; 0xFF = nenhuma
+# execucao), as quatro janelas (u16, como vieram), e por canal (A, depois B):
+# bandeiras u8 (bit 0: somas validas), indice_de_chegada u16, soma_antes u32,
+# soma_depois u32. O canal vem zerado quando: a ultima execucao nao concluiu, a
+# memoria mudou depois dela (CONFIGURAR ou bloco gravado), o canal nao
+# declarou, alguma janela e vazia ou sai do registro.
+_DEGRAU = struct.Struct('<8sBHHHH')
+_DEGRAU_CANAL = struct.Struct('<BHII')
+CAMPOS_DO_DEGRAU = ('bandeiras', 'indice_de_chegada', 'soma_antes', 'soma_depois')
+DEGRAU_VALIDO = 0x01
+
+
+def somas_do_degrau(codigos, chegada, janelas, n_amostras):
+    """(soma_antes, soma_depois) de um canal, ou None se alguma janela e vazia ou sai do registro."""
+    n_a, g, ini, n_d = (int(janelas[c]) for c in CAMPOS_DA_JANELA)
+    if n_a == 0 or n_d == 0 or chegada < g + n_a or chegada + ini + n_d > n_amostras:
+        return None
+    antes = codigos[chegada - g - n_a: chegada - g]
+    depois = codigos[chegada + ini: chegada + ini + n_d]
+    return int(sum(antes)), int(sum(depois))
+
+
+def carga_degrau(identificador, situacao, janelas, canal_a=None, canal_b=None):
+    """Carga de DEGRAU. `canal_*` = (indice_de_chegada, soma_antes, soma_depois); None zera o canal."""
+    corpo = b''
+    for canal in (canal_a, canal_b):
+        corpo += (_DEGRAU_CANAL.pack(0, 0, 0, 0) if canal is None
+                  else _DEGRAU_CANAL.pack(DEGRAU_VALIDO, *[int(v) for v in canal]))
+    return _DEGRAU.pack(codificar_id(identificador), situacao,
+                        *[int(janelas[c]) for c in CAMPOS_DA_JANELA]) + corpo
+
+
+def ler_degrau(carga, degrau_m=None):
+    """Le DEGRAU; com `degrau_m` (a resolucao da representacao), acrescenta o degrau em metros de carga."""
+    if len(carga) != _DEGRAU.size + 2 * _DEGRAU_CANAL.size:
+        raise QuadroInvalido('DEGRAU com tamanho %d' % len(carga))
+    ident, situacao, *janelas = _DEGRAU.unpack_from(carga)
+    janelas = dict(zip(CAMPOS_DA_JANELA, janelas))
+    saida = {'id': decodificar_id(ident), 'situacao': situacao, 'janelas': janelas}
+    for k, nome in enumerate(('canal_A', 'canal_B')):
+        canal = dict(zip(CAMPOS_DO_DEGRAU, _DEGRAU_CANAL.unpack_from(carga, _DEGRAU.size + k * _DEGRAU_CANAL.size)))
+        canal['valido'] = bool(canal['bandeiras'] & DEGRAU_VALIDO)
+        if canal['valido']:
+            canal['degrau_em_codigos'] = (canal['soma_depois'] / janelas['n_depois']
+                                          - canal['soma_antes'] / janelas['n_antes'])
+            if degrau_m is not None:
+                canal['degrau_m'] = canal['degrau_em_codigos'] * float(degrau_m)
+        saida[nome] = canal
+    return saida
 
 
 # --- B-10: resultado ---------------------------------------------------------------------

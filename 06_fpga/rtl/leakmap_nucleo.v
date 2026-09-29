@@ -20,7 +20,12 @@
 //     instante e latencia da declaracao em cada canal, amostras atrasadas);
 //   - PEDIR_SAUDE devolve SAUDE: o autoteste que cada canal fez, amostra a
 //     amostra, na ultima execucao (leakmap_saude.v), julgado com os limites
-//     que vieram no pedido: canal congelado, saturado, fora da faixa, salto.
+//     que vieram no pedido: canal congelado, saturado, fora da faixa, salto;
+//   - PEDIR_DEGRAU devolve DEGRAU: numa passada pela memoria, a soma dos
+//     codigos de cada canal que declarou evento numa janela antes da chegada
+//     (nivel de regime) e noutra depois (o degrau da onda). O computador tira as
+//     medias e a diferenca e chega a vazao do furo pela Joukowsky. So vale
+//     enquanto a memoria for a da ultima execucao concluida.
 //
 // Interface de bytes: um byte entra quando rx_valido e rx_pronto estao altos
 // no mesmo ciclo; um byte sai quando tx_valido e tx_pronto estao altos.
@@ -48,8 +53,9 @@ module leakmap_nucleo #(
     localparam [7:0] T_CONFIGURAR = 8'h01, T_AMOSTRAS = 8'h02, T_EXECUTAR = 8'h03,
                      T_CONFIRMAR  = 8'h04, T_PEDIR    = 8'h05,
                      T_EXEC_TR    = 8'h07, T_PEDIR_TEMPOS = 8'h08, T_PEDIR_SAUDE = 8'h09,
+                     T_PEDIR_DEGRAU = 8'h0A,
                      T_LIDA       = 8'h81, T_RECIBO   = 8'h82, T_RESULTADO = 8'h83,
-                     T_TEMPOS     = 8'h87, T_SAUDE    = 8'h88;
+                     T_TEMPOS     = 8'h87, T_SAUDE    = 8'h88, T_DEGRAU = 8'h89;
     localparam [7:0] B_OK = 8'd0, B_CRC = 8'd1, B_SEQUENCIA = 8'd2, B_OUTRO = 8'd3,
                      B_MEMORIA = 8'd4, B_MAL_FORMADO = 8'd5;
     localparam [7:0] R_CONCLUIDO = 8'd0, R_FALTANDO = 8'd1, R_SEM_CONFIG = 8'd2, R_ESTOURO = 8'd3;
@@ -60,7 +66,8 @@ module leakmap_nucleo #(
         S_CARGA = 5'd5,  S_CRC0  = 5'd6,  S_CRC1 = 5'd7,   S_TRATAR = 5'd8,
         S_AMOS  = 5'd9,  S_GRAVA = 5'd10, S_EXEC = 5'd11,  S_PREP = 5'd12,  S_PREP_ESPERA = 5'd13,
         S_LE    = 5'd14, S_LE2   = 5'd15, S_AMOSTRA = 5'd16, S_ESPERA = 5'd17,
-        S_MONTA = 5'd18, S_TX    = 5'd19;
+        S_MONTA = 5'd18, S_TX    = 5'd19,
+        S_DEG_LE = 5'd20, S_DEG_LE2 = 5'd21, S_DEG_SOMA = 5'd22, S_DEG_MONTA = 5'd23;
 
     reg [4:0] estado;
 
@@ -186,8 +193,37 @@ module leakmap_nucleo #(
         .codigo_min(sau_min_b), .codigo_max(sau_max_b), .maior_sequencia(sau_seq_b),
         .maior_variacao(sau_var_b), .no_extremo(sau_ext_b), .bandeiras(sau_band_b));
 
+    // --- degrau da onda: janelas do PEDIR_DEGRAU, lidas da carga ---------------------------
+    // Antes da chegada: [chegada - guarda - n_antes, chegada - guarda); depois:
+    // [chegada + inicio, chegada + inicio + n_depois). O canal so e somado se
+    // declarou evento, as duas janelas tem amostras e cabem no registro, e a
+    // memoria ainda e a da ultima execucao concluida (`memoria_da_execucao`).
+    reg         memoria_da_execucao;
+    wire [15:0] jan_n_antes   = {carga[9],  carga[8]};
+    wire [15:0] jan_guarda    = {carga[11], carga[10]};
+    wire [15:0] jan_inicio    = {carga[13], carga[12]};
+    wire [15:0] jan_n_depois  = {carga[15], carga[14]};
+    wire [17:0] jan_recuo     = {2'd0, jan_guarda} + {2'd0, jan_n_antes};
+    wire [17:0] jan_avanco    = {2'd0, jan_inicio} + {2'd0, jan_n_depois};
+    wire        jan_nao_vazia = (jan_n_antes != 16'd0) && (jan_n_depois != 16'd0);
+    wire deg_ok_a = memoria_da_execucao && det_a && jan_nao_vazia && ({2'd0, cheg_a} >= jan_recuo)
+                    && ({2'd0, cheg_a} + jan_avanco <= {2'd0, cfg_n_amostras});
+    wire deg_ok_b = memoria_da_execucao && det_b && jan_nao_vazia && ({2'd0, cheg_b} >= jan_recuo)
+                    && ({2'd0, cheg_b} + jan_avanco <= {2'd0, cfg_n_amostras});
+    // com o canal valido nenhuma destas contas sai de 16 bits
+    wire [15:0] ant_ini_a = cheg_a - jan_recuo[15:0],  ant_fim_a = cheg_a - jan_guarda;
+    wire [15:0] dep_ini_a = cheg_a + jan_inicio,       dep_fim_a = cheg_a + jan_avanco[15:0];
+    wire [15:0] ant_ini_b = cheg_b - jan_recuo[15:0],  ant_fim_b = cheg_b - jan_guarda;
+    wire [15:0] dep_ini_b = cheg_b + jan_inicio,       dep_fim_b = cheg_b + jan_avanco[15:0];
+    reg  [15:0] indice_deg;
+    reg  [31:0] soma_ant_a, soma_dep_a, soma_ant_b, soma_dep_b;
+    wire no_ant_a = deg_ok_a && (indice_deg >= ant_ini_a) && (indice_deg < ant_fim_a);
+    wire no_dep_a = deg_ok_a && (indice_deg >= dep_ini_a) && (indice_deg < dep_fim_a);
+    wire no_ant_b = deg_ok_b && (indice_deg >= ant_ini_b) && (indice_deg < ant_fim_b);
+    wire no_dep_b = deg_ok_b && (indice_deg >= dep_ini_b) && (indice_deg < dep_fim_b);
+
     // --- resposta e resultado ------------------------------------------------------------
-    reg  [7:0]  resp [0:38];           // CONFIGURACAO_LIDA (39), BLOCO_RECEBIDO (11) ou SAUDE (39)
+    reg  [7:0]  resp [0:38];           // CONFIGURACAO_LIDA (39), BLOCO_RECEBIDO (11), SAUDE ou DEGRAU (39)
     reg  [7:0]  res  [0:70];           // RESULTADO (71), guardado para reenvio
     reg  [7:0]  tem  [0:42];           // TEMPOS (43) da ultima execucao
     reg         pendente;
@@ -311,6 +347,24 @@ module leakmap_nucleo #(
         end
     endtask
 
+    // um canal do DEGRAU a partir da posicao `base`; zerado se o canal nao vale
+    task canal_no_degrau;
+        input integer base;
+        input         valido;
+        input [15:0]  cheg;
+        input [31:0]  s_ant, s_dep;
+        integer j;
+        begin
+            resp[base]     <= valido ? 8'd1 : 8'd0;
+            resp[base + 1] <= valido ? cheg[7:0]  : 8'd0;
+            resp[base + 2] <= valido ? cheg[15:8] : 8'd0;
+            for (j = 0; j < 4; j = j + 1) begin
+                resp[base + 3 + j] <= valido ? s_ant[8*j +: 8] : 8'd0;
+                resp[base + 7 + j] <= valido ? s_dep[8*j +: 8] : 8'd0;
+            end
+        end
+    endtask
+
     task enviar_tempos;
         begin
             tx_tipo    <= T_TEMPOS;
@@ -360,6 +414,7 @@ module leakmap_nucleo #(
             tx_indice          <= 16'd0;
             fonte_tx           <= 2'd0;
             contando           <= 1'b0;
+            memoria_da_execucao <= 1'b0;
             for (j = 0; j < 31; j = j + 1)
                 cfg[j] <= 8'd0;
             // TEMPOS antes de qualquer execucao: situacao 0xFF, so a frequencia
@@ -448,6 +503,7 @@ module leakmap_nucleo #(
                         sequencia_esperada <= 16'd0;
                         amostras_gravadas  <= 16'd0;
                         pendente           <= 1'b0;
+                        memoria_da_execucao <= 1'b0;
                         tx_tipo            <= T_LIDA;
                         tx_tamanho         <= 16'd39;
                         fonte_tx           <= 2'd0;
@@ -486,6 +542,17 @@ module leakmap_nucleo #(
                         tx_indice  <= 16'd0;
                         crc_tx     <= 16'hFFFF;
                         estado     <= S_TX;
+                    end
+                T_PEDIR_DEGRAU:
+                    if (tamanho != 16'd16) begin
+                        recibo(1'b0, 16'hFFFF, B_MAL_FORMADO);
+                    end else begin
+                        indice_deg <= 16'd0;
+                        soma_ant_a <= 32'd0;
+                        soma_dep_a <= 32'd0;
+                        soma_ant_b <= 32'd0;
+                        soma_dep_b <= 32'd0;
+                        estado     <= (deg_ok_a || deg_ok_b) ? S_DEG_LE : S_DEG_MONTA;
                     end
                 T_CONFIRMAR:
                     if (tamanho != 16'd8) begin
@@ -527,6 +594,7 @@ module leakmap_nucleo #(
             end
             S_GRAVA: begin
                 mem_escreve     <= 1'b1;
+                memoria_da_execucao <= 1'b0;           // a memoria deixou de ser a da execucao
                 mem_end_escrita <= carga_u16_10[BITS_ENDERECO-1:0] + k_par;
                 mem_dado_a      <= {carga[15 + 4*k_par], carga[14 + 4*k_par]};
                 mem_dado_b      <= {carga[17 + 4*k_par], carga[16 + 4*k_par]};
@@ -641,7 +709,42 @@ module leakmap_nucleo #(
                 tem[41] <= lat_b[7:0];
                 tem[42] <= lat_b[15:8];
                 pendente <= 1'b1;
+                memoria_da_execucao <= (situacao == R_CONCLUIDO);
                 enviar_resultado;
+            end
+
+            // --- DEGRAU: uma passada pela memoria somando as janelas --------------------------
+            S_DEG_LE: begin
+                mem_end_leitura <= indice_deg[BITS_ENDERECO-1:0];
+                estado          <= S_DEG_LE2;
+            end
+            S_DEG_LE2: estado <= S_DEG_SOMA;              // memoria sincrona: um ciclo
+            S_DEG_SOMA: begin
+                if (no_ant_a) soma_ant_a <= soma_ant_a + {16'd0, lido_a};
+                if (no_dep_a) soma_dep_a <= soma_dep_a + {16'd0, lido_a};
+                if (no_ant_b) soma_ant_b <= soma_ant_b + {16'd0, lido_b};
+                if (no_dep_b) soma_dep_b <= soma_dep_b + {16'd0, lido_b};
+                if (indice_deg + 16'd1 >= cfg_n_amostras) begin
+                    estado <= S_DEG_MONTA;
+                end else begin
+                    indice_deg <= indice_deg + 16'd1;
+                    estado     <= S_DEG_LE;
+                end
+            end
+            S_DEG_MONTA: begin
+                // id e situacao da ultima execucao, as janelas como vieram, e os canais
+                for (j = 0; j < 9; j = j + 1)
+                    resp[j] <= tem[j];
+                for (j = 0; j < 8; j = j + 1)
+                    resp[9 + j] <= carga[8 + j];
+                canal_no_degrau(17, deg_ok_a, cheg_a, soma_ant_a, soma_dep_a);
+                canal_no_degrau(28, deg_ok_b, cheg_b, soma_ant_b, soma_dep_b);
+                tx_tipo    <= T_DEGRAU;
+                tx_tamanho <= 16'd39;
+                fonte_tx   <= 2'd0;
+                tx_indice  <= 16'd0;
+                crc_tx     <= 16'hFFFF;
+                estado     <= S_TX;
             end
 
             // --- transmissao ---------------------------------------------------------------------

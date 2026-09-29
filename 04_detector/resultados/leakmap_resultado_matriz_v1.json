@@ -117,6 +117,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0000000144539385,
+          "velocidade_m_s": 0.7022088933333867,
+          "vazao_m3_s": 0.04963622176308569,
+          "fator_de_atrito": 0.5968395748372068,
+          "reynolds": 210662.66800001598,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.6903983471085
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 7.167634720503136e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005816557254823797,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.79361124868674,
+            "B": -37.5775187494604
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.84782826021536,
+            "B": 37.84782826021536
+          },
+          "degrau_no_furo_m": 37.84782826021536,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04370847743066846,
+          "vazao_l_min": 2622.508645840108,
+          "incerteza_relativa": 1.8682889182570077e-08,
+          "fracao_da_vazao_de_regime": 0.8805762380402273,
+          "carga_de_regime_no_furo_m": 56.99999955671102,
+          "carga_de_pressao_depois_m": 19.15217129649566,
+          "coeficiente_de_emissor_m2_5_s": 0.009987497176829627,
+          "diametro_equivalente_m": 0.06860309763286315,
+          "area_equivalente_m2": 0.0036963861390301818,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07540394981458946
+        }
       }
     },
     {
@@ -216,6 +283,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.9443016560672419,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.8000000000000003
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0000000144539385,
+          "velocidade_m_s": 0.7022088933333867,
+          "vazao_m3_s": 0.04963622176308569,
+          "fator_de_atrito": 0.5968395748372068,
+          "reynolds": 210662.66800001598,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.6903983471085
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 7.027092863238368e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.000570250711257235,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.79361124868674,
+            "B": -37.5775187494604
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.844636872328046,
+            "B": 37.84463687232804
+          },
+          "degrau_no_furo_m": 37.844636872328046,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04284783516049586,
+          "vazao_l_min": 2570.870109629752,
+          "incerteza_relativa": 0.019607843137263804,
+          "fracao_da_vazao_de_regime": 0.8632372416460123,
+          "carga_de_regime_no_furo_m": 57.03999955680737,
+          "carga_de_pressao_depois_m": 19.195362684479328,
+          "coeficiente_de_emissor_m2_5_s": 0.009779816889533445,
+          "diametro_equivalente_m": 0.06788608331116609,
+          "area_equivalente_m2": 0.003619523385357284,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07386190086056844
         }
       }
     },
@@ -317,6 +451,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.000000975003317,
+          "velocidade_m_s": 0.7022089495562329,
+          "vazao_m3_s": 0.04963622573724451,
+          "fator_de_atrito": 0.596839574813427,
+          "reynolds": 210662.68486686988,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69041265408023
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 6.348892737370883e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005816557720298774,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.23112510191,
+            "B": -37.13669449072019
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.32579582979442,
+            "B": 37.32579582979443
+          },
+          "degrau_no_furo_m": 37.32579582979442,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04310560947887332,
+          "vazao_l_min": 2586.336568732399,
+          "incerteza_relativa": 1.894418499235632e-08,
+          "fracao_da_vazao_de_regime": 0.8684304424566482,
+          "carga_de_regime_no_furo_m": 55.999999845797,
+          "carga_de_pressao_depois_m": 18.674204016002577,
+          "coeficiente_de_emissor_m2_5_s": 0.009974996235609972,
+          "diametro_equivalente_m": 0.06856015034583954,
+          "area_equivalente_m2": 0.003691759523870143,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07464603659325103
+        }
       }
     },
     {
@@ -416,6 +617,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.6416429050892212,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.4
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.000000975003317,
+          "velocidade_m_s": 0.7022089495562329,
+          "vazao_m3_s": 0.04963622573724451,
+          "fator_de_atrito": 0.596839574813427,
+          "reynolds": 210662.68486686988,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69041265408023
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 6.224404644481255e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005702507568920366,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.23112510191,
+            "B": -37.13669449072019
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.3230079636295,
+            "B": 37.3230079636295
+          },
+          "degrau_no_furo_m": 37.3230079636295,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04225724501768999,
+          "vazao_l_min": 2535.434701061399,
+          "incerteza_relativa": 0.019607843137264054,
+          "fracao_da_vazao_de_regime": 0.8513388032640502,
+          "carga_de_regime_no_furo_m": 56.01999984904701,
+          "carga_de_pressao_depois_m": 18.69699188541751,
+          "coeficiente_de_emissor_m2_5_s": 0.009772716712834492,
+          "diametro_equivalente_m": 0.06786143608575945,
+          "area_equivalente_m2": 0.003616895600410765,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07314537343252606
         }
       }
     },
@@ -517,6 +785,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.000001799907821,
+          "velocidade_m_s": 0.702208997839514,
+          "vazao_m3_s": 0.04963622915018853,
+          "fator_de_atrito": 0.5968395747930055,
+          "reynolds": 210662.69935185421,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69042494067872
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.0005816558120041241,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.66363500533259,
+            "B": -36.69111788699925
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.66363500533259,
+            "B": 36.69111788699925
+          },
+          "degrau_no_furo_m": 36.67737644616592,
+          "incerteza_do_degrau_m": 0.013741440851525207,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04235678384480845,
+          "vazao_l_min": 2541.407030688507,
+          "incerteza_relativa": 0.00037465713698727957,
+          "fracao_da_vazao_de_regime": 0.853344111146033,
+          "carga_de_regime_no_furo_m": 54.99999931098011,
+          "carga_de_pressao_depois_m": 18.322622864814186,
+          "coeficiente_de_emissor_m2_5_s": 0.009895304327534922,
+          "diametro_equivalente_m": 0.06828573191696216,
+          "area_equivalente_m2": 0.0036622654415003502,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07338554052354204
+        }
       }
     },
     {
@@ -616,6 +951,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.5017027184013808,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.000001799907821,
+          "velocidade_m_s": 0.702208997839514,
+          "vazao_m3_s": 0.04963622915018853,
+          "fator_de_atrito": 0.5968395747930055,
+          "reynolds": 210662.69935185421,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69042494067872
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.0005702507960824747,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.66363500533259,
+            "B": -36.69111788699925
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.66363500533259,
+            "B": 36.69111788699925
+          },
+          "degrau_no_furo_m": 36.67737644616592,
+          "incerteza_do_degrau_m": 0.013741440851525207,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04152625867138083,
+          "vazao_l_min": 2491.5755202828495,
+          "incerteza_relativa": 0.019611422193851463,
+          "fracao_da_vazao_de_regime": 0.8366118736725814,
+          "carga_de_regime_no_furo_m": 54.99999931098011,
+          "carga_de_pressao_depois_m": 18.322622864814186,
+          "coeficiente_de_emissor_m2_5_s": 0.009701278752485217,
+          "diametro_equivalente_m": 0.06761294967794396,
+          "area_equivalente_m2": 0.003590456315196422,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07194660835641375
         }
       }
     },
@@ -717,6 +1119,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 5.999998379207938,
+          "velocidade_m_s": 0.7022087976192084,
+          "vazao_m3_s": 0.04963621499744911,
+          "fator_de_atrito": 0.5968395748776895,
+          "reynolds": 210662.63928576253,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.6903739908168
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 0.00010091181592486657,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005816556462395842,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.09811286512182,
+            "B": -36.244116381310455
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.39071042772484,
+            "B": 36.39071042772484
+          },
+          "degrau_no_furo_m": 36.39071042772484,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04202572825263481,
+          "vazao_l_min": 2521.543695158088,
+          "incerteza_relativa": 1.943096941157343e-08,
+          "fracao_da_vazao_de_regime": 0.8466747163294901,
+          "carga_de_regime_no_furo_m": 53.99999966416117,
+          "carga_de_pressao_depois_m": 17.609289236436332,
+          "coeficiente_de_emissor_m2_5_s": 0.010014847361485717,
+          "diametro_equivalente_m": 0.06869696622531328,
+          "area_equivalente_m2": 0.0037065084791593206,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07359379743364666
+        }
       }
     },
     {
@@ -816,6 +1285,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.6416429050892212,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.4
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 5.999998379207938,
+          "velocidade_m_s": 0.7022087976192084,
+          "vazao_m3_s": 0.04963621499744911,
+          "fator_de_atrito": 0.5968395748776895,
+          "reynolds": 210662.63928576253,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.6903739908168
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 9.893315286751622e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005702506335682198,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.09811286512182,
+            "B": -36.244116381310455
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.38639038690582,
+            "B": 36.38639038690582
+          },
+          "degrau_no_furo_m": 36.38639038690582,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04119680319944061,
+          "vazao_l_min": 2471.8081919664364,
+          "incerteza_relativa": 0.019607843137264533,
+          "fracao_da_vazao_de_regime": 0.8299747110362421,
+          "carga_de_regime_no_furo_m": 53.97999966956381,
+          "carga_de_pressao_depois_m": 17.593609282657987,
+          "coeficiente_de_emissor_m2_5_s": 0.00982168599469038,
+          "diametro_equivalente_m": 0.06803124420528593,
+          "area_equivalente_m2": 0.0036350191974927545,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.0721609902221192
         }
       }
     },
@@ -917,6 +1453,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 5.999997843341575,
+          "velocidade_m_s": 0.702208766253889,
+          "vazao_m3_s": 0.04963621278036532,
+          "fator_de_atrito": 0.5968395748909556,
+          "reynolds": 210662.6298761667,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69036600931514
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 9.03559100028596e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005816556202718997,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.53095585710356,
+            "B": -35.7887209065385
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.8534538278492,
+            "B": 35.8534538278492
+          },
+          "degrau_no_furo_m": 35.8534538278492,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04140527870375471,
+          "vazao_l_min": 2484.316722225283,
+          "incerteza_relativa": 1.972213847462868e-08,
+          "fracao_da_vazao_de_regime": 0.8341748168211066,
+          "carga_de_regime_no_furo_m": 53.00000048217732,
+          "carga_de_pressao_depois_m": 17.14654665432812,
+          "coeficiente_de_emissor_m2_5_s": 0.009999248914153732,
+          "diametro_equivalente_m": 0.0686434465087495,
+          "area_equivalente_m2": 0.0037007354728207454,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07279563123644393
+        }
       }
     },
     {
@@ -1016,6 +1619,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.9443016560672419,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.8000000000000003
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 5.999997843341575,
+          "velocidade_m_s": 0.702208766253889,
+          "vazao_m3_s": 0.04963621278036532,
+          "fator_de_atrito": 0.5968395748909556,
+          "reynolds": 210662.6298761667,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 178.69036600931514
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 8.858422549299959e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005702506081097056,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.53095585710356,
+            "B": -35.7887209065385
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.84964276988625,
+            "B": 35.84964276988625
+          },
+          "degrau_no_furo_m": 35.84964276988625,
+          "incerteza_do_degrau_m": 7.071067811865476e-07,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.040589095600225666,
+          "vazao_l_min": 2435.34573601354,
+          "incerteza_relativa": 0.01960784313726482,
+          "fracao_da_vazao_de_regime": 0.8177315175077492,
+          "carga_de_regime_no_furo_m": 52.96000049655504,
+          "carga_de_pressao_depois_m": 17.110357726668788,
+          "coeficiente_de_emissor_m2_5_s": 0.009812503616651924,
+          "diametro_equivalente_m": 0.06799943527360024,
+          "area_equivalente_m2": 0.0036316207870297785,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.0714091428441948
         }
       }
     },
@@ -1117,6 +1787,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0502937757796005,
+          "velocidade_m_s": 0.7051465432580564,
+          "vazao_m3_s": 0.04984387200008431,
+          "fator_de_atrito": 0.5968383372630809,
+          "reynolds": 211543.9629774169,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.43793920030353
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 7.17169465280841e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.000584087837129446,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.79238442120208,
+            "B": -37.57617689102045
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.846630403718294,
+            "B": 37.84663040371829
+          },
+          "degrau_no_furo_m": 37.84663040371829,
+          "incerteza_do_degrau_m": 0.0014764848431650537,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04370709408884744,
+          "vazao_l_min": 2622.4256453308462,
+          "incerteza_relativa": 3.901231965475042e-05,
+          "fracao_da_vazao_de_regime": 0.8768799921638011,
+          "carga_de_regime_no_furo_m": 57.012124502594425,
+          "carga_de_pressao_depois_m": 19.165494098876138,
+          "coeficiente_de_emissor_m2_5_s": 0.009983709205475604,
+          "diametro_equivalente_m": 0.06859008680499068,
+          "area_equivalente_m2": 0.00369498420573697,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07538336769203773
+        }
       }
     },
     {
@@ -1216,6 +1953,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.9443016560672417,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.7999999999999999
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0502937757796005,
+          "velocidade_m_s": 0.7051465432580564,
+          "vazao_m3_s": 0.04984387200008431,
+          "fator_de_atrito": 0.5968383372630809,
+          "reynolds": 211543.9629774169,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.43793920030353
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 7.031073189027854e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005726351344406334,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.79238442120208,
+            "B": -37.57617689102045
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.84343730928555,
+            "B": 37.84343730928555
+          },
+          "degrau_no_furo_m": 37.84343730928555,
+          "incerteza_do_degrau_m": 0.0014764848431650537,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04284647701086734,
+          "vazao_l_min": 2570.7886206520407,
+          "incerteza_relativa": 0.01960788195377372,
+          "fracao_da_vazao_de_regime": 0.8596137356823897,
+          "carga_de_regime_no_furo_m": 57.052459794432956,
+          "carga_de_pressao_depois_m": 19.209022485147408,
+          "coeficiente_de_emissor_m2_5_s": 0.009776029108802802,
+          "diametro_equivalente_m": 0.06787293569788769,
+          "area_equivalente_m2": 0.003618121522614042,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07384135761485396
         }
       }
     },
@@ -1317,6 +2121,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0500876898657765,
+          "velocidade_m_s": 0.7051345307803217,
+          "vazao_m3_s": 0.04984302288806876,
+          "fator_de_atrito": 0.5968383423037491,
+          "reynolds": 211540.3592340965,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.43488239704752
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 6.352226640578677e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005840778918722659,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.230359482652815,
+            "B": -37.13588129032351
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.325078038978226,
+            "B": 37.32507803897823
+          },
+          "degrau_no_furo_m": 37.32507803897823,
+          "incerteza_do_degrau_m": 0.0016146307006436572,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04310478053979989,
+          "vazao_l_min": 2586.2868323879934,
+          "incerteza_relativa": 4.3258602137616784e-05,
+          "fracao_da_vazao_de_regime": 0.8648107205816795,
+          "carga_de_regime_no_furo_m": 56.00375285130899,
+          "carga_de_pressao_depois_m": 18.678674812330755,
+          "coeficiente_de_emissor_m2_5_s": 0.0099736105912393,
+          "diametro_equivalente_m": 0.06855538827458064,
+          "area_equivalente_m2": 0.003691246695024768,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07463816830330153
+        }
       }
     },
     {
@@ -1416,6 +2287,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.6416429050892212,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.4
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.0500876898657765,
+          "velocidade_m_s": 0.7051345307803217,
+          "vazao_m3_s": 0.04984302288806876,
+          "fator_de_atrito": 0.5968383423037491,
+          "reynolds": 211540.3592340965,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.43488239704752
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 6.227673177037918e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.000572625384188496,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.230359482652815,
+            "B": -37.13588129032351
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.32228876255573,
+            "B": 37.322288762555736
+          },
+          "degrau_no_furo_m": 37.322288762555736,
+          "incerteza_do_degrau_m": 0.0016146307006436572,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04225643073562514,
+          "vazao_l_min": 2535.3858441375087,
+          "incerteza_relativa": 0.019607890862649333,
+          "fracao_da_vazao_de_regime": 0.8477902881315879,
+          "carga_de_regime_no_furo_m": 56.02391981027521,
+          "carga_de_pressao_depois_m": 18.701631047719474,
+          "coeficiente_de_emissor_m2_5_s": 0.009771316224859607,
+          "diametro_equivalente_m": 0.06785657343941709,
+          "area_equivalente_m2": 0.0036163772779275057,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07313745000614613
         }
       }
     },
@@ -1517,6 +2455,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.050401212760512,
+          "velocidade_m_s": 0.7051528055376961,
+          "vazao_m3_s": 0.049844314654547806,
+          "fator_de_atrito": 0.5968383346353718,
+          "reynolds": 211545.84166130883,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.4395327563721
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.0005840930217368924,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.66286195002268,
+            "B": -36.684657996259965
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.66286195002268,
+            "B": 36.684657996259965
+          },
+          "degrau_no_furo_m": 36.675114994891764,
+          "incerteza_do_degrau_m": 0.010990957275178913,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.042354172213004956,
+          "vazao_l_min": 2541.2503327802974,
+          "incerteza_relativa": 0.0002996843302798034,
+          "fracao_da_vazao_de_regime": 0.8497292521031895,
+          "carga_de_regime_no_furo_m": 54.99322466255999,
+          "carga_de_pressao_depois_m": 18.318109667668224,
+          "coeficiente_de_emissor_m2_5_s": 0.00989591305076365,
+          "diametro_equivalente_m": 0.0682878322299282,
+          "area_equivalente_m2": 0.003662490730786078,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07338553487091672
+        }
       }
     },
     {
@@ -1616,6 +2621,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.5017027184013808,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.050401212760512,
+          "velocidade_m_s": 0.7051528055376961,
+          "vazao_m3_s": 0.049844314654547806,
+          "fator_de_atrito": 0.5968383346353718,
+          "reynolds": 211545.84166130883,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.4395327563721
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.0005726402173891101,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.66286195002268,
+            "B": -36.684657996259965
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.66286195002268,
+            "B": 36.684657996259965
+          },
+          "degrau_no_furo_m": 36.675114994891764,
+          "incerteza_do_degrau_m": 0.010990957275178913,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.041523698248044076,
+          "vazao_l_min": 2491.4218948826447,
+          "incerteza_relativa": 0.01961013317632008,
+          "fracao_da_vazao_de_regime": 0.8330678942188133,
+          "carga_de_regime_no_furo_m": 54.99322466255999,
+          "carga_de_pressao_depois_m": 18.318109667668224,
+          "coeficiente_de_emissor_m2_5_s": 0.009701875539964364,
+          "diametro_equivalente_m": 0.06761502929766676,
+          "area_equivalente_m2": 0.003590677187045175,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07194660281462424
         }
       }
     },
@@ -1717,6 +2789,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.055703623849361,
+          "velocidade_m_s": 0.7054618030698467,
+          "vazao_m3_s": 0.049866156403029896,
+          "fator_de_atrito": 0.5968382050322715,
+          "reynolds": 211638.54092095402,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.51816305090762
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 9.794828488846944e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005843488440540865,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.099292661027775,
+            "B": -36.24100464073297
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.38327292732707,
+            "B": 36.38327292732707
+          },
+          "degrau_no_furo_m": 36.38327292732706,
+          "incerteza_do_degrau_m": 0.0013776213023832906,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04201713907240387,
+          "vazao_l_min": 2521.028344344232,
+          "incerteza_relativa": 3.786413897218617e-05,
+          "fracao_da_vazao_de_regime": 0.8425983092182112,
+          "carga_de_regime_no_furo_m": 53.98445235055198,
+          "carga_de_pressao_depois_m": 17.60117942322492,
+          "coeficiente_de_emissor_m2_5_s": 0.010015106989192139,
+          "diametro_equivalente_m": 0.06869785667923349,
+          "area_equivalente_m2": 0.003706604567722685,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07358510994903504
+        }
       }
     },
     {
@@ -1816,6 +2955,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.6416429050892212,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.4
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.055703623849361,
+          "velocidade_m_s": 0.7054618030698467,
+          "vazao_m3_s": 0.049866156403029896,
+          "fator_de_atrito": 0.5968382050322715,
+          "reynolds": 211638.54092095402,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.51816305090762
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 9.602773028281315e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005728910235824378,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.099292661027775,
+            "B": -36.24100464073297
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.37908060513585,
+            "B": 36.379080605135854
+          },
+          "degrau_no_furo_m": 36.37908060513585,
+          "incerteza_do_degrau_m": 0.0013776213023832906,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04118852703800204,
+          "vazao_l_min": 2471.3116222801227,
+          "incerteza_relativa": 0.019607879704819454,
+          "fracao_da_vazao_de_regime": 0.8259815876946033,
+          "carga_de_regime_no_furo_m": 53.964266671805824,
+          "carga_de_pressao_depois_m": 17.585186066669976,
+          "coeficiente_de_emissor_m2_5_s": 0.009822064398922147,
+          "diametro_equivalente_m": 0.06803255472685843,
+          "area_equivalente_m2": 0.0036351592454079117,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07215325321497633
         }
       }
     },
@@ -1917,6 +3123,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.49186541019743213,
+        "componentes_m": {
+          "marcas_m": 0.49186541019743213,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.050486741509154,
+          "velocidade_m_s": 0.7051577907919937,
+          "vazao_m3_s": 0.04984466704140905,
+          "fator_de_atrito": 0.5968383325435457,
+          "reynolds": 211547.3372375981,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.4408013490726
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 9.03518564883872e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005840971490815701,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.529030618791694,
+            "B": -35.786770096297694
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.851496582585106,
+            "B": 35.8514965825851
+          },
+          "degrau_no_furo_m": 35.851496582585106,
+          "incerteza_do_degrau_m": 0.0016162571581999055,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04140301838356239,
+          "vazao_l_min": 2484.1811030137433,
+          "incerteza_relativa": 4.508199970053701e-05,
+          "fracao_da_vazao_de_regime": 0.8306408857975988,
+          "carga_de_regime_no_furo_m": 52.97920835729005,
+          "carga_de_pressao_depois_m": 17.12771177470494,
+          "coeficiente_de_emissor_m2_5_s": 0.010004199194268062,
+          "diametro_equivalente_m": 0.06866043589691435,
+          "area_equivalente_m2": 0.0037025675781495334,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07281738233200169
+        }
       }
     },
     {
@@ -2016,6 +3289,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.9443016560672417,
+        "componentes_m": {
+          "marcas_m": 0.5017027184013808,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.7999999999999999
+        },
+        "incerteza_de_delta_t_s": 0.0008191616236362241,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.050486741509154,
+          "velocidade_m_s": 0.7051577907919937,
+          "vazao_m3_s": 0.04984466704140905,
+          "fator_de_atrito": 0.5968383325435457,
+          "reynolds": 211547.3372375981,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 179.4408013490726
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 8.858025145920315e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005726442638054608,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.529030618791694,
+            "B": -35.786770096297694
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.84768590362026,
+            "B": 35.84768590362026
+          },
+          "degrau_no_furo_m": 35.84768590362026,
+          "incerteza_do_degrau_m": 0.0016162571581999055,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04058688002914015,
+          "vazao_l_min": 2435.2128017484088,
+          "incerteza_relativa": 0.01960789497406612,
+          "fracao_da_vazao_de_regime": 0.8142672514077005,
+          "carga_de_regime_no_furo_m": 52.93887177901332,
+          "carga_de_pressao_depois_m": 17.09118587539306,
+          "coeficiente_de_emissor_m2_5_s": 0.009817469689031405,
+          "diametro_equivalente_m": 0.06801664023042864,
+          "area_equivalente_m2": 0.0036334587370971407,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07143102956261066
         }
       }
     },
@@ -2117,6 +3457,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.42885257981169805,
+        "componentes_m": {
+          "marcas_m": 0.42885257981169805,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0007142189068308834,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.258732129886553,
+          "velocidade_m_s": 0.7171931648938217,
+          "vazao_m3_s": 0.05069539750579297,
+          "fator_de_atrito": 0.5968333630716803,
+          "reynolds": 215157.94946814651,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.5034310208547
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 7.78845471098066e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005940613582367017,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.721910742318904,
+            "B": -37.486198076628284
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.78000657135251,
+            "B": 37.78000657135251
+          },
+          "degrau_no_furo_m": 37.78000657135251,
+          "incerteza_do_degrau_m": 0.013188586719145932,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.043630153709249345,
+          "vazao_l_min": 2617.809222554961,
+          "incerteza_relativa": 0.0003490890530746085,
+          "fracao_da_vazao_de_regime": 0.8606334274085476,
+          "carga_de_regime_no_furo_m": 57.067424831940095,
+          "carga_de_pressao_depois_m": 19.287418260587586,
+          "coeficiente_de_emissor_m2_5_s": 0.009934584172089846,
+          "diametro_equivalente_m": 0.06842112928758408,
+          "area_equivalente_m2": 0.003676802964804279,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07504881365497805
+        }
       }
     },
     {
@@ -2216,6 +3623,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.9160124187144086,
+        "componentes_m": {
+          "marcas_m": 0.43742963140793206,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.8048192771084337
+        },
+        "incerteza_de_delta_t_s": 0.0007142189068308834,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.258732129886553,
+          "velocidade_m_s": 0.7171931648938217,
+          "vazao_m3_s": 0.05069539750579297,
+          "fator_de_atrito": 0.5968333630716803,
+          "reynolds": 215157.94946814651,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.5034310208547
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 7.635739912726137e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005824130963104919,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.721910742318904,
+            "B": -37.486198076628284
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.776544990296365,
+            "B": 37.77654499029637
+          },
+          "degrau_no_furo_m": 37.77654499029637,
+          "incerteza_do_degrau_m": 0.013188586719145932,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.0427707412846343,
+          "vazao_l_min": 2566.244477078058,
+          "incerteza_relativa": 0.019610950971245322,
+          "fracao_da_vazao_de_regime": 0.8436809530835,
+          "carga_de_regime_no_furo_m": 57.10940106751002,
+          "carga_de_pressao_depois_m": 19.33285607721365,
+          "coeficiente_de_emissor_m2_5_s": 0.00972744465203349,
+          "diametro_equivalente_m": 0.06770406974458873,
+          "area_equivalente_m2": 0.003600140349814211,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07351104070798692
         }
       }
     },
@@ -2317,6 +3791,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.35485005124656577,
+        "componentes_m": {
+          "marcas_m": 0.35485005124656577,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0005909737462731054,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.249279877059351,
+          "velocidade_m_s": 0.7166512573324075,
+          "vazao_m3_s": 0.05065709231748105,
+          "fator_de_atrito": 0.5968335834176192,
+          "reynolds": 214995.37719972225,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.36553234293177
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 8.27518573994132e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005936127076081813,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.19711943385413,
+            "B": -37.07271925226271
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.319704494591825,
+            "B": 37.319704494591825
+          },
+          "degrau_no_furo_m": 37.31970449459183,
+          "incerteza_do_degrau_m": 0.01461722077731661,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.043098574914422365,
+          "vazao_l_min": 2585.914494865342,
+          "incerteza_relativa": 0.0003916756838049149,
+          "fracao_da_vazao_de_regime": 0.8507905397394799,
+          "carga_de_regime_no_furo_m": 56.04550041519974,
+          "carga_de_pressao_depois_m": 18.725795920607908,
+          "coeficiente_de_emissor_m2_5_s": 0.009959619965515334,
+          "diametro_equivalente_m": 0.06850728787175348,
+          "area_equivalente_m2": 0.0036860687456259536,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07456124356234534
+        }
       }
     },
     {
@@ -2416,6 +3957,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.543032518148426,
+        "componentes_m": {
+          "marcas_m": 0.3619470522714971,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.4048192771084337
+        },
+        "incerteza_de_delta_t_s": 0.0005909737462731054,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.249279877059351,
+          "velocidade_m_s": 0.7166512573324075,
+          "vazao_m3_s": 0.05065709231748105,
+          "fator_de_atrito": 0.5968335834176192,
+          "reynolds": 214995.37719972225,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.36553234293177
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 8.112927196020903e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.000581973242753119,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -37.19711943385413,
+            "B": -37.07271925226271
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 37.316071406898054,
+            "B": 37.316071406898054
+          },
+          "degrau_no_furo_m": 37.316071406898054,
+          "incerteza_do_degrau_m": 0.01461722077731661,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04224939142299404,
+          "vazao_l_min": 2534.9634853796424,
+          "incerteza_relativa": 0.019611755459668964,
+          "fracao_da_vazao_de_regime": 0.8340271715203513,
+          "carga_de_regime_no_furo_m": 56.06658232321873,
+          "carga_de_pressao_depois_m": 18.75051091632068,
+          "coeficiente_de_emissor_m2_5_s": 0.009756946072491255,
+          "diametro_equivalente_m": 0.06780665856350819,
+          "area_equivalente_m2": 0.0036110588652071137,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07305769170202159
         }
       }
     },
@@ -2517,6 +4125,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.3549045131688815,
+        "componentes_m": {
+          "marcas_m": 0.3549045131688815,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0005910644481516795,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.2925020557673506,
+          "velocidade_m_s": 0.7191258953809737,
+          "vazao_m3_s": 0.05083201417353861,
+          "fator_de_atrito": 0.5968325797707708,
+          "reynolds": 215737.76861429212,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.995251024739
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.000595661484783817,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.61655577982108,
+            "B": -36.606679594914894
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.61655577982108,
+            "B": 36.606679594914894
+          },
+          "degrau_no_furo_m": 36.61168251998047,
+          "incerteza_do_degrau_m": 0.017262405387823303,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.042280917365224276,
+          "vazao_l_min": 2536.8550419134567,
+          "incerteza_relativa": 0.0004714999202345457,
+          "fracao_da_vazao_de_regime": 0.8317773366382609,
+          "carga_de_regime_no_furo_m": 55.00186581715965,
+          "carga_de_pressao_depois_m": 18.390183297179178,
+          "coeficiente_de_emissor_m2_5_s": 0.00985942011731005,
+          "diametro_equivalente_m": 0.06816180419215176,
+          "area_equivalente_m2": 0.0036489846470293408,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07312065679677258
+        }
       }
     },
     {
@@ -2616,6 +4291,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.36203468110608045,
+        "componentes_m": {
+          "marcas_m": 0.36200260343225915,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.004819277108433801
+        },
+        "incerteza_de_delta_t_s": 0.0005910644481516795,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.2925020557673506,
+          "velocidade_m_s": 0.7191258953809737,
+          "vazao_m3_s": 0.05083201417353861,
+          "fator_de_atrito": 0.5968325797707708,
+          "reynolds": 215737.76861429212,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.995251024739
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 0.0,
+          "origem_da_atenuacao": "sem correcao: atrito teorico fora da faixa de validade",
+          "atenuacao_teorica_1_m": 0.0005839818478272715,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.61655577982108,
+            "B": -36.606679594914894
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.61655577982108,
+            "B": 36.606679594914894
+          },
+          "degrau_no_furo_m": 36.61168251998047,
+          "incerteza_do_degrau_m": 0.017262405387823303,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04145187976982771,
+          "vazao_l_min": 2487.1127861896625,
+          "incerteza_relativa": 0.019613511278452293,
+          "fracao_da_vazao_de_regime": 0.8154679770963341,
+          "carga_de_regime_no_furo_m": 55.00211852808558,
+          "carga_de_pressao_depois_m": 18.390436008105112,
+          "coeficiente_de_emissor_m2_5_s": 0.009666031740982116,
+          "diametro_equivalente_m": 0.06749001109137538,
+          "area_equivalente_m2": 0.0035774113488294167,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.0716865905706743
         }
       }
     },
@@ -2717,6 +4459,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.42883051084334894,
+        "componentes_m": {
+          "marcas_m": 0.42883051084334894,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0007141821527685524,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.236391303555479,
+          "velocidade_m_s": 0.7159116810938538,
+          "vazao_m3_s": 0.050604814753730326,
+          "fator_de_atrito": 0.5968338846494001,
+          "reynolds": 214773.50432815615,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.17733311342917
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 0.0001192908452502946,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005930004051006268,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.06013105586666,
+            "B": -36.23052503052503
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.40486337751049,
+            "B": 36.404863377510495
+          },
+          "degrau_no_furo_m": 36.404863377510495,
+          "incerteza_do_degrau_m": 0.013064527848580062,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.042042072754148355,
+          "vazao_l_min": 2522.524365248901,
+          "incerteza_relativa": 0.00035886765218986696,
+          "fracao_da_vazao_de_regime": 0.8307919505040621,
+          "carga_de_regime_no_furo_m": 53.95517833914705,
+          "carga_de_pressao_depois_m": 17.550314961636552,
+          "coeficiente_de_emissor_m2_5_s": 0.01003556116020883,
+          "diametro_equivalente_m": 0.06876797280443626,
+          "area_equivalente_m2": 0.00371417468392826,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07371540029223152
+        }
       }
     },
     {
@@ -2816,6 +4625,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.5894851934521234,
+        "componentes_m": {
+          "marcas_m": 0.43740712106021595,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.39518072289156625
+        },
+        "incerteza_de_delta_t_s": 0.0007141821527685524,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.236391303555479,
+          "velocidade_m_s": 0.7159116810938538,
+          "vazao_m3_s": 0.050604814753730326,
+          "fator_de_atrito": 0.5968338846494001,
+          "reynolds": 214773.50432815615,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.17733311342917
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 0.00011695180906891635,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.000581372946177085,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -36.06013105586666,
+            "B": -36.23052503052503
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 36.39975459845036,
+            "B": 36.39975459845036
+          },
+          "degrau_no_furo_m": 36.399754598450365,
+          "incerteza_do_degrau_m": 0.013064527848580062,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04121193420823433,
+          "vazao_l_min": 2472.71605249406,
+          "incerteza_relativa": 0.019611127826830034,
+          "fracao_da_vazao_de_regime": 0.814387611313139,
+          "carga_de_regime_no_furo_m": 53.934640825617265,
+          "carga_de_pressao_depois_m": 17.5348862271669,
+          "coeficiente_de_emissor_m2_5_s": 0.009841731706738322,
+          "diametro_equivalente_m": 0.06810063349384549,
+          "area_equivalente_m2": 0.0036424381424845892,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07227788190317673
         }
       }
     },
@@ -2917,6 +4793,73 @@
           "depois": 16,
           "busca": 4
         }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.3548891082846718,
+        "componentes_m": {
+          "marcas_m": 0.3548891082846718,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.0
+        },
+        "incerteza_de_delta_t_s": 0.0005910387925765983,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.236393125945362,
+          "velocidade_m_s": 0.7159117857208045,
+          "vazao_m3_s": 0.05060482214937367,
+          "fator_de_atrito": 0.5968338846067434,
+          "reynolds": 214773.53571624134,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.1773597377452
+        },
+        "onda": {
+          "velocidade_m_s": 1200.899544131626,
+          "atenuacao_por_atrito_1_m": 9.036158349331023e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005930004917223196,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.4567664034615,
+            "B": -35.71245421245422
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.777832259428564,
+            "B": 35.777832259428564
+          },
+          "degrau_no_furo_m": 35.777832259428564,
+          "incerteza_do_degrau_m": 0.014444819702191513,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.04131794730936505,
+          "vazao_l_min": 2479.076838561903,
+          "incerteza_relativa": 0.0004037365818434921,
+          "fracao_da_vazao_de_regime": 0.8164824132254447,
+          "carga_de_regime_no_furo_m": 52.91541379557924,
+          "carga_de_pressao_depois_m": 17.137581536150677,
+          "coeficiente_de_emissor_m2_5_s": 0.00998076822488715,
+          "diametro_equivalente_m": 0.06857998349731154,
+          "area_equivalente_m2": 0.0036938957448653578,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07260308398513518
+        }
       }
     },
     {
@@ -3016,6 +4959,73 @@
           "antes": 3,
           "depois": 16,
           "busca": 4
+        }
+      },
+      "incerteza_fisica": {
+        "incerteza_m": 0.873697253581742,
+        "componentes_m": {
+          "marcas_m": 0.36198689045036525,
+          "atualizacao_do_transmissor_m": 0.0,
+          "velocidade_da_onda_m": 0.7951807228915664
+        },
+        "incerteza_de_delta_t_s": 0.0005910387925765983,
+        "periodo_de_atualizacao_s": 0.0
+      },
+      "fisica": {
+        "aplicado": true,
+        "escoamento_de_regime": {
+          "perda_de_carga_m": 6.236393125945362,
+          "velocidade_m_s": 0.7159117857208045,
+          "vazao_m3_s": 0.05060482214937367,
+          "fator_de_atrito": 0.5968338846067434,
+          "reynolds": 214773.53571624134,
+          "area_m2": 0.07068583470577035,
+          "rugosidade_relativa": 0.8333333333333334,
+          "dentro_da_faixa_de_validade": false,
+          "vazao_m3_h": 182.1773597377452
+        },
+        "onda": {
+          "velocidade_m_s": 1224.9175350142586,
+          "atenuacao_por_atrito_1_m": 8.858978773853941e-05,
+          "origem_da_atenuacao": "medida pela razao das amplitudes nos dois sensores",
+          "atenuacao_teorica_1_m": 0.0005813730311003133,
+          "canais_usados": [
+            "A",
+            "B"
+          ],
+          "degrau_medido_m": {
+            "A": -35.4567664034615,
+            "B": -35.71245421245422
+          },
+          "degrau_no_furo_visto_de_m": {
+            "A": 35.774029000911334,
+            "B": 35.774029000911334
+          },
+          "degrau_no_furo_m": 35.77402900091133,
+          "incerteza_do_degrau_m": 0.014444819702191513,
+          "janelas_depois_s": {
+            "A": [
+              0.004,
+              0.024
+            ],
+            "B": [
+              0.004,
+              0.024
+            ]
+          }
+        },
+        "vazamento": {
+          "vazao_m3_s": 0.040503485416678885,
+          "vazao_l_min": 2430.209125000733,
+          "incerteza_relativa": 0.019612000162742418,
+          "fracao_da_vazao_de_regime": 0.800387862190722,
+          "carga_de_regime_no_furo_m": 52.874088298961524,
+          "carga_de_pressao_depois_m": 17.100059298050198,
+          "coeficiente_de_emissor_m2_5_s": 0.009794755256095349,
+          "diametro_equivalente_m": 0.0679379104695664,
+          "area_equivalente_m2": 0.0036250520949149974,
+          "cd": 0.61,
+          "vazao_na_pressao_de_regime_m3_s": 0.07122214261051295
         }
       }
     },

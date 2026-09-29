@@ -136,6 +136,31 @@ def resumo_do_autoteste(registros):
     }
 
 
+def resumo_do_degrau(registros):
+    """Degrau da onda somado pela placa (DEGRAU) nos canais que declararam evento."""
+    com_evento, com_degrau, degraus = 0, 0, []
+    for r in registros:
+        d = r.get('degrau_na_placa')
+        for canal in ('canal_A', 'canal_B'):
+            if not (r.get(canal) or {}).get('detectado'):
+                continue
+            com_evento += 1
+            if d and d.get(canal):
+                com_degrau += 1
+                if d[canal].get('degrau_m') is not None:
+                    degraus.append(abs(d[canal]['degrau_m']))
+    if not com_degrau:
+        return None
+    return {
+        'canais_com_evento': com_evento,
+        'canais_com_degrau_medido_na_placa': com_degrau,
+        'degrau_m': {'min': min(degraus), 'max': max(degraus)} if degraus else None,
+        'observacao': ('a placa soma os codigos de cada canal nas janelas antes e depois da chegada '
+                       '(mensagem DEGRAU); a diferenca das medias e o degrau da onda, a entrada da '
+                       'Joukowsky (04_detector/fisica.py) para a vazao do furo.'),
+    }
+
+
 def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0, saida=SAIDA,
              mostrar=None, tempo_real=False):
     """Roda o cenario B. Com `tempo_real`, a placa entrega uma amostra a cada periodo
@@ -185,7 +210,9 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
                                       preparo['conversao']['canal_A']['codigos'],
                                       preparo['conversao']['canal_B']['codigos'],
                                       preparo['parametros'], periodo_ciclos,
-                                      limites_de_saude=preparo['limites_de_saude'])
+                                      limites_de_saude=preparo['limites_de_saude'],
+                                      janelas_de_degrau=preparo['janelas_do_degrau'],
+                                      degrau_m=preparo['representacao']['degrau_m'])
         except HO.FalhaNaPlaca as e:
             falhas_de_comunicacao.append({'id': identificador, 'motivo': str(e)})
             rodada = None
@@ -288,6 +315,7 @@ def executar(transporte, identificadores=None, tentativas=3, tempo_limite_s=2.0,
         'execucao': 'tempo real, uma amostra por periodo de amostragem' if tempo_real else 'lote',
         'tempos_na_placa': resumo_dos_tempos(registros),
         'autoteste_dos_canais': resumo_do_autoteste(registros),
+        'degrau_da_onda_na_placa': resumo_do_degrau(registros),
         'avaliacao_contra_a_verdade': None if avaliacao is None else {
             'arquivo': os.path.basename(arquivos['avaliacao']),
             'contagens': avaliacao['contagens'],
@@ -358,6 +386,11 @@ def main():
               % (at['canais_saudaveis'], at['canais_conferidos'],
                  ''.join('; %s %s: %s' % (f['id'], f['canal'], ', '.join(f['falhas']))
                          for f in at['canais_com_falha'])))
+    dg = rel.get('degrau_da_onda_na_placa')
+    if dg:
+        print('degrau da onda somado pela placa: %d de %d canais com evento%s'
+              % (dg['canais_com_degrau_medido_na_placa'], dg['canais_com_evento'],
+                 '' if not dg['degrau_m'] else ', de %.3f a %.3f m' % (dg['degrau_m']['min'], dg['degrau_m']['max'])))
     av = rel['avaliacao_contra_a_verdade']
     if av:
         g = av['erro_de_localizacao_geral'] or {}

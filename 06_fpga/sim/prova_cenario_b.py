@@ -25,6 +25,11 @@ confere os criterios do cenario B sem passar pelo modelo Python da placa:
         amostras enviadas, nos 90 canais da matriz, todos saudaveis com os
         limites do transmissor; e cada canal doente de proposito acusado com
         a falha certa, e so ela.
+  Degrau as somas que o circuito faz nas janelas antes e depois da chegada
+        (mensagem DEGRAU): iguais as somas feitas aqui, direto nas amostras
+        enviadas, em todos os canais da matriz que declararam evento; canal
+        sem evento zerado; e os pedidos que tem de sair zerados (antes de
+        executar, janela vazia ou fora do registro, depois de CONFIGURAR).
 
 Depois liga o computador do cenario B (hospedeiro, registro, comparacao com o
 cenario A e avaliador independente) a essas respostas gravadas, com a origem
@@ -134,6 +139,9 @@ class Caso:
 
     def resultados(self):
         return [(i, PR.ler_resultado(c), c) for i, c in self.do_tipo(PR.RESULTADO)]
+
+    def degraus(self):
+        return [(i, PR.ler_degrau(c)) for i, c in self.do_tipo(PR.DEGRAU)]
 
     def latencia(self, deslocamento):
         """Ciclos entre o ultimo byte do EXECUTAR consumido e o primeiro byte do RESULTADO."""
@@ -514,6 +522,61 @@ def criterio_autoteste(casos):
     }
 
 
+def somas_das_amostras(codigos, chegada, janelas):
+    """As somas das janelas, feitas aqui direto nas amostras, sem o modelo da placa."""
+    g, n_a, ini, n_d = (janelas[k] for k in ('guarda_antes', 'n_antes', 'inicio_depois', 'n_depois'))
+    return sum(codigos[chegada - g - n_a:chegada - g]), sum(codigos[chegada + ini:chegada + ini + n_d])
+
+
+def criterio_degrau(casos):
+    falhas = []
+
+    def exigir(condicao, texto):
+        if not condicao:
+            falhas.append(texto)
+
+    declarados, iguais, zerados_sem_evento = 0, 0, 0
+    for nome, caso in casos.items():
+        if not nome.startswith('ensaio_'):
+            continue
+        degraus, resultados = caso.degraus(), caso.resultados()
+        exigir(len(degraus) == 1 and len(resultados) >= 1, '%s: sem DEGRAU da execucao' % nome)
+        if len(degraus) != 1 or not resultados:
+            continue
+        degrau, resultado = degraus[0][1], resultados[-1][1]
+        for canal, codigos in zip(('canal_A', 'canal_B'), caso.codigos()):
+            r, d = resultado[canal], degrau[canal]
+            if not r['detectado']:
+                zerados_sem_evento += not d['valido'] and d['soma_antes'] == d['soma_depois'] == 0
+                continue
+            declarados += 1
+            iguais += (d['valido'] and d['indice_de_chegada'] == r['indice_de_chegada']
+                       and (d['soma_antes'], d['soma_depois'])
+                       == somas_das_amostras(codigos, r['indice_de_chegada'], degrau['janelas']))
+    exigir(declarados > 0 and iguais == declarados,
+           'matriz: %d canais com evento, %d com as somas certas' % (declarados, iguais))
+
+    caso = casos['degrau_janelas_e_memoria']
+    validos = [(d['canal_A']['valido'], d['canal_B']['valido']) for _, d in caso.degraus()]
+    recibos = [PR.ler_bloco_recebido(c)[2] for _, c in caso.do_tipo(PR.BLOCO_RECEBIDO)]
+    exigir(validos == [(False, False), (True, True)] + [(False, False)] * 4
+           and PR.BLOCO_MAL_FORMADO in recibos,
+           'DEGRAU antes de executar, valido, janela vazia, fora do registro, mal formado e depois de '
+           'CONFIGURAR: %r' % validos)
+
+    return {
+        'criterio': ('o circuito soma, numa passada pela memoria, os codigos de cada canal com evento nas '
+                     'janelas antes e depois da chegada (o degrau da onda, entrada da Joukowsky), e zera '
+                     'o canal quando a janela nao cabe ou a memoria nao e mais a da execucao'),
+        'canais_da_matriz_com_evento': declarados,
+        'canais_com_as_somas_iguais_as_das_amostras': iguais,
+        'canais_sem_evento_zerados': zerados_sem_evento,
+        'pedidos_que_devem_sair_zerados': validos,
+        'falhas': falhas,
+        'passou': not falhas,
+    }
+
+
 # --- cadeia completa do computador sobre a resposta do Verilog --------------------------------
 
 def cadeia_completa(casos, pacote):
@@ -542,11 +605,12 @@ def main():
     b06 = criterio_b06(casos)
     tempos = criterio_tempos(casos)
     autoteste = criterio_autoteste(casos)
+    degrau = criterio_degrau(casos)
     relatorio = cadeia_completa(casos, pacote)
 
     maior = max(linhas, key=lambda l: l['ciclos_de_processamento'])
     criterios = {'B-06': b06, 'B-07': b07, 'B-08': b08, 'B-09': b09, 'Tempos': tempos,
-                 'Autoteste': autoteste}
+                 'Autoteste': autoteste, 'Degrau': degrau}
     prova = {
         'descricao': ('Prova do cenario B no simulador: a resposta gravada do proprio Verilog da placa, '
                       'decodificada e conferida contra a referencia em ponto fixo e contra os criterios '
@@ -606,6 +670,11 @@ def main():
           % (autoteste['canais_saudaveis'], autoteste['canais_da_matriz'],
              'passou' if autoteste['passou'] else 'FALHOU'))
     for f in autoteste['falhas']:
+        print('   ' + f)
+    print('Degrau %d de %d canais com evento com as somas iguais as das amostras -> %s'
+          % (degrau['canais_com_as_somas_iguais_as_das_amostras'], degrau['canais_da_matriz_com_evento'],
+             'passou' if degrau['passou'] else 'FALHOU'))
+    for f in degrau['falhas']:
         print('   ' + f)
     p = prova['processamento_na_placa']
     print('processamento: mediana %d ciclos, maximo %d ciclos (%s, %.1f us a 100 MHz)'

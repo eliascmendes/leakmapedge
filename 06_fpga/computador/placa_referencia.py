@@ -189,6 +189,12 @@ class PlacaReferencia:
 
     PEDIR_SAUDE devolve o autoteste dos dois canais na ultima execucao,
     julgado com os limites que vieram no pedido.
+
+    PEDIR_DEGRAU devolve, por canal que declarou evento na ultima execucao, a
+    soma dos codigos numa janela antes da chegada e noutra depois: o nivel de
+    regime e o degrau da onda, de onde o computador tira a vazao do furo. So
+    vale enquanto a memoria for a daquela execucao: CONFIGURAR ou bloco gravado
+    depois dela zera os canais.
     """
 
     def __init__(self, capacidade_de_amostras=4096, perder_resultados=0, frequencia_hz=100_000_000):
@@ -197,6 +203,7 @@ class PlacaReferencia:
         self.frequencia_hz = frequencia_hz
         self.tempos = PR.carga_tempos('', PR.TEMPOS_SEM_EXECUCAO, PR.MODO_LOTE, frequencia_hz, 0, 0)
         self.saude = ('', PR.SAUDE_SEM_EXECUCAO, None, None)   # id, situacao, canal A, canal B
+        self.chegadas = None            # (chegada A ou None, chegada B ou None) da memoria atual
         self.leitor = PR.LeitorDeQuadros()
         self._zerar()
         self.configurado = False
@@ -246,6 +253,8 @@ class PlacaReferencia:
             identificador, situacao, canal_a, canal_b = self.saude
             return PR.montar_quadro(PR.SAUDE, PR.carga_saude(identificador, situacao, limites,
                                                              canal_a, canal_b))
+        if tipo == PR.PEDIR_DEGRAU:
+            return PR.montar_quadro(PR.DEGRAU, self._degrau(PR.ler_pedir_degrau(carga)[1]))
         if tipo == PR.PEDIR_RESULTADO:
             return self._enviar_resultado()
         if tipo == PR.CONFIRMAR_RESULTADO:
@@ -258,6 +267,7 @@ class PlacaReferencia:
     def _configurar(self, carga):
         identificador, valores = PR.ler_configurar(carga)
         self._zerar()
+        self.chegadas = None
         n = valores.pop('n_amostras')
         self.identificador = identificador
         self.parametros = valores
@@ -288,6 +298,7 @@ class PlacaReferencia:
             # cada bloco comeca onde o anterior terminou; e assim que a placa
             # sabe, contando, que nao ficou lacuna na memoria
             return self._recibo(identificador, seq, PR.BLOCO_MAL_FORMADO)
+        self.chegadas = None                      # a memoria deixou de ser a da execucao
         for k, (a, b) in enumerate(pares):
             self.memoria_a[inicio + k] = a
             self.memoria_b[inicio + k] = b
@@ -309,7 +320,19 @@ class PlacaReferencia:
         self.saude = (r['id'], r['situacao'],
                       self._saude_a.estatisticas if concluido else None,
                       self._saude_b.estatisticas if concluido else None)
+        self.chegadas = (tuple(c['indice_de_chegada'] if c['detectado'] else None
+                               for c in (r['canal_A'], r['canal_B'])) if concluido else None)
         return resposta
+
+    def _degrau(self, janelas):
+        identificador, situacao = self.saude[:2]
+        canais = []
+        for k, memoria in enumerate((self.memoria_a, self.memoria_b)):
+            chegada = self.chegadas[k] if self.chegadas else None
+            somas = (None if chegada is None
+                     else PR.somas_do_degrau(memoria, chegada, janelas, self.n_amostras))
+            canais.append(None if somas is None else (chegada,) + somas)
+        return PR.carga_degrau(identificador, situacao, janelas, *canais)
 
     def _executar_conta(self, carga):
         identificador, n_blocos, n_amostras = PR.ler_executar(carga)

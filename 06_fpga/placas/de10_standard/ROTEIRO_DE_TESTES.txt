@@ -47,8 +47,10 @@ Como usar este roteiro
 [ ] 0.2  O leakmap esta compilado: existe o arquivo
          C:\Users\Elias\OneDrive\Documentos\leakmap\output_files\leakmap.sof
 
-[ ] 0.3  (Opcional, para o passo B6) Recompilar o leakmap com o autoteste:
-         abrir leakmap.qpf, conferir em Project > Add/Remove Files in Project
+[ ] 0.3  (Opcional, para o passo B6) Recompilar o leakmap com o autoteste
+         e o degrau da onda: copiar 06_fpga\rtl\leakmap_nucleo.v por cima de
+         C:\Users\Elias\OneDrive\Documentos\leakmap_nucleo.v (e a copia que
+         o leakmap.qpf compila), abrir leakmap.qpf, conferir em Project > Add/Remove Files in Project
          que aparece o arquivo leakmap_saude.v (se nao aparecer, adicione
          C:\Users\Elias\OneDrive\Documentos\leakmap_saude.v), e
          Processing > Start Compilation (cerca de 20 minutos).
@@ -385,6 +387,9 @@ Todos os comandos abaixo num terminal aberto na pasta do repositorio:
          Na saida do B.4 ou do B.5 aparece a linha:
            autoteste da placa: 90 de 90 canais saudaveis
          Se a linha nao aparece, o .sof gravado e o antigo, sem autoteste.
+         Com o leakmap recompilado depois da mensagem DEGRAU, aparece tambem:
+           degrau da onda somado pela placa: 60 de 60 canais com evento, ...
+         Se essa linha nao aparece, o .sof e anterior ao DEGRAU: e normal.
 
 [ ] B.7  Comparacao FPGA x notebook (alguns minutos; nao use o notebook
          enquanto roda, para nao atrapalhar a medida do lado do notebook):
@@ -480,6 +485,7 @@ leakmap
   B.4 lote: concluidos ___ de 45, iguais ao software ___ de 45
   B.5 tempo real: amostras atrasadas ___, declaracao de ___ a ___ us
   B.6 autoteste: ___ de 90 canais saudaveis  [ ] nao testado (sof antigo)
+      degrau: ___ de 60 canais com evento     [ ] nao testado (sof antigo)
   B.7 FPGA mediana ___ us, maximo ___ us; notebook mediana ___ us, maximo ___ us
   B.8 site atualizado                        [ ] sim  [ ] nao
 

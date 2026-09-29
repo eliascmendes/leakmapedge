@@ -11,6 +11,7 @@ import json
 import os
 
 import detector as D
+import fisica as FL
 import refino as RF
 
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -18,6 +19,11 @@ ENTRADA_PACOTE = os.path.join(RAIZ, '03_ensaios', 'pacotes',
                               'leakmap_pacote_matriz_v1.json')
 SAIDA = os.path.join(RAIZ, '04_detector', 'resultados',
                      'leakmap_resultado_matriz_v1.json')
+# geometria do trecho de 200 m (02_bancada/codigo/build_model.py): tubo de 300 mm com agua, sensores em 40 e 160 m,
+# reservatorios em 0 e 200 m. A rugosidade de Darcy-Weisbach do modelo e 0,25 (o wntr le em metros); fica a mesma
+# aqui para a fisica ser coerente com a simulacao.
+GEOMETRIA = {'diametro_interno_m': 0.3, 'rugosidade_m': 0.25, 'viscosidade_m2_s': 1.0e-6,
+             'contorno_antes_de_a_m': 40.0, 'contorno_depois_de_b_m': 40.0}
 
 
 def main(entrada=ENTRADA_PACOTE, saida=SAIDA):
@@ -25,6 +31,7 @@ def main(entrada=ENTRADA_PACOTE, saida=SAIDA):
         pacote = json.load(f)
 
     registros = RF.refinar_pacote(pacote, D.processar_pacote(pacote))
+    registros = FL.caracterizar_pacote(pacote, registros, GEOMETRIA)
     if len(registros) != len(pacote['ensaios']):
         raise SystemExit('contagem de registros (%d) diferente da contagem de '
                          'ensaios (%d)' % (len(registros),
